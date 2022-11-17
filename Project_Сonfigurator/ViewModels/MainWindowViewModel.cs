@@ -20,7 +20,7 @@ namespace Project_Сonfigurator.ViewModels
         #region Параметры
 
         #region Заголовок окна
-        private string _Title = "Главное окно";
+        private string _Title = "Конфигуратор проекта";
         /// <summary>
         /// Заголовок окна
         /// </summary>
