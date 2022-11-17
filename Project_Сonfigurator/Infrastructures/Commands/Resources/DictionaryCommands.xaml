@@ -1,0 +1,8 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:l="clr-namespace:Project_Сonfigurator.Infrastructures.Commands"
+                    >
+    <l:CmdCloseWindow x:Key="CmdCloseWindow"/>
+    <l:CmdHideWindow x:Key="CmdHideWindow"/>
+    <l:CmdChangeStateWindow x:Key="CmdChangeStateWindow"/>
+</ResourceDictionary>
