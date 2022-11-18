@@ -12,6 +12,7 @@
                 <ResourceDictionary Source="Resources\BrushList\DictionaryBrush.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Converters\DictionaryConverters.xaml"/>
                 <ResourceDictionary Source="Infrastructures\ToolTips\ToolTipsDictionary.xaml"/>
+                <ResourceDictionary Source="Infrastructures\Lists\ListsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
             <vm:ViewModelsLocator x:Key="Locator"/>
         </ResourceDictionary>
