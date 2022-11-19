@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.UserControls;
 using System.Windows;
 
 namespace Project_Сonfigurator.ViewModels
@@ -9,11 +10,18 @@ namespace Project_Сonfigurator.ViewModels
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
+        public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
-        public MainWindowViewModel(IUserDialogService userDialog, ILogSerivece logSerivece)
+        public MainWindowViewModel(
+            IUserDialogService userDialog,
+            ILogSerivece logSerivece,
+            LayotRackUserControlViewModel layotRackViewModel
+            )
         {
             UserDialog = userDialog;
             Log = logSerivece;
+
+            LayotRackViewModel = layotRackViewModel;
         }
         #endregion
 
@@ -44,7 +52,7 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Ширина окна
-        private int _WindowWidth = 800;
+        private int _WindowWidth = 1200;
         /// <summary>
         /// Ширина окна
         /// </summary>

@@ -3,4 +3,5 @@
                     xmlns:l="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
                     >
     <l:BrushConverter x:Key="BrushConverter"/>
+    <l:BrushModuleNameConverter x:Key="BrushModuleNameConverter"/>
 </ResourceDictionary>

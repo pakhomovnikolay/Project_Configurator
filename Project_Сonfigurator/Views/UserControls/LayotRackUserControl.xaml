@@ -1,0 +1,423 @@
+﻿<UserControl x:Class="Project_Сonfigurator.Views.UserControls.LayotRackUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls"
+             d:Background="AliceBlue"
+             d:DataContext="{Binding LayotRackUserControlViewModel, Source={StaticResource Locator}}"
+             d:DesignHeight="{Binding WindowHeight}"
+             d:DesignWidth="{Binding WindowWidth}"
+             >
+
+    <Grid>
+        
+        <!--Сетка-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="35"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        <!--Верхняя панель-->
+        <Border BorderThickness="2,2,2,1" BorderBrush="Black" Background="#FFCCFFCC">
+            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                       FontWeight="Bold" FontSize="16"
+                       Text="{Binding Description}"/>
+        </Border>
+        
+        <!--Данные-->
+        <DataGrid Grid.Row="1"
+                  BorderThickness="0"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserReorderColumns="False"
+                  CanUserResizeRows="False"
+                  GridLinesVisibility="None"
+                  CanUserResizeColumns="False"
+                  HorizontalScrollBarVisibility="Visible"
+                  SelectionMode="Single"
+                  SelectionUnit="CellOrRowHeader"
+                  Background="Gray"
+                  HeadersVisibility="Column"
+                  ScrollViewer.CanContentScroll="False"
+                  FrozenColumnCount="3"
+                  ItemsSource="{Binding Racks}"
+                  >
+
+            <DataGrid.Resources>
+
+                <Style TargetType="{x:Type DataGridCell}">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Height" Value="250"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+
+                <Style TargetType="{x:Type DataGridColumnHeader}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                    <Setter Property="BorderThickness" Value="1,1,0,1"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Height" Value="60"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+                
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                
+                <DataGridTemplateColumn Width="60">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;корзины"/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="2,0,0,0" BorderBrush="Black">
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Top" FontWeight="Bold"
+                                           Text="{Binding Index}"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                
+                <DataGridTemplateColumn Width="150">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                       Text="Название шкафа&#x0a;Номер шкафа"/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
+                                    <TextBox Grid.Row="0" BorderThickness="0" FontWeight="Bold"
+                                             TextAlignment="Left" VerticalContentAlignment="Center"
+                                             Text="{Binding NameUSO}"
+                                             />
+                                </Border>
+                                <Border Grid.Row="1" BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0" FontWeight="Bold"
+                                               Text="{Binding IndexUSO}"/>
+                                </Border>
+                                <Border Grid.Row="2" BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0" FontWeight="Bold"
+                                               Text="Начальный адрес"/>
+                                </Border>
+                                <Border Grid.Row="3" BorderThickness="2,0,0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Left" VerticalAlignment="Top" Margin="2,0,0,0" FontWeight="Bold"
+                                               Text="Конечный адрес"/>
+                                </Border>
+                                <Border Grid.Row="4"/>
+                                <Border Grid.Row="5" BorderThickness="0,0,0,2" BorderBrush="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="60">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;корзины&#x0a;в шкафу"/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0" Grid.RowSpan="4" BorderThickness="1,0,0,2" BorderBrush="Black" Background="LightGray">
+                                    <TextBlock Grid.Row="0" FontWeight="Bold"
+                                             TextAlignment="Center" VerticalAlignment="Center"
+                                             Text="{Binding Name}"
+                                             />
+                                </Border>
+                                <Border Grid.Row="4"/>
+                                <Border Grid.Row="5" BorderThickness="0,0,0,2" BorderBrush="Black"/>
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="1613">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="0,0,1,1" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Grid>
+
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+
+                                <ItemsControl Grid.Row="0" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,1" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding Index}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border x:Name="border" BorderThickness="1,0,0,1" Width="62" BorderBrush="Black">
+                                                <StackPanel>
+                                                    <ToggleButton x:Name="ListModule"
+                                                                  BorderThickness="0"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Stretch"
+                                                                  Background="#FFE5E5E5"
+                                                                  BorderBrush="#FFACACAC"
+                                                                  Height="{Binding ElementName=border, Path=ActualHeight}">
+                                                        <TextBlock HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center"
+                                                                   Text="{Binding Name}">
+                                                            <TextBlock.LayoutTransform>
+                                                                <RotateTransform Angle="-90"/>
+                                                            </TextBlock.LayoutTransform>
+                                                        </TextBlock>
+                                                    </ToggleButton>
+                                                    <Popup AllowsTransparency="False"
+                                                           StaysOpen="False"
+                                                           PlacementTarget="{Binding ElementName=ListModule}"
+                                                           IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                                        <ListBox Height="500"
+                                                             ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
+                                                             SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                                    </Popup>
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,1" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding StartAddress}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,2" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding EndAddress}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="4" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="5" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="0,0,0,2" Width="62" BorderBrush="Black"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="150"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                    <RowDefinition Height="20"/>
+                                </Grid.RowDefinitions>
+                                
+                                <ItemsControl Grid.Row="0" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,1" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding Index}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="1" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,1" Width="62" BorderBrush="Black">
+                                                <Border.Background>
+                                                    <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
+                                                </Border.Background>
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding Name}">
+                                                    <TextBlock.LayoutTransform>
+                                                        <RotateTransform Angle="-90"/>
+                                                    </TextBlock.LayoutTransform>
+                                                </TextBlock>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,1" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding StartAddress}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="1,0,0,2" Width="62" BorderBrush="Black" Background="White">
+                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                           Text="{Binding EndAddress}"/>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="4" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                                <ItemsControl Grid.Row="5" ItemsSource="{Binding Modules}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderThickness="0,0,0,2" Width="62" BorderBrush="Black"/>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </Grid>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    
+                </DataGridTemplateColumn>
+                
+            </DataGrid.Columns>
+            
+        </DataGrid>
+        
+    </Grid>
+</UserControl>
