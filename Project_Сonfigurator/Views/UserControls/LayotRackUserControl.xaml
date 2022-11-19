@@ -19,9 +19,31 @@
 
         <!--Верхняя панель-->
         <Border BorderThickness="2,2,2,1" BorderBrush="Black" Background="#FFCCFFCC">
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                       FontWeight="Bold" FontSize="16"
-                       Text="{Binding Description}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" Content="Обновить индексы модулей" Margin="2" FontWeight="Bold" Panel.ZIndex="9999"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdRefreshIndexModule}"
+                        />
+
+                <Button Grid.Column="1" Content="Обновить адреса модулей" Margin="2" FontWeight="Bold" Panel.ZIndex="9999"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdRefreshAddressModule}"
+                        />
+
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="3" TextAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" FontSize="16"
+                           Text="{Binding Description}"/>
+            </Grid>
+            
+            
+            
+            
         </Border>
 
         <!--Данные-->

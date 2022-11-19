@@ -126,10 +126,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// <summary>
         /// Команда - обновить индексы модулей
         /// </summary>
-        public ICommand CmdRefreshIndexModule => _CmdRefreshIndexModule ??= new RelayCommand(OnCmdRefreshIndexModuleExecuted, CanCmdRefreshIndexModuleExecute);
+        public ICommand CmdRefreshIndexModule => _CmdRefreshIndexModule ??= new RelayCommand(OnCmdRefreshIndexModuleExecuted);
 
-        private bool CanCmdRefreshIndexModuleExecute(object p) => true;
-        private void OnCmdRefreshIndexModuleExecuted(object p)
+        private void OnCmdRefreshIndexModuleExecuted()
         {
 
         }

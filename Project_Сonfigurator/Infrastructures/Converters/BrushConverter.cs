@@ -2,9 +2,11 @@
 using System;
 using System.Windows.Data;
 using System.Windows.Media;
+using System.Windows.Markup;
 
 namespace Project_Сonfigurator.Infrastructures.Converters
 {
+    [MarkupExtensionReturnType(typeof(BrushConverter))]
     public class BrushConverter : IValueConverter
     {
         public object Convert(object v, Type t, object p, CultureInfo c)
