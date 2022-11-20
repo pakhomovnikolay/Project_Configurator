@@ -1,11 +1,9 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
-using Project_Сonfigurator.Models.LayotRack.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
@@ -15,11 +13,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
+        ILayotRackService _LayotRackService;
 
-        public LayotRackUserControlViewModel(IUserDialogService userDialog, ILogSerivece logSerivece)
+        public LayotRackUserControlViewModel(IUserDialogService userDialog, ILogSerivece logSerivece, ILayotRackService iLayotRackService)
         {
             UserDialog = userDialog;
             Log = logSerivece;
+            _LayotRackService = iLayotRackService;
 
 
             while (Racks.Count < 53)
@@ -34,9 +34,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         StartAddress = "",
                         EndAddress = "",
                         Type = TypeModule.Unknown,
-                        ColorRack = "",
+                        ColorUSO = "",
                         NameUSO = "",
-                        Channel = new()
+                        Channels = new()
                     };
                     modules.Add(module);
                 }
@@ -52,6 +52,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
                 Racks.Add(rack);
             }
+
+            _LayotRackService.RefreshRack(Racks);
         }
         #endregion
 
@@ -130,7 +132,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         private void OnCmdRefreshIndexModuleExecuted()
         {
-
+            _LayotRackService.RefreshIndexModule(Racks);
         }
         #endregion
 
@@ -143,7 +145,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         private bool CanCmdRefreshAddressModuleExecute(object p) => true;
         private void OnCmdRefreshAddressModuleExecuted(object p)
         {
-
+            _LayotRackService.RefreshAddressModule(Racks);
         }
         #endregion
 

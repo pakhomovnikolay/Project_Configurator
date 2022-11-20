@@ -8,6 +8,7 @@ namespace Project_Сonfigurator.Services
         public static IServiceCollection AddServices(this IServiceCollection services) => services
             .AddTransient<IUserDialogService, UserDialogService>()
             .AddTransient<ILogSerivece, LogSerivece>()
+            .AddTransient<ILayotRackService, LayotRackService>()
             ;
     }
 }

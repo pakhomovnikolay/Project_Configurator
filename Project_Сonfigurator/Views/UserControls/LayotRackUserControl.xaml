@@ -238,7 +238,7 @@
                                                                   Height="{Binding ElementName=border, Path=ActualHeight}">
                                                         <TextBlock HorizontalAlignment="Center"
                                                                    VerticalAlignment="Center"
-                                                                   Text="{Binding Name}">
+                                                                   Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
                                                             <TextBlock.LayoutTransform>
                                                                 <RotateTransform Angle="-90"/>
                                                             </TextBlock.LayoutTransform>
@@ -249,8 +249,8 @@
                                                            PlacementTarget="{Binding ElementName=ListModule}"
                                                            IsOpen="{Binding IsChecked, ElementName=ListModule}">
                                                         <ListBox Height="500"
-                                                             ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
-                                                             SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                                                 ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
+                                                                 SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Popup>
                                                 </StackPanel>
                                             </Border>
@@ -362,7 +362,7 @@
                                                     <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
                                                 </Border.Background>
                                                 <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                           Text="{Binding Name}">
+                                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
                                                     <TextBlock.LayoutTransform>
                                                         <RotateTransform Angle="-90"/>
                                                     </TextBlock.LayoutTransform>

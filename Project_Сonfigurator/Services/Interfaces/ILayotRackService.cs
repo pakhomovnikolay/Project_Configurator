@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Infrastructures.Enum;
-using Project_Сonfigurator.Models.LayotRack;
+﻿using Project_Сonfigurator.Models.LayotRack;
 using System.Collections.Generic;
 
 namespace Project_Сonfigurator.Services.Interfaces
@@ -28,14 +27,6 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         /// <param name="Racks"></param>
         void RefreshAddressModule(List<Rack> Racks);
-        #endregion
-
-        #region Наполнение списка модулей
-        /// <summary>
-        /// Наполнение списка модулей
-        /// </summary>
-        /// <param name="Racks"></param>
-        List<string> GetListModules(TypePLC typePLC);
         #endregion
     }
 }

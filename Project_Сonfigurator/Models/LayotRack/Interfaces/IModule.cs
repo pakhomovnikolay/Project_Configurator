@@ -51,14 +51,14 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         /// <summary>
         /// Цвет УСО
         /// </summary>
-        string ColorRack { get; set; }
+        string ColorUSO { get; set; }
         #endregion
 
-        #region Сигналы модуля
+        #region Каналы модуля
         /// <summary>
-        /// Сигналы модуля
+        /// Каналы модуля
         /// </summary>
-        List<Channel> Channel { get; set; }
+        List<Channel> Channels { get; set; }
         #endregion
     }
 }
