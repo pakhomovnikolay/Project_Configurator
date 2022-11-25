@@ -14,14 +14,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
     public class LayotRackUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private readonly IUserDialogService UserDialog;
-        private readonly ILogSerivece Log;
         ILayotRackService _LayotRackService;
 
-        public LayotRackUserControlViewModel(IUserDialogService userDialog, ILogSerivece logSerivece, ILayotRackService iLayotRackService)
+        public LayotRackUserControlViewModel(ILayotRackService iLayotRackService)
         {
-            UserDialog = userDialog;
-            Log = logSerivece;
             _LayotRackService = iLayotRackService;
 
             OnCmdCreateNewUSOExecuted();

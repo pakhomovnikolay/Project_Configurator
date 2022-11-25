@@ -16,17 +16,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private readonly ILogSerivece Log;
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
         public TableSignalsUserControlViewModel(
             IUserDialogService userDialog,
-            ILogSerivece logSerivece,
-            ILayotRackService iLayotRackService,
             LayotRackUserControlViewModel layotRackViewModel)
         {
             UserDialog = userDialog;
-            Log = logSerivece;
             _DataViewModules.Filter += OnModulesFiltered;
             _DataView.Filter += OnUSOListFiltered;
 
