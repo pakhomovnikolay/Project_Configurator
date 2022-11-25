@@ -6,6 +6,7 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:Project_Сonfigurator"
         xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
+        xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         WindowStyle="None"
@@ -88,6 +89,11 @@
             <TabItem Header="{Binding TableSignalsViewModel.Title}"
                      IsSelected="{Binding TableSignalsViewModel.IsSelected}">
                 <pages:TableSignalsUserControl DataContext="{Binding TableSignalsViewModel}"/>
+            </TabItem>
+
+            <TabItem Header="{Binding SignalsDIViewModel.Title}"
+                     IsSelected="{Binding SignalsDIViewModel.IsSelected}">
+                <pages_signal:SignalsDIUserControl DataContext="{Binding SignalsDIViewModel}"/>
             </TabItem>
 
 

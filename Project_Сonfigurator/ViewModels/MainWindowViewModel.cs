@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
+using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System.Windows;
 
 namespace Project_Сonfigurator.ViewModels
@@ -13,12 +14,14 @@ namespace Project_Сonfigurator.ViewModels
 
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
+        public SignalsDIUserControlViewModel SignalsDIViewModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
             ILogSerivece logSerivece,
             LayotRackUserControlViewModel layotRackViewModel,
-            TableSignalsUserControlViewModel tableSignalsViewModel
+            TableSignalsUserControlViewModel tableSignalsViewModel,
+            SignalsDIUserControlViewModel signalsDIViewModel
             )
         {
             UserDialog = userDialog;
@@ -26,6 +29,7 @@ namespace Project_Сonfigurator.ViewModels
 
             LayotRackViewModel = layotRackViewModel;
             TableSignalsViewModel = tableSignalsViewModel;
+            SignalsDIViewModel = signalsDIViewModel;
         }
         #endregion
 

@@ -1,9 +1,18 @@
-﻿using Project_Сonfigurator.ViewModels.Base;
+﻿using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels.Base;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
     public class SignalsDIUserControlViewModel : ViewModel
     {
+        #region Конструктор
+        ILayotRackService _LayotRackService;
+
+        public SignalsDIUserControlViewModel(ILayotRackService iLayotRackService)
+        {
+            _LayotRackService = iLayotRackService;
+        }
+        #endregion
 
         #region Параметры
 

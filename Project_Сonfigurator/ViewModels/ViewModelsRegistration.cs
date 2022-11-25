@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.ViewModels.UserControls;
+using Project_Сonfigurator.ViewModels.UserControls.Signals;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -9,6 +10,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<LayotRackUserControlViewModel>()
             .AddSingleton<TableSignalsUserControlViewModel>()
+            .AddSingleton<SignalsDIUserControlViewModel>()
             ;
     }
 }
