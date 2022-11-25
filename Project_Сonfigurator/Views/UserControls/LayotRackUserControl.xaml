@@ -20,8 +20,8 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="100" Width="200"/>
-            <ColumnDefinition MinWidth="150"/>
+            <ColumnDefinition MinWidth="183" Width="200"/>
+            <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Row="2" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
 

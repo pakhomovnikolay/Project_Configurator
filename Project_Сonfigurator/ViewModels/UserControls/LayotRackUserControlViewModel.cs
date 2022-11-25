@@ -194,6 +194,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     {
                         Index = $"{i + 1}",
                         Name = $"A{i + 1}",
+                        IsEnable = true,
                         Modules = modules
                     };
                     racks.Add(rack);
@@ -224,6 +225,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 {
                     Index = $"1",
                     Name = $"A1",
+                    IsEnable = true,
                     Modules = modules
                 };
                 racks.Add(rack);
@@ -242,7 +244,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             #endregion
 
             SelectedUSO = USOList[^1];
-            SelectedRack = USOList[^1].Racks[^1];
+            SelectedRack = USOList[^1].Racks[0];
             _DataView.Source = USOList;
             _DataView.View.Refresh();
         }
@@ -304,6 +306,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             {
                 Index = $"{SelectedUSO.Racks.Count + 1}",
                 Name = $"A{SelectedUSO.Racks.Count + 1}",
+                IsEnable = true,
                 Modules = modules
             };
             SelectedUSO.Racks.Add(rack);

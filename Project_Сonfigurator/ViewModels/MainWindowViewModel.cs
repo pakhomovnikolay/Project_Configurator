@@ -80,7 +80,7 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Текущее состояние окна
-        private WindowState _WindowWindowState = WindowState.Normal;
+        private WindowState _WindowWindowState = WindowState.Maximized;
         /// <summary>
         /// Текущее состояние окна
         /// </summary>
