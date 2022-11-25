@@ -11,8 +11,7 @@ namespace Project_Сonfigurator.Infrastructures.Converters
     {
         public object Convert(object v, Type t, object p, CultureInfo c)
         {
-            if (v is not string brush) return null;
-
+            if (v is not string brush) return Brushes.White;
 
             #region Заглушки\Оконечные модуля
             if (brush.Contains("ST", StringComparison.CurrentCultureIgnoreCase) ||

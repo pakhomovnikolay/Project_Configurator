@@ -6,6 +6,7 @@
         AI,
         DI,
         AO,
-        DO
+        DO,
+        DA
     }
 }

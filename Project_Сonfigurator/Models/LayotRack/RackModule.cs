@@ -7,16 +7,9 @@ namespace Project_Сonfigurator.Models.LayotRack
 {
     public class RackModule : IModule
     {
-        #region Тип модуля
+        #region Индекс в массиве
         /// <summary>
-        /// Тип модуля
-        /// </summary>
-        public TypeModule Type { get; set; }
-        #endregion
-
-        #region Индекс модуля
-        /// <summary>
-        /// Индекс модуля
+        /// Индекс в массиве
         /// </summary>
         public string Index { get; set; }
         #endregion
@@ -26,50 +19,53 @@ namespace Project_Сonfigurator.Models.LayotRack
         /// <summary>
         /// Имя модуля
         /// </summary>
+        //public string Name { get; set; }
         public string Name
         {
-            get
+            get { return _Name; }
+            set
             {
-                #region Модули DI
-                if (_Name.Contains("DI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DAI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DDI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DDM", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DRA", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DRC", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("ERT", StringComparison.CurrentCultureIgnoreCase)
-                        )
-                    Type = TypeModule.DI;
-                #endregion
+                _Name = value;
+                Type = TypeModule.Unknown;
 
-                #region Модули AI
-                else if (_Name.Contains("AI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("AHI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("AMI", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("AMM", StringComparison.CurrentCultureIgnoreCase)
-                        )
+                #region AI
+                if (_Name.Contains("ai", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("ahi", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("ami", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("art", StringComparison.CurrentCultureIgnoreCase))
+                {
                     Type = TypeModule.AI;
-                #endregion
-
-                #region Модули DO
-                else if (_Name.Contains("DO", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DAO", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("DDO", StringComparison.CurrentCultureIgnoreCase)
-                        )
-                    Type = TypeModule.DO;
-                #endregion
-
-                #region Модули AO
-                else if (_Name.Contains("AO", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("AMO", StringComparison.CurrentCultureIgnoreCase) ||
-                        _Name.Contains("AHO", StringComparison.CurrentCultureIgnoreCase)
-                        )
+                }
+                else if (_Name.Contains("di", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("dai", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("ddi", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("ert", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Type = TypeModule.DI;
+                }
+                else if (_Name.Contains("ao", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("aho", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("amo", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("amm", StringComparison.CurrentCultureIgnoreCase))
+                {
                     Type = TypeModule.AO;
+                }
+                else if (_Name.Contains("do", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("dao", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("ddo", StringComparison.CurrentCultureIgnoreCase) ||
+                     _Name.Contains("ddm", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Type = TypeModule.DO;
+                }
+                else if (_Name.Contains("da", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("drc", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("dra", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Type = TypeModule.DA;
+                }
                 #endregion
 
-                return _Name;
             }
-            set => _Name = value;
         }
         #endregion
 
@@ -87,18 +83,11 @@ namespace Project_Сonfigurator.Models.LayotRack
         public string EndAddress { get; set; }
         #endregion
 
-        #region Наименование УСО, к котрому относится модуль
+        #region Тип модуля
         /// <summary>
-        /// Наименование УСО, к котрому относится модуль
+        /// Тип модуля
         /// </summary>
-        public string NameUSO { get; set; }
-        #endregion
-
-        #region Цвет УСО
-        /// <summary>
-        /// Цвет УСО
-        /// </summary>
-        public string ColorUSO { get; set; }
+        public TypeModule Type { get; set; }
         #endregion
 
         #region Каналы модуля

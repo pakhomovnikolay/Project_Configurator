@@ -8,6 +8,7 @@ namespace Project_Сonfigurator.ViewModels
         public static IServiceCollection AddViewModels(this IServiceCollection services) => services
             .AddSingleton<MainWindowViewModel>()
             .AddSingleton<LayotRackUserControlViewModel>()
+            .AddSingleton<TableSignalsUserControlViewModel>()
             ;
     }
 }

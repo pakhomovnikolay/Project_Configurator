@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services;
 using Project_Сonfigurator.ViewModels;
 using System;
@@ -15,6 +16,8 @@ namespace Project_Сonfigurator
         public static Window ActiveWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsActive);
 
         public static Window FucusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsFocused);
+
+        public static SettingApp Settings = new();
 
         public static string NameApp => Assembly.GetEntryAssembly().GetName().Name;
 

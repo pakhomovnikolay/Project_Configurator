@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Project_Сonfigurator.Models.LayotRack
 {
-    public class Rack : IRack
+    public class USO : IUSO
     {
         #region Индекс в массиве
         /// <summary>
@@ -12,25 +12,25 @@ namespace Project_Сonfigurator.Models.LayotRack
         public string Index { get; set; }
         #endregion
 
-        #region Имя корзины
+        #region Имя УСО
         /// <summary>
-        /// Имя корзины
+        /// Имя УСО
         /// </summary>
         public string Name { get; set; }
         #endregion
 
-        #region Корзина активна
+        #region Цвет УСО
         /// <summary>
-        /// Корзина активна
+        /// Цвет УСО
         /// </summary>
-        public bool IsEnable { get; set; }
+        public string Color { get; set; }
         #endregion
 
-        #region Модули корзины
+        #region Корзины УСО
         /// <summary>
-        /// Модули корзины
+        /// Корзины УСО
         /// </summary>
-        public List<RackModule> Modules { get; set; } = new();
+        public List<Rack> Racks { get; set; }
         #endregion
     }
 }

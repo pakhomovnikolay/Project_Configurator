@@ -5,16 +5,9 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
 {
     public interface IModule
     {
-        #region Тип модуля
+        #region Индекс в массиве
         /// <summary>
-        /// Тип модуля
-        /// </summary>
-        TypeModule Type { get; set; }
-        #endregion
-
-        #region Индекс модуля
-        /// <summary>
-        /// Индекс модуля
+        /// Индекс в массиве
         /// </summary>
         string Index { get; set; }
         #endregion
@@ -40,18 +33,11 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         string EndAddress { get; set; }
         #endregion
 
-        #region Наименование УСО, к котрому относится модуль
+        #region Тип модуля
         /// <summary>
-        /// Наименование УСО, к котрому относится модуль
+        /// Тип модуля
         /// </summary>
-        string NameUSO { get; set; }
-        #endregion
-
-        #region Цвет УСО
-        /// <summary>
-        /// Цвет УСО
-        /// </summary>
-        string ColorUSO { get; set; }
+        TypeModule Type { get; set; }
         #endregion
 
         #region Каналы модуля

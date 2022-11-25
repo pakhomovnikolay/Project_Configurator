@@ -2,25 +2,25 @@
 {
     public interface IChannel
     {
-        #region Индекс канала
+        #region Индекс в массиве
         /// <summary>
-        /// Индекс канала
+        /// Индекс в массиве
         /// </summary>
-        int Index { get; set; }
+        string Index { get; set; }
         #endregion
 
-        #region Идентификатор канала
+        #region Идентификатор
         /// <summary>
-        /// Идентификатор канала
+        /// Идентификатор
         /// </summary>
         string Id { get; set; }
         #endregion
 
-        #region Наименование канала
+        #region Описание канала
         /// <summary>
-        /// Наименование канала
+        /// Описание канала
         /// </summary>
-        string Name { get; set; }
+        string Description { get; set; }
         #endregion
 
         #region Имя переменной

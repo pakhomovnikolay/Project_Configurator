@@ -80,10 +80,16 @@
                 </ControlTemplate>
             </TabControl.Template>
 
-            <TabItem Header="{Binding LayotRackViewModel.Title}">
-                <pages:LayotRackUserControl DataContext="{Binding LayotRackViewModel}" />
+            <TabItem Header="{Binding LayotRackViewModel.Title}"
+                     IsSelected="{Binding LayotRackViewModel.IsSelected}">
+                <pages:LayotRackUserControl DataContext="{Binding LayotRackViewModel}"/>
             </TabItem>
-            
+
+            <TabItem Header="{Binding TableSignalsViewModel.Title}"
+                     IsSelected="{Binding TableSignalsViewModel.IsSelected}">
+                <pages:TableSignalsUserControl DataContext="{Binding TableSignalsViewModel}"/>
+            </TabItem>
+
 
         </TabControl>
     </Grid>

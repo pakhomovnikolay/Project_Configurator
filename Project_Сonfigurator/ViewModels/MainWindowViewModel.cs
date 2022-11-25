@@ -10,18 +10,22 @@ namespace Project_Сonfigurator.ViewModels
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
+
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
+        public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
             ILogSerivece logSerivece,
-            LayotRackUserControlViewModel layotRackViewModel
+            LayotRackUserControlViewModel layotRackViewModel,
+            TableSignalsUserControlViewModel tableSignalsViewModel
             )
         {
             UserDialog = userDialog;
             Log = logSerivece;
 
             LayotRackViewModel = layotRackViewModel;
+            TableSignalsViewModel = tableSignalsViewModel;
         }
         #endregion
 

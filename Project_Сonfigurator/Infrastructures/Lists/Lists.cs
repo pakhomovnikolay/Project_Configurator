@@ -175,7 +175,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "8 - Идет плавный пуск"
             };
 
-            ResultModuleList = new List<string>(SEModuleList);
+            ResultModuleList = new List<string>(PSModuleList);
         }
         #endregion
 

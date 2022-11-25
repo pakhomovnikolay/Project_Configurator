@@ -4,4 +4,7 @@
                     >
     <l:BrushConverter x:Key="BrushConverter"/>
     <l:BrushModuleNameConverter x:Key="BrushModuleNameConverter"/>
+    <l:HeightModuleConverter x:Key="HeightModuleConverter"/>
+    <l:VisibilityModuleConverter x:Key="VisibilityModuleConverter"/>
+    <l:EnabledRackConverter x:Key="EnabledRackConverter"/>
 </ResourceDictionary>

@@ -2,7 +2,7 @@
 
 namespace Project_Сonfigurator.Models.LayotRack.Interfaces
 {
-    public interface IRack
+    public interface IUSO
     {
         #region Индекс в массиве
         /// <summary>
@@ -11,25 +11,25 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         string Index { get; set; }
         #endregion
 
-        #region Имя корзины
+        #region Имя УСО
         /// <summary>
-        /// Имя корзины
+        /// Имя УСО
         /// </summary>
         string Name { get; set; }
         #endregion
 
-        #region Корзина активна
+        #region Цвет УСО
         /// <summary>
-        /// Корзина активна
+        /// Цвет УСО
         /// </summary>
-        bool IsEnable { get; set; } 
+        string Color { get; set; }
         #endregion
 
-        #region Модули корзины
+        #region Корзины УСО
         /// <summary>
-        /// Модули корзины
+        /// Корзины УСО
         /// </summary>
-        List<RackModule> Modules { get; set; }
+        List<Rack> Racks { get; set; }
         #endregion
     }
 }
