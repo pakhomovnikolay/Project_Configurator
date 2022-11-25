@@ -380,7 +380,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             if (p is null) return;
             if (p is not DataGrid MyDataGrid) return;
-            if (!MyDataGrid.CancelEdit()) return;
+            if (MyDataGrid.BeginEdit()) return;
 
             _LayotRackService.RefreshAddressModule(USOList);
             _DataViewRacks.Source = SelectedUSO.Racks;

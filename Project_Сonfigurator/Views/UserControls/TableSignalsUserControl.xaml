@@ -4,22 +4,34 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls"
+             xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:converter="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
              d:Background="AliceBlue"
              d:DataContext="{Binding TableSignalsUserControlViewModel, Source={StaticResource Locator}}"
              d:DesignHeight="{Binding WindowHeight}"
              d:DesignWidth="{Binding WindowWidth}"
              >
+
+    <UserControl.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding CmdGenerateTable}"/>
+    </UserControl.InputBindings>
     <Grid>
         
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="35"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="183" Width="200"/>
+            <ColumnDefinition MinWidth="200"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.Row="2" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
 
         <!--Верхняя панель-->
-        <Border Grid.Row="0" BorderThickness="1,1,1,1" Background="#FFCCFFCC" BorderBrush="Black">
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  BorderThickness="1,1,1,1" Background="#FFCCFFCC" BorderBrush="Black">
             <DockPanel>
                 <Button Content="Генерировать структуру" Width="200" Margin="2" FontWeight="Bold"
                         Style="{StaticResource CustomButtonStyle}"
@@ -30,10 +42,56 @@
                            FontWeight="Bold" FontSize="16"/>
             </DockPanel>
         </Border>
+        
+        <!--Список корзин-->
+        <TextBlock Grid.Row="1" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
+        <ListView Grid.Row="2" Margin="5,5,0,0"
+                  BorderThickness="1"
+                  BorderBrush="Black"
+                  ItemsSource="{Binding DataView}"
+                  SelectedItem="{Binding SelectedUSO}">
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                               ToolTip="{Binding Name}"
+                               Text="{Binding Name}"/>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ListView>
 
         <!--Данные-->
-        <DataGrid Grid.Row="1"
+        <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black"
+                Margin="5,5,0,0" Background="AntiqueWhite" Width="1350" HorizontalAlignment="Left">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="1288"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBox Grid.Column="1" BorderThickness="1" Margin="5,1,0,1" VerticalContentAlignment="Center"
+                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding CmdFilteringChannels}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+
+                <Button Grid.Column="2" Margin="2" HorizontalAlignment="Left" Width="25"
+                                                ToolTip="Обновить фльтр"
+                                                Style="{StaticResource CustomButtonStyle}"
+                                                Command="{Binding CmdFilteringChannels}"
+                                                >
+                    <Button.Content>
+                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+        <DataGrid Grid.Row="2" Grid.Column="1"
+                  Margin="5,5,0,0"
                   BorderThickness="0"
+                  BorderBrush="Black"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserReorderColumns="False"
@@ -45,17 +103,19 @@
                   Background="Gray"
                   HeadersVisibility="Column"
                   ScrollViewer.CanContentScroll="False"
-                  ItemsSource="{Binding Modules}"
+                  ItemsSource="{Binding DataViewModules}"
+                  
                   >
-
             <DataGrid.Resources>
 
                 <converter:HeightModuleConverter x:Key="HeightModuleConverter" HeighRow="25"/>
 
+                <converter:FilteredBackLightConverter x:Key="BackLightConverter" TextFilter="{Binding TextFilter}"/>
+
                 <Style TargetType="{x:Type DataGridCell}">
                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Background" Value="White"/>
                     <Setter Property="Height" Value="auto"/>
                     <Style.Triggers>
                         <Trigger Property="IsSelected" Value="True">
@@ -70,7 +130,7 @@
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     <Setter Property="BorderThickness" Value="1,1,0,1"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Background" Value="White"/>
                     <Setter Property="Height" Value="90"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
@@ -78,37 +138,10 @@
             </DataGrid.Resources>
 
             <DataGrid.Columns>
-
+                
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Имя УСО" Margin="0,0,0,5">
-                                <TextBlock.LayoutTransform>
-                                    <RotateTransform Angle="-90"/>
-                                </TextBlock.LayoutTransform>
-                            </TextBlock>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="2,0,0,1" BorderBrush="Black" Background="{Binding ColorUSO}">
-                                <Border.Height>
-                                    <Binding Path="Channels.Count" Converter="{StaticResource HeightModuleConverter}"/>
-                                </Border.Height>
-                                <TextBlock TextAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding NameUSO}">
-                                    <TextBlock.LayoutTransform>
-                                        <RotateTransform Angle="-90"/>
-                                    </TextBlock.LayoutTransform>
-                                </TextBlock>
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Width="25">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="1,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Тип модуля" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -118,7 +151,7 @@
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
+                            <Border BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
                                 <TextBlock TextAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"
                                            Text="{Binding Type}">
                                     <TextBlock.LayoutTransform>
@@ -129,10 +162,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Имя модуля" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -140,6 +173,7 @@
                             </TextBlock>
                         </Border>
                     </DataGridTemplateColumn.Header>
+                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,1" BorderBrush="Black">
@@ -156,10 +190,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="№ канала" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -177,7 +211,7 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="LightGray" Height="25">
+                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25" Background="LightGray">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}"/>
                                         </Border>
                                     </DataTemplate>
@@ -186,10 +220,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="150">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -203,8 +237,16 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
-                                            <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Id}"/>
+                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                            <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
+                                                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.Background>
+                                                    <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                        <Binding Path="Id"/>
+                                                        <Binding Path="Description" />
+                                                    </MultiBinding>
+                                                </TextBox.Background>
+                                            </TextBox>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -212,10 +254,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="800">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сигнала"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -230,7 +272,15 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
-                                            <TextBox BorderThickness="0" VerticalContentAlignment="Center" Text="{Binding Name}"/>
+                                            <TextBox BorderThickness="0" VerticalContentAlignment="Center"
+                                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBox.Background>
+                                                    <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                        <Binding Path="Id"/>
+                                                        <Binding Path="Description" />
+                                                    </MultiBinding>
+                                                </TextBox.Background>
+                                            </TextBox>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
@@ -238,10 +288,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -286,10 +336,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Бит" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -316,10 +366,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -333,7 +383,13 @@
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
+                                        <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                            <Border.Background>
+                                                <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                    <Binding Path="Id"/>
+                                                    <Binding Path="Description"/>
+                                                </MultiBinding>
+                                            </Border.Background>
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Address}"/>
                                         </Border>
                                     </DataTemplate>
@@ -342,10 +398,10 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
+                
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,2,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,2,1" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной&#x0a;для ВУ"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -372,7 +428,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-
+                                
                                 <Border BorderThickness="1,0,2,1" BorderBrush="Black" Background="LightGray">
                                     <Border.Resources>
                                         <converter:VisibilityModuleConverter x:Key="VisibilityModuleConverter" CountRow="32"/>
@@ -390,10 +446,37 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-
             </DataGrid.Columns>
-                    
+            
         </DataGrid>
+
+        <!--Нижняя панель-->
+        <Border Grid.Row="3" Grid.ColumnSpan="2" Margin="5,2,0,0" HorizontalAlignment="Left" Width="1551"
+                BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
+            <Grid>
                 
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="195"/>
+                    <ColumnDefinition Width="140"/>
+                    <ColumnDefinition Width="1084"/>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Путь для импорта ТБ:"/>
+                <Border Grid.Column="2" Background="White" BorderThickness="1" BorderBrush="Black" Margin="0,2,0,2">
+                    <TextBox TextAlignment="Left" VerticalAlignment="Center" 
+                             Margin="5,0" BorderThickness="0"
+                             Text="{Binding PathImport}"/>
+                </Border>
+                <Button Grid.Column="3" Content="..." Margin="-10,2,0,2" FontWeight="Bold"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdSelectedPathImport}"/>
+                <Button Grid.Column="4" Content="Импорт" Margin="2" FontWeight="Bold"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdImportTB}"/>
+            </Grid>
+            
+        </Border>
     </Grid>
 </UserControl>

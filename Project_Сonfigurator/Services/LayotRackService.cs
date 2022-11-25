@@ -3,6 +3,7 @@ using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Windows.Media;
 
 namespace Project_Сonfigurator.Services
@@ -40,9 +41,6 @@ namespace Project_Сonfigurator.Services
             var index = 0;
             foreach (var _USO in USOList)
             {
-                var r = new Random();
-                _USO.Color = new SolidColorBrush(Color.FromRgb((byte)r.Next(1, 239), (byte)r.Next(1, 239), (byte)r.Next(1, 239))).ToString();
-
                 foreach (var _Rack in _USO.Racks)
                 {
                     index++;

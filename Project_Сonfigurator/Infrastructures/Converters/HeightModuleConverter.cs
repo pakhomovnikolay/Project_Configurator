@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Infrastructures.Enum;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
@@ -78,7 +77,7 @@ namespace Project_Сonfigurator.Infrastructures.Converters
                 var type = p is not null ? p.ToString() : "";
                 return int.TryParse(CountRow, out int count_row) ? count_row * HeighRow : 0;
             }
-            
+
         }
 
         public object ConvertBack(object v, Type t, object p, CultureInfo c)

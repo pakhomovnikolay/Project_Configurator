@@ -19,13 +19,6 @@ namespace Project_Сonfigurator.Models.LayotRack
         public string Name { get; set; }
         #endregion
 
-        #region Цвет УСО
-        /// <summary>
-        /// Цвет УСО
-        /// </summary>
-        public string Color { get; set; }
-        #endregion
-
         #region Корзины УСО
         /// <summary>
         /// Корзины УСО

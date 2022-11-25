@@ -1,8 +1,13 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
@@ -12,7 +17,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
-        ILayotRackService _LayotRackService;
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
         public TableSignalsUserControlViewModel(
@@ -23,7 +27,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             UserDialog = userDialog;
             Log = logSerivece;
-            _LayotRackService = iLayotRackService;
+            _DataViewModules.Filter += OnModulesFiltered;
+            _DataView.Filter += OnUSOListFiltered;
+
+
             LayotRackViewModel = layotRackViewModel;
         }
         #endregion
@@ -78,18 +85,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         }
         #endregion
 
-        #region Список модулей
-        private List<RackModule> _Modules = new();
-        /// <summary>
-        /// Список модулей
-        /// </summary>
-        public List<RackModule> Modules
-        {
-            get => _Modules;
-            set => Set(ref _Modules, value);
-        }
-        #endregion
-
         #region Состояние активной вкладки
         private bool _IsSelected = false;
         /// <summary>
@@ -99,6 +94,98 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             get => _IsSelected;
             set => Set(ref _IsSelected, value);
+        }
+        #endregion
+
+        #region Коллекция УСО для отображения
+        /// <summary>
+        /// Коллекция УСО для отображения
+        /// </summary>
+        private readonly CollectionViewSource _DataView = new();
+        public ICollectionView DataView => _DataView?.View;
+        #endregion
+
+        #region Выбранное УСО
+        private USO _SelectedUSO = new();
+        /// <summary>
+        /// Выбранное УСО
+        /// </summary>
+        public USO SelectedUSO
+        {
+            get => _SelectedUSO;
+            set
+            {
+                if (Set(ref _SelectedUSO, value))
+                {
+                    if (_SelectedUSO is null) return;
+                    if (_SelectedUSO.Racks is null) return;
+                    if (_SelectedUSO.Racks.Count <= 0) return;
+
+                    var modules = new List<RackModule>();
+                    foreach (var Rack in value?.Racks)
+                    {
+                        foreach (var Module in Rack.Modules)
+                        {
+                            switch (Module.Type)
+                            {
+                                case TypeModule.AI:
+                                case TypeModule.DI:
+                                case TypeModule.AO:
+                                case TypeModule.DO:
+                                case TypeModule.DA:
+                                    var module = new RackModule()
+                                    {
+                                        Index = Module.Index,
+                                        Name = Module.Name,
+                                        Type = Module.Type,
+                                        Channels = Module.Channels,
+                                        EndAddress = Module.EndAddress,
+                                        StartAddress = Module.StartAddress
+                                    };
+                                    modules.Add(module);
+
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                    _DataViewModules.Source = modules;
+                    OnPropertyChanged(nameof(DataViewModules));
+                }
+            }
+        }
+        #endregion
+
+        #region Коллекция модулей для отображения
+        /// <summary>
+        /// Коллекция модулей для отображения
+        /// </summary>
+        private readonly CollectionViewSource _DataViewModules = new();
+        public ICollectionView DataViewModules => _DataViewModules?.View;
+        #endregion
+
+        #region Текст фильтрации
+        private string _TextFilter;
+        /// <summary>
+        /// Текст фильтрации
+        /// </summary>
+        public string TextFilter
+        {
+            get => _TextFilter;
+            set => Set(ref _TextFilter, value);
+        }
+        #endregion
+
+        #region Путь для импорта ТБ
+        private string _PathImport;
+        /// <summary>
+        /// Путь для импорта ТБ
+        /// </summary>
+        public string PathImport
+        {
+            get => _PathImport;
+            set => Set(ref _PathImport, value);
         }
         #endregion
 
@@ -114,32 +201,83 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdGenerateTable => _CmdGenerateTable ??= new RelayCommand(OnCmdGenerateTableExecuted);
         private void OnCmdGenerateTableExecuted()
         {
-            //if (LayotRackViewModel is null) return;
-            //if (LayotRackViewModel.Racks is null) return;
+            if (LayotRackViewModel is null) return;
+            if (LayotRackViewModel.USOList is null) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            //if (MessageBox.Show("Все данные по сигналам будут потеряны!\nПродолжить?", "Внимание", MessageBoxButton.YesNo, MessageBoxImage.Warning)
-            //    != MessageBoxResult.Yes) return;
+            SelectedUSO = null;
+            var uso_list = new List<USO>();
+            foreach (var _USO in LayotRackViewModel.USOList)
+            {
+                var need_add_uso = false;
+                foreach (var _Rack in _USO.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        switch (_Module.Type)
+                        {
+                            case TypeModule.AI:
+                            case TypeModule.DI:
+                            case TypeModule.AO:
+                            case TypeModule.DO:
+                            case TypeModule.DA:
+                                need_add_uso = true;
+                                break;
+                        }
+                    }
+                }
+                if (need_add_uso)
+                    uso_list.Add(_USO);
+            }
 
+            SelectedUSO = uso_list.Count > 0 ? uso_list[0] : new USO();
+            _DataView.Source = uso_list.Count > 0 ? uso_list : new List<USO>();
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+        }
+        #endregion
 
-            //var modules = new List<RackModule>();
-            //foreach (var _Racks in LayotRackViewModel.Racks)
-            //{
-            //    foreach (var _Module in _Racks.Modules)
-            //    {
-            //        switch (_Module.Type)
-            //        {
-            //            case TypeModule.AI:
-            //            case TypeModule.DI:
-            //            case TypeModule.AO:
-            //            case TypeModule.DO:
-            //                modules.Add(_Module);
-            //                break;
+        #region Команда - Отфильтровать каналы
+        /// <summary>
+        /// Команда - Отфильтровать каналы
+        /// </summary>
+        private ICommand _CmdFilteringChannels;
+        public ICommand CmdFilteringChannels => _CmdFilteringChannels ??= new RelayCommand(OnCmdFilteringChannelsExecuted);
+        private void OnCmdFilteringChannelsExecuted()
+        {
+            if (_DataView.Source is null) return;
+            if (_DataViewModules.Source is null) return;
+            _DataView.View.Refresh();
+            _DataViewModules.View.Refresh();
+        }
+        #endregion
 
-            //        }
-            //    }
-            //}
-            //Modules = new(modules);
+        #region Команда - Выбрать путь для импорта ТБ
+        /// <summary>
+        /// Команда - Выбрать путь для импорта ТБ
+        /// </summary>
+        private ICommand _CmdSelectedPathImport;
+        public ICommand CmdSelectedPathImport => _CmdSelectedPathImport ??= new RelayCommand(OnCmdSelectedPathImportExecuted);
+        private void OnCmdSelectedPathImportExecuted()
+        {
+            if (UserDialog.SelectFolder(Title, out string path))
+            {
+                PathImport = path;
+            }
+        }
+        #endregion
 
+        #region Команда - Импортировать ТБ
+        /// <summary>
+        /// Команда - Импортировать ТБ
+        /// </summary>
+        private ICommand _CmdImportTB;
+        public ICommand CmdImportTB => _CmdImportTB ??= new RelayCommand(OnCmdImportTBExecuted, CanCmdImportTBExecute);
+        private bool CanCmdImportTBExecute() => !string.IsNullOrWhiteSpace(PathImport);
+        private void OnCmdImportTBExecuted()
+        {
+            return;
         }
         #endregion
 
@@ -267,6 +405,73 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         //    }
         //}
         //#endregion
+
+        #endregion
+
+        #region Функции
+
+        #region Фильтрация модулей
+        /// <summary>
+        /// Фильтрация модулей
+        /// </summary>
+        public void OnModulesFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not RackModule _Module || _Module is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
+
+            foreach (var Channel in _Module.Channels)
+            {
+                if (Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                    Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return;
+                }
+            }
+            e.Accepted = false;
+        }
+        #endregion
+
+        #region Фильтрация УСО
+        /// <summary>
+        /// Фильтрация УСО
+        /// </summary>
+        public void OnUSOListFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not USO _USO || _USO is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter))
+            {
+                var _USOList = (List<USO>)_DataView.Source;
+                SelectedUSO = _USOList[0];
+                return;
+            }
+            #endregion
+
+            #region Фильтр УСО
+            foreach (var _Rack in _USO.Racks)
+            {
+                foreach (var _Module in _Rack.Modules)
+                {
+                    foreach (var _Channel in _Module.Channels)
+                    {
+                        if (_Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                            _Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase))
+                        {
+                            SelectedUSO = _USO;
+                            return;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            e.Accepted = false;
+        }
+        #endregion
 
         #endregion
     }
