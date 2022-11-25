@@ -17,7 +17,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Компоновка корзин";
+        private string _Title = "Сигналы DI";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -29,7 +29,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Компоновка корзин НПС-1 \"Сызрань\"";
+        private string _Description = "Дискретные сигналы (DI)";
         /// <summary>
         /// Описание вкладки
         /// </summary>
