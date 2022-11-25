@@ -323,7 +323,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Удалить выбранную корзину в выбранном УСО
         /// </summary>
         public ICommand CmdDeleteSelectedRack => _CmdDeleteSelectedRack ??= new RelayCommand(OnCmdDeleteSelectedRackExecuted, CanCmdDeleteSelectedRackExecute);
-        private bool CanCmdDeleteSelectedRackExecute() => SelectedRack is not null;
+        private bool CanCmdDeleteSelectedRackExecute() => SelectedRack is not null && SelectedUSO.Index != "1";
         private void OnCmdDeleteSelectedRackExecuted()
         {
             var index = SelectedUSO.Racks.IndexOf(SelectedRack);
@@ -356,8 +356,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             if (p is null) return;
             if (p is not DataGrid MyDataGrid) return;
-            if (!MyDataGrid.CancelEdit()) return;
-
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
             if (!int.TryParse(SelectedRack.Name.Replace("A", ""), out int index))
                 index = 1;
 
@@ -380,7 +379,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             if (p is null) return;
             if (p is not DataGrid MyDataGrid) return;
-            if (MyDataGrid.BeginEdit()) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
             _LayotRackService.RefreshAddressModule(USOList);
             _DataViewRacks.Source = SelectedUSO.Racks;

@@ -221,12 +221,42 @@
                                     <RowDefinition Height="20"/>
                                 </Grid.RowDefinitions>
                                 <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
-                                    <TextBox TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBox>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
+                                                  Style="{StaticResource CheckBoxPowerStyle}"
+                                                  IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
+                                                  >
+                                            <CheckBox.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource PowerBrushConverter}"/>
+                                            </CheckBox.Foreground>
+                                        </CheckBox>
+                                        <Button Grid.Row="0" Grid.Column="1" Margin="2" HorizontalAlignment="Center" Width="25"
+                                                ToolTip="Обновить индексы модулей"
+                                                Style="{StaticResource CustomButtonStyle}"
+                                                Command="{Binding LayotRackUserControlViewModel.CmdRefreshIndexModules, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                >
+                                            <Button.Content>
+                                                <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
+                                            </Button.Content>
+                                        </Button>
+                                        <TextBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
+                                                 TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                                            <TextBlock.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </TextBlock.Foreground>
+                                        </TextBox>
+                                    </Grid>
+                                    
                                 </Border>
                             </Grid>
                         </DataTemplate>
@@ -244,12 +274,42 @@
                                     <RowDefinition Height="20"/>
                                 </Grid.RowDefinitions>
                                 <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="30"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
+                                                  Style="{StaticResource CheckBoxPowerStyle}"
+                                                  IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
+                                                  >
+                                            <CheckBox.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource PowerBrushConverter}"/>
+                                            </CheckBox.Foreground>
+                                        </CheckBox>
+                                        <Button Grid.Row="0" Grid.Column="1" Margin="2" HorizontalAlignment="Center" Width="25"
+                                                ToolTip="Обновить индексы модулей"
+                                                Style="{StaticResource CustomButtonStyle}"
+                                                Command="{Binding LayotRackUserControlViewModel.CmdRefreshIndexModules, Source={StaticResource Locator}}"
+                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                >
+                                            <Button.Content>
+                                                <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
+                                            </Button.Content>
+                                        </Button>
+                                        <TextBlock Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2"
+                                                   TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                                                   Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                                            <TextBlock.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </TextBlock.Foreground>
+                                        </TextBlock>
+                                    </Grid>
                                 </Border>
                             </Grid>
                         </DataTemplate>
@@ -283,32 +343,11 @@
                                     </TextBlock>
                                 </Border>
                                 <Border Grid.Row="3" BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
-                                    <Grid>
-                                        
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="30"/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Button Grid.Row="0" Margin="2" HorizontalAlignment="Left" Width="25"
-                                                ToolTip="Обновить индексы модулей"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                Command="{Binding LayotRackUserControlViewModel.CmdRefreshIndexModules, Source={StaticResource Locator}}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                >
-                                            <Button.Content>
-                                                <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
-                                            </Button.Content>
-                                        </Button>
-                                        <CheckBox Grid.Row="0" Margin="30,8,0,0" Content="Включить" FontWeight="Bold"
-                                                  IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"/>
-                                        <TextBlock Grid.Row="0" Grid.RowSpan="2"
-                                                   TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Имя моудля">
-                                            <TextBlock.Foreground>
-                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                            </TextBlock.Foreground>
-                                        </TextBlock>
-                                        
-                                    </Grid>
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Имя моудля">
+                                        <TextBlock.Foreground>
+                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                        </TextBlock.Foreground>
+                                    </TextBlock>
                                 </Border>
                                 <Border Grid.Row="4" BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Text="Начальный адрес">

@@ -8,4 +8,5 @@
     <l:VisibilityModuleConverter x:Key="VisibilityModuleConverter"/>
     <l:EnabledRackConverter x:Key="EnabledRackConverter"/>
     <l:FilteredBackLightConverter x:Key="FilteredBackLightConverter"/>
+    <l:PowerBrushConverter x:Key="PowerBrushConverter"/>
 </ResourceDictionary>
