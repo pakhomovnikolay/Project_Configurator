@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.Signals;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -51,6 +52,13 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Сброс параметров
         /// </summary>
         void ResetSignal();
+        #endregion
+
+        #region Переописание сигналов
+        /// <summary>
+        /// Переописание сигналов
+        /// </summary>
+        void RedefineSignal(BaseSignal signal);
         #endregion
     }
 }

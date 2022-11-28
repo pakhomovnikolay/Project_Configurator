@@ -2,13 +2,11 @@
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Signals;
-using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -101,14 +99,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         DoSelection = _SignalService.DoSelection;
                         if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
                         {
-                            SelectedSignalDI.Signal.Address = _SignalService.Address;
-                            if (string.IsNullOrWhiteSpace(SelectedSignalDI.Signal.Id))
-                                SelectedSignalDI.Signal.Id = _SignalService.Id;
-                            if (string.IsNullOrWhiteSpace(SelectedSignalDI.Signal.Description))
-                                SelectedSignalDI.Signal.Description = _SignalService.Description;
-
+                            _SignalService.RedefineSignal(SelectedSignalDI.Signal);
                             _DataView.View?.Refresh();
-                            _SignalService.ResetSignal();
                             DoSelection = false;
 
 
