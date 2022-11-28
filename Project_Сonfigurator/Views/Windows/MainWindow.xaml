@@ -22,6 +22,8 @@
         WindowState="{Binding WindowWindowState}"
         >
     <Grid>
+        
+        <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
             <RowDefinition Height="25"/>
@@ -61,7 +63,7 @@
                         Command="{StaticResource CmdHideWindow}"/>
 
         </Grid>
-
+        
         <!--Данные-->
         <TabControl Grid.Row="2">
 
@@ -98,5 +100,6 @@
 
 
         </TabControl>
+        
     </Grid>
 </Window>

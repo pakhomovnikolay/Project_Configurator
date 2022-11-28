@@ -8,6 +8,7 @@ using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Project_Сonfigurator
 {
@@ -18,6 +19,27 @@ namespace Project_Сonfigurator
         public static Window FucusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsFocused);
 
         public static SettingApp Settings = new();
+
+        public static TabControl FucusedTabControl
+        {
+            get
+            {
+                var Content = Current.MainWindow.Content;
+                var _Grid = Content as Grid;
+                var _FucusedTabControl = new TabControl();
+
+                foreach (var Children in _Grid.Children)
+                {
+                    if (Children is TabControl)
+                    {
+                        return Children as TabControl;
+
+                    }
+                }
+
+                return _FucusedTabControl;
+            }
+        }
 
         public static string NameApp => Assembly.GetEntryAssembly().GetName().Name;
 

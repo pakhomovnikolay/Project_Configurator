@@ -99,12 +99,12 @@
                   GridLinesVisibility="None"
                   CanUserResizeColumns="False"
                   SelectionMode="Single"
-                  SelectionUnit="CellOrRowHeader"
+                  SelectionUnit="FullRow"
                   Background="Gray"
                   HeadersVisibility="Column"
                   ScrollViewer.CanContentScroll="False"
                   ItemsSource="{Binding DataViewModules}"
-                  
+                  SelectedItem="{Binding SelectedModule}"
                   >
             <DataGrid.Resources>
 
@@ -239,7 +239,8 @@
                                     <DataTemplate>
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
                                             <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}">
+                                                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                                     IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
                                                 <TextBox.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -273,7 +274,8 @@
                                     <DataTemplate>
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
                                             <TextBox BorderThickness="0" VerticalContentAlignment="Center"
-                                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}">
+                                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                                     IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
                                                 <TextBox.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -384,6 +386,11 @@
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick"
+                                                              Command="{Binding TableSignalsUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                              CommandParameter="{Binding Address}"/>
+                                            </Border.InputBindings>
                                             <Border.Background>
                                                 <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                     <Binding Path="Id"/>
@@ -446,6 +453,7 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
+                
             </DataGrid.Columns>
             
         </DataGrid>

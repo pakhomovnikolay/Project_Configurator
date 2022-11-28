@@ -4,6 +4,7 @@ using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System;
+using System.Windows.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -16,13 +17,16 @@ namespace Project_Сonfigurator.ViewModels.UserControls
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
+        private ISignalService _SignalService;
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
         public TableSignalsUserControlViewModel(
             IUserDialogService userDialog,
+            ISignalService signalService,
             LayotRackUserControlViewModel layotRackViewModel)
         {
             UserDialog = userDialog;
+            _SignalService = signalService;
             _DataViewModules.Filter += OnModulesFiltered;
             _DataView.Filter += OnUSOListFiltered;
 
@@ -89,7 +93,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public bool IsSelected
         {
             get => _IsSelected;
-            set => Set(ref _IsSelected, value);
+            set
+            {
+                if (Set(ref _IsSelected, value))
+                {
+                    DoSelection = _SignalService.DoSelection;
+                    if (!_IsSelected && string.IsNullOrWhiteSpace(_SignalService.Address))
+                    {
+                        DoSelection = false;
+                        _SignalService.ResetSignal();
+                    }
+
+                }
+            }
         }
         #endregion
 
@@ -161,6 +177,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICollectionView DataViewModules => _DataViewModules?.View;
         #endregion
 
+        #region Выбранный модуль
+        /// <summary>
+        /// Выбранный модуль
+        /// </summary>
+        private RackModule _SelectedModule = new();
+        public RackModule SelectedModule
+        {
+            get => _SelectedModule;
+            set => Set(ref _SelectedModule, value);
+        }
+        #endregion
+
         #region Текст фильтрации
         private string _TextFilter;
         /// <summary>
@@ -182,6 +210,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             get => _PathImport;
             set => Set(ref _PathImport, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -277,130 +317,116 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         }
         #endregion
 
-        //#region Команда - Выбрать сигнал
-        ///// <summary>
-        ///// Команда - Выбрать сигнал
-        ///// </summary>
-        //private ICommand _CmdSelectionSignal;
-        //public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        //private bool CanCmdSelectionSignalExecute(object p) => _SignalService.DoSelection;
-        //private void OnCmdSelectionSignalExecuted(object p)
-        //{
-        //    var index = (int)p;
-        //    var message = "";
-        //    switch (_SignalService.Type)
-        //    {
-        //        case Models.Enum.TypeModule.AI:
-        //            if (index >= 100000)
-        //            {
-        //                message =
-        //                    "Выбор неверный!\n" +
-        //                    "Вы выбрали не аналоговый входной сигнал.\n" +
-        //                    "Запрашивается ссылка на аналоговый входной сигнал (0-99999)" +
-        //                    "Повторить выбор?";
-        //            }
-        //            break;
-        //        case Models.Enum.TypeModule.DI:
-        //            if (index < 100000 || index >= 200000)
-        //            {
-        //                message =
-        //                    "Выбор неверный!\n" +
-        //                    "Вы выбрали не дискретный входной сигнал.\n" +
-        //                    "Запрашивается ссылка на дискретный входной сигнал (100000-199999)" +
-        //                    "Повторить выбор?";
-        //            }
-        //            break;
-        //        case Models.Enum.TypeModule.AO:
-        //            if (index < 300000 || index >= 400000)
-        //            {
-        //                message =
-        //                    "Выбор неверный!\n" +
-        //                    "Вы выбрали не аналоговый выходной сигнал.\n" +
-        //                    "Запрашивается ссылка на аналоговый выходной сигнал (300000-399999)" +
-        //                    "Повторить выбор?";
-        //            }
-        //            break;
-        //        case Models.Enum.TypeModule.DO:
-        //            if (index < 200000 || index >= 300000)
-        //            {
-        //                message =
-        //                    "Выбор неверный!\n" +
-        //                    "Вы выбрали не дискретный выходной сигнал.\n" +
-        //                    "Запрашивается ссылка на аналоговый входной сигнал (200000-299999)" +
-        //                    "Повторить выбор?";
-        //            }
-        //            break;
-        //        default:
-        //            break;
-        //    }
+        #region Команда - Выбрать сигнал
+        /// <summary>
+        /// Команда - Выбрать сигнал
+        /// </summary>
+        private ICommand _CmdSelectionSignal;
+        public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
+        private bool CanCmdSelectionSignalExecute(object p) => _SignalService.DoSelection;
+        private void OnCmdSelectionSignalExecuted(object p)
+        {
+            var index = int.Parse((string)p);
+            var message = "";
+            switch (_SignalService.Type)
+            {
+                case TypeModule.AI:
+                    if (index >= 100000)
+                    {
+                        message =
+                            "Выбор неверный!\n" +
+                            "Вы выбрали не аналоговый входной сигнал.\n" +
+                            "Запрашивается ссылка на аналоговый входной сигнал (0-99999)" +
+                            "Повторить выбор?";
+                    }
+                    break;
+                case TypeModule.DI:
+                    if (index < 100000 || index >= 200000)
+                    {
+                        message =
+                            "Выбор неверный!\n" +
+                            "Вы выбрали не дискретный входной сигнал.\n" +
+                            "Запрашивается ссылка на дискретный входной сигнал (100000-199999)" +
+                            "Повторить выбор?";
+                    }
+                    break;
+                case TypeModule.AO:
+                    if (index < 300000 || index >= 400000)
+                    {
+                        message =
+                            "Выбор неверный!\n" +
+                            "Вы выбрали не аналоговый выходной сигнал.\n" +
+                            "Запрашивается ссылка на аналоговый выходной сигнал (300000-399999)" +
+                            "Повторить выбор?";
+                    }
+                    break;
+                case TypeModule.DO:
+                    if (index < 200000 || index >= 300000)
+                    {
+                        message =
+                            "Выбор неверный!\n" +
+                            "Вы выбрали не дискретный выходной сигнал.\n" +
+                            "Запрашивается ссылка на аналоговый входной сигнал (200000-299999)" +
+                            "Повторить выбор?";
+                    }
+                    break;
+                default:
+                    break;
+            }
 
-        //    if (!string.IsNullOrWhiteSpace(message))
-        //    {
-        //        if (UserDialog.SendMessage("Выбор сигнала", message, MessageBoxButton.YesNo, ResultType: MessageBoxResult.Yes))
-        //            return;
-        //        else
-        //        {
-        //            _SignalService.ResetSignal();
-        //            DoSelection = _SignalService.DoSelection;
-        //        }
+            if (!string.IsNullOrWhiteSpace(message))
+            {
+                if (UserDialog.SendMessage("Выбор сигнала", message, MessageBoxButton.YesNo, ResultType: MessageBoxResult.Yes))
+                    return;
+                else
+                {
+                    _SignalService.ResetSignal();
+                    DoSelection = _SignalService.DoSelection;
+                }
+            }
+            else
+            {
+                foreach (var _Channel in SelectedModule.Channels)
+                {
+                    if (_Channel.Address == index.ToString())
+                    {
+                        _SignalService.Id = _Channel.Id;
+                        _SignalService.Description = _Channel.Description;
 
-        //    }
-        //    else
-        //    {
-        //        foreach (var _Module in Modules)
-        //        {
-        //            foreach (var _Signal in _Module.Signals)
-        //            {
-        //                if (_Signal.Index == index)
-        //                {
-        //                    _SignalService.Id = _Signal.Id;
-        //                    _SignalService.Description = _Signal.Description;
-        //                    break;
-        //                }
+                        switch (_SignalService.Type)
+                        {
+                            case TypeModule.AI:
+                                _SignalService.Address = $"{index}";
+                                break;
+                            case TypeModule.DI:
+                                _SignalService.Address = $"{index - 100000}";
+                                break;
+                            case TypeModule.AO:
+                                _SignalService.Address = $"{index - 300000}";
+                                break;
+                            case TypeModule.DO:
+                                _SignalService.Address = $"{index - 200000}";
+                                break;
+                            default:
+                                break;
+                        }
 
-        //            }
-        //        }
-
-        //        var Content = Application.Current.MainWindow.Content;
-        //        var _Grid = Content as Grid;
-
-        //        foreach (var Children in _Grid.Children)
-        //        {
-        //            if (Children is TabControl)
-        //            {
-        //                var _TabControl = Children as TabControl;
-        //                foreach (var item in _TabControl.Items)
-        //                {
-        //                    var TabItem = item as TabItem;
-        //                    if (TabItem.Header.ToString() == _SignalService.ListName)
-        //                    {
-        //                        switch (_SignalService.Type)
-        //                        {
-        //                            case Models.Enum.TypeModule.AI:
-        //                                _SignalService.Address = $"{index}";
-        //                                break;
-        //                            case Models.Enum.TypeModule.DI:
-        //                                _SignalService.Address = $"{index - 100000}";
-        //                                break;
-        //                            case Models.Enum.TypeModule.AO:
-        //                                _SignalService.Address = $"{index - 300000}";
-        //                                break;
-        //                            case Models.Enum.TypeModule.DO:
-        //                                _SignalService.Address = $"{index - 200000}";
-        //                                break;
-        //                            default:
-        //                                break;
-        //                        }
-
-        //                        _TabControl.SelectedItem = TabItem;
-        //                        break;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
-        //#endregion
+                        break;
+                    }
+                }
+                if (App.FucusedTabControl == null) return;
+                foreach (var _Item in App.FucusedTabControl.Items)
+                {
+                    var _TabItem = _Item as TabItem;
+                    if (_TabItem.Header.ToString() == _SignalService.ListName)
+                    {
+                        App.FucusedTabControl.SelectedItem = _TabItem;
+                        break;
+                    }
+                }
+            }
+        }
+        #endregion
 
         #endregion
 

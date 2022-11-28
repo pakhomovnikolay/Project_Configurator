@@ -52,15 +52,20 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition/>
-                    <ColumnDefinition Width="25"/>
+                    <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
 
                 <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBox Grid.Column="1" BorderThickness="1" Margin="5,1,0,1" VerticalContentAlignment="Center"/>
-                <Button Grid.Column="2" Margin="2" HorizontalAlignment="Stretch"
-                                                ToolTip="Обновить фльтр"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                >
+                <TextBox Grid.Column="1" BorderThickness="1" Margin="5,1,0,1" VerticalContentAlignment="Center"
+                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding CmdRefreshFilter}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Grid.Column="2" Margin="2" HorizontalAlignment="Stretch" ToolTip="Обновить фльтр"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdRefreshFilter}"
+                        >
                     <Button.Content>
                         <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
                     </Button.Content>
@@ -79,11 +84,11 @@
                   GridLinesVisibility="None"
                   CanUserResizeColumns="False"
                   SelectionMode="Single"
-                  SelectionUnit="CellOrRowHeader"
+                  SelectionUnit="FullRow"
                   Background="Gray"
                   HeadersVisibility="Column"
-                  ScrollViewer.CanContentScroll="False"
                   ItemsSource="{Binding DataView}"
+                  SelectedItem="{Binding SelectedSignalDI}"
                   >
             
             <DataGrid.Resources>
@@ -97,6 +102,8 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="Black"/>
                             <Setter Property="Opacity" Value="1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0,1,0,2"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
@@ -106,9 +113,21 @@
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     <Setter Property="BorderThickness" Value="1,2,0,2"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Background" Value="Gray"/>
                     <Setter Property="Height" Value="90"/>
                     <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="Gray"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Foreground" Value="Black"/>
+                            <Setter Property="Opacity" Value="1"/>
+                        </Trigger>
+                    </Style.Triggers>
                 </Style>
 
             </DataGrid.Resources>
@@ -142,7 +161,8 @@
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0"
-                                           Text="{Binding Signal.Id, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding Signal.Id, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -158,7 +178,8 @@
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
                                 <TextBox VerticalContentAlignment="Center" BorderThickness="0"
-                                           Text="{Binding Signal.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding Signal.Description, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -194,7 +215,8 @@
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0"
-                                           Text="{Binding Signal.Area, UpdateSourceTrigger=PropertyChanged}"/>
+                                         Text="{Binding Signal.Area, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -210,8 +232,15 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0"
-                                           Text="{Binding Signal.Address, UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                         Text="{Binding Signal.Address, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
+                                    <TextBox.InputBindings>
+                                        <MouseBinding MouseAction="RightClick"
+                                                      Command="{Binding SignalsDIUserControlViewModel.CmdChangeAddressSignal, Source={StaticResource Locator}}"
+                                                      CommandParameter="{Binding Signal.Index}"/>
+                                    </TextBox.InputBindings>
+                                </TextBox>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -225,9 +254,9 @@
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,1,0" BorderBrush="Black" Background="LightGray">
+                            <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                           Text="{Binding Signal.LinkValue}"/>
+                                           Text="{Binding Signal.LinkValue, UpdateSourceTrigger=PropertyChanged}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
