@@ -117,6 +117,11 @@
                 <pages_signal:SignalsDOUserControl DataContext="{Binding SignalsDOViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding SignalsAOViewModel.Title}"
+                     IsSelected="{Binding SignalsAOViewModel.IsSelected}">
+                <pages_signal:SignalsAOUserControl DataContext="{Binding SignalsAOViewModel}"/>
+            </TabItem>
+
 
         </TabControl>
         

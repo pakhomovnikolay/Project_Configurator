@@ -14,6 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\UserControls\Signals\SignalsAOUserControl.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\UserControls\Signals\SignalsDOUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
