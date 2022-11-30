@@ -76,7 +76,6 @@
                         <KeyBinding Key="Return" Command="{Binding CmdFilteringChannels}"/>
                     </TextBox.InputBindings>
                 </TextBox>
-
                 <Button Grid.Column="2" Margin="2" HorizontalAlignment="Left" Width="25"
                                                 ToolTip="Обновить фльтр"
                                                 Style="{StaticResource CustomButtonStyle}"
@@ -128,11 +127,17 @@
                 <Style TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="1,1,0,1"/>
+                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
+                    <Setter Property="Background" Value="Gray"/>
                     <Setter Property="Height" Value="90"/>
                     <Setter Property="FontWeight" Value="Bold"/>
+                </Style>
+
+                <Style TargetType="{x:Type DataGridRow}">
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="Black"/>
+                    <Setter Property="Background" Value="Gray"/>
                 </Style>
 
             </DataGrid.Resources>
@@ -141,7 +146,7 @@
                 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Тип модуля" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -165,7 +170,7 @@
                 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Имя модуля" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -173,7 +178,6 @@
                             </TextBlock>
                         </Border>
                     </DataGridTemplateColumn.Header>
-                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,1" BorderBrush="Black">
@@ -193,7 +197,7 @@
                 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="№ канала" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -223,7 +227,7 @@
                 
                 <DataGridTemplateColumn Width="150">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -258,7 +262,7 @@
                 
                 <DataGridTemplateColumn Width="800">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сигнала"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -293,7 +297,7 @@
                 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -341,7 +345,7 @@
                 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Бит" Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -371,7 +375,7 @@
                 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -408,7 +412,7 @@
                 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,2,1" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной&#x0a;для ВУ"/>
                         </Border>
                     </DataGridTemplateColumn.Header>

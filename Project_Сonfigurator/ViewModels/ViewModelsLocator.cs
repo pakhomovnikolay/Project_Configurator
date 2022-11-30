@@ -10,5 +10,6 @@ namespace Project_Сonfigurator.ViewModels
         public LayotRackUserControlViewModel LayotRackUserControlViewModel => App.Services.GetRequiredService<LayotRackUserControlViewModel>();
         public TableSignalsUserControlViewModel TableSignalsUserControlViewModel => App.Services.GetRequiredService<TableSignalsUserControlViewModel>();
         public SignalsDIUserControlViewModel SignalsDIUserControlViewModel => App.Services.GetRequiredService<SignalsDIUserControlViewModel>();
+        public SettingWindowViewModels SettingWindowViewModels => App.Services.GetRequiredService<SettingWindowViewModels>();
     }
 }

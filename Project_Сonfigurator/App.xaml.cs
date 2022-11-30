@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services;
 using Project_Сonfigurator.ViewModels;
 using System;
@@ -18,8 +17,6 @@ namespace Project_Сonfigurator
 
         public static Window FucusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsFocused);
 
-        public static SettingApp Settings = new();
-
         public static TabControl FucusedTabControl
         {
             get
@@ -27,15 +24,9 @@ namespace Project_Сonfigurator
                 var Content = Current.MainWindow.Content;
                 var _Grid = Content as Grid;
                 var _FucusedTabControl = new TabControl();
-
                 foreach (var Children in _Grid.Children)
-                {
                     if (Children is TabControl)
-                    {
                         return Children as TabControl;
-
-                    }
-                }
 
                 return _FucusedTabControl;
             }
@@ -44,16 +35,15 @@ namespace Project_Сonfigurator
         public static string NameApp => Assembly.GetEntryAssembly().GetName().Name;
 
         public static string VersionApp => Assembly.GetEntryAssembly().GetName().Version.ToString();
-        private static IHost __Host;
 
+        private static IHost __Host;
         public static IHost Host => __Host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
 
         public static IServiceProvider Services => Host.Services;
 
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
             .AddServices()
-            .AddViewModels()
-            ;
+            .AddViewModels();
 
         protected override async void OnStartup(StartupEventArgs e)
         {

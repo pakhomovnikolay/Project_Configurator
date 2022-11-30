@@ -3,7 +3,7 @@
     public enum TypePLC
     {
         Unknown,
-        PS,
-        SE
+        ProsoftSystems,
+        SchneiderElectric
     }
 }

@@ -102,16 +102,17 @@
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Foreground" Value="Black"/>
                             <Setter Property="Opacity" Value="1"/>
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
                             <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="BorderThickness" Value="0,1,0,2"/>
+                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
                         </Trigger>
                     </Style.Triggers>
                 </Style>
-
+                
                 <Style TargetType="{x:Type DataGridColumnHeader}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="1,2,0,2"/>
+                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="Gray"/>
                     <Setter Property="Height" Value="90"/>
@@ -122,12 +123,6 @@
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="Gray"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                        </Trigger>
-                    </Style.Triggers>
                 </Style>
 
             </DataGrid.Resources>
@@ -136,7 +131,7 @@
 
                 <DataGridTemplateColumn Width="35">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -152,15 +147,14 @@
 
                 <DataGridTemplateColumn Width="150">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
-
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
-                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0"
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Id, UpdateSourceTrigger=PropertyChanged}"
                                          IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
@@ -170,14 +164,14 @@
 
                 <DataGridTemplateColumn Width="800">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование параметра" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header> 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
-                                <TextBox VerticalContentAlignment="Center" BorderThickness="0"
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Description, UpdateSourceTrigger=PropertyChanged}"
                                          IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
@@ -187,7 +181,7 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
@@ -203,7 +197,7 @@
 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Обл." Margin="0,0,0,5">
                                 <TextBlock.LayoutTransform>
                                     <RotateTransform Angle="-90"/>
@@ -213,8 +207,8 @@
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
-                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0"
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Area, UpdateSourceTrigger=PropertyChanged}"
                                          IsReadOnly="{Binding SignalsDIUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
                             </Border>
@@ -224,11 +218,10 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
-
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
@@ -248,7 +241,7 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,0,2,0" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Значение&#x0a;ссылки" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>

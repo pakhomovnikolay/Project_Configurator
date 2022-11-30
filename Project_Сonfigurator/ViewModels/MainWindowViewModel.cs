@@ -1,8 +1,11 @@
-﻿using Project_Сonfigurator.Services.Interfaces;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
+using Project_Сonfigurator.Views.Windows;
 using System.Windows;
+using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -110,6 +113,26 @@ namespace Project_Сonfigurator.ViewModels
         {
             get => _ButtonChangeStateWindowStyle;
             set => Set(ref _ButtonChangeStateWindowStyle, value);
+        }
+        #endregion
+
+        #endregion
+
+        #region Команды
+
+        #region Команда - Открыть окно настроек
+        private ICommand _CmdOpenSettingWindow;
+        /// <summary>
+        /// Команда - Открыть окно настроек
+        /// </summary>
+        public ICommand CmdOpenSettingWindow => _CmdOpenSettingWindow ??= new RelayCommand(OnCmdOpenSettingWindowExecuted);
+        private void OnCmdOpenSettingWindowExecuted()
+        {
+            var window = new SettingWindow()
+            {
+                Owner = Application.Current.MainWindow
+            };
+            window.ShowDialog();
         }
         #endregion
 

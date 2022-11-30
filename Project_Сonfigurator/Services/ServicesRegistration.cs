@@ -9,8 +9,10 @@ namespace Project_Сonfigurator.Services
             .AddTransient<IUserDialogService, UserDialogService>()
             .AddTransient<ILogSerivece, LogSerivece>()
             .AddTransient<ILayotRackService, LayotRackService>()
+            .AddTransient<IVendorService, VendorService>()
 
             .AddSingleton<ISignalService, SignalService>()
+            .AddSingleton<ISettingService, SettingService>()
             ;
     }
 }

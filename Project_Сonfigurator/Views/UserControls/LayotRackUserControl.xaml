@@ -222,6 +222,7 @@
                                 </Grid.RowDefinitions>
                                 <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
                                     <Grid>
+                                        
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="30"/>
                                             <RowDefinition/>
@@ -230,6 +231,7 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
+                                        
                                         <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
                                                   Style="{StaticResource CheckBoxPowerStyle}"
                                                   IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
@@ -265,6 +267,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
+                                
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
@@ -380,6 +383,7 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Grid>
+                                
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
@@ -442,7 +446,7 @@
                                                            PlacementTarget="{Binding ElementName=ListModule}"
                                                            IsOpen="{Binding IsChecked, ElementName=ListModule}">
                                                         <ListBox Height="500"
-                                                                 ItemsSource="{Binding PSModuleList, Source={StaticResource Lists}}"
+                                                                 ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
                                                                  SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Popup>
                                                 </StackPanel>

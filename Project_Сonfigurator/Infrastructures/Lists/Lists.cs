@@ -19,32 +19,32 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "R500 ST 02 111",
                 "R500 ST 02 121",
                 "R500 ST 00 001",
-                "- - - - - - - DI - - - - - - -",
+                "- - - - - - - - - DI - - - - - - - - - -",
                 "R500 DI 32 011",
-                "- - - - - - - DO - - - - - - -",
+                "- - - - - - - - - DO - - - - - - - - - -",
                 "R500 DO 32 011",
                 "R500 DO 32 012",
-                "- - - - - - - AI - - - - - - -",
+                "- - - - - - - - - AI - - - - - - - - - -",
                 "R500 AI 08 041",
                 "R500 AI 08 051",
-                "- - - - - - - AO - - - - - - -",
+                "- - - - - - - - - AO - - - - - - - - - -",
                 "R500 AO 08 011",
-                "- - - - - - - БП - - - - - - -",
+                "- - - - - - - - - БП - - - - - - - - - -",
                 "R500 PP 00 011",
-                "- - - - CPU и прочее - - - - -",
+                "- - - - - CPU и прочее - - - - - -",
                 "R500 CU 00 061",
                 "R500 CU 00 051",
-                "- - - - - - - CP - - - - - - -",
+                "- - - - - - - - - CP - - - - - - - - - -",
                 "R500 CP 04 011",
                 "R500 CP 02 021",
-                "- - - - - - - DA - - - - - - -",
+                "- - - - - - - - - DA - - - - - - - - - -",
                 "R500 DA 03 0"
             };
 
             SEModuleList = new()
             {
                 "",
-                "- - - - - - - БП - - - - - - -",
+                "- - - - - - - - - БП - - - - - - - - -",
                 "BMX CPS 2000",
                 "BMX CPS 2010",
                 "BMX CPS 3020",
@@ -62,7 +62,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "BMX P34 2030",
                 "BMX P34 20302",
                 "BMX PRA 0100",
-                "- - - - - CPU M580 - - - - -",
+                "- - - - - - CPU M580 - - - - - - -",
                 "BME H58 2040 HSBY",
                 "BME H58 4040 HSBY",
                 "BME H58 6040 HSBY",
@@ -76,13 +76,13 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "BME H58 5040",
                 "BME H58 6040",
                 "BME P58 4020",
-                "- - - CPU M580 Safety - - -",
+                "- - - - CPU M580 Safety - - - -",
                 "BME H58 2040S (Safety) HSBY",
                 "BME H58 4040S (Safety) HSBY",
                 "BME H58 6040S (Safety) HSBY",
                 "BME H58 2040S (Safety)",
                 "BME H58 4040S (Safety)",
-                "- - - - = Аналоги = - - - -",
+                "- - - - - - - Аналоги - - - - - - -",
                 "BME AHI 0812",
                 "BME AHO 0412",
                 "BMX AMI 0410",
@@ -94,7 +94,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "BMX AMO 0802",
                 "BMX ART 0414.2",
                 "BMX ART 0814.2",
-                "- - - - - Дискреты - - - - -",
+                "- - - - - - - Дискреты - - - - - -",
                 "BMX DAI 0805",
                 "BMX DAI 0814",
                 "BMX DAI 1602",
@@ -122,7 +122,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "BMX DRA 1605",
                 "BMX DRC 0805",
                 "BMX ERT 1604",
-                "- - - - - - Сеть - - - - - -",
+                "- - - - - - - - Сеть - - - - - - - -",
                 "BME CXM 0100",
                 "BME NOC 0301",
                 "BME NOC 0301.2",
@@ -175,7 +175,33 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 "8 - Идет плавный пуск"
             };
 
-            ResultModuleList = new List<string>(PSModuleList);
+
+            if (Program.Settings is not null &&
+                Program.Settings.Config is not null &&
+                Program.Settings.Config.Vendors is not null &&
+                Program.Settings.Config.Vendors.Count > 0)
+            {
+                ResultModuleList = new();
+                foreach (var Vendor in Program.Settings.Config.Vendors)
+                {
+                    if (Vendor.IsSelected)
+                    {
+                        foreach (var ModuleType in Vendor.ModuleTypes)
+                        {
+                            ResultModuleList.Add($"- - - - - - - {ModuleType.Name} - - - - - - -");
+                            foreach (var Module in ModuleType.Modules)
+                            {
+                                ResultModuleList.Add($"{Module.Name}");
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                ResultModuleList = new List<string>(PSModuleList);
+            }
+            
         }
         #endregion
 

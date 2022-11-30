@@ -1,26 +1,14 @@
-﻿namespace Project_Сonfigurator.Models.Settings.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Project_Сonfigurator.Models.Settings.Interfaces
 {
     public interface ISettingApp
     {
-        #region Выбранное имя системы
+        #region Список вендоров
         /// <summary>
-        /// Выбранное имя системы
+        /// Список вендоров
         /// </summary>
-        string SelectedSystemName { get; set; }
-        #endregion
-
-        #region Выбранный тип системы
-        /// <summary>
-        /// Выбранный тип системы
-        /// </summary>
-        string SelectedTypeSystem { get; set; }
-        #endregion
-
-        #region Выбранный тип вендора
-        /// <summary>
-        /// Выбранный тип вендора
-        /// </summary>
-        string SelectedTypeVendor { get; set; }
+        List<Vendor> Vendors { get; set; } 
         #endregion
     }
 }

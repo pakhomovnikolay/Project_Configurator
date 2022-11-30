@@ -11,6 +11,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<LayotRackUserControlViewModel>()
             .AddSingleton<TableSignalsUserControlViewModel>()
             .AddSingleton<SignalsDIUserControlViewModel>()
+            .AddSingleton<SettingWindowViewModels>()
             ;
     }
 }

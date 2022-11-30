@@ -63,6 +63,15 @@
                         Command="{StaticResource CmdHideWindow}"/>
 
         </Grid>
+
+        <!--Меню-->
+        <Menu Grid.Row="1">
+            <MenuItem Header="Меню" Height="25" Margin="10,0,0,0">
+                <MenuItem Header="Настройки" Command="{Binding CmdOpenSettingWindow}">
+                    
+                </MenuItem>
+            </MenuItem>
+        </Menu>
         
         <!--Данные-->
         <TabControl Grid.Row="2">
