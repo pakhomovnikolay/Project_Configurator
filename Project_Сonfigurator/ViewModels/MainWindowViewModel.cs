@@ -19,6 +19,7 @@ namespace Project_Сonfigurator.ViewModels
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
         public SignalsDIUserControlViewModel SignalsDIViewModel { get; }
         public SignalsAIUserControlViewModel SignalsAIViewModel { get; }
+        public SignalsDOUserControlViewModel SignalsDOViewModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -26,7 +27,8 @@ namespace Project_Сonfigurator.ViewModels
             LayotRackUserControlViewModel layotRackViewModel,
             TableSignalsUserControlViewModel tableSignalsViewModel,
             SignalsDIUserControlViewModel signalsDIViewModel,
-            SignalsAIUserControlViewModel signalsAIViewModel
+            SignalsAIUserControlViewModel signalsAIViewModel,
+            SignalsDOUserControlViewModel signalsDOViewModel
             )
         {
             UserDialog = userDialog;
@@ -36,6 +38,7 @@ namespace Project_Сonfigurator.ViewModels
             TableSignalsViewModel = tableSignalsViewModel;
             SignalsDIViewModel = signalsDIViewModel;
             SignalsAIViewModel = signalsAIViewModel;
+            SignalsDOViewModel = signalsDOViewModel;
         }
         #endregion
 

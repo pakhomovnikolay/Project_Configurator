@@ -1,6 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
-using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -27,7 +26,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             TableSignalsViewModel = tableSignalsViewModel;
             _SignalService = signalService;
 
-            _DataView.Filter += OnSignalsDIFiltered;
+            _DataView.Filter += OnSignalsDOFiltered;
             GeneratedSignals();
         }
         #endregion
@@ -257,7 +256,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// <summary>
         /// Фильтрация модулей
         /// </summary>
-        private void OnSignalsDIFiltered(object sender, FilterEventArgs e)
+        private void OnSignalsDOFiltered(object sender, FilterEventArgs e)
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
@@ -278,7 +277,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             var index = 0;
             var data_list = new List<SignalAI>();
 
-            #region Генерируем сигналы DI, при отсутсвии данных во владке Таблица сигналов
+            #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
                 while (data_list.Count < 500)
@@ -307,27 +306,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
-            #region Генерируем сигналы DI, созданные во вкладке Таблица сигналов
-            foreach (RackModule _Module in TableSignalsViewModel.DataViewModules)
+            #region Генерируем сигналы DO, созданные во вкладке Таблица сигналов
+            var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
+            foreach (var _USO in uso_list)
             {
-
-                if (_Module.Type == TypeModule.AI)
+                foreach (var _Rack in _USO.Racks)
                 {
-                    foreach (var _Channel in _Module.Channels)
+                    foreach (var _Module in _Rack.Modules)
                     {
-                        var signal = new SignalAI()
+                        if (_Module.Type == TypeModule.AI)
                         {
-                            Signal = new BaseSignal
+                            foreach (var _Channel in _Module.Channels)
                             {
-                                Index = $"{++index}",
-                                Id = _Channel.Id,
-                                Description = _Channel.Description,
-                                VarName = $"ai_shared[{index}]",
-                                Area = "",
-                                Address = $"{int.Parse(_Channel.Address)}",
+                                var signal = new SignalAI()
+                                {
+                                    Signal = new BaseSignal
+                                    {
+                                        Index = $"{++index}",
+                                        Id = _Channel.Id,
+                                        Description = _Channel.Description,
+                                        VarName = $"ai_shared[{index}]",
+                                        Area = "",
+                                        Address = $"{int.Parse(_Channel.Address)}",
+                                    }
+                                };
+                                data_list.Add(signal);
                             }
-                        };
-                        data_list.Add(signal);
+                        }
                     }
                 }
             }

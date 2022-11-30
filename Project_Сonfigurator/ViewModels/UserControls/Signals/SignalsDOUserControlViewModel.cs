@@ -13,20 +13,20 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class SignalsDIUserControlViewModel : ViewModel
+    public class SignalsDOUserControlViewModel : ViewModel
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
 
-        public SignalsDIUserControlViewModel(IUserDialogService userDialog, TableSignalsUserControlViewModel tableSignalsViewModel, ISignalService signalService)
+        public SignalsDOUserControlViewModel(IUserDialogService userDialog, TableSignalsUserControlViewModel tableSignalsViewModel, ISignalService signalService)
         {
             UserDialog = userDialog;
             TableSignalsViewModel = tableSignalsViewModel;
             _SignalService = signalService;
 
-            _DataView.Filter += OnSignalsDIFiltered;
+            _DataView.Filter += OnSignalsDOFiltered;
             GeneratedSignals();
         }
         #endregion
@@ -34,7 +34,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Сигналы DI";
+        private string _Title = "Сигналы DO";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -46,7 +46,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Дискретные сигналы (DI)";
+        private string _Description = "Дискретные сигналы (DO)";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -98,7 +98,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         DoSelection = _SignalService.DoSelection;
                         if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
                         {
-                            _SignalService.RedefineSignal(SelectedSignalDI.Signal);
+                            _SignalService.RedefineSignal(SelectedSignalDO.Signal);
                             _DataView.View?.Refresh();
                             DoSelection = false;
 
@@ -120,23 +120,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
-        #region Коллекция сигналов DI
+        #region Коллекция сигналов DO
         /// <summary>
-        /// Коллекция сигналов DI
+        /// Коллекция сигналов DO
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
-        #region Выбранный сигнал DI
-        private SignalDI _SelectedSignalDI = new();
+        #region Выбранный сигнал DO
+        private SignalDO _SelectedSignalDO = new();
         /// <summary>
-        /// Выбранный сигнал DI
+        /// Выбранный сигнал DO
         /// </summary>
-        public SignalDI SelectedSignalDI
+        public SignalDO SelectedSignalDO
         {
-            get => _SelectedSignalDI;
-            set => Set(ref _SelectedSignalDI, value);
+            get => _SelectedSignalDO;
+            set => Set(ref _SelectedSignalDO, value);
         }
         #endregion
 
@@ -208,31 +208,31 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Сменить адрес сигнала
         /// </summary>
         public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
-        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedSignalDI is not null;
+        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedSignalDO is not null;
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignalDI is null) return;
+            if (SelectedSignalDO is null) return;
 
-            var data_list = new List<SignalDI>();
-            foreach (SignalDI SignalDI in DataView)
+            var data_list = new List<SignalDO>();
+            foreach (SignalDO SignalDO in DataView)
             {
-                data_list.Add(SignalDI);
+                data_list.Add(SignalDO);
             }
 
-            if (Index != SelectedSignalDI.Signal.Index)
-                SelectedSignalDI = data_list[int.Parse(Index) - 1];
+            if (Index != SelectedSignalDO.Signal.Index)
+                SelectedSignalDO = data_list[int.Parse(Index) - 1];
 
             _SignalService.DoSelection = true;
             _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.DI;
+            _SignalService.Type = TypeModule.DO;
 
             var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedSignalDI.Signal.Area) || int.Parse(SelectedSignalDI.Signal.Area) == 0)
+            if (string.IsNullOrWhiteSpace(SelectedSignalDO.Signal.Area) || int.Parse(SelectedSignalDO.Signal.Area) == 0)
                 NameListSelected = "Таблица сигналов";
-            else if (int.Parse(SelectedSignalDI.Signal.Area) == 1)
+            else if (int.Parse(SelectedSignalDO.Signal.Area) == 1)
                 NameListSelected = "DI формируемые";
 
             if (App.FucusedTabControl == null) return;
@@ -256,11 +256,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// <summary>
         /// Фильтрация модулей
         /// </summary>
-        private void OnSignalsDIFiltered(object sender, FilterEventArgs e)
+        private void OnSignalsDOFiltered(object sender, FilterEventArgs e)
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not SignalDI Signal || Signal is null) { e.Accepted = false; return; }
+            if (e.Item is not SignalDO Signal || Signal is null) { e.Accepted = false; return; }
             if (string.IsNullOrWhiteSpace(TextFilter)) return;
             #endregion
 
@@ -275,21 +275,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<SignalDI>();
+            var data_list = new List<SignalDO>();
 
-            #region Генерируем сигналы DI, при отсутсвии данных во владке Таблица сигналов
+            #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
                 while (data_list.Count < 2500)
                 {
-                    var signal = new SignalDI()
+                    var signal = new SignalDO()
                     {
                         Signal = new BaseSignal
                         {
                             Index = $"{++index}",
                             Id = "",
                             Description = "",
-                            VarName = $"di_shared[{index}]",
+                            VarName = $"do_shared[{index}]",
                             Area = "",
                             Address = "",
                             LinkValue = ""
@@ -298,7 +298,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                     data_list.Add(signal);
                 }
 
-                SelectedSignalDI = data_list[0];
+                SelectedSignalDO = data_list[0];
                 _DataView.Source = data_list;
                 _DataView.View.Refresh();
                 OnPropertyChanged(nameof(DataView));
@@ -306,7 +306,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
-            #region Генерируем сигналы DI, созданные во вкладке Таблица сигналов
+            #region Генерируем сигналы DO, созданные во вкладке Таблица сигналов
             var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
             foreach (var _USO in uso_list)
             {
@@ -314,20 +314,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                 {
                     foreach (var _Module in _Rack.Modules)
                     {
-                        if (_Module.Type == TypeModule.DI)
+                        if (_Module.Type == TypeModule.DO)
                         {
                             foreach (var _Channel in _Module.Channels)
                             {
-                                var signal = new SignalDI()
+                                var signal = new SignalDO()
                                 {
                                     Signal = new BaseSignal
                                     {
                                         Index = $"{++index}",
                                         Id = _Channel.Id,
                                         Description = _Channel.Description,
-                                        VarName = $"di_shared[{index}]",
+                                        VarName = $"do_shared[{index}]",
                                         Area = "",
-                                        Address = $"{int.Parse(_Channel.Address) - 100000}",
+                                        Address = $"{int.Parse(_Channel.Address) - 200000}",
                                     }
                                 };
                                 data_list.Add(signal);
@@ -339,14 +339,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
             while (data_list.Count < 2500)
             {
-                var signal = new SignalDI()
+                var signal = new SignalDO()
                 {
                     Signal = new BaseSignal
                     {
                         Index = $"{++index}",
                         Id = "",
                         Description = "",
-                        VarName = $"di_shared[{index}]",
+                        VarName = $"do_shared[{index}]",
                         Area = "",
                         Address = "",
                         LinkValue = ""
@@ -356,7 +356,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
-            SelectedSignalDI = data_list[0];
+            SelectedSignalDO = data_list[0];
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
