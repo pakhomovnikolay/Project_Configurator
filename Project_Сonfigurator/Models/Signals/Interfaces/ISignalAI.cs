@@ -37,13 +37,6 @@
         string IndexPZ { get; set; }
         #endregion
 
-        #region Тип ПЗ
-        /// <summary>
-        /// Тип ПЗ
-        /// </summary>
-        string TypePZ { get; set; }
-        #endregion
-
         #region Тип ПИ
         /// <summary>
         /// Тип ПИ

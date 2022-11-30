@@ -39,13 +39,6 @@ namespace Project_Сonfigurator.Models.Signals
         public string IndexPZ { get; set; }
         #endregion
 
-        #region Тип ПЗ
-        /// <summary>
-        /// Тип ПЗ
-        /// </summary>
-        public string TypePZ { get; set; }
-        #endregion
-
         #region Тип ПИ
         /// <summary>
         /// Тип ПИ
