@@ -168,14 +168,14 @@
                                                      TextAlignment="Left" VerticalAlignment="Center"
                                                      Background="Transparent"
                                                      Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                            <Button Grid.Column="1" Margin="1" ToolTip="Добавить модуль" BorderThickness="0"
+                                            <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
                                                     Style="{StaticResource CustomButtonStyle}"
                                                     Command="{Binding SettingWindowViewModels.CmdEditSelectedVendor, Source={StaticResource Locator}}"
                                                     CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     >
                                                 <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
                                             </Button>
-                                            <Button Grid.Column="2" Margin="1" ToolTip="Добавить модуль" BorderThickness="0"
+                                            <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
                                                     Style="{StaticResource CustomButtonStyle}"
                                                     Command="{Binding SettingWindowViewModels.CmdRemoveVendor, Source={StaticResource Locator}}"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
