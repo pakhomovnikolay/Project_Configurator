@@ -1,6 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System.Collections.Generic;
@@ -29,7 +28,7 @@ namespace Project_Сonfigurator.ViewModels
                 _DataViewVendors.View.Refresh();
                 OnPropertyChanged(nameof(DataViewVendors));
             }
-            
+
         }
         #endregion
 
