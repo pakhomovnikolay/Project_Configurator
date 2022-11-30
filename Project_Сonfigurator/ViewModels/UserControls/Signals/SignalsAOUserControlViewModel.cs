@@ -280,7 +280,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #region Генерируем сигналы AO, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
-                while (data_list.Count < 2500)
+                while (data_list.Count < 500)
                 {
                     var signal = new SignalAO()
                     {
@@ -337,7 +337,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                 }
             }
 
-            while (data_list.Count < 2500)
+            while (data_list.Count < 500)
             {
                 var signal = new SignalAO()
                 {
