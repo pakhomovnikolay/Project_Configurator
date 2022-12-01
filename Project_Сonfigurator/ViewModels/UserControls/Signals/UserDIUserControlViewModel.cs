@@ -87,14 +87,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (!_IsSelected && _SignalService.DoSelection &&
-                        string.IsNullOrWhiteSpace(_SignalService.Address) &&
-                        _SignalService.ListName != Title
-                        )
-                    {
-                        _SignalService.ResetSignal();
-                        DoSelection = false;
-                    }
+                    _SignalService.RedefineSignal(SelectedSignal, _IsSelected, Title);
+                    DoSelection = _SignalService.DoSelection;
+                    if (_IsSelected)
+                        _DataView.View.Refresh();
                 }
             }
         }
@@ -178,6 +174,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedSignal is null) return;
             if (App.FucusedTabControl == null) return;
+            if (!_SignalService.DoSelection) return;
 
             var data_list = new List<BaseSignal>();
             foreach (BaseSignal Signal in DataView)

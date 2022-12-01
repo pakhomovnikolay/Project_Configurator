@@ -103,7 +103,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         DoSelection = false;
                         _SignalService.ResetSignal();
                     }
-
                 }
             }
         }

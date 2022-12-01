@@ -59,14 +59,16 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <summary>
         /// Переописание сигналов
         /// </summary>
-        void RedefineSignal(BaseSignal signal);
+        /// <param name="signal"></param>
+        /// <param name="is_selected"></param>
+        void RedefineSignal(BaseSignal signal, bool is_selected, string title);
         #endregion
 
         #region Переописание параметров
         /// <summary>
         /// Переописание параметров
         /// </summary>
-        void RedefineParam(BaseParam param);
+        void RedefineParam(BaseParam param, bool is_selected, string title);
         #endregion
     }
 }

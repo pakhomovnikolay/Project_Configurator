@@ -143,6 +143,11 @@
                 <pages_param:SignalsGroupUserControl DataContext="{Binding SignalsGroupViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding GroupsSignalViewModel.Title}"
+                     IsSelected="{Binding GroupsSignalViewModel.IsSelected}">
+                <pages_param:GroupsSignalUserControl DataContext="{Binding GroupsSignalViewModel}"/>
+            </TabItem>
+
 
         </TabControl>
         

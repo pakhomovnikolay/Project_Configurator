@@ -45,7 +45,7 @@
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="1" BorderBrush="Black"
                 Margin="5,5,0,0" Background="AntiqueWhite"
-                Width="1310" HorizontalAlignment="Left">
+                Width="1390" HorizontalAlignment="Left">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -114,7 +114,7 @@
                     <Setter Property="BorderThickness" Value="1,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="90"/>
+                    <Setter Property="Height" Value="70"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
 
@@ -239,15 +239,37 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Значение&#x0a;ссылки" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                            Text="{Binding Signal.LinkValue, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Width="80">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес&#x0a;сигнала" Margin="0,0,0,5"/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="Transparent">
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                               Text="{Binding Signal.Index, UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick"
+                                                          Command="{Binding SignalsDOUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                          CommandParameter="{Binding Signal.Index}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

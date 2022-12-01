@@ -68,15 +68,27 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Переописание сигналов
         /// </summary>
-        public void RedefineSignal(BaseSignal signal)
+        /// <param name="signal"></param>
+        /// <param name="is_selected"></param>
+        public void RedefineSignal(BaseSignal signal, bool is_selected, string title)
         {
-            signal.Address = Address;
-            if (string.IsNullOrWhiteSpace(signal.Id))
-                signal.Id = Id;
-            if (string.IsNullOrWhiteSpace(signal.Description))
-                signal.Description = Description;
+            if (is_selected)
+            {
+                if (DoSelection && !string.IsNullOrWhiteSpace(Address))
+                {
+                    signal.Address = Address;
+                    if (string.IsNullOrWhiteSpace(signal.Id))
+                        signal.Id = Id;
+                    if (string.IsNullOrWhiteSpace(signal.Description))
+                        signal.Description = Description;
 
-            ResetSignal();
+                    ResetSignal();
+                }
+                else if (DoSelection && string.IsNullOrWhiteSpace(Address) && ListName == title)
+                    ResetSignal();
+            }
+            else if (DoSelection && string.IsNullOrWhiteSpace(Address) && ListName != title)
+                ResetSignal();
         }
         #endregion
 
@@ -84,15 +96,25 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Переописание параметров
         /// </summary>
-        public void RedefineParam(BaseParam param)
+        public void RedefineParam(BaseParam param, bool is_selected, string title)
         {
-            param.Address = Address;
-            if (string.IsNullOrWhiteSpace(param.Id))
-                param.Id = Id;
-            if (string.IsNullOrWhiteSpace(param.Description))
-                param.Description = Description;
+            if (is_selected)
+            {
+                if (DoSelection && !string.IsNullOrWhiteSpace(Address))
+                {
+                    param.Address = Address;
+                    if (string.IsNullOrWhiteSpace(param.Id))
+                        param.Id = Id;
+                    if (string.IsNullOrWhiteSpace(param.Description))
+                        param.Description = Description;
 
-            ResetSignal();
+                    ResetSignal();
+                }
+                else if (DoSelection && string.IsNullOrWhiteSpace(Address) && ListName == title)
+                    ResetSignal();
+            }
+            else if (DoSelection && string.IsNullOrWhiteSpace(Address) && ListName != title)
+                ResetSignal();
         }
         #endregion
     }

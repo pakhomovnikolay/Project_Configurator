@@ -40,7 +40,7 @@
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="1" BorderBrush="Black"
                 Margin="5,5,0,0" Background="AntiqueWhite"
-                Width="1210" HorizontalAlignment="Left">
+                Width="1290" HorizontalAlignment="Left">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -109,7 +109,7 @@
                     <Setter Property="BorderThickness" Value="1,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="90"/>
+                    <Setter Property="Height" Value="70"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
 
@@ -204,8 +204,9 @@
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                           BorderThickness="0" Background="Transparent"
-                                           Text="{Binding TypeSignal, UpdateSourceTrigger=PropertyChanged}"/>
+                                         BorderThickness="0" Background="Transparent"
+                                         IsReadOnly="{Binding SignalsGroupUserControlViewModel.DoSelection, Source={StaticResource Locator}}"
+                                         Text="{Binding TypeSignal, UpdateSourceTrigger=PropertyChanged}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -213,13 +214,13 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,2,0" BorderBrush="Black">
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
                                          IsReadOnly="{Binding SignalsGroupUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
@@ -233,7 +234,29 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                
+
+                <DataGridTemplateColumn Width="80">
+                    <DataGridTemplateColumn.Header>
+                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес&#x0a;сигнала" Margin="0,0,0,5"/>
+                        </Border>
+                    </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1,0,2,0" BorderBrush="Black" >
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Background="Transparent"
+                                           Text="{Binding Index}">
+                                    <TextBlock.InputBindings>
+                                        <MouseBinding MouseAction="LeftDoubleClick"
+                                                          Command="{Binding SignalsGroupUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                          CommandParameter="{Binding Index}"/>
+                                    </TextBlock.InputBindings>
+                                </TextBlock>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
             </DataGrid.Columns>
 
         </DataGrid>

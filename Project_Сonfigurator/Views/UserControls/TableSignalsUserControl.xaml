@@ -376,7 +376,7 @@
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес"/>
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;сигнала"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>

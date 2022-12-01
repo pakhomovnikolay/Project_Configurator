@@ -19,5 +19,6 @@ namespace Project_Сonfigurator.ViewModels
         public UserAIUserControlViewModel UserAIUserControlViewModel => App.Services.GetRequiredService<UserAIUserControlViewModel>();
         public UserRegUserControlViewModel UserRegUserControlViewModel => App.Services.GetRequiredService<UserRegUserControlViewModel>();
         public SignalsGroupUserControlViewModel SignalsGroupUserControlViewModel => App.Services.GetRequiredService<SignalsGroupUserControlViewModel>();
+        public GroupsSignalUserControlViewModel GroupsSignalUserControlViewModel => App.Services.GetRequiredService<GroupsSignalUserControlViewModel>();
     }
 }

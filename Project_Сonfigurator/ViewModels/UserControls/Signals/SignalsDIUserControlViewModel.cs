@@ -93,28 +93,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
+                    _SignalService.RedefineSignal(SelectedSignalDI.Signal, _IsSelected, Title);
+                    DoSelection = _SignalService.DoSelection;
                     if (_IsSelected)
-                    {
-                        DoSelection = _SignalService.DoSelection;
-                        if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
-                        {
-                            _SignalService.RedefineSignal(SelectedSignalDI.Signal);
-                            _DataView.View?.Refresh();
-                            DoSelection = false;
-
-
-                        }
-                        else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
-                        {
-                            _SignalService.ResetSignal();
-                            DoSelection = false;
-                        }
-                    }
-                    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
-                    {
-                        _SignalService.ResetSignal();
-                        DoSelection = false;
-                    }
+                        _DataView.View.Refresh();
                 }
             }
         }
@@ -240,6 +222,47 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 var _TabItem = _Item as TabItem;
                 if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
+
+        #region Команда - Выбрать сигнал
+        private ICommand _CmdSelectionSignal;
+        /// <summary>
+        /// Команда - Выбрать сигнал
+        /// </summary>
+        public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
+        private bool CanCmdSelectionSignalExecute(object p) => SelectedSignalDI is not null;
+
+        private void OnCmdSelectionSignalExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedSignalDI is null) return;
+            if (App.FucusedTabControl == null) return;
+            if (!_SignalService.DoSelection) return;
+
+            var data_list = new List<SignalDI>();
+            foreach (SignalDI Signal in DataView)
+            {
+                data_list.Add(Signal);
+            }
+
+            if (Index != SelectedSignalDI.Signal.Index)
+                SelectedSignalDI = data_list[int.Parse(Index) - 1];
+
+            _SignalService.Address = SelectedSignalDI.Signal.Index;
+            _SignalService.Id = SelectedSignalDI.Signal.Id;
+            _SignalService.Description = SelectedSignalDI.Signal.Description;
+
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == _SignalService.ListName)
                 {
                     App.FucusedTabControl.SelectedItem = _TabItem;
                     break;

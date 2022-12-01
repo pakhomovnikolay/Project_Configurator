@@ -109,7 +109,7 @@
                     <Setter Property="BorderThickness" Value="1,0,0,0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="90"/>
+                    <Setter Property="Height" Value="70"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
 
@@ -192,7 +192,7 @@
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес" Margin="0,0,0,5"/>
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес&#x0a;для ВУ" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
