@@ -138,7 +138,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
                                            Text="{Binding Signal.Index}"/>
                             </Border>
                         </DataTemplate>
@@ -208,9 +208,8 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
-                                         Text="{Binding Signal.Area, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding SignalsDOUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Background="Transparent"
+                                         Text="{Binding Signal.Area, UpdateSourceTrigger=PropertyChanged}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -258,5 +257,6 @@
             </DataGrid.Columns>
 
         </DataGrid>
+        
     </Grid>
 </UserControl>

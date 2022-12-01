@@ -229,12 +229,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _SignalService.ListName = Title;
             _SignalService.Type = TypeModule.AO;
 
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedSignalAO.Signal.Area) || int.Parse(SelectedSignalAO.Signal.Area) == 0)
-                NameListSelected = "Таблица сигналов";
-            else if (int.Parse(SelectedSignalAO.Signal.Area) == 1)
-                NameListSelected = "DI формируемые";
-
+            var NameListSelected = "Таблица сигналов";
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
             {

@@ -28,7 +28,7 @@
         <!--Верхняя панель-->
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
             <Grid>
-                
+
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
@@ -46,7 +46,7 @@
                         Command="{Binding CmdRefreshAddressModules}"
                         CommandParameter="{Binding ElementName=RackDataGrid}"
                         />
-                
+
             </Grid>
         </Border>
 
@@ -202,7 +202,7 @@
             <DataGrid.Columns>
 
                 <DataGridTemplateColumn Width="60">
-                    
+
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;корзины"/>
@@ -222,7 +222,7 @@
                                 </Grid.RowDefinitions>
                                 <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
                                     <Grid>
-                                        
+
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="30"/>
                                             <RowDefinition/>
@@ -231,7 +231,7 @@
                                             <ColumnDefinition/>
                                             <ColumnDefinition/>
                                         </Grid.ColumnDefinitions>
-                                        
+
                                         <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
                                                   Style="{StaticResource CheckBoxPowerStyle}"
                                                   IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
@@ -258,16 +258,16 @@
                                             </TextBlock.Foreground>
                                         </TextBox>
                                     </Grid>
-                                    
+
                                 </Border>
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
-                    
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
-                                
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
@@ -317,7 +317,7 @@
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
-                    
+
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="120">
@@ -383,7 +383,7 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Grid>
-                                
+
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
@@ -392,7 +392,7 @@
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
                                 </Grid.RowDefinitions>
-                                
+
                                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
                                     <ItemsControl.Foreground>
                                         <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
@@ -406,7 +406,7 @@
                                         <DataTemplate>
                                             <Border BorderThickness="1,2,0,1" Width="55" BorderBrush="Black" Background="White">
                                                 <TextBlock Background="White" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}">
-                                                    
+
                                                 </TextBlock>
                                             </Border>
                                         </DataTemplate>
@@ -490,7 +490,7 @@
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
                                 </ItemsControl>
-                                
+
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
@@ -506,7 +506,7 @@
                                     <RowDefinition Height="20"/>
                                     <RowDefinition Height="20"/>
                                 </Grid.RowDefinitions>
-                                
+
                                 <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
                                     <ItemsControl.Foreground>
                                         <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
@@ -593,7 +593,7 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="109">
-                    
+
                     <DataGridTemplateColumn.CellTemplate>
 
                         <DataTemplate>
@@ -619,5 +619,4 @@
         </DataGrid>
 
     </Grid>
-    
 </UserControl>

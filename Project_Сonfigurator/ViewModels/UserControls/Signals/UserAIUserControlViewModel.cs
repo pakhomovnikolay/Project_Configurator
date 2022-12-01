@@ -11,15 +11,13 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class UserDIUserControlViewModel : ViewModel
+    public class UserAIUserControlViewModel : ViewModel
     {
-
         #region Конструктор
         private ISignalService _SignalService;
-        public UserDIUserControlViewModel(ISignalService signalService)
+        public UserAIUserControlViewModel(ISignalService signalService)
         {
             _SignalService = signalService;
-
             _DataView.Filter += OnSignalsFiltered;
             GeneratedSignals();
         }
@@ -28,7 +26,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "DI формируемые";
+        private string _Title = "AI формируемые";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -40,7 +38,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Описание вкладки
-        private string _Description = "DI формируемые от ПЛК";
+        private string _Description = "AI формируемые от ПЛК";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -100,18 +98,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
-        #region Коллекция сигналов DI
+        #region Коллекция сигналов AI
         /// <summary>
-        /// Коллекция сигналов DI
+        /// Коллекция сигналов AI
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
-        #region Выбранный сигнал DI
+        #region Выбранный сигнал AI
         private BaseSignal _SelectedSignal = new();
         /// <summary>
-        /// Выбранный сигнал DI
+        /// Выбранный сигнал AI
         /// </summary>
         public BaseSignal SelectedSignal
         {
@@ -230,28 +228,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Генерация сигналов
         private void GeneratedSignals()
         {
-            var index_reg = 0;
             var index = 0;
             var data_list = new List<BaseSignal>();
 
             #region Генерируем сигналы DI
-            while (index_reg < 75)
+            while (index < 500)
             {
-                index_reg++;
-                for (int i = 0; i < 16; i++)
+                var signal = new BaseSignal
                 {
-                    var signal = new BaseSignal
-                    {
-                        Index = $"{++index}",
-                        Id = "",
-                        Description = "",
-                        VarName = $"user_di[{index_reg}]",
-                        Area = "",
-                        Address = $"{index}",
-                        LinkValue = ""
-                    };
-                    data_list.Add(signal);
-                }
+                    Index = $"{++index}",
+                    Id = "",
+                    Description = "",
+                    VarName = $"user_ai[{index}]",
+                    Area = "",
+                    Address = $"{index}",
+                    LinkValue = ""
+                };
+                data_list.Add(signal);
             }
             SelectedSignal = data_list[0];
             _DataView.Source = data_list;

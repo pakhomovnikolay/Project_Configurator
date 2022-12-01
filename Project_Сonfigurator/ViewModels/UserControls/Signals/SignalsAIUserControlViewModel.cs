@@ -233,7 +233,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (string.IsNullOrWhiteSpace(SelectedSignalAI.Signal.Area) || int.Parse(SelectedSignalAI.Signal.Area) == 0)
                 NameListSelected = "Таблица сигналов";
             else if (int.Parse(SelectedSignalAI.Signal.Area) == 1)
-                NameListSelected = "DI формируемые";
+                NameListSelected = "AI формируемые";
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)

@@ -16,6 +16,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<SignalsDOUserControlViewModel>()
             .AddSingleton<SignalsAOUserControlViewModel>()
             .AddSingleton<UserDIUserControlViewModel>()
+            .AddSingleton<UserAIUserControlViewModel>()
             ;
     }
 }
