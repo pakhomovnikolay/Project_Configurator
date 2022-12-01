@@ -1,6 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:l="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
+                    xmlns:UserDI="clr-namespace:Project_Сonfigurator.Infrastructures.Converters.UserDIUserControl"
                     >
     <l:BrushConverter x:Key="BrushConverter"/>
     <l:BrushModuleNameConverter x:Key="BrushModuleNameConverter"/>
@@ -9,4 +10,8 @@
     <l:EnabledRackConverter x:Key="EnabledRackConverter"/>
     <l:FilteredBackLightConverter x:Key="FilteredBackLightConverter"/>
     <l:PowerBrushConverter x:Key="PowerBrushConverter"/>
+    <l:IndexToBitConverter x:Key="IndexToBitConverter"/>
+    <UserDI:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter"/>
+    <UserDI:IndexToVarNameConverter x:Key="IndexToVarNameConverter"/>
+    
 </ResourceDictionary>

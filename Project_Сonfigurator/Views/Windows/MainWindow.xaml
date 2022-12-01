@@ -102,6 +102,11 @@
                 <pages:TableSignalsUserControl DataContext="{Binding TableSignalsViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UserDIViewModel.Title}"
+                     IsSelected="{Binding UserDIViewModel.IsSelected}">
+                <pages_signal:UserDIUserControl DataContext="{Binding UserDIViewModel}"/>
+            </TabItem>
+
             <TabItem Header="{Binding SignalsDIViewModel.Title}"
                      IsSelected="{Binding SignalsDIViewModel.IsSelected}">
                 <pages_signal:SignalsDIUserControl DataContext="{Binding SignalsDIViewModel}"/>
@@ -121,6 +126,8 @@
                      IsSelected="{Binding SignalsAOViewModel.IsSelected}">
                 <pages_signal:SignalsAOUserControl DataContext="{Binding SignalsAOViewModel}"/>
             </TabItem>
+
+            
 
 
         </TabControl>

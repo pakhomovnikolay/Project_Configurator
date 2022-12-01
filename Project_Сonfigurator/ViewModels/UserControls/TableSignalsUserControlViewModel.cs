@@ -328,6 +328,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             var index = int.Parse((string)p);
             var message = "";
+
+            #region Проверка корректного выбора сигнала
             switch (_SignalService.Type)
             {
                 case TypeModule.AI:
@@ -373,7 +375,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 default:
                     break;
             }
+            #endregion
 
+            #region Оповещение пользователя о некореектном выборе сигнала
             if (!string.IsNullOrWhiteSpace(message))
             {
                 if (UserDialog.SendMessage("Выбор сигнала", message, MessageBoxButton.YesNo, ResultType: MessageBoxResult.Yes))
@@ -384,6 +388,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     DoSelection = _SignalService.DoSelection;
                 }
             }
+            #endregion
+
+            #region Возврат на вкладку измененногоо сигнала
             else
             {
                 foreach (var _Channel in SelectedModule.Channels)
@@ -424,7 +431,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         break;
                     }
                 }
-            }
+            } 
+            #endregion
         }
         #endregion
 

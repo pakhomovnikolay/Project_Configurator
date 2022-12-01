@@ -12,6 +12,10 @@ namespace Project_Сonfigurator.Infrastructures.Converters
     {
         protected override Freezable CreateInstanceCore() => new FilteredBackLightConverter();
 
+        #region Текст фильтра
+        /// <summary>
+        /// Текст фильтра
+        /// </summary>
         public string TextFilter
         {
             get => (string)GetValue(TextFilterProperty);
@@ -23,8 +27,8 @@ namespace Project_Сonfigurator.Infrastructures.Converters
                 nameof(TextFilter),
                 typeof(string),
                 typeof(FilteredBackLightConverter),
-                new PropertyMetadata(default(string)));
-
+                new PropertyMetadata(default(string))); 
+        #endregion
 
         public object Convert(object[] v, Type t, object p, CultureInfo c)
         {
@@ -35,10 +39,6 @@ namespace Project_Сonfigurator.Infrastructures.Converters
                 if (text is not string _text) return Brushes.White;
                 if (TextFilter == _text) return Brushes.AliceBlue;
             }
-
-            //
-            //if (string.IsNullOrWhiteSpace(TextFilter)) return Brushes.White;
-            //if (TextFilter == text) return Brushes.AliceBlue;
             return Brushes.White;
         }
 
