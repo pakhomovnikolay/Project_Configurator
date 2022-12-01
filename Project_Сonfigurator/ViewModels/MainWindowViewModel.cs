@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
+using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
 using System.Windows;
@@ -23,6 +24,7 @@ namespace Project_Сonfigurator.ViewModels
         public SignalsAOUserControlViewModel SignalsAOViewModel { get; }
         public UserDIUserControlViewModel UserDIViewModel { get; }
         public UserAIUserControlViewModel UserAIViewModel { get; }
+        public UserRegUserControlViewModel UserRegUserModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -34,7 +36,8 @@ namespace Project_Сonfigurator.ViewModels
             SignalsDOUserControlViewModel signalsDOViewModel,
             SignalsAOUserControlViewModel signalsAOViewModel,
             UserDIUserControlViewModel userDIViewModel,
-            UserAIUserControlViewModel userAIViewModel
+            UserAIUserControlViewModel userAIViewModel,
+            UserRegUserControlViewModel userRegUserModel
             )
         {
             UserDialog = userDialog;
@@ -48,6 +51,7 @@ namespace Project_Сonfigurator.ViewModels
             SignalsAOViewModel = signalsAOViewModel;
             UserDIViewModel = userDIViewModel;
             UserAIViewModel = userAIViewModel;
+            UserRegUserModel = userRegUserModel;
         }
         #endregion
 

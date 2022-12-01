@@ -7,6 +7,7 @@
         xmlns:l="clr-namespace:Project_Сonfigurator"
         xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
         xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
+        xmlns:pages_param="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
         WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         WindowStyle="None"
@@ -132,7 +133,10 @@
                 <pages_signal:SignalsAOUserControl DataContext="{Binding SignalsAOViewModel}"/>
             </TabItem>
 
-            
+            <TabItem Header="{Binding UserRegUserModel.Title}"
+                     IsSelected="{Binding UserRegUserModel.IsSelected}">
+                <pages_param:UserRegUserControl DataContext="{Binding UserRegUserModel}"/>
+            </TabItem>
 
 
         </TabControl>

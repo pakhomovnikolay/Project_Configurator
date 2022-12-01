@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.ViewModels.UserControls;
+using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 
 namespace Project_Сonfigurator.ViewModels
@@ -17,6 +18,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<SignalsAOUserControlViewModel>()
             .AddSingleton<UserDIUserControlViewModel>()
             .AddSingleton<UserAIUserControlViewModel>()
+            .AddSingleton<UserRegUserControlViewModel>()
             ;
     }
 }
