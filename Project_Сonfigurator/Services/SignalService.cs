@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 
@@ -74,6 +75,22 @@ namespace Project_Сonfigurator.Services
                 signal.Id = Id;
             if (string.IsNullOrWhiteSpace(signal.Description))
                 signal.Description = Description;
+
+            ResetSignal();
+        }
+        #endregion
+
+        #region Переописание параметров
+        /// <summary>
+        /// Переописание параметров
+        /// </summary>
+        public void RedefineParam(BaseParam param)
+        {
+            param.Address = Address;
+            if (string.IsNullOrWhiteSpace(param.Id))
+                param.Id = Id;
+            if (string.IsNullOrWhiteSpace(param.Description))
+                param.Description = Description;
 
             ResetSignal();
         }

@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
 
 namespace Project_Сonfigurator.Services.Interfaces
@@ -59,6 +60,13 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Переописание сигналов
         /// </summary>
         void RedefineSignal(BaseSignal signal);
+        #endregion
+
+        #region Переописание параметров
+        /// <summary>
+        /// Переописание параметров
+        /// </summary>
+        void RedefineParam(BaseParam param);
         #endregion
     }
 }

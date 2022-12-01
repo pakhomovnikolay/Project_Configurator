@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -11,14 +12,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UserRegUserControlViewModel : ViewModel
+    public class SignalsGroupUserControlViewModel : ViewModel
     {
         #region Конструктор
         private ISignalService _SignalService;
-        public UserRegUserControlViewModel(ISignalService signalService)
+
+        public SignalsGroupUserControlViewModel(ISignalService signalService)
         {
             _SignalService = signalService;
-            _DataView.Filter += OnSignalsFiltered;
+
+            _DataView.Filter += OnParamFiltered;
             GeneratedSignals();
         }
         #endregion
@@ -26,7 +29,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Регистры формируемые";
+        private string _Title = "Сигналы групп";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -38,7 +41,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Регистры формируемые для ВУ";
+        private string _Description = "Список сигналов состоящих в группе";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -85,30 +88,50 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.ResetSignal();
-                    DoSelection = false;
+                    if (_IsSelected)
+                    {
+                        DoSelection = _SignalService.DoSelection;
+                        if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
+                        {
+                            _SignalService.RedefineParam(SelectedParam);
+                            _DataView.View?.Refresh();
+                            DoSelection = false;
+
+
+                        }
+                        else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
+                        {
+                            _SignalService.ResetSignal();
+                            DoSelection = false;
+                        }
+                    }
+                    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
+                    {
+                        _SignalService.ResetSignal();
+                        DoSelection = false;
+                    }
                 }
             }
         }
         #endregion
 
-        #region Коллекция регистров формируемых
+        #region Коллекция парметров
         /// <summary>
-        /// Коллекция регистров формируемых
+        /// Коллекция парметров
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
-        #region Выбранный регистр
-        private BaseParam _SelectedSignal = new();
+        #region Выбранный параметр
+        private BaseParam _SelectedParam = new();
         /// <summary>
-        /// Выбранный регистр
+        /// Выбранный параметр
         /// </summary>
-        public BaseParam SelectedSignal
+        public BaseParam SelectedParam
         {
-            get => _SelectedSignal;
-            set => Set(ref _SelectedSignal, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -156,38 +179,44 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Команда - Выбрать сигнал
-        private ICommand _CmdSelectionSignal;
+        #region Команда - Сменить адрес сигнала
+        private ICommand _CmdChangeAddressSignal;
         /// <summary>
-        /// Команда - Выбрать сигнал
+        /// Команда - Сменить адрес сигнала
         /// </summary>
-        public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => SelectedSignal is not null;
+        public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
+        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedParam is not null;
 
-        private void OnCmdSelectionSignalExecuted(object p)
+        private void OnCmdChangeAddressSignalExecuted(object p)
         {
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignal is null) return;
-            if (App.FucusedTabControl == null) return;
+            if (SelectedParam is null) return;
 
             var data_list = new List<BaseParam>();
-            foreach (BaseParam Signal in DataView)
+            foreach (BaseParam Param in DataView)
             {
-                data_list.Add(Signal);
+                data_list.Add(Param);
             }
 
-            if (Index != SelectedSignal.Index)
-                SelectedSignal = data_list[int.Parse(Index) - 1];
+            if (Index != SelectedParam.Index)
+                SelectedParam = data_list[int.Parse(Index) - 1];
 
-            _SignalService.Address = SelectedSignal.Address;
-            _SignalService.Id = SelectedSignal.Id;
-            _SignalService.Description = SelectedSignal.Description;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.AI;
 
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedParam.TypeSignal) || int.Parse(SelectedParam.TypeSignal) == 0)
+                NameListSelected = "Сигналы DI";
+            else if (int.Parse(SelectedParam.TypeSignal) > 0)
+                NameListSelected = "Сигналы AI";
+
+            if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
             {
                 var _TabItem = _Item as TabItem;
-                if (_TabItem.Header.ToString() == _SignalService.ListName)
+                if (_TabItem.Header.ToString() == NameListSelected)
                 {
                     App.FucusedTabControl.SelectedItem = _TabItem;
                     break;
@@ -204,7 +233,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Фильтрация модулей
         /// </summary>
-        private void OnSignalsFiltered(object sender, FilterEventArgs e)
+        private void OnParamFiltered(object sender, FilterEventArgs e)
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
@@ -225,25 +254,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<BaseParam>();
 
-            #region Генерируем сигналы DI
-            while (index < 1000)
+            while (data_list.Count < 256)
             {
-                var signal = new BaseParam
+                var signal = new BaseParam()
                 {
                     Index = $"{++index}",
                     Id = "",
                     Description = "",
-                    VarName = $"user_reg[{index}]",
-                    Address = $"{index}"
+                    VarName = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = ""
                 };
                 data_list.Add(signal);
             }
-            SelectedSignal = data_list[0];
+
+            SelectedParam = data_list[0];
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
             return;
-            #endregion
         }
         #endregion 
 

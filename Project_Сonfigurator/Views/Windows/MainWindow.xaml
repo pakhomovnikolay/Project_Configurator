@@ -138,6 +138,11 @@
                 <pages_param:UserRegUserControl DataContext="{Binding UserRegUserModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding SignalsGroupViewModel.Title}"
+                     IsSelected="{Binding SignalsGroupViewModel.IsSelected}">
+                <pages_param:SignalsGroupUserControl DataContext="{Binding SignalsGroupViewModel}"/>
+            </TabItem>
+
 
         </TabControl>
         
