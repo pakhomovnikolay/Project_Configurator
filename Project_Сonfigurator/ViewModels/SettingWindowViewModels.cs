@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.DialogControl;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
@@ -16,10 +17,13 @@ namespace Project_Сonfigurator.ViewModels
         #region Конструктор
         public ISettingService _SettingService;
         public IVendorService _VendorService;
-        public SettingWindowViewModels(ISettingService settingService, IVendorService vendorService)
+        public IUserDialogService UserDialog;
+
+        public SettingWindowViewModels(ISettingService settingService, IVendorService vendorService, IUserDialogService userDialog)
         {
             _SettingService = settingService;
             _VendorService = vendorService;
+            UserDialog = userDialog;
 
             if (Config.Vendors is not null && Config.Vendors.Count > 0)
             {
@@ -140,7 +144,8 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdSaveSettingsExecuted(object p)
         {
             if (p is not Window window) return;
-            _SettingService.Config.Vendors = Config.Vendors;
+            //_SettingService.Config.Vendors = Config.Vendors;
+            _SettingService.Config = _Config;
             if (_SettingService.Save())
                 Application.Current.Shutdown();
         }
@@ -184,6 +189,13 @@ namespace Project_Сonfigurator.ViewModels
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранного вендора?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Yes,
+                MessageBoxOptions.None))
+                return;
+
             Config.Vendors.Remove(SelectedVendor);
             _DataViewVendors.Source = Config.Vendors;
             _DataViewVendors.View.Refresh();
@@ -202,39 +214,58 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdEditSelectedVendorExecuted(object p)
         {
             if (!_VendorService.Edit(SelectedVendor)) return;
+        }
+        #endregion
 
+        #region Команда - Открыть окно настроек завдижек
+        /// <summary>
+        /// Команда - Открыть окно настроек завдижек
+        /// </summary>
+        private ICommand _CmdOpenWindowEditDevice;
+        public ICommand CmdOpenWindowEditDevice => _CmdOpenWindowEditDevice ??= new RelayCommand(OnCmdOpenWindowEditDeviceExecuted, CanCmdOpenWindowEditDeviceExecute);
+        private bool CanCmdOpenWindowEditDeviceExecute(object p) => SelectedVendor is not null;
+        private void OnCmdOpenWindowEditDeviceExecuted(object p)
+        {
+            if (p is not string Content) return;
+            if (string.IsNullOrWhiteSpace(Content)) return;
+            var window = new Window();
+            switch (Content)
+            {
 
+                case "Настройки агрегатов":
+                    window = new WindowEditDevice()
+                    {
+                        _Title = Content,
+                        InputParam = Config.UMPNA.InputParams,
+                        OutputParam = Config.UMPNA.OutputParams,
+                        Setpoints = Config.UMPNA.Setpoints
+                    };
+                    break;
+                case "Настройки задвижек":
+                    window = new WindowEditDevice()
+                    {
+                        _Title = Content,
+                        InputParam = Config.UZD.InputParams,
+                        OutputParam = Config.UZD.OutputParams,
+                        Setpoints = Config.UZD.Setpoints
+                    };
+                    break;
+                case "Настройки вспомсистем":
+                    window = new WindowEditDevice()
+                    {
+                        _Title = Content,
+                        InputParam = Config.UVS.InputParams,
+                        OutputParam = Config.UVS.OutputParams,
+                        Setpoints = Config.UVS.Setpoints
+                    };
+                    break;
+                default:
+                    break;
+            }
 
-            //var show_dialog = new WindowEditVendor()
-            //{
-            //    VendorData = SelectedVendor,
-            //    Owner = App.FucusedWindow ?? App.ActiveWindow,
-            //    WindowStartupLocation = WindowStartupLocation.CenterOwner
-            //};
-            //if (!show_dialog.ShowDialog().Value) return;
+            
 
-            //SelectedVendor = show_dialog.VendorData;
-
-
-
-
-
-
-
-
-            //if (p is not DataGrid ModulesDataGrid) return;
-
-            //SelectedVendor.SelectedModuleType.Modules.Remove(SelectedVendor.SelectedModuleType.SelectedModule);
-            //if (SelectedVendor.SelectedModuleType.Modules.Count > 0)
-            //    SelectedVendor.SelectedModuleType.SelectedModule = SelectedVendor.SelectedModuleType.Modules[^1];
-            //else
-            //    SelectedVendor.SelectedModuleType.SelectedModule.Name = "";
-
-            //OnPropertyChanged(nameof(DataViewVendors));
-            //OnPropertyChanged(nameof(DataViewVendorModuleType));
-            //OnPropertyChanged(nameof(SelectedVendor));
-            //ModulesDataGrid.ItemsSource = SelectedVendor.SelectedModuleType.Modules;
-            //ModulesDataGrid.Items.Refresh();
+            window.ShowDialog();
         }
         #endregion
 

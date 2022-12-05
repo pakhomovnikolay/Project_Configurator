@@ -148,6 +148,10 @@
                 <pages_param:GroupsSignalUserControl DataContext="{Binding GroupsSignalViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UZDViewModel.Title}"
+                     IsSelected="{Binding UZDViewModel.IsSelected}">
+                <pages_param:UZDUserControl DataContext="{Binding UZDViewModel}"/>
+            </TabItem>
 
         </TabControl>
         

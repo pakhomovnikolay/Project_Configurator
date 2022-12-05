@@ -32,11 +32,13 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="400"/>
+            <ColumnDefinition />
+            <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <!--Верхняя панель-->
-        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="White">
+        <Grid Grid.Row="0" Grid.ColumnSpan="5" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="35"/>
                 <ColumnDefinition Width="*"/>
@@ -241,6 +243,88 @@
                 
             </Grid>
             
+        </GroupBox>
+        
+        <!--Настройки испольнительных механизмов-->
+        <GroupBox Grid.Row="2" Grid.Column="1" BorderBrush="Black" Height="119">
+
+            <GroupBox.Header>
+                <TextBlock Text="Настройки испольнительных механизмов" FontWeight="Bold" Margin="5,0,5,0"/>
+            </GroupBox.Header>
+
+            <DockPanel>
+                
+                <Button DockPanel.Dock="Top" Content="Настройки агрегатов"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDevice}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+                
+                <Button DockPanel.Dock="Top" Content="Настройки задвижек"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDevice}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+                
+                <Button DockPanel.Dock="Top" Content="Настройки вспомсистем"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDevice}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+                
+            </DockPanel>
+
+            <!--<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="Black" CornerRadius="5" Background="AntiqueWhite">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+
+                        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="Black" CornerRadius="5" Background="White">
+                            <TextBlock Margin="10,2" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" Text="Настройки задвижек"/>
+                        </Border>
+                        <TextBlock Margin="1,0,5,0" Grid.Row="1" TextAlignment="Right"
+                                   Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="Количество входных сигналов на одну задвижку:"/>
+                        <TextBlock Margin="1,0,5,0" Grid.Row="2" TextAlignment="Right"
+                                   Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="Количество выходных сигналов на одну задвижку:"/>
+                        <TextBlock Margin="1,0,5,0" Grid.Row="3" TextAlignment="Right"
+                                   Grid.Column="0" Grid.ColumnSpan="2"
+                                   Text="Количество уставок на одну задвижку:"/>
+
+                        <TextBox Grid.Row="1" Grid.Column="2" VerticalContentAlignment="Center"
+                                 Text="{Binding Config.UZD.QtyInputParam, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Grid.Row="2" Grid.Column="2" VerticalContentAlignment="Center"
+                                 Text="{Binding Config.UZD.QtyOutputParam, UpdateSourceTrigger=PropertyChanged}"/>
+                        <TextBox Grid.Row="3" Grid.Column="2" VerticalContentAlignment="Center"
+                                 Text="{Binding Config.UZD.QtySetpoints, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Grid>
+                </Border>
+
+                
+                
+            </Grid>-->
         </GroupBox>
 
         <!--Команды управления-->

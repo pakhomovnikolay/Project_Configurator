@@ -27,6 +27,7 @@ namespace Project_Сonfigurator.ViewModels
         public UserRegUserControlViewModel UserRegUserModel { get; }
         public SignalsGroupUserControlViewModel SignalsGroupViewModel { get; }
         public GroupsSignalUserControlViewModel GroupsSignalViewModel { get; }
+        public UZDUserControlViewModel UZDViewModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -41,7 +42,8 @@ namespace Project_Сonfigurator.ViewModels
             UserAIUserControlViewModel userAIViewModel,
             UserRegUserControlViewModel userRegUserModel,
             SignalsGroupUserControlViewModel signalsGroupViewModel,
-            GroupsSignalUserControlViewModel groupsSignalViewModel
+            GroupsSignalUserControlViewModel groupsSignalViewModel,
+            UZDUserControlViewModel uZDViewModel
             )
         {
             UserDialog = userDialog;
@@ -58,6 +60,7 @@ namespace Project_Сonfigurator.ViewModels
             UserRegUserModel = userRegUserModel;
             SignalsGroupViewModel = signalsGroupViewModel;
             GroupsSignalViewModel = groupsSignalViewModel;
+            UZDViewModel = uZDViewModel;
         }
         #endregion
 

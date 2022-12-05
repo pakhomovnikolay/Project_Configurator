@@ -11,5 +11,26 @@ namespace Project_Сonfigurator.Models.Settings
         /// </summary>
         public List<Vendor> Vendors { get; set; } = new();
         #endregion
+
+        #region Настройки задвижек
+        /// <summary>
+        /// Настройки задвижек
+        /// </summary>
+        public UZDParam UZD { get; set; } = new();
+        #endregion
+
+        #region Настройки вспомсистем
+        /// <summary>
+        /// Настройки вспомсистем
+        /// </summary>
+        public UVSParam UVS { get; set; } = new();
+        #endregion
+
+        #region Настройки агрегатов
+        /// <summary>
+        /// Настройки агрегатов
+        /// </summary>
+        public UMPNAParam UMPNA { get; set; } = new();
+        #endregion
     }
 }

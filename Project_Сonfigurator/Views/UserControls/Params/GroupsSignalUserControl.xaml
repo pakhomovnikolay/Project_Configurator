@@ -40,7 +40,7 @@
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="1" BorderBrush="Black"
                 Margin="5,5,0,0" Background="AntiqueWhite"
-                Width="1465" HorizontalAlignment="Left">
+                Width="1415" HorizontalAlignment="Left">
             <Grid>
 
                 <Grid.ColumnDefinitions>
@@ -207,7 +207,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="200">
+                <DataGridTemplateColumn Width="150">
                     <DataGridTemplateColumn.Header>
                         <Grid>
                             <Grid.ColumnDefinitions>

@@ -21,6 +21,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UserRegUserControlViewModel>()
             .AddSingleton<SignalsGroupUserControlViewModel>()
             .AddSingleton<GroupsSignalUserControlViewModel>()
+            .AddSingleton<UZDUserControlViewModel>()
             ;
     }
 }
