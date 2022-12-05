@@ -8,6 +8,7 @@ using Project_Сonfigurator.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -17,10 +18,16 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class UZDUserControlViewModel : ViewModel
     {
         #region Конструктор
+        private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
+
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-        public UZDUserControlViewModel(ISignalService signalService, TableSignalsUserControlViewModel tableSignalsViewModel)
+        public UZDUserControlViewModel(
+            ISignalService signalService,
+            IUserDialogService userDialog,
+            TableSignalsUserControlViewModel tableSignalsViewModel)
         {
+            UserDialog = userDialog;
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
         }
@@ -286,12 +293,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать задвижки из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUZD => _CmdImportUZD ??= new RelayCommand(OnCmdImportUZDExecuted, CanCmdImportUZDExecute);
-        private bool CanCmdImportUZDExecute() => true;
+        private bool CanCmdImportUZDExecute() => TableSignalsViewModel.DataView is not null;
 
         private void OnCmdImportUZDExecuted()
         {
             if (TableSignalsViewModel.DataView is null) return;
-            var data_list = (List<BaseUZD>)_DataView.Source ?? new List<BaseUZD>();
+            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+            var data_list = new List<BaseUZD>();
             foreach (var DataView in TableSignalsViewModel.DataView)
             {
                 var uso = DataView as USO;
@@ -305,14 +315,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                 Channel.Description.Contains("клапан", StringComparison.CurrentCultureIgnoreCase) ||
                                 Channel.Description.Contains("клоп", StringComparison.CurrentCultureIgnoreCase))
                             {
+                                var index_dot = Channel.Description.IndexOf(".");
+                                var qty = Channel.Description.Length;
+                                var name = Channel.Description.Remove(index_dot, qty - index_dot);
                                 var fl_tmp = false;
                                 foreach (var item in data_list)
                                 {
-                                    if (item.Description == Channel.Description && !string.IsNullOrWhiteSpace(Channel.Description))
+                                    if (item.Description == name)
                                         fl_tmp = true;
                                 }
                                 if (!fl_tmp)
-                                    ImportUZD(Channel.Description);
+                                    ImportUZD(name, data_list);
                             }
                         }
                     }
@@ -524,10 +537,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Импортируем задвижки
-        private void ImportUZD(string Description)
+        private void ImportUZD(string Description, List<BaseUZD> data_list)
         {
-            var data_list = (List<BaseUZD>)_DataView.Source ?? new List<BaseUZD>();
-
             var index = data_list.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
             var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;

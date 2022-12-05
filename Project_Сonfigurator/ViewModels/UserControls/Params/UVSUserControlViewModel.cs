@@ -1,11 +1,14 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -15,10 +18,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class UVSUserControlViewModel : ViewModel
     {
         #region Конструктор
+        private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
-        public UVSUserControlViewModel(ISignalService signalService)
+        
+        TableSignalsUserControlViewModel TableSignalsViewModel { get; }
+        public UVSUserControlViewModel(
+            ISignalService signalService,
+            IUserDialogService userDialog, 
+            TableSignalsUserControlViewModel tableSignalsViewModel)
         {
+            UserDialog = userDialog;
             _SignalService = signalService;
+            TableSignalsViewModel = tableSignalsViewModel;
         }
         #endregion
 
@@ -232,109 +243,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdAddUVSExecuted()
         {
-            var data_list = (List<BaseUVS>)_DataView.Source ?? new List<BaseUVS>();
-
-            var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
-
-            #region Создаем задвижку
-
-            #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.InputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = Program.Settings.Config.UVS.InputParams[i].Text
-                };
-                InputParam.Add(Param);
-            }
-            #endregion
-
-            #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.OutputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = Program.Settings.Config.UVS.OutputParams[i].Text
-                };
-                OutputParam.Add(Param);
-            }
-            #endregion
-
-            #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UVS.Setpoints.Count; i++)
-            {
-                var Param = new BaseSetpoints
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
-                    Id = $"H{7000 + index_setpoints + i}",
-                    Unit = "",
-                    Value = "",
-                    Address = $"%MW{2000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UVS.Setpoints[i].Text
-                };
-                Setpoints.Add(Param);
-            }
-            #endregion
-
-            #region Генерируем задвижки
-            var signal = new BaseUVS
-            {
-                Index = $"{index}",
-                Description = $"Вспомсистема №{index}",
-                VarName = $"uvs_param[{index}]",
-                ShortDescription = "",
-                IndexEC = "",
-                IndexGroup = "",
-                DescriptionGroup = "",
-                COz = "",
-                OnePressureSensorGroup = "",
-                Reservable = "",
-                TypeGroup = "",
-                TypePressure = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
-            };
-            data_list.Add(signal);
-            #endregion
-
-            SelectedUVS = data_list[^1];
-            SelectedInputParam = SelectedUVS.InputParam[0];
-            SelectedOutputParam = SelectedUVS.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUVS.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUVS.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
-
+            CreateUVS();
         }
         #endregion
 
@@ -384,12 +293,43 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать вспомсистемы из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUVS => _CmdImportUVS ??= new RelayCommand(OnCmdImportUVSExecuted, CanCmdImportUVSExecute);
-        private bool CanCmdImportUVSExecute() => true;
+        private bool CanCmdImportUVSExecute() => TableSignalsViewModel.DataView is not null;
 
         private void OnCmdImportUVSExecuted()
         {
-            return;
+            if (TableSignalsViewModel.DataView is null) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
+            var data_list = new List<BaseUVS>();
+            foreach (var DataView in TableSignalsViewModel.DataView)
+            {
+                var uso = DataView as USO;
+                foreach (var _Rack in uso.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        foreach (var Channel in _Module.Channels)
+                        {
+                            if (Channel.Description.Contains("насос", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                var index_dot = Channel.Description.IndexOf(".");
+                                var qty = Channel.Description.Length;
+                                var name = Channel.Description.Remove(index_dot, qty - index_dot);
+                                var fl_tmp = false;
+                                foreach (var item in data_list)
+                                {
+                                    if (item.Description == name)
+                                        fl_tmp = true;
+                                }
+                                if (!fl_tmp)
+                                    ImportUVS(name, data_list);
+                            }
+                        }
+                    }
+                }
+            }
         }
         #endregion
 
@@ -475,6 +415,225 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
         }
         #endregion
+
+        #endregion
+
+        #region Функции
+
+        #region Создаем вспомсистему
+        private void CreateUVS()
+        {
+            var data_list = (List<BaseUVS>)_DataView.Source ?? new List<BaseUVS>();
+
+            var index = data_list.Count + 1;
+            var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
+            var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
+            var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
+            var InputParam = new List<BaseParam>();
+            var OutputParam = new List<BaseParam>();
+            var Setpoints = new List<BaseSetpoints>();
+
+            #region Создаем вспомсистему
+
+            #region Входные параметры
+            for (int i = 0; i < Program.Settings.Config.UVS.InputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = Program.Settings.Config.UVS.InputParams[i].Text
+                };
+                InputParam.Add(Param);
+            }
+            #endregion
+
+            #region Выходные параметры
+            for (int i = 0; i < Program.Settings.Config.UVS.OutputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = Program.Settings.Config.UVS.OutputParams[i].Text
+                };
+                OutputParam.Add(Param);
+            }
+            #endregion
+
+            #region Уставки
+            for (int i = 0; i < Program.Settings.Config.UVS.Setpoints.Count; i++)
+            {
+                var Param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
+                    Id = $"H{7000 + index_setpoints + i}",
+                    Unit = "",
+                    Value = "",
+                    Address = $"%MW{2000 + index_setpoints + i}",
+                    Description = Program.Settings.Config.UVS.Setpoints[i].Text
+                };
+                Setpoints.Add(Param);
+            }
+            #endregion
+
+            #region Генерируем вспомсистему
+            var signal = new BaseUVS
+            {
+                Index = $"{index}",
+                Description = $"Вспомсистема №{index}",
+                VarName = $"uvs_param[{index}]",
+                ShortDescription = "",
+                IndexEC = "",
+                IndexGroup = "",
+                DescriptionGroup = "",
+                COz = "",
+                OnePressureSensorGroup = "",
+                Reservable = "",
+                TypeGroup = "",
+                TypePressure = "",
+                InputParam = new List<BaseParam>(InputParam),
+                OutputParam = new List<BaseParam>(OutputParam),
+                Setpoints = new List<BaseSetpoints>(Setpoints)
+            };
+            data_list.Add(signal);
+            #endregion
+
+            SelectedUVS = data_list[^1];
+            SelectedInputParam = SelectedUVS.InputParam[0];
+            SelectedOutputParam = SelectedUVS.OutputParam[0];
+
+            _DataViewInputParam.Source = SelectedUVS.InputParam;
+            _DataViewInputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewInputParam));
+
+            _DataViewOutputParam.Source = SelectedUVS.OutputParam;
+            _DataViewOutputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewOutputParam));
+
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+            return;
+            #endregion
+        }
+        #endregion 
+
+        #region Импортируем вспомсистемы
+        private void ImportUVS(string Description, List<BaseUVS> data_list)
+        {
+
+            var index = data_list.Count + 1;
+            var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
+            var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
+            var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
+            var InputParam = new List<BaseParam>();
+            var OutputParam = new List<BaseParam>();
+            var Setpoints = new List<BaseSetpoints>();
+
+            #region Создаем вспомсистему
+
+            #region Входные параметры
+            for (int i = 0; i < Program.Settings.Config.UVS.InputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = Program.Settings.Config.UVS.InputParams[i].Text
+                };
+                InputParam.Add(Param);
+            }
+            #endregion
+
+            #region Выходные параметры
+            for (int i = 0; i < Program.Settings.Config.UVS.OutputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = Program.Settings.Config.UVS.OutputParams[i].Text
+                };
+                OutputParam.Add(Param);
+            }
+            #endregion
+
+            #region Уставки
+            for (int i = 0; i < Program.Settings.Config.UVS.Setpoints.Count; i++)
+            {
+                var Param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
+                    Id = $"H{7000 + index_setpoints + i}",
+                    Unit = "",
+                    Value = "",
+                    Address = $"%MW{2000 + index_setpoints + i}",
+                    Description = Program.Settings.Config.UVS.Setpoints[i].Text
+                };
+                Setpoints.Add(Param);
+            }
+            #endregion
+
+            #region Генерируем вспомсистему
+            var signal = new BaseUVS
+            {
+                Index = $"{index}",
+                Description = Description,
+                VarName = $"uvs_param[{index}]",
+                ShortDescription = "",
+                IndexEC = "",
+                IndexGroup = "",
+                DescriptionGroup = "",
+                COz = "",
+                OnePressureSensorGroup = "",
+                Reservable = "",
+                TypeGroup = "",
+                TypePressure = "",
+                InputParam = new List<BaseParam>(InputParam),
+                OutputParam = new List<BaseParam>(OutputParam),
+                Setpoints = new List<BaseSetpoints>(Setpoints)
+            };
+            data_list.Add(signal);
+            #endregion
+
+            SelectedUVS = data_list[^1];
+            SelectedInputParam = SelectedUVS.InputParam[0];
+            SelectedOutputParam = SelectedUVS.OutputParam[0];
+
+            _DataViewInputParam.Source = SelectedUVS.InputParam;
+            _DataViewInputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewInputParam));
+
+            _DataViewOutputParam.Source = SelectedUVS.OutputParam;
+            _DataViewOutputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewOutputParam));
+
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+            return;
+            #endregion
+        }
+        #endregion 
 
         #endregion
     }
