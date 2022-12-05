@@ -187,7 +187,7 @@
                                 <RowDefinition Height="426"/>
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White">
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" BorderThickness="2,2,0,2" BorderBrush="Black" Background="White">
                                 <DockPanel>
                                     <Border BorderThickness="0" BorderBrush="Black" Background="White" Width="250">
                                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование параметра"/>
@@ -209,10 +209,10 @@
                                     </Border>
                                 </DockPanel>
                             </Border>
-                            <Border Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="11" BorderThickness="1,1,1,0" BorderBrush="Black" Background="White">
+                            <Border Grid.Row="0" Grid.Column="6" Grid.ColumnSpan="11" BorderThickness="1,2,2,0" BorderBrush="Black" Background="White">
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Настроечные параметры"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="11" BorderThickness="1" BorderBrush="Black" Background="White">
+                            <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="11" BorderThickness="1,1,2,2" BorderBrush="Black" Background="White">
                                 <DockPanel>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
                                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slDist"/>
@@ -249,7 +249,7 @@
                                     </Border>
                                 </DockPanel>
                             </Border>
-                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="17" BorderThickness="1,0,1,1" BorderBrush="Black" Background="White">
+                            <Border Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="17" BorderThickness="2,0,2,2" BorderBrush="Black" Background="White">
                                 <DockPanel>
                                     <Border BorderThickness="0,0,0,0" BorderBrush="Black" Width="250">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
@@ -270,7 +270,7 @@
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
                                              Text="{Binding IndexGroup, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
-                                    <Border BorderThickness="1,0,1,0" BorderBrush="Black" Width="200">
+                                    <Border BorderThickness="1,0,1,0" BorderBrush="Black" Width="199">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
                                              Text="{Binding DescriptionGroup, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
@@ -499,7 +499,6 @@
                 </TabItem>
 
                 <TabItem Header="Ввод\Вывод">
-
                     <ScrollViewer VerticalScrollBarVisibility="Auto" MaxWidth="1700" HorizontalScrollBarVisibility="Auto">
                         <Grid>
 
@@ -585,7 +584,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="150">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
@@ -601,7 +600,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="110">
+                                    <DataGridTemplateColumn Width="150">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор" Margin="0,0,0,5"/>
@@ -638,7 +637,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="80">
+                                    <DataGridTemplateColumn Width="100">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
@@ -656,7 +655,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="80">
+                                    <DataGridTemplateColumn Width="100">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -674,7 +673,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="400">
+                                    <DataGridTemplateColumn Width="1135">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -769,7 +768,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="150">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
@@ -785,7 +784,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="110">
+                                    <DataGridTemplateColumn Width="150">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор" Margin="0,0,0,5"/>
@@ -801,7 +800,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                     
-                                    <DataGridTemplateColumn Width="190">
+                                    <DataGridTemplateColumn Width="230">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -819,7 +818,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="400">
+                                    <DataGridTemplateColumn Width="1135">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -839,13 +838,9 @@
                                 </DataGrid.Columns>
 
                             </DataGrid>
+                            
                         </Grid>
-                        
                     </ScrollViewer>
-                    
-
-                    
-
                 </TabItem>
                 
             </TabControl>
