@@ -146,7 +146,7 @@
                                 <RowDefinition Height="55"/>
                                 <RowDefinition Height="25"/>
                                 <RowDefinition Height="35"/>
-                                <RowDefinition Height="426"/>
+                                <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="6" BorderThickness="2,2,0,2" BorderBrush="Black" Background="White">
@@ -424,10 +424,10 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="35"/>
-                                <RowDefinition Height="201"/>
+                                <RowDefinition Height="auto" MaxHeight="500"/>
                                 <RowDefinition Height="15"/>
                                 <RowDefinition Height="35"/>
-                                <RowDefinition Height="101"/>
+                                <RowDefinition Height="auto" MaxHeight="500"/>
                             </Grid.RowDefinitions>
 
                             <Border Grid.Row="0" Margin="0,2" CornerRadius="2"

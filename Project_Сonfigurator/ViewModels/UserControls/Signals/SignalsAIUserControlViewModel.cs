@@ -301,7 +301,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             var index = 0;
             var data_list = new List<SignalAI>();
 
-            #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
+            #region Генерируем сигналы AI, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
                 while (data_list.Count < 500)
@@ -330,7 +330,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
-            #region Генерируем сигналы DO, созданные во вкладке Таблица сигналов
+            #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
             var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
             foreach (var _USO in uso_list)
             {

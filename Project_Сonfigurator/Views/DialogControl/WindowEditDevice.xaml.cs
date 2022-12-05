@@ -143,6 +143,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdDeleteSelectedInputParam(object sender, RoutedEventArgs e)
         {
             var index = InputParam.IndexOf(SelectedInputParam);
+            if (index < 0) return;
             InputParam.Remove(SelectedInputParam);
 
             if (InputParam.Count > 0)
@@ -180,6 +181,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdDeleteSelectedOutputParam(object sender, RoutedEventArgs e)
         {
             var index = OutputParam.IndexOf(SelectedOutputParam);
+            if (index < 0) return;
             OutputParam.Remove(SelectedOutputParam);
 
             if (OutputParam.Count > 0)
@@ -218,6 +220,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         {
             var index = Setpoints.IndexOf(SelectedSetpoint);
             Setpoints.Remove(SelectedSetpoint);
+            if (index < 0) return;
 
             if (Setpoints.Count > 0)
             {
