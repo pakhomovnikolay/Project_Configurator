@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
@@ -6,8 +7,7 @@ using Project_Сonfigurator.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Reflection;
+using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -87,8 +87,39 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.ResetSignal();
-                    DoSelection = false;
+                    if (_IsSelected)
+                    {
+                        DoSelection = _SignalService.DoSelection;
+                        if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
+                        {
+                            if (DoSelectionInputParam)
+                            {
+                                _SignalService.RedefineParam(SelectedInputParam, _IsSelected, Title);
+                                _DataViewInputParam.View?.Refresh();
+                            }
+
+                            if (DoSelectionOutputParam)
+                            {
+                                _SignalService.RedefineParam(SelectedOutputParam, _IsSelected, Title);
+                                _DataViewOutputParam.View?.Refresh();
+                            }
+
+                            DoSelectionInputParam = false;
+                            DoSelectionOutputParam = false;
+                            DoSelection = false;
+                            _SignalService.ResetSignal();
+                        }
+                        else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
+                        {
+                            _SignalService.ResetSignal();
+                            DoSelection = false;
+                        }
+                    }
+                    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
+                    {
+                        _SignalService.ResetSignal();
+                        DoSelection = false;
+                    }
                 }
             }
         }
@@ -114,6 +145,46 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Коллекция входных параметров
+        /// <summary>
+        /// Коллекция входных параметров
+        /// </summary>
+        private readonly CollectionViewSource _DataViewInputParam = new();
+        public ICollectionView DataViewInputParam => _DataViewInputParam?.View;
+        #endregion
+
+        #region Выбранный входной параметр
+        private BaseParam _SelectedInputParam;
+        /// <summary>
+        /// Выбранный входной параметр
+        /// </summary>
+        public BaseParam SelectedInputParam
+        {
+            get => _SelectedInputParam;
+            set => Set(ref _SelectedInputParam, value);
+        }
+        #endregion
+
+        #region Коллекция выходных параметров
+        /// <summary>
+        /// Коллекция выходных параметров
+        /// </summary>
+        private readonly CollectionViewSource _DataViewOutputParam = new();
+        public ICollectionView DataViewOutputParam => _DataViewOutputParam?.View;
+        #endregion
+
+        #region Выбранный выходной параметр
+        private BaseParam _SelectedOutputParam;
+        /// <summary>
+        /// Выбранный выходной параметр
+        /// </summary>
+        public BaseParam SelectedOutputParam
+        {
+            get => _SelectedOutputParam;
+            set => Set(ref _SelectedOutputParam, value);
+        }
+        #endregion
+
         #region Текст фильтрации
         private string _TextFilter;
         /// <summary>
@@ -135,6 +206,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _DoSelection;
             set => Set(ref _DoSelection, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора входного параметра
+        private bool _DoSelectionInputParam;
+        /// <summary>
+        /// Состояние необходимости выбора входного параметра
+        /// </summary>
+        public bool DoSelectionInputParam
+        {
+            get => _DoSelectionInputParam;
+            set => Set(ref _DoSelectionInputParam, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора выходного параметра
+        private bool _DoSelectionOutputParam;
+        /// <summary>
+        /// Состояние необходимости выбора выходного параметра
+        /// </summary>
+        public bool DoSelectionOutputParam
+        {
+            get => _DoSelectionOutputParam;
+            set => Set(ref _DoSelectionOutputParam, value);
         }
         #endregion
 
@@ -221,10 +316,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
-                    Id = $"H800{index_setpoints + i}",
+                    Id = $"H{8000 + index_setpoints + i}",
                     Unit = "",
                     Value = "",
-                    Address = "",
+                    Address = $"%MW{3000 + index_setpoints + i}",
                     Description = Program.Settings.Config.UZD.Setpoints[i].Text
                 };
                 Setpoints.Add(Param);
@@ -260,6 +355,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             #endregion
 
             SelectedUZD = data_list[^1];
+            SelectedInputParam = SelectedUZD.InputParam[0];
+            SelectedOutputParam = SelectedUZD.OutputParam[0];
+
+            _DataViewInputParam.Source = SelectedUZD.InputParam;
+            _DataViewInputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewInputParam));
+
+            _DataViewOutputParam.Source = SelectedUZD.OutputParam;
+            _DataViewOutputParam.View.Refresh();
+            OnPropertyChanged(nameof(DataViewOutputParam));
+
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
@@ -294,6 +400,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 SelectedUZD = null;
             }
+
+            _DataViewInputParam.Source = SelectedUZD?.InputParam;
+            _DataViewInputParam.View?.Refresh();
+            OnPropertyChanged(nameof(DataViewInputParam));
+
+            _DataViewOutputParam.Source = SelectedUZD?.OutputParam;
+            _DataViewOutputParam.View?.Refresh();
+            OnPropertyChanged(nameof(DataViewOutputParam));
+
             _DataView.Source = data_list;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
@@ -315,46 +430,88 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Сменить адрес входного параметра
+        private ICommand _CmdChangeAddressInputParam;
+        /// <summary>
+        /// Команда - Сменить адрес входного параметра
+        /// </summary>
+        public ICommand CmdChangeAddressInputParam => _CmdChangeAddressInputParam ??= new RelayCommand(OnCmdChangeAddressInputParamExecuted, CanCmdChangeAddressInputParamExecute);
+        private bool CanCmdChangeAddressInputParamExecute(object p) => SelectedInputParam is not null;
 
-        //#region Команда - Выбрать сигнал
-        //private ICommand _CmdSelectionSignal;
-        ///// <summary>
-        ///// Команда - Выбрать сигнал
-        ///// </summary>
-        //public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        //private bool CanCmdSelectionSignalExecute(object p) => SelectedSignal is not null;
+        private void OnCmdChangeAddressInputParamExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedInputParam is null) return;
 
-        //private void OnCmdSelectionSignalExecuted(object p)
-        //{
-        //    if (p is not string Index) return;
-        //    if (string.IsNullOrWhiteSpace(Index)) return;
-        //    if (SelectedSignal is null) return;
-        //    if (App.FucusedTabControl == null) return;
+            if (Index != SelectedInputParam.Index)
+                SelectedInputParam = SelectedUZD.InputParam[int.Parse(Index) - 1];
 
-        //    var data_list = new List<BaseUZD>();
-        //    foreach (BaseUZD Signal in DataView)
-        //    {
-        //        data_list.Add(Signal);
-        //    }
+            DoSelectionInputParam = true;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.Unknown;
 
-        //    if (Index != SelectedSignal.Index)
-        //        SelectedSignal = data_list[int.Parse(Index) - 1];
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
+            {
+                NameListSelected = "Сигналы DI";
+                _SignalService.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
+            {
+                NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.DI;
+            }
 
-        //    _SignalService.Address = SelectedSignal.Address;
-        //    _SignalService.Id = SelectedSignal.Id;
-        //    _SignalService.Description = SelectedSignal.Description;
+            if (App.FucusedTabControl == null) return;
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
 
-        //    foreach (var _Item in App.FucusedTabControl.Items)
-        //    {
-        //        var _TabItem = _Item as TabItem;
-        //        if (_TabItem.Header.ToString() == _SignalService.ListName)
-        //        {
-        //            App.FucusedTabControl.SelectedItem = _TabItem;
-        //            break;
-        //        }
-        //    }
-        //}
-        //#endregion
+        #region Команда - Сменить адрес выходного параметра
+        private ICommand _CmdChangeAddressOutputParam;
+        /// <summary>
+        /// Команда - Сменить адрес выходного параметра
+        /// </summary>
+        public ICommand CmdChangeAddressOutputParam => _CmdChangeAddressOutputParam ??= new RelayCommand(OnCmdChangeAddressOutputParamExecuted, CanCmdChangeAddressOutputParamExecute);
+        private bool CanCmdChangeAddressOutputParamExecute(object p) => SelectedOutputParam is not null;
+
+        private void OnCmdChangeAddressOutputParamExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedOutputParam is null) return;
+
+            if (Index != SelectedOutputParam.Index)
+                SelectedOutputParam = SelectedUZD.OutputParam[int.Parse(Index) - 1];
+
+            DoSelectionOutputParam = true;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.DO;
+
+            var NameListSelected = "Сигналы DO";
+            if (App.FucusedTabControl == null) return;
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
 
         #endregion
 
@@ -377,106 +534,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             e.Accepted = false;
         }
         #endregion
-
-        #region Генерация сигналов
-        private void GeneratedSignals()
-        {
-            var index = 0;
-            var data_list = new List<BaseUZD>();
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
-            #region Создаем задвижку
-            while (index < 100)
-            {
-                ++index;
-                #region Входные параметры
-                for (int i = 0; i < Program.Settings.Config.UZD.InputParams.Count; i++)
-                {
-                    var Param = new BaseParam
-                    {
-                        Index = $"{i + 1}",
-                        VarName = $"ZD_DI_P{index}",
-                        Id = "",
-                        Inv = "",
-                        TypeSignal = "",
-                        Address = "",
-                        Description = Program.Settings.Config.UZD.InputParams[i].Text
-                    };
-                    InputParam.Add(Param);
-                }
-                #endregion
-
-                #region Выходные параметры
-                for (int i = 0; i < Program.Settings.Config.UZD.OutputParams.Count; i++)
-                {
-                    var Param = new BaseParam
-                    {
-                        Index = $"{i + 1}",
-                        VarName = $"ZD_DO_P{index}",
-                        Id = "",
-                        Inv = "",
-                        TypeSignal = "",
-                        Address = "",
-                        Description = Program.Settings.Config.UZD.OutputParams[i].Text
-                    };
-                    OutputParam.Add(Param);
-                }
-                #endregion
-
-                #region Уставки
-                for (int i = 0; i < Program.Settings.Config.UZD.Setpoints.Count; i++)
-                {
-                    var Param = new BaseSetpoints
-                    {
-                        Index = $"{i + 1}",
-                        VarName = $"H800{index - 1}",
-                        Id = "",
-                        Unit = "",
-                        Value = "",
-                        Address = "",
-                        Description = Program.Settings.Config.UZD.Setpoints[i].Text
-                    };
-                    Setpoints.Add(Param);
-                }
-                #endregion
-
-                #region Генерируем задвижки
-                var signal = new BaseUZD
-                {
-                    Index = $"{index}",
-                    Description = "",
-                    VarName = $"uzd_param[{index}]",
-                    ShortDescription = "",
-                    IndexEC = "",
-                    IndexGroup = "",
-                    DescriptionGroup = "",
-                    Dist = "",
-                    DoubleStop = "",
-                    Bur = "",
-                    COz = "",
-                    CZz = "",
-                    EC = "",
-                    CheckState = "",
-                    RsOff = "",
-                    TypeZD = "",
-                    IndexPZ = "",
-                    IndexBD = "",
-                    InputParam = new List<BaseParam>(InputParam),
-                    OutputParam = new List<BaseParam>(OutputParam),
-                    Setpoints = new List<BaseSetpoints>(Setpoints)
-                };
-                data_list.Add(signal);
-                #endregion
-            }
-            SelectedUZD = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
-        }
-        #endregion 
 
         #endregion
     }

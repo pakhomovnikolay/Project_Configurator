@@ -96,18 +96,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                             if (DoSelectionAddressStart)
                             {
                                 SelectedParam.AddressStart = _SignalService.Address;
-                                if (!string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
+                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
                                     SelectedParam.Param.Id = _SignalService.Id;
-                                if (!string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
+                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
                                     SelectedParam.Param.Description = _SignalService.Description;
                             }
 
                             if (DoSelectionAddressEnd)
                             {
                                 SelectedParam.AddressEnd = _SignalService.Address;
-                                if (!string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
+                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
                                     SelectedParam.Param.Id = _SignalService.Id;
-                                if (!string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
+                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
                                     SelectedParam.Param.Description = _SignalService.Description;
                             }
 

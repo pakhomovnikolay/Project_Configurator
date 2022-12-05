@@ -61,6 +61,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         /// <param name="signal"></param>
         /// <param name="is_selected"></param>
+        /// <param name="title"></param>
         void RedefineSignal(BaseSignal signal, bool is_selected, string title);
         #endregion
 
@@ -68,6 +69,9 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <summary>
         /// Переописание параметров
         /// </summary>
+        /// <param name="param"></param>
+        /// <param name="is_selected"></param>
+        /// <param name="title"></param>
         void RedefineParam(BaseParam param, bool is_selected, string title);
         #endregion
     }

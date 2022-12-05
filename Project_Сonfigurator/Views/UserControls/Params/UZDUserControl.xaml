@@ -14,50 +14,14 @@
     <Grid>
 
         <!--Сетка-->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" MaxWidth="500" MinWidth="135"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Row="1" Width="2" Background="Transparent" Panel.ZIndex="9999"/>
 
-        <!--Данные-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-                BorderThickness="1" BorderBrush="Black"
-                Margin="5,5,0,0" Background="AntiqueWhite"
-                Width="1415" HorizontalAlignment="Left">
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="30"/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="30"/>
-                </Grid.ColumnDefinitions>
-
-                <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBox Grid.Column="1" BorderThickness="1" Margin="5,1,0,1" VerticalContentAlignment="Center"
-                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.InputBindings>
-                        <KeyBinding Key="Return" Command="{Binding CmdRefreshFilter}"/>
-                    </TextBox.InputBindings>
-                </TextBox>
-                <Button Grid.Column="2" Margin="2" HorizontalAlignment="Stretch" ToolTip="Обновить фльтр"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdRefreshFilter}"
-                        >
-                    <Button.Content>
-                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
-                    </Button.Content>
-                </Button>
-
-            </Grid>
-        </Border>
-
         <!--Список задвижек-->
-        <GroupBox Grid.Row="1" Grid.Column="0" BorderBrush="Black">
+        <GroupBox Grid.Column="0" BorderBrush="Black">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="Список задвижек"/>
             </GroupBox.Header>
@@ -135,7 +99,7 @@
         </GroupBox>
 
         <!--Данные выбранной задвижки-->
-        <GroupBox Grid.Row="1" Grid.Column="1" BorderBrush="Black">
+        <GroupBox Grid.Column="1" BorderBrush="Black">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedUZD.Description, FallbackValue='Выберите задвижку', TargetNullValue='Добавьте задвижку'}" />
             </GroupBox.Header>
@@ -527,7 +491,8 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding InputParam}"
+                                      ItemsSource="{Binding UZDUserControlViewModel.DataViewInputParam, Source={StaticResource Locator}}"
+                                      SelectedItem="{Binding UZDUserControlViewModel.SelectedInputParam, Source={StaticResource Locator}}"
                                       >
 
                                 <DataGrid.Resources>
@@ -578,7 +543,7 @@
                                             <DataTemplate>
                                                 <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
                                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Index}"/>
+                                                               Text="{Binding Index}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -594,7 +559,7 @@
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
                                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding VarName, UpdateSourceTrigger=PropertyChanged}"/>
+                                                               Text="{Binding VarName, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -610,7 +575,7 @@
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
                                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
+                                                               Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -628,10 +593,10 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="White">
                                                     <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                     TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     Text="{Binding Inv, UpdateSourceTrigger=PropertyChanged}"/>
+                                                             TextAlignment="Center" VerticalContentAlignment="Center"
+                                                             Text="{Binding Inv, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -646,10 +611,10 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBox BorderThickness="0" Background="Transparent"
-                                                     TextAlignment="Center" VerticalContentAlignment="Center" 
-                                                     Text="{Binding TypeSignal, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                                    <TextBox BorderThickness="0" Background="White"
+                                                             TextAlignment="Center" VerticalContentAlignment="Center" 
+                                                             Text="{Binding TypeSignal, UpdateSourceTrigger=PropertyChanged}"
+                                                             />
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -664,10 +629,15 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBox BorderThickness="0" Background="Transparent"
-                                                     TextAlignment="Center" VerticalContentAlignment="Center" 
-                                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                                    <TextBox BorderThickness="0" Background="White"
+                                                             TextAlignment="Center" VerticalContentAlignment="Center"
+                                                             Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
+                                                        <TextBox.InputBindings>
+                                                            <MouseBinding MouseAction="RightClick"
+                                                                          Command="{Binding UZDUserControlViewModel.CmdChangeAddressInputParam, Source={StaticResource Locator}}"
+                                                                          CommandParameter="{Binding Index}"/>
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -711,7 +681,8 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding OutputParam}"
+                                      ItemsSource="{Binding UZDUserControlViewModel.DataViewOutputParam, Source={StaticResource Locator}}"
+                                      SelectedItem="{Binding UZDUserControlViewModel.SelectedOutputParam, Source={StaticResource Locator}}"
                                       >
 
                                 <DataGrid.Resources>
@@ -809,10 +780,15 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBox BorderThickness="0" Background="Transparent"
-                                                     TextAlignment="Center" VerticalContentAlignment="Center" 
-                                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                                    <TextBox BorderThickness="0" Background="White"
+                                                             TextAlignment="Center" VerticalContentAlignment="Center"
+                                                             Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
+                                                        <TextBox.InputBindings>
+                                                            <MouseBinding MouseAction="RightClick"
+                                                                          Command="{Binding UZDUserControlViewModel.CmdChangeAddressOutputParam, Source={StaticResource Locator}}"
+                                                                          CommandParameter="{Binding Index}"/>
+                                                        </TextBox.InputBindings>
+                                                    </TextBox>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

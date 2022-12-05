@@ -70,6 +70,7 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         /// <param name="signal"></param>
         /// <param name="is_selected"></param>
+        /// <param name="title"></param>
         public void RedefineSignal(BaseSignal signal, bool is_selected, string title)
         {
             if (is_selected)
@@ -96,6 +97,9 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Переописание параметров
         /// </summary>
+        /// <param name="param"></param>
+        /// <param name="is_selected"></param>
+        /// <param name="title"></param>
         public void RedefineParam(BaseParam param, bool is_selected, string title)
         {
             if (is_selected)
