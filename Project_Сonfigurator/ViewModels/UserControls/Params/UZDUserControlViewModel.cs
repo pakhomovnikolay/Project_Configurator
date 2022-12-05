@@ -293,7 +293,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать задвижки из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUZD => _CmdImportUZD ??= new RelayCommand(OnCmdImportUZDExecuted, CanCmdImportUZDExecute);
-        private bool CanCmdImportUZDExecute() => TableSignalsViewModel.DataView is not null;
+        private bool CanCmdImportUZDExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
 
         private void OnCmdImportUZDExecuted()
         {

@@ -395,7 +395,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать вспомсистемы из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUMPNA => _CmdImportUMPNA ??= new RelayCommand(OnCmdImportUMPNAExecuted, CanCmdImportUMPNAExecute);
-        private bool CanCmdImportUMPNAExecute() => TableSignalsViewModel.DataView is not null;
+        private bool CanCmdImportUMPNAExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
 
         private void OnCmdImportUMPNAExecuted()
         {

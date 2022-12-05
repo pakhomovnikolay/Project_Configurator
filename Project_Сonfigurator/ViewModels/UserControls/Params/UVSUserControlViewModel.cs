@@ -293,7 +293,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать вспомсистемы из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUVS => _CmdImportUVS ??= new RelayCommand(OnCmdImportUVSExecuted, CanCmdImportUVSExecute);
-        private bool CanCmdImportUVSExecute() => TableSignalsViewModel.DataView is not null;
+        private bool CanCmdImportUVSExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
 
         private void OnCmdImportUVSExecuted()
         {
