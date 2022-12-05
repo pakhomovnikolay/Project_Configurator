@@ -158,6 +158,11 @@
                 <pages_param:UVSUserControl DataContext="{Binding UVSViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UMPNAViewModel.Title}"
+                     IsSelected="{Binding UMPNAViewModel.IsSelected}">
+                <pages_param:UMPNAUserControl DataContext="{Binding UMPNAViewModel}"/>
+            </TabItem>
+
         </TabControl>
         
     </Grid>

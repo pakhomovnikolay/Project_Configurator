@@ -22,5 +22,7 @@ namespace Project_Сonfigurator.ViewModels
         public GroupsSignalUserControlViewModel GroupsSignalUserControlViewModel => App.Services.GetRequiredService<GroupsSignalUserControlViewModel>();
         public UZDUserControlViewModel UZDUserControlViewModel => App.Services.GetRequiredService<UZDUserControlViewModel>();
         public UVSUserControlViewModel UVSUserControlViewModel => App.Services.GetRequiredService<UVSUserControlViewModel>();
+        public UMPNAUserControlViewModel UMPNAUserControlViewModel => App.Services.GetRequiredService<UMPNAUserControlViewModel>();
+        
     }
 }
