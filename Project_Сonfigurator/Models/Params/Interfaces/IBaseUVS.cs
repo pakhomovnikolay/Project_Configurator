@@ -79,7 +79,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Один датчик давления на группу
         /// </summary>
-        string OnPressureSensorGroup { get; set; }
+        string OnePressureSensorGroup { get; set; }
         #endregion
 
         #region Тип группы вспомсистем

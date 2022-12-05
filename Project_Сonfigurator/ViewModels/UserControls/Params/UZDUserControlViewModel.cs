@@ -4,7 +4,6 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -20,8 +19,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public UZDUserControlViewModel(ISignalService signalService)
         {
             _SignalService = signalService;
-            _DataView.Filter += OnSignalsFiltered;
-            //GeneratedSignals();
         }
         #endregion
 
@@ -185,18 +182,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Текст фильтрации
-        private string _TextFilter;
-        /// <summary>
-        /// Текст фильтрации
-        /// </summary>
-        public string TextFilter
-        {
-            get => _TextFilter;
-            set => Set(ref _TextFilter, value);
-        }
-        #endregion
-
         #region Состояние необходимости выбора сигнала
         private bool _DoSelection;
         /// <summary>
@@ -236,22 +221,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Команды
-
-        #region Команда - Обновить фильтр
-        private ICommand _CmdRefreshFilter;
-        /// <summary>
-        /// Команда - Обновить фильтр
-        /// </summary>
-        public ICommand CmdRefreshFilter => _CmdRefreshFilter ??= new RelayCommand(OnCmdRefreshFilterExecuted, CanCmdRefreshFilterExecute);
-        private bool CanCmdRefreshFilterExecute() => true;
-
-        private void OnCmdRefreshFilterExecuted()
-        {
-            if (_DataView.Source is null) return;
-            _DataView.View.Refresh();
-
-        }
-        #endregion
 
         #region Команда - Добавить задвижку
         private ICommand _CmdAddUZD;
@@ -510,28 +479,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     break;
                 }
             }
-        }
-        #endregion
-
-        #endregion
-
-        #region Функции
-
-        #region Фильтрация модулей
-        /// <summary>
-        /// Фильтрация модулей
-        /// </summary>
-        private void OnSignalsFiltered(object sender, FilterEventArgs e)
-        {
-            #region Проверки до начала фильтрации
-            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not BaseUZD Signal || Signal is null) { e.Accepted = false; return; }
-            if (string.IsNullOrWhiteSpace(TextFilter)) return;
-            #endregion
-
-            if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
-
-            e.Accepted = false;
         }
         #endregion
 

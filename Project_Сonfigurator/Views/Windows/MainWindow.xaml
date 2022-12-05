@@ -153,6 +153,11 @@
                 <pages_param:UZDUserControl DataContext="{Binding UZDViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UVSViewModel.Title}"
+                     IsSelected="{Binding UVSViewModel.IsSelected}">
+                <pages_param:UVSUserControl DataContext="{Binding UVSViewModel}"/>
+            </TabItem>
+
         </TabControl>
         
     </Grid>
