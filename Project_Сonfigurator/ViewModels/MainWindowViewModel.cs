@@ -30,7 +30,7 @@ namespace Project_Сonfigurator.ViewModels
         public UZDUserControlViewModel UZDViewModel { get; }
         public UVSUserControlViewModel UVSViewModel { get; }
         public UMPNAUserControlViewModel UMPNAViewModel { get; }
-        
+        public KTPRUserControlViewModel KTPRViewModel { get; }
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -48,7 +48,8 @@ namespace Project_Сonfigurator.ViewModels
             GroupsSignalUserControlViewModel groupsSignalViewModel,
             UZDUserControlViewModel uZDViewModel,
             UVSUserControlViewModel uVSViewModel,
-            UMPNAUserControlViewModel uMPNAViewModel
+            UMPNAUserControlViewModel uMPNAViewModel,
+            KTPRUserControlViewModel kTPRViewModel
             )
         {
             UserDialog = userDialog;
@@ -68,6 +69,7 @@ namespace Project_Сonfigurator.ViewModels
             UZDViewModel = uZDViewModel;
             UVSViewModel = uVSViewModel;
             UMPNAViewModel = uMPNAViewModel;
+            KTPRViewModel = kTPRViewModel;
         }
         #endregion
 

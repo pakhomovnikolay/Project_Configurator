@@ -24,6 +24,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UZDUserControlViewModel>()
             .AddSingleton<UVSUserControlViewModel>()
             .AddSingleton<UMPNAUserControlViewModel>()
+            .AddSingleton<KTPRUserControlViewModel>()
             ;
     }
 }

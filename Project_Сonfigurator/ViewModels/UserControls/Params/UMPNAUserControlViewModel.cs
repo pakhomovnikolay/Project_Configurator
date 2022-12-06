@@ -20,8 +20,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
-
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
+
         public UMPNAUserControlViewModel(
             ISignalService signalService,
             IUserDialogService userDialog,

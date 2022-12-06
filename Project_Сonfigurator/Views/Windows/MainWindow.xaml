@@ -163,6 +163,11 @@
                 <pages_param:UMPNAUserControl DataContext="{Binding UMPNAViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding KTPRViewModel.Title}"
+                     IsSelected="{Binding KTPRViewModel.IsSelected}">
+                <pages_param:KTPRUserControl DataContext="{Binding KTPRViewModel}"/>
+            </TabItem>
+
         </TabControl>
         
     </Grid>

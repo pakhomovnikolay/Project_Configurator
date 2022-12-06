@@ -1687,7 +1687,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.Open, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1704,7 +1704,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.Close, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1721,7 +1721,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.NoOpen, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1738,7 +1738,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.NoClose, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1755,7 +1755,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.CloseAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1772,7 +1772,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.OpenAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1789,7 +1789,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.CloseAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1806,7 +1806,7 @@
                                                     <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.OpenAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1934,7 +1934,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnPrimary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1951,7 +1951,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnSecondary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1968,7 +1968,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffPrimary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -1985,7 +1985,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffSecondary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2002,7 +2002,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.NoOffPrimary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2019,7 +2019,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.NoOffSecondary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2036,7 +2036,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.NoOnPrimary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2053,7 +2053,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.NoOnSecondary, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2070,7 +2070,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnPrimaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2087,7 +2087,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnSecondaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2104,7 +2104,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffPrimaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2121,7 +2121,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffPrimaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2138,7 +2138,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnPrimaryAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2155,7 +2155,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OnSecondaryAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2172,7 +2172,7 @@
                                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffPrimaryAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
@@ -2189,7 +2189,7 @@
                                                     <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffSecondaryAfterProtTimer, UpdateSourceTrigger=PropertyChanged}"/>
                                                     </Border>
                                                 </DataTemplate>
                                             </DataGridTemplateColumn.CellTemplate>
