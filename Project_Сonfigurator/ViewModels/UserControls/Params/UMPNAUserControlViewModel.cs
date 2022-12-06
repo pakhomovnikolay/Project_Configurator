@@ -112,8 +112,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                 _DataViewOutputParam.View?.Refresh();
                             }
 
+                            if (DoSelectionKGMPNA)
+                            {
+                                _SignalService.RedefineParam(SelectedKGMPNA.Param, _IsSelected, Title);
+                                _DataViewKGMPNA.View?.Refresh();
+                            }
+
                             DoSelectionInputParam = false;
                             DoSelectionOutputParam = false;
+                            DoSelectionKGMPNA = false;
                             DoSelection = false;
                             _SignalService.ResetSignal();
                         }
@@ -149,7 +156,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUMPNA SelectedUMPNA
         {
             get => _SelectedUMPNA;
-            set => Set(ref _SelectedUMPNA, value);
+            set
+            {
+                if (Set(ref _SelectedUMPNA, value))
+                {
+                    _DataViewInputParam.Source = value?.InputParam;
+                    _DataViewInputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewInputParam));
+
+                    _DataViewOutputParam.Source = value?.OutputParam;
+                    _DataViewOutputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewOutputParam));
+
+                    _DataViewKGMPNA.Source = value?.KGMPNA;
+                    _DataViewKGMPNA.View.Refresh();
+                    OnPropertyChanged(nameof(DataViewKGMPNA));
+                }
+            }
         }
         #endregion
 
@@ -193,6 +216,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Коллекция агрегатных готовностей
+        /// <summary>
+        /// Коллекция агрегатных готовностей
+        /// </summary>
+        private readonly CollectionViewSource _DataViewKGMPNA = new();
+        public ICollectionView DataViewKGMPNA => _DataViewKGMPNA?.View;
+        #endregion
+
+        #region Выбранный параметр агрегатных готовностей
+        private BaseKGMPNA _SelectedKGMPNA;
+        /// <summary>
+        /// Выбранный параметр агрегатных готовностей
+        /// </summary>
+        public BaseKGMPNA SelectedKGMPNA
+        {
+            get => _SelectedKGMPNA;
+            set => Set(ref _SelectedKGMPNA, value);
+        }
+        #endregion
+
         #region Состояние необходимости выбора сигнала
         private bool _DoSelection;
         /// <summary>
@@ -229,6 +272,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Состояние необходимости выбора параметра карты готовности
+        private bool _DoSelectionKGMPNA;
+        /// <summary>
+        /// Состояние необходимости выбора параметра карты готовности
+        /// </summary>
+        public bool DoSelectionKGMPNA
+        {
+            get => _DoSelectionKGMPNA;
+            set => Set(ref _DoSelectionKGMPNA, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -244,108 +299,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void OnCmdAddUMPNAExecuted()
         {
             CreateUMPNA();
-            //var data_list = (List<BaseUMPNA>)_DataView.Source ?? new List<BaseUMPNA>();
-
-            //var index = data_list.Count + 1;
-            //var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
-            //var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
-            //var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
-            //var InputParam = new List<BaseParam>();
-            //var OutputParam = new List<BaseParam>();
-            //var Setpoints = new List<BaseSetpoints>();
-
-            //#region Создаем задвижку
-
-            //#region Входные параметры
-            //for (int i = 0; i < Program.Settings.Config.UMPNA.InputParams.Count; i++)
-            //{
-            //    var Param = new BaseParam
-            //    {
-            //        Index = $"{i + 1}",
-            //        VarName = $"NA_DI_P[{index_input_param + i + 1}]",
-            //        Id = "",
-            //        Inv = "",
-            //        TypeSignal = "",
-            //        Address = "",
-            //        Description = Program.Settings.Config.UMPNA.InputParams[i].Text
-            //    };
-            //    InputParam.Add(Param);
-            //}
-            //#endregion
-
-            //#region Выходные параметры
-            //for (int i = 0; i < Program.Settings.Config.UMPNA.OutputParams.Count; i++)
-            //{
-            //    var Param = new BaseParam
-            //    {
-            //        Index = $"{i + 1}",
-            //        VarName = $"NA_DO_P[{index_output_param + i + 1}]",
-            //        Id = "",
-            //        Inv = "",
-            //        TypeSignal = "",
-            //        Address = "",
-            //        Description = Program.Settings.Config.UMPNA.OutputParams[i].Text
-            //    };
-            //    OutputParam.Add(Param);
-            //}
-            //#endregion
-
-            //#region Уставки
-            //for (int i = 0; i < Program.Settings.Config.UMPNA.Setpoints.Count; i++)
-            //{
-            //    var Param = new BaseSetpoints
-            //    {
-            //        Index = $"{i + 1}",
-            //        VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
-            //        Id = $"H{6000 + index_setpoints + i}",
-            //        Unit = "",
-            //        Value = "",
-            //        Address = $"%MW{5000 + index_setpoints + i}",
-            //        Description = Program.Settings.Config.UMPNA.Setpoints[i].Text
-            //    };
-            //    Setpoints.Add(Param);
-            //}
-            //#endregion
-
-            //#region Генерируем задвижки
-            //var signal = new BaseUMPNA
-            //{
-            //    Index = $"{index}",
-            //    Description = $"МПНА №{index}",
-            //    VarName = $"umpna_param[{index}]",
-            //    ShortDescription = "",
-            //    IndexPZ = "",
-            //    IndexVZ = "",
-            //    TypeUMPNA = "",
-            //    IndexGroupMS = "",
-            //    UsedMCP = "",
-            //    UsedKPD = "",
-            //    CountButtonStop = "",
-            //    InputParam = new List<BaseParam>(InputParam),
-            //    OutputParam = new List<BaseParam>(OutputParam),
-            //    Setpoints = new List<BaseSetpoints>(Setpoints)
-            //};
-            //data_list.Add(signal);
-            //#endregion
-
-            //SelectedUMPNA = data_list[^1];
-            //SelectedInputParam = SelectedUMPNA.InputParam[0];
-            //SelectedOutputParam = SelectedUMPNA.OutputParam[0];
-
-            //_DataViewInputParam.Source = SelectedUMPNA.InputParam;
-            //_DataViewInputParam.View.Refresh();
-            //OnPropertyChanged(nameof(DataViewInputParam));
-
-            //_DataViewOutputParam.Source = SelectedUMPNA.OutputParam;
-            //_DataViewOutputParam.View.Refresh();
-            //OnPropertyChanged(nameof(DataViewOutputParam));
-
-            //_DataView.Source = data_list;
-            //_DataView.View.Refresh();
-            //OnPropertyChanged(nameof(DataView));
-            //return;
-            //#endregion
-
         }
         #endregion
 
@@ -524,6 +477,53 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Сменить адрес параметра карты готовностей
+        private ICommand _CmdChangeAddressKGMPNA;
+        /// <summary>
+        /// Команда - Сменить адрес параметра карты готовностей
+        /// </summary>
+        public ICommand CmdChangeAddressKGMPNA => _CmdChangeAddressKGMPNA ??= new RelayCommand(OnCmdChangeAddressKGMPNAExecuted, CanCmdChangeAddressKGMPNAExecute);
+        private bool CanCmdChangeAddressKGMPNAExecute(object p) => SelectedKGMPNA is not null;
+
+        private void OnCmdChangeAddressKGMPNAExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedKGMPNA is null) return;
+
+            if (Index != SelectedKGMPNA.Param.Index)
+                SelectedKGMPNA = SelectedUMPNA.KGMPNA[int.Parse(Index) - 1];
+
+            DoSelectionKGMPNA = true;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.Unknown;
+
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedKGMPNA.Param.TypeSignal) || int.Parse(SelectedKGMPNA.Param.TypeSignal) == 0)
+            {
+                NameListSelected = "Сигналы DI";
+                _SignalService.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.DI;
+            }
+
+            if (App.FucusedTabControl == null) return;
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -540,6 +540,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var InputParam = new List<BaseParam>();
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
+            var KGMPNA = new List<BaseKGMPNA>();
 
             #region Создаем задвижку
 
@@ -591,6 +592,40 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Description = Program.Settings.Config.UMPNA.Setpoints[i].Text
                 };
                 Setpoints.Add(Param);
+            }
+            #endregion
+
+            #region Параметры готовностей
+            for (int i = 0; i < 48; i++)
+            {
+                var j = (index - 1) * 48 + i;
+                var Param = new BaseKGMPNA
+                {
+                    NoMasked = "",
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"kgmpna_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    Setpoints = new BaseSetpoints
+                    {
+                        Index = $"{i + 1}",
+                        Value = "",
+                        Unit = "",
+                        Id = $"H{1000 + j}",
+                        Description = "",
+                        VarName = $"SP_NA_READY[{j + 1}]",
+                        Address = $"MW{6500 + j}"
+                    }
+
+
+                };
+                KGMPNA.Add(Param);
             }
             #endregion
 
@@ -610,7 +645,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 CountButtonStop = "",
                 InputParam = new List<BaseParam>(InputParam),
                 OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                Setpoints = new List<BaseSetpoints>(Setpoints),
+                KGMPNA = new List<BaseKGMPNA>(KGMPNA)
             };
             data_list.Add(signal);
             #endregion
@@ -626,6 +662,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _DataViewOutputParam.Source = SelectedUMPNA.OutputParam;
             _DataViewOutputParam.View.Refresh();
             OnPropertyChanged(nameof(DataViewOutputParam));
+
+
+            _DataViewKGMPNA.Source = SelectedUMPNA.KGMPNA;
+            _DataViewKGMPNA.View.Refresh();
+            OnPropertyChanged(nameof(DataViewKGMPNA));
 
             _DataView.Source = data_list;
             _DataView.View.Refresh();
@@ -645,6 +686,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var InputParam = new List<BaseParam>();
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
+            var KGMPNA = new List<BaseKGMPNA>();
 
             #region Создаем задвижку
 
@@ -699,6 +741,40 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
+            #region Параметры готовностей
+            for (int i = 0; i < 48; i++)
+            {
+                var j = (index - 1) * 48 + i;
+                var Param = new BaseKGMPNA
+                {
+                    NoMasked = "",
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"kgmpna_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    Setpoints = new BaseSetpoints
+                    {
+                        Index = $"{i + 1}",
+                        Value = "",
+                        Unit = "",
+                        Id = $"H{1000 + j}",
+                        Description = "",
+                        VarName = $"SP_NA_READY[{j + 1}]",
+                        Address = $"MW{6500 + j}"
+                    }
+
+
+                };
+                KGMPNA.Add(Param);
+            }
+            #endregion
+
             #region Генерируем задвижки
             var signal = new BaseUMPNA
             {
@@ -715,7 +791,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 CountButtonStop = "",
                 InputParam = new List<BaseParam>(InputParam),
                 OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                Setpoints = new List<BaseSetpoints>(Setpoints),
+                KGMPNA = new List<BaseKGMPNA>(KGMPNA)
             };
             data_list.Add(signal);
             #endregion

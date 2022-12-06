@@ -149,7 +149,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUVS SelectedUVS
         {
             get => _SelectedUVS;
-            set => Set(ref _SelectedUVS, value);
+            set
+            {
+                if (Set(ref _SelectedUVS, value))
+                {
+                    _DataViewInputParam.Source = value?.InputParam;
+                    _DataViewInputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewInputParam));
+
+                    _DataViewOutputParam.Source = value?.OutputParam;
+                    _DataViewOutputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewOutputParam));
+                }
+            }
         }
         #endregion
 

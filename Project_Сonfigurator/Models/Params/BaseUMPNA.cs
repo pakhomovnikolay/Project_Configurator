@@ -103,5 +103,12 @@ namespace Project_Сonfigurator.Models.Params
         /// </summary>
         public List<BaseSetpoints> Setpoints { get; set; }
         #endregion
+
+        #region Параметры готовностей
+        /// <summary>
+        /// Параметры готовностей
+        /// </summary>
+        public List<BaseKGMPNA> KGMPNA { get; set; }
+        #endregion
     }
 }

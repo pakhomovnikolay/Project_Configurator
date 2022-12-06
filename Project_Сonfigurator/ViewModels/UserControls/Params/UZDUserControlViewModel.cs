@@ -149,7 +149,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUZD SelectedUZD
         {
             get => _SelectedUZD;
-            set => Set(ref _SelectedUZD, value);
+            set
+            {
+                if (Set(ref _SelectedUZD, value))
+                {
+                    _DataViewInputParam.Source = value?.InputParam;
+                    _DataViewInputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewInputParam));
+
+                    _DataViewOutputParam.Source = value?.OutputParam;
+                    _DataViewOutputParam.View?.Refresh();
+                    OnPropertyChanged(nameof(DataViewOutputParam));
+                }
+            }
         }
         #endregion
 
