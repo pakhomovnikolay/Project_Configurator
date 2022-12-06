@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Запрет маскирования
         /// </summary>
-        string NoMasked { get; set; } 
+        string NoMasked { get; set; }
         #endregion
     }
 }

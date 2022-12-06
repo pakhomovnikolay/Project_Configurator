@@ -118,9 +118,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                 _DataViewKGMPNA.View?.Refresh();
                             }
 
+                            if (DoSelectionKTPRA)
+                            {
+                                _SignalService.RedefineParam(SelectedKTPRA.Param, _IsSelected, Title);
+                                _DataViewKTPRA.View?.Refresh();
+                            }
+
+                            if (DoSelectionKTPRAS)
+                            {
+                                _SignalService.RedefineParam(SelectedKTPRAS.Param, _IsSelected, Title);
+                                _DataViewKTPRAS.View?.Refresh();
+                            }
+
                             DoSelectionInputParam = false;
                             DoSelectionOutputParam = false;
                             DoSelectionKGMPNA = false;
+                            DoSelectionKTPRA = false;
+                            DoSelectionKTPRAS = false;
                             DoSelection = false;
                             _SignalService.ResetSignal();
                         }
@@ -171,6 +185,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     _DataViewKGMPNA.Source = value?.KGMPNA;
                     _DataViewKGMPNA.View.Refresh();
                     OnPropertyChanged(nameof(DataViewKGMPNA));
+
+                    _DataViewKTPRA.Source = value?.KTPRA;
+                    _DataViewKTPRA.View.Refresh();
+                    OnPropertyChanged(nameof(DataViewKTPRA));
+
+                    _DataViewKTPRAS.Source = value?.KTPRAS;
+                    _DataViewKTPRAS.View.Refresh();
+                    OnPropertyChanged(nameof(DataViewKTPRAS));
                 }
             }
         }
@@ -236,6 +258,46 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Коллекция агрегатных защит
+        /// <summary>
+        /// Коллекция агрегатных защит
+        /// </summary>
+        private readonly CollectionViewSource _DataViewKTPRA = new();
+        public ICollectionView DataViewKTPRA => _DataViewKTPRA?.View;
+        #endregion
+
+        #region Выбранный параметр агрегатных защит
+        private BaseKTPRA _SelectedKTPRA;
+        /// <summary>
+        /// Выбранный параметр агрегатных защит
+        /// </summary>
+        public BaseKTPRA SelectedKTPRA
+        {
+            get => _SelectedKTPRA;
+            set => Set(ref _SelectedKTPRA, value);
+        }
+        #endregion
+
+        #region Коллекция предельных параметров
+        /// <summary>
+        /// Коллекция предельных параметров
+        /// </summary>
+        private readonly CollectionViewSource _DataViewKTPRAS = new();
+        public ICollectionView DataViewKTPRAS => _DataViewKTPRAS?.View;
+        #endregion
+
+        #region Выбранный параметр предельных параметров
+        private BaseKTPRAS _SelectedKTPRAS;
+        /// <summary>
+        /// Выбранный параметр предельных параметров
+        /// </summary>
+        public BaseKTPRAS SelectedKTPRAS
+        {
+            get => _SelectedKTPRAS;
+            set => Set(ref _SelectedKTPRAS, value);
+        }
+        #endregion
+
         #region Состояние необходимости выбора сигнала
         private bool _DoSelection;
         /// <summary>
@@ -281,6 +343,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _DoSelectionKGMPNA;
             set => Set(ref _DoSelectionKGMPNA, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора параметра карты защит
+        private bool _DoSelectionKTPRA;
+        /// <summary>
+        /// Состояние необходимости выбора параметра карты защит
+        /// </summary>
+        public bool DoSelectionKTPRA
+        {
+            get => _DoSelectionKTPRA;
+            set => Set(ref _DoSelectionKTPRA, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора параметра предельных параметров
+        private bool _DoSelectionKTPRAS;
+        /// <summary>
+        /// Состояние необходимости выбора параметра предельных параметров
+        /// </summary>
+        public bool DoSelectionKTPRAS
+        {
+            get => _DoSelectionKTPRAS;
+            set => Set(ref _DoSelectionKTPRAS, value);
         }
         #endregion
 
@@ -524,6 +610,100 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Сменить адрес параметра карты защит
+        private ICommand _CmdChangeAddressKTPRA;
+        /// <summary>
+        /// Команда - Сменить адрес параметра карты защит
+        /// </summary>
+        public ICommand CmdChangeAddressKTPRA => _CmdChangeAddressKTPRA ??= new RelayCommand(OnCmdChangeAddressKTPRAExecuted, CanCmdChangeAddressKTPRAExecute);
+        private bool CanCmdChangeAddressKTPRAExecute(object p) => SelectedKTPRA is not null;
+
+        private void OnCmdChangeAddressKTPRAExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedKTPRA is null) return;
+
+            if (Index != SelectedKTPRA.Param.Index)
+                SelectedKTPRA = SelectedUMPNA.KTPRA[int.Parse(Index) - 1];
+
+            DoSelectionKTPRA = true;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.Unknown;
+
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedKTPRA.Param.TypeSignal) || int.Parse(SelectedKTPRA.Param.TypeSignal) == 0)
+            {
+                NameListSelected = "Сигналы DI";
+                _SignalService.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.DI;
+            }
+
+            if (App.FucusedTabControl == null) return;
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
+
+        #region Команда - Сменить адрес параметра предельных параметров
+        private ICommand _CmdChangeAddressKTPRAS;
+        /// <summary>
+        /// Команда - Сменить адрес параметра предельных параметров
+        /// </summary>
+        public ICommand CmdChangeAddressKTPRAS => _CmdChangeAddressKTPRAS ??= new RelayCommand(OnCmdChangeAddressKTPRASExecuted, CanCmdChangeAddressKTPRASExecute);
+        private bool CanCmdChangeAddressKTPRASExecute(object p) => SelectedKTPRAS is not null;
+
+        private void OnCmdChangeAddressKTPRASExecuted(object p)
+        {
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedKTPRAS is null) return;
+
+            if (Index != SelectedKTPRAS.Param.Index)
+                SelectedKTPRAS = SelectedUMPNA.KTPRAS[int.Parse(Index) - 1];
+
+            DoSelectionKTPRAS = true;
+            _SignalService.DoSelection = true;
+            _SignalService.ListName = Title;
+            _SignalService.Type = TypeModule.Unknown;
+
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedKTPRAS.Param.TypeSignal) || int.Parse(SelectedKTPRAS.Param.TypeSignal) == 0)
+            {
+                NameListSelected = "Сигналы DI";
+                _SignalService.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.DI;
+            }
+
+            if (App.FucusedTabControl == null) return;
+            foreach (var _Item in App.FucusedTabControl.Items)
+            {
+                var _TabItem = _Item as TabItem;
+                if (_TabItem.Header.ToString() == NameListSelected)
+                {
+                    App.FucusedTabControl.SelectedItem = _TabItem;
+                    break;
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -541,6 +721,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
             var KGMPNA = new List<BaseKGMPNA>();
+            var KTPRA = new List<BaseKTPRA>();
+            var KTPRAS = new List<BaseKTPRAS>();
 
             #region Создаем задвижку
 
@@ -629,6 +811,68 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
+            #region Параметры защит
+            for (int i = 0; i < 128; i++)
+            {
+                var j = (index - 1) * 128 + i;
+                var Param = new BaseKTPRA
+                {
+                    StateUMPNA = "",
+                    NoMasked = "",
+                    AVR = "",
+                    Type = "",
+                    StopType = "",
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"ktpra_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    Setpoints = new BaseSetpoints
+                    {
+                        Index = $"{i + 1}",
+                        Value = "",
+                        Unit = "",
+                        Id = $"H{3000 + j}",
+                        VarName = $"SP_NA_PROT[{j + 1}]",
+                        Address = $"%MW{5200 + j}",
+                        Description = ""
+                    },
+                    ControlUVS = new BaseControlUVS(),
+                    ControlUZD = new BaseControlUZD()
+                };
+                KTPRA.Add(Param);
+            }
+            #endregion
+
+            #region Параметры предельных параметров
+            for (int i = 0; i < 128; i++)
+            {
+                var j = (index - 1) * 128 + i;
+                var Param = new BaseKTPRAS
+                {
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"ktpras_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    TypeWarning = "",
+                    StateUMPNA = "",
+                    Type = ""
+                };
+                KTPRAS.Add(Param);
+            }
+            #endregion
+
             #region Генерируем задвижки
             var signal = new BaseUMPNA
             {
@@ -646,7 +890,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 InputParam = new List<BaseParam>(InputParam),
                 OutputParam = new List<BaseParam>(OutputParam),
                 Setpoints = new List<BaseSetpoints>(Setpoints),
-                KGMPNA = new List<BaseKGMPNA>(KGMPNA)
+                KGMPNA = new List<BaseKGMPNA>(KGMPNA),
+                KTPRA = new List<BaseKTPRA>(KTPRA),
+                KTPRAS = new List<BaseKTPRAS>(KTPRAS)
             };
             data_list.Add(signal);
             #endregion
@@ -687,6 +933,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
             var KGMPNA = new List<BaseKGMPNA>();
+            var KTPRA = new List<BaseKTPRA>();
+            var KTPRAS = new List<BaseKTPRAS>();
 
             #region Создаем задвижку
 
@@ -775,11 +1023,73 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
+            #region Параметры защит
+            for (int i = 0; i < 128; i++)
+            {
+                var j = (index - 1) * 128 + i;
+                var Param = new BaseKTPRA
+                {
+                    StateUMPNA = "",
+                    NoMasked = "",
+                    AVR = "",
+                    Type = "",
+                    StopType = "",
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"ktpra_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    Setpoints = new BaseSetpoints
+                    {
+                        Index = $"{i + 1}",
+                        Value = "",
+                        Unit = "",
+                        Id = $"H{3000 + j}",
+                        VarName = $"SP_NA_PROT[{j + 1}]",
+                        Address = $"%MW{5200 + j}",
+                        Description = ""
+                    },
+                    ControlUVS = new BaseControlUVS(),
+                    ControlUZD = new BaseControlUZD()
+                };
+                KTPRA.Add(Param);
+            }
+            #endregion
+
+            #region Параметры предельных параметров
+            for (int i = 0; i < 128; i++)
+            {
+                var j = (index - 1) * 128 + i;
+                var Param = new BaseKTPRAS
+                {
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"ktpras_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    TypeWarning = "",
+                    StateUMPNA = "",
+                    Type = ""
+                };
+                KTPRAS.Add(Param);
+            }
+            #endregion
+
             #region Генерируем задвижки
             var signal = new BaseUMPNA
             {
                 Index = $"{index}",
-                Description = Description,
+                Description = $"МПНА №{index}",
                 VarName = $"umpna_param[{index}]",
                 ShortDescription = "",
                 IndexPZ = "",
@@ -792,7 +1102,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 InputParam = new List<BaseParam>(InputParam),
                 OutputParam = new List<BaseParam>(OutputParam),
                 Setpoints = new List<BaseSetpoints>(Setpoints),
-                KGMPNA = new List<BaseKGMPNA>(KGMPNA)
+                KGMPNA = new List<BaseKGMPNA>(KGMPNA),
+                KTPRA = new List<BaseKTPRA>(KTPRA),
+                KTPRAS = new List<BaseKTPRAS>(KTPRAS)
             };
             data_list.Add(signal);
             #endregion

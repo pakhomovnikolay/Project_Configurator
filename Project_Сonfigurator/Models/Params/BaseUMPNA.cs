@@ -110,5 +110,19 @@ namespace Project_Сonfigurator.Models.Params
         /// </summary>
         public List<BaseKGMPNA> KGMPNA { get; set; }
         #endregion
+
+        #region Параметры защит
+        /// <summary>
+        /// Параметры защит
+        /// </summary>
+        public List<BaseKTPRA> KTPRA { get; set; }
+        #endregion
+
+        #region Параметры предельных параметров
+        /// <summary>
+        /// Параметры предельных параметров
+        /// </summary>
+        public List<BaseKTPRAS> KTPRAS { get; set; }
+        #endregion
     }
 }
