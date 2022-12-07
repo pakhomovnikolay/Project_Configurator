@@ -1,4 +1,7 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.VariantTypes;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
@@ -233,7 +236,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Сгенерировать таблицу
         /// </summary>
         private ICommand _CmdGenerateTable;
-        public ICommand CmdGenerateTable => _CmdGenerateTable ??= new RelayCommand(OnCmdGenerateTableExecuted);
+        public ICommand CmdGenerateTable => _CmdGenerateTable ??= new RelayCommand(OnCmdGenerateTableExecuted, CanCmdGenerateTableExecute);
+        private bool CanCmdGenerateTableExecute() =>
+            LayotRackViewModel is not null &&
+            LayotRackViewModel.USOList is not null &&
+            LayotRackViewModel.USOList.Count > 0;
         private void OnCmdGenerateTableExecuted()
         {
             if (LayotRackViewModel is null) return;
@@ -241,7 +248,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            SelectedUSO = null;
+            SelectedUSO = new USO();
             var uso_list = new List<USO>();
             foreach (var _USO in LayotRackViewModel.USOList)
             {
@@ -257,6 +264,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                             case TypeModule.AO:
                             case TypeModule.DO:
                             case TypeModule.DA:
+                                foreach (var Channel in _Module.Channels)
+                                {
+                                    Channel.Description = "";
+                                    Channel.Id = "";
+                                }
                                 need_add_uso = true;
                                 break;
                         }
@@ -266,9 +278,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     uso_list.Add(_USO);
             }
 
-            SelectedUSO = uso_list.Count > 0 ? uso_list[0] : new USO();
-            _DataView.Source = uso_list.Count > 0 ? uso_list : new List<USO>();
-            _DataView.View.Refresh();
+            if (uso_list.Count <= 0)
+                _DataView.Source = uso_list;
+            else
+            {
+                SelectedUSO = uso_list[0];
+                _DataView.Source = uso_list;
+                _DataView.View?.Refresh();
+            }
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
         #endregion
@@ -296,10 +314,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdSelectedPathImport => _CmdSelectedPathImport ??= new RelayCommand(OnCmdSelectedPathImportExecuted);
         private void OnCmdSelectedPathImportExecuted()
         {
-            if (UserDialog.SelectFolder(Title, out string path))
-            {
+            if (UserDialog.SelectFile(Title, out string path, PathImport))
                 PathImport = path;
-            }
         }
         #endregion
 
@@ -312,7 +328,56 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         private bool CanCmdImportTBExecute() => !string.IsNullOrWhiteSpace(PathImport);
         private void OnCmdImportTBExecuted()
         {
-            return;
+            try
+            {
+                using var work_book = new XLWorkbook(PathImport);
+                var worksheet = work_book.Worksheets.Worksheet(1);
+
+                var jSh = 5;
+                var Id = new List<string>();
+                var Description = new List<string>();
+
+                #region Формируем листы Идентификаторов и Наименования параметров
+                while (!string.IsNullOrWhiteSpace(worksheet.Cell(jSh, 3).Value.ToString()))
+                {
+                    if (!string.IsNullOrWhiteSpace(worksheet.Cell(jSh, 5).Value.ToString()))
+                    {
+                        if (!worksheet.Cell(jSh, 1).Value.ToString().Contains(SelectedUSO.Name, StringComparison.CurrentCultureIgnoreCase))
+                            Id.Add(worksheet.Cell(jSh, 1).Value.ToString());
+                        else
+                            Id.Add("");
+
+                        Description.Add(worksheet.Cell(jSh, 2).Value.ToString());
+                    }
+                    jSh++;
+                }
+                #endregion
+
+                #region Переописываем каналы модулей
+                jSh = 0;
+                if (Id.Count > 0 && Description.Count > 0)
+                {
+                    foreach (var _Rack in SelectedUSO.Racks)
+                    {
+                        foreach (var _Module in _Rack.Modules)
+                        {
+                            foreach (var _Channel in _Module.Channels)
+                            {
+                                _Channel.Id = Id[jSh];
+                                _Channel.Description = Description[jSh++];
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                _DataViewModules.View?.Refresh();
+                OnPropertyChanged(nameof(DataViewModules));
+            }
+            catch (Exception e)
+            {
+                UserDialog.SendMessage(Title, $"Ипорт завершен с ошибкой:\n{e}");
+            }
         }
         #endregion
 
@@ -430,7 +495,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         break;
                     }
                 }
-            } 
+            }
             #endregion
         }
         #endregion

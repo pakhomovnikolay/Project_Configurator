@@ -38,6 +38,18 @@ namespace Project_Сonfigurator.Services.Interfaces
         bool SelectFolder(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Папки (*.Folder*)|*.Folder*");
         #endregion
 
+        #region Выбрать файл для импорта ТБ
+        /// <summary>
+        /// Выбрать файл для импорта ТБ
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="SelectedPath"></param>
+        /// <param name="DefaulPath"></param>
+        /// <param name="Filter"></param>
+        /// <returns></returns>
+        bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Книга Excel (*.xlsx*)|*.xlsx*");
+        #endregion
+
         #region Отправка сообщений пользователю
         /// <summary>
         /// Отправка сообщений пользователю

@@ -96,6 +96,43 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
+        #region Выбрать файл для импорта ТБ
+        /// <summary>
+        /// Выбрать файл для импорта ТБ
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="SelectedPath"></param>
+        /// <param name="DefaulPath"></param>
+        /// <param name="Filter"></param>
+        /// <returns></returns>
+        public bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Книга Excel (*.xlsx*)|*.xlsx*")
+        {
+            SelectedPath = "";
+            var path = string.IsNullOrWhiteSpace(DefaulPath) ? Environment.CurrentDirectory : DefaulPath;
+            var dialog = new OpenFileDialog()
+            {
+                Title = Title,
+                Filter = Filter,
+                RestoreDirectory = true,
+                InitialDirectory = path.Replace(".xlsx", ""),
+                CheckPathExists = true,
+                ValidateNames = false,
+                CheckFileExists = true,
+                FileName = ""
+            };
+
+            if (dialog.ShowDialog() != true) { return false; }
+            if (!File.Exists(dialog.FileName))
+            {
+                SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return false;
+            }
+            SelectedPath = dialog.FileName;
+            return true;
+        }
+        #endregion
+
         #region Отправка сообщений пользователю
         /// <summary>
         /// Отправка сообщений пользователю
