@@ -587,7 +587,7 @@
                                                              Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
                                                         <TextBox.InputBindings>
                                                             <MouseBinding MouseAction="RightClick"
-                                                                          Command="{Binding UMPNAUserControlViewModel.CmdChangeAddressInputParam, Source={StaticResource Locator}}"
+                                                                          Command="{Binding DataContext.CmdChangeAddressInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                           CommandParameter="{Binding Index}"/>
                                                         </TextBox.InputBindings>
                                                     </TextBox>
@@ -738,7 +738,7 @@
                                                              Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
                                                         <TextBox.InputBindings>
                                                             <MouseBinding MouseAction="RightClick"
-                                                                          Command="{Binding UMPNAUserControlViewModel.CmdChangeAddressOutputParam, Source={StaticResource Locator}}"
+                                                                          Command="{Binding DataContext.CmdChangeAddressOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                           CommandParameter="{Binding Index}"/>
                                                         </TextBox.InputBindings>
                                                     </TextBox>
@@ -958,7 +958,7 @@
                                                          Text="{Binding Param.Address, UpdateSourceTrigger=PropertyChanged}">
                                                     <TextBox.InputBindings>
                                                         <MouseBinding MouseAction="RightClick"
-                                                                      Command="{Binding UMPNAUserControlViewModel.CmdChangeAddressKGMPNA, Source={StaticResource Locator}}"
+                                                                      Command="{Binding DataContext.CmdChangeAddressKGMPNA, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                       CommandParameter="{Binding Param.Index}"/>
                                                     </TextBox.InputBindings>
                                                 </TextBox>
@@ -1278,7 +1278,7 @@
                                                          Text="{Binding Param.Address, UpdateSourceTrigger=PropertyChanged}">
                                                             <TextBox.InputBindings>
                                                                 <MouseBinding MouseAction="RightClick"
-                                                                      Command="{Binding UMPNAUserControlViewModel.CmdChangeAddressKTPRA, Source={StaticResource Locator}}"
+                                                                      Command="{Binding DataContext.CmdChangeAddressKTPRA, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                       CommandParameter="{Binding Param.Index}"/>
                                                             </TextBox.InputBindings>
                                                         </TextBox>
@@ -2391,7 +2391,7 @@
                                                          Text="{Binding Param.Address, UpdateSourceTrigger=PropertyChanged}">
                                                     <TextBox.InputBindings>
                                                         <MouseBinding MouseAction="RightClick"
-                                                                      Command="{Binding UMPNAUserControlViewModel.CmdChangeAddressKTPRAS, Source={StaticResource Locator}}"
+                                                                      Command="{Binding DataContext.CmdChangeAddressKTPRAS, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                       CommandParameter="{Binding Param.Index}"/>
                                                     </TextBox.InputBindings>
                                                 </TextBox>

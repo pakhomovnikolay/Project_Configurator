@@ -1,13 +1,12 @@
-﻿<UserControl x:Class="Project_Сonfigurator.Views.UserControls.Params.KTPRUserControl"
+﻿<UserControl x:Class="Project_Сonfigurator.Views.UserControls.Params.KTPRSUserControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:fa="http://schemas.fontawesome.com/icons/"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-            
+             
              d:Background="AliceBlue"
-             d:DataContext="{Binding KTPRUserControlViewModel, Source={StaticResource Locator}}"
+             d:DataContext="{Binding KTPRSUserControlViewModel, Source={StaticResource Locator}}"
              d:DesignHeight="{Binding WindowHeight}"
              d:DesignWidth="{Binding WindowWidth}"
              >
@@ -39,7 +38,7 @@
 
         <!--Данные-->
         <TabControl Grid.Row="1">
-            
+
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid>
@@ -239,78 +238,10 @@
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="80">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Состояние&#x0a;станции" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding StateStation}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="120">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты к группе" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding Shoulder}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="120">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты&#x0a;к подгруппе" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding SubShoulder}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="80">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Автодеблок" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding Autodeblok}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
                         <DataGridTemplateColumn Width="100">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Запрет&#x0a;маскирования" Margin="0,0,0,5"/>
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Настройка&#x0a;сигнализации" Margin="0,0,0,5"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -318,50 +249,16 @@
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
                                         <TextBox BorderThickness="0" TextAlignment="Center"
                                          VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding NoMasked}"/>
+                                         Text="{Binding TypeWarning}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="80">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;станции" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding StopTypeNS}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="80">
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;МПНА" Margin="0,0,0,5"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
-                                        <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding StopTypeUMPNA}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="60">
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;защиты" Margin="0,0,0,5"/>
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;параметра" Margin="0,0,0,5"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -374,7 +271,7 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-
+                        
                     </DataGrid.Columns>
 
                 </DataGrid>
@@ -1442,13 +1339,13 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
-                        
+
                     </DataGrid.Columns>
 
                 </DataGrid>
             </TabItem>
 
         </TabControl>
-        
+
     </Grid>
 </UserControl>

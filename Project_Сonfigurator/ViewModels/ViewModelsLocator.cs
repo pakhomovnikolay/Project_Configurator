@@ -24,6 +24,8 @@ namespace Project_Сonfigurator.ViewModels
         public UVSUserControlViewModel UVSUserControlViewModel => App.Services.GetRequiredService<UVSUserControlViewModel>();
         public UMPNAUserControlViewModel UMPNAUserControlViewModel => App.Services.GetRequiredService<UMPNAUserControlViewModel>();
         public KTPRUserControlViewModel KTPRUserControlViewModel => App.Services.GetRequiredService<KTPRUserControlViewModel>();
+        public KTPRSUserControlViewModel KTPRSUserControlViewModel => App.Services.GetRequiredService<KTPRSUserControlViewModel>();
+        
 
     }
 }

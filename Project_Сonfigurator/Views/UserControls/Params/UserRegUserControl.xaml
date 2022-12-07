@@ -150,7 +150,7 @@
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding UserRegUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -167,7 +167,7 @@
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding UserRegUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

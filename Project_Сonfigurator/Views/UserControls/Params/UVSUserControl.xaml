@@ -447,8 +447,8 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding UVSUserControlViewModel.DataViewInputParam, Source={StaticResource Locator}}"
-                                      SelectedItem="{Binding UVSUserControlViewModel.SelectedInputParam, Source={StaticResource Locator}}"
+                                      ItemsSource="{Binding DataContext.DataViewInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      SelectedItem="{Binding DataContext.SelectedInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       >
 
                                 <DataGrid.Resources>
@@ -590,7 +590,7 @@
                                                              Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
                                                         <TextBox.InputBindings>
                                                             <MouseBinding MouseAction="RightClick"
-                                                                          Command="{Binding UVSUserControlViewModel.CmdChangeAddressInputParam, Source={StaticResource Locator}}"
+                                                                          Command="{Binding DataContext.CmdChangeAddressInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                           CommandParameter="{Binding Index}"/>
                                                         </TextBox.InputBindings>
                                                     </TextBox>
@@ -637,8 +637,8 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding UVSUserControlViewModel.DataViewOutputParam, Source={StaticResource Locator}}"
-                                      SelectedItem="{Binding UVSUserControlViewModel.SelectedOutputParam, Source={StaticResource Locator}}"
+                                      ItemsSource="{Binding DataContext.DataViewOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      SelectedItem="{Binding DataContext.SelectedOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       >
 
                                 <DataGrid.Resources>
@@ -741,7 +741,7 @@
                                                              Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}">
                                                         <TextBox.InputBindings>
                                                             <MouseBinding MouseAction="RightClick"
-                                                                          Command="{Binding UVSUserControlViewModel.CmdChangeAddressOutputParam, Source={StaticResource Locator}}"
+                                                                          Command="{Binding DataContext.CmdChangeAddressOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                                           CommandParameter="{Binding Index}"/>
                                                         </TextBox.InputBindings>
                                                     </TextBox>

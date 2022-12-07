@@ -168,6 +168,11 @@
                 <pages_param:KTPRUserControl DataContext="{Binding KTPRViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding KTPRSViewModel.Title}"
+                     IsSelected="{Binding KTPRSViewModel.IsSelected}">
+                <pages_param:KTPRSUserControl DataContext="{Binding KTPRSViewModel}"/>
+            </TabItem>
+
         </TabControl>
         
     </Grid>

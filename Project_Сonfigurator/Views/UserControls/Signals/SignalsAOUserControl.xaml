@@ -2,9 +2,10 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
+             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
+             
              d:Background="AliceBlue"
              d:DataContext="{Binding SignalsAOUserControlViewModel, Source={StaticResource Locator}}"
              d:DesignHeight="{Binding WindowHeight}"
@@ -155,7 +156,7 @@
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Id, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding SignalsAOUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -172,7 +173,7 @@
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Description, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding SignalsAOUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -225,10 +226,10 @@
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                 <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                          Text="{Binding Signal.Address, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding SignalsAOUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                     <TextBox.InputBindings>
                                         <MouseBinding MouseAction="RightClick"
-                                                      Command="{Binding SignalsAOUserControlViewModel.CmdChangeAddressSignal, Source={StaticResource Locator}}"
+                                                      Command="{Binding DataContext.CmdChangeAddressSignal, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                       CommandParameter="{Binding Signal.Index}"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
@@ -266,7 +267,7 @@
                                                Text="{Binding Signal.Index, UpdateSourceTrigger=PropertyChanged}">
                                     <TextBlock.InputBindings>
                                         <MouseBinding MouseAction="LeftDoubleClick"
-                                                          Command="{Binding SignalsAOUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                          Command="{Binding DataContext.CmdSelectionSignal, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                           CommandParameter="{Binding Signal.Index}"/>
                                     </TextBlock.InputBindings>
                                 </TextBlock>

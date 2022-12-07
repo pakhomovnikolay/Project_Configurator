@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
+        
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         WindowStyle="None"
@@ -172,14 +173,14 @@
                                                      Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                                             <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
                                                     Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding SettingWindowViewModels.CmdEditSelectedVendor, Source={StaticResource Locator}}"
+                                                    Command="{Binding DataContext.CmdEditSelectedVendor, RelativeSource={RelativeSource AncestorType=Window}}"
                                                     CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                                     >
                                                 <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
                                             </Button>
                                             <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
                                                     Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding SettingWindowViewModels.CmdRemoveVendor, Source={StaticResource Locator}}"
+                                                    Command="{Binding DataContext.CmdRemoveVendor, RelativeSource={RelativeSource AncestorType=Window}}"
                                                     CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
                                                 <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
                                             </Button>
@@ -273,58 +274,7 @@
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
                 
             </DockPanel>
-
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                    <RowDefinition/>
-                </Grid.RowDefinitions>
-                
-                <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="Black" CornerRadius="5" Background="AntiqueWhite">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <Border Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="1" BorderBrush="Black" CornerRadius="5" Background="White">
-                            <TextBlock Margin="10,2" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" Text="Настройки задвижек"/>
-                        </Border>
-                        <TextBlock Margin="1,0,5,0" Grid.Row="1" TextAlignment="Right"
-                                   Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="Количество входных сигналов на одну задвижку:"/>
-                        <TextBlock Margin="1,0,5,0" Grid.Row="2" TextAlignment="Right"
-                                   Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="Количество выходных сигналов на одну задвижку:"/>
-                        <TextBlock Margin="1,0,5,0" Grid.Row="3" TextAlignment="Right"
-                                   Grid.Column="0" Grid.ColumnSpan="2"
-                                   Text="Количество уставок на одну задвижку:"/>
-
-                        <TextBox Grid.Row="1" Grid.Column="2" VerticalContentAlignment="Center"
-                                 Text="{Binding Config.UZD.QtyInputParam, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Grid.Row="2" Grid.Column="2" VerticalContentAlignment="Center"
-                                 Text="{Binding Config.UZD.QtyOutputParam, UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBox Grid.Row="3" Grid.Column="2" VerticalContentAlignment="Center"
-                                 Text="{Binding Config.UZD.QtySetpoints, UpdateSourceTrigger=PropertyChanged}"/>
-                    </Grid>
-                </Border>
-
-                
-                
-            </Grid>-->
+            
         </GroupBox>
 
         <!--Команды управления-->

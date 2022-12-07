@@ -31,6 +31,8 @@ namespace Project_Сonfigurator.ViewModels
         public UVSUserControlViewModel UVSViewModel { get; }
         public UMPNAUserControlViewModel UMPNAViewModel { get; }
         public KTPRUserControlViewModel KTPRViewModel { get; }
+        public KTPRSUserControlViewModel KTPRSViewModel { get; }
+        
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -49,7 +51,8 @@ namespace Project_Сonfigurator.ViewModels
             UZDUserControlViewModel uZDViewModel,
             UVSUserControlViewModel uVSViewModel,
             UMPNAUserControlViewModel uMPNAViewModel,
-            KTPRUserControlViewModel kTPRViewModel
+            KTPRUserControlViewModel kTPRViewModel,
+            KTPRSUserControlViewModel kTPRSViewModel
             )
         {
             UserDialog = userDialog;
@@ -70,6 +73,7 @@ namespace Project_Сonfigurator.ViewModels
             UVSViewModel = uVSViewModel;
             UMPNAViewModel = uMPNAViewModel;
             KTPRViewModel = kTPRViewModel;
+            KTPRSViewModel = kTPRSViewModel;
         }
         #endregion
 

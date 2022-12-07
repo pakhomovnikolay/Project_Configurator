@@ -138,7 +138,7 @@
                                 <TextBox BorderThickness="0" Background="Transparent"
                                          TextAlignment="Center" VerticalContentAlignment="Center"
                                          Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -155,7 +155,7 @@
                             <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
                                 <TextBox BorderThickness="0" VerticalContentAlignment="Center" Background="Transparent" 
                                          Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}"/>
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -188,7 +188,7 @@
                             <Border BorderThickness="1,0,2,1" BorderBrush="Black" Height="25">
                                 <Border.InputBindings>
                                     <MouseBinding MouseAction="LeftDoubleClick"
-                                                  Command="{Binding UserAIUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                  Command="{Binding DataContext.CmdSelectionSignal, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                   CommandParameter="{Binding Address}"/>
                                 </Border.InputBindings>
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Address}"/>

@@ -12,12 +12,12 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class KTPRUserControlViewModel : ViewModel
+    public class KTPRSUserControlViewModel : ViewModel
     {
         #region Конструктор
         private ISignalService _SignalService;
 
-        public KTPRUserControlViewModel(ISignalService signalService)
+        public KTPRSUserControlViewModel(ISignalService signalService)
         {
             _SignalService = signalService;
 
@@ -28,7 +28,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Общестанционные защиты";
+        private string _Title = "Предельные параметры";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -40,7 +40,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Массив общестанционных защит";
+        private string _Description = "Массив предельных параметров общестанционных защит";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -105,11 +105,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Выбранный параметр
-        private BaseKTPR _SelectedParam = new();
+        private BaseKTPRS _SelectedParam = new();
         /// <summary>
         /// Выбранный параметр
         /// </summary>
-        public BaseKTPR SelectedParam
+        public BaseKTPRS SelectedParam
         {
             get => _SelectedParam;
             set => Set(ref _SelectedParam, value);
@@ -146,7 +146,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedParam is null) return;
 
-            var data_list = (List<BaseKTPR>)_DataView.Source ?? new List<BaseKTPR>();
+            var data_list = (List<BaseKTPRS>)_DataView.Source ?? new List<BaseKTPRS>();
             if (Index != SelectedParam.Param.Index)
                 SelectedParam = data_list[int.Parse(Index) - 1];
 
@@ -187,30 +187,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<BaseKTPR>();
+            var data_list = new List<BaseKTPRS>();
 
             #region Создание параметров
             while (data_list.Count < 256)
             {
-                var param = new BaseKTPR()
+                var param = new BaseKTPRS()
                 {
                     Param = new BaseParam
                     {
                         Index = $"{++index}",
                         Id = "",
                         Description = "",
-                        VarName = $"ktpr_param[{index}]",
+                        VarName = $"ktprs_param[{index}]",
                         Inv = "",
                         TypeSignal = "",
                         Address = ""
                     },
-                    StateStation = "",
-                    Shoulder = "",
-                    SubShoulder = "",
-                    Autodeblok = "",
-                    NoMasked = "",
-                    StopTypeNS = "",
-                    StopTypeUMPNA = "",
+                    TypeWarning = "",
                     Type = "",
                     ControlUTS = new BaseControlUTS(),
                     ControlUVS = new BaseControlUVS(),
@@ -220,9 +214,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                         Index = $"{index}",
                         Value = "",
                         Unit = "",
-                        Id = $"H{2000 + index - 1}",
-                        VarName = $"SP_STAT_PROT[{index}]",
-                        Address = $"%MW{4800 + index - 1}",
+                        Id = $"H{5000 + index - 1}",
+                        VarName = $"SP_CRIT_PROT[{index}]",
+                        Address = $"%MW{4600 + index - 1}",
                         Description = ""
                     }
                 };

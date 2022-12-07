@@ -15,6 +15,7 @@
     <UserControl.InputBindings>
         <KeyBinding Key="F5" Command="{Binding CmdGenerateTable}"/>
     </UserControl.InputBindings>
+    
     <Grid>
         
         <!--Сетка-->
@@ -244,7 +245,7 @@
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
                                             <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
                                                      Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                                     IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
+                                                     IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                 <TextBox.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -279,7 +280,7 @@
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
                                             <TextBox BorderThickness="0" VerticalContentAlignment="Center"
                                                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                                     IsReadOnly="{Binding TableSignalsUserControlViewModel.DoSelection, Source={StaticResource Locator}}">
+                                                     IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}">
                                                 <TextBox.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -392,7 +393,7 @@
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
                                             <Border.InputBindings>
                                                 <MouseBinding MouseAction="LeftDoubleClick"
-                                                              Command="{Binding TableSignalsUserControlViewModel.CmdSelectionSignal, Source={StaticResource Locator}}"
+                                                              Command="{Binding DataContext.CmdSelectionSignal, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                               CommandParameter="{Binding Address}"/>
                                             </Border.InputBindings>
                                             <Border.Background>
