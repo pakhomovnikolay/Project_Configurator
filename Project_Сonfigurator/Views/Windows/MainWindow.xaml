@@ -173,6 +173,11 @@
                 <pages_param:KTPRSUserControl DataContext="{Binding KTPRSViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding SignalingViewModel.Title}"
+                     IsSelected="{Binding SignalingViewModel.IsSelected}">
+                <pages_param:SignalingUserControl DataContext="{Binding SignalingViewModel}"/>
+            </TabItem>
+
         </TabControl>
         
     </Grid>
