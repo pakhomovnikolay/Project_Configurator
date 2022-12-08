@@ -27,7 +27,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _SignalService = signalService;
 
             _DataView.Filter += OnSignalsAOFiltered;
-            GeneratedSignals();
+            if (Program.Settings.AppData is null || Program.Settings.AppData.SignalAO.Count <= 0)
+                GeneratedSignals();
+            else
+                GeneratedData();
         }
         #endregion
 
@@ -324,7 +327,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
-            #region Генерируем сигналы AO, созданные во вкладке Таблица сигналов
+            #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
+
+            #region Генерируем данные из ТБ
             var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
             foreach (var _USO in uso_list)
             {
@@ -336,25 +341,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         {
                             foreach (var _Channel in _Module.Channels)
                             {
-                                var signal = new SignalAO()
+                                if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
                                 {
-                                    Signal = new BaseSignal
+                                    var signal = new SignalAO()
                                     {
-                                        Index = $"{++index}",
-                                        Id = _Channel.Id,
-                                        Description = _Channel.Description,
-                                        VarName = $"ao_shared[{index}]",
-                                        Area = "",
-                                        Address = $"{int.Parse(_Channel.Address) - 300000}",
-                                    }
-                                };
-                                data_list.Add(signal);
+                                        Signal = new BaseSignal
+                                        {
+                                            Index = $"{++index}",
+                                            Id = _Channel.Id,
+                                            Description = _Channel.Description,
+                                            VarName = $"ao_shared[{index}]",
+                                            Area = "",
+                                            Address = $"{int.Parse(_Channel.Address) - 300000}",
+                                        }
+                                    };
+                                    data_list.Add(signal);
+                                }
                             }
                         }
                     }
                 }
             }
+            #endregion
 
+            #region Дозаполняем таблицу
             while (data_list.Count < 500)
             {
                 var signal = new SignalAO()
@@ -374,12 +384,32 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
+            #endregion
+
             SelectedSignalAO = data_list[0];
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
-        #endregion 
+        #endregion
+
+        #region Генерируем данные
+        private void GeneratedData()
+        {
+            var data_list = new List<SignalAO>();
+            var signals = Program.Settings.AppData.SignalAO;
+
+            foreach (var signal in signals)
+            {
+                data_list.Add(signal);
+            }
+
+            SelectedSignalAO = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+        }
+        #endregion
 
         #endregion
     }

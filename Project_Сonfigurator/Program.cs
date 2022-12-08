@@ -18,6 +18,7 @@ namespace Project_Сonfigurator
                 System.IO.Directory.CreateDirectory(PathConfig);
 
             Settings.Load();
+            Settings.LoadData();
             #endregion
 
             var app = new App();

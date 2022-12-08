@@ -115,6 +115,7 @@
             <Button Margin="2" ToolTip="Добавить корзину" Width="70"
                     Style="{StaticResource CustomButtonStyle}"
                     Command="{Binding CmdCreateNewRack}"
+                    CommandParameter="{Binding ElementName=RackDataGrid}"
                     >
                 <Button.Content>
                     <Grid>

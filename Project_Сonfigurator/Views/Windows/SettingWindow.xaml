@@ -278,9 +278,8 @@
             
         </GroupBox>
 
-        <!--Настройки испольнительных механизмов-->
+        <!--Настройки импорта-->
         <GroupBox Grid.Row="2" Grid.Column="2" BorderBrush="Black">
-
             <GroupBox.Header>
                 <TextBlock Text="Настройки импорта ТБ" FontWeight="Bold" Margin="5,0,5,0"/>
             </GroupBox.Header>
@@ -290,7 +289,6 @@
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -298,6 +296,7 @@
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
+                
                 <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
                 <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
                 <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
@@ -333,6 +332,70 @@
                          Text="{Binding Config.Import.IndexColumnModule, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid> 
 
+        </GroupBox>
+        
+        <!--Настройки сохранения БД-->
+        <GroupBox Grid.Row="2" Grid.Column="3" BorderBrush="Black">
+            <GroupBox.Header>
+                <TextBlock Text="Настройки сохранения БД" FontWeight="Bold" Margin="5,0,5,0"/>
+            </GroupBox.Header>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                
+                <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="3" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="4" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="5" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White"/>
+                
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="4" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="5" BorderThickness="1" BorderBrush="Black"/>
+                
+                <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Адрес подключения:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Имя базы данных:"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Порт подключения:"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Таймаут подключения(сек.):"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Имя пользователя:"/>
+                <TextBlock Grid.Column="0" Grid.Row="5" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Пароль:"/>
+
+                <TextBox Grid.Column="1" Grid.Row="0" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.IPAddress, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="1" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.NameDB, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="2" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.Port, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="3" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.TimeoutConnect, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="4" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.UserName, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="5" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.ConnectDB.Password, UpdateSourceTrigger=PropertyChanged}"/>
+
+            </Grid>
         </GroupBox>
 
         <!--Команды управления-->

@@ -30,6 +30,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UserDialog = userDialog;
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
+
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UZD.Count > 0)
+                GeneratedSignals();
         }
         #endregion
 
@@ -657,6 +660,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             OnPropertyChanged(nameof(DataView));
             return;
             #endregion
+        }
+        #endregion 
+
+        #region Генерация сигналов
+        private void GeneratedSignals()
+        {
+            var data_list = new List<BaseUZD>();
+
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UZD.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UZD;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            SelectedUZD = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+            return;
         }
         #endregion 
 

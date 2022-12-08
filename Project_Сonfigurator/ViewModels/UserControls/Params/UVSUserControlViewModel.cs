@@ -20,16 +20,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
-        
+
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
         public UVSUserControlViewModel(
             ISignalService signalService,
-            IUserDialogService userDialog, 
+            IUserDialogService userDialog,
             TableSignalsUserControlViewModel tableSignalsViewModel)
         {
             UserDialog = userDialog;
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
+
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UVS.Count > 0)
+                GeneratedSignals();
         }
         #endregion
 
@@ -644,6 +647,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             OnPropertyChanged(nameof(DataView));
             return;
             #endregion
+        }
+        #endregion 
+
+        #region Генерация сигналов
+        private void GeneratedSignals()
+        {
+            var data_list = new List<BaseUVS>();
+
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UVS.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UVS;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            SelectedUVS = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+            return;
         }
         #endregion 
 

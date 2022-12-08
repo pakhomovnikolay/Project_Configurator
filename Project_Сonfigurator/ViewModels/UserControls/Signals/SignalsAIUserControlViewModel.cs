@@ -27,7 +27,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _SignalService = signalService;
 
             _DataView.Filter += OnSignalsDOFiltered;
-            GeneratedSignals();
+
+            if (Program.Settings.AppData is null || Program.Settings.AppData.SignalAI.Count <= 0)
+                GeneratedSignals();
+            else
+                GeneratedData();
+
+
         }
         #endregion
 
@@ -302,7 +308,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             var data_list = new List<SignalAI>();
 
             #region Генерируем сигналы AI, при отсутсвии данных во владке Таблица сигналов
-            if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
+            if (TableSignalsViewModel.LayotRackViewModel is null ||
+                TableSignalsViewModel.LayotRackViewModel.USOList is null ||
+                TableSignalsViewModel.LayotRackViewModel.USOList.Count < 0)
             {
                 while (data_list.Count < 500)
                 {
@@ -331,6 +339,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
+
+            #region Генерируем данные из ТБ
             var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
             foreach (var _USO in uso_list)
             {
@@ -342,25 +352,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         {
                             foreach (var _Channel in _Module.Channels)
                             {
-                                var signal = new SignalAI()
+                                if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
                                 {
-                                    Signal = new BaseSignal
+                                    var signal = new SignalAI()
                                     {
-                                        Index = $"{++index}",
-                                        Id = _Channel.Id,
-                                        Description = _Channel.Description,
-                                        VarName = $"ai_shared[{index}]",
-                                        Area = "",
-                                        Address = $"{int.Parse(_Channel.Address)}",
-                                    }
-                                };
-                                data_list.Add(signal);
+                                        Signal = new BaseSignal
+                                        {
+                                            Index = $"{++index}",
+                                            Id = _Channel.Id,
+                                            Description = _Channel.Description,
+                                            VarName = $"ai_shared[{index}]",
+                                            Area = "",
+                                            Address = $"{int.Parse(_Channel.Address)}",
+                                        }
+                                    };
+                                    data_list.Add(signal);
+                                }
                             }
                         }
                     }
                 }
             }
+            #endregion
 
+            #region Дозаполняем таблицу
             while (data_list.Count < 500)
             {
                 var signal = new SignalAI()
@@ -380,12 +395,32 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
+            #endregion
+
             SelectedSignalAI = data_list[0];
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
-        #endregion 
+        #endregion
+
+        #region Генерируем данные
+        private void GeneratedData()
+        {
+            var data_list = new List<SignalAI>();
+            var signals = Program.Settings.AppData.SignalAI;
+
+            foreach (var signal in signals)
+            {
+                data_list.Add(signal);
+            }
+
+            SelectedSignalAI = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+        }
+        #endregion
 
         #endregion
     }

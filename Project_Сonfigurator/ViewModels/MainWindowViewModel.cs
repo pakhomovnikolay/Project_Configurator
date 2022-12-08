@@ -1,12 +1,20 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using DocumentFormat.OpenXml.Spreadsheet;
+using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Models;
+using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using System;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -15,6 +23,8 @@ namespace Project_Сonfigurator.ViewModels
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
+        private readonly IDBService _DBService;
+        public ISettingService _SettingService;
 
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
@@ -33,12 +43,12 @@ namespace Project_Сonfigurator.ViewModels
         public KTPRUserControlViewModel KTPRViewModel { get; }
         public KTPRSUserControlViewModel KTPRSViewModel { get; }
         public SignalingUserControlViewModel SignalingViewModel { get; }
-        
-
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
             ILogSerivece logSerivece,
+            IDBService dDBService,
+            ISettingService settingService,
             LayotRackUserControlViewModel layotRackViewModel,
             TableSignalsUserControlViewModel tableSignalsViewModel,
             SignalsDIUserControlViewModel signalsDIViewModel,
@@ -60,6 +70,8 @@ namespace Project_Сonfigurator.ViewModels
         {
             UserDialog = userDialog;
             Log = logSerivece;
+            _DBService = dDBService;
+            _SettingService = settingService;
 
             LayotRackViewModel = layotRackViewModel;
             TableSignalsViewModel = tableSignalsViewModel;
@@ -178,6 +190,54 @@ namespace Project_Сonfigurator.ViewModels
                 Owner = Application.Current.MainWindow
             };
             window.ShowDialog();
+        }
+        #endregion
+
+        #region Команда - Сохранить данные
+        private ICommand _CmdSaveData;
+        /// <summary>
+        /// Команда - Сохранить данные
+        /// </summary>
+        public ICommand CmdSaveData => _CmdSaveData ??= new RelayCommand(OnCmdSaveDataExecuted);
+        private void OnCmdSaveDataExecuted()
+        {
+            FormingAppDataBeforeSaving();
+            _SettingService.SaveData();
+            _DBService.GetData();
+        }
+        #endregion
+
+        #endregion
+
+        #region Функции
+
+        #region Формируем данные приложения перед сохранением
+        private void FormingAppDataBeforeSaving()
+        {
+            try
+            {
+                _SettingService.AppData.USOList = TableSignalsViewModel.DataView is null ? new() : (List<USO>)TableSignalsViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UserDI = UserDIViewModel.DataView is null ? new() : (List<BaseSignal>)UserDIViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UserAI = UserAIViewModel.DataView is null ? new() : (List<BaseSignal>)UserAIViewModel.DataView.SourceCollection;
+                _SettingService.AppData.SignalDI = SignalsDIViewModel.DataView is null ? new() : (List<SignalDI>)SignalsDIViewModel.DataView.SourceCollection;
+                _SettingService.AppData.SignalAI = SignalsAIViewModel.DataView is null ? new() : (List<SignalAI>)SignalsAIViewModel.DataView.SourceCollection;
+                _SettingService.AppData.SignalDO = SignalsDOViewModel.DataView is null ? new() : (List<SignalDO>)SignalsDOViewModel.DataView.SourceCollection;
+                _SettingService.AppData.SignalAO = SignalsAOViewModel.DataView is null ? new() : (List<SignalAO>)SignalsAOViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UserReg = UserRegUserModel.DataView is null ? new() : (List<BaseParam>)UserRegUserModel.DataView.SourceCollection;
+                _SettingService.AppData.SignalGroup = SignalsGroupViewModel.DataView is null ? new() : (List<BaseParam>)SignalsGroupViewModel.DataView.SourceCollection;
+                _SettingService.AppData.GroupSignals = GroupsSignalViewModel.DataView is null ? new() : (List<GroupSignal>)GroupsSignalViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UZD = UZDViewModel.DataView is null ? new() : (List<BaseUZD>)UZDViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UVS = UVSViewModel.DataView is null ? new() : (List<BaseUVS>)UVSViewModel.DataView.SourceCollection;
+                _SettingService.AppData.UMPNA = UMPNAViewModel.DataView is null ? new() : (List<BaseUMPNA>)UMPNAViewModel.DataView.SourceCollection;
+                _SettingService.AppData.KTPR = KTPRViewModel.DataView is null ? new() : (List<BaseKTPR>)KTPRViewModel.DataView.SourceCollection;
+                _SettingService.AppData.KTPRS = KTPRSViewModel.DataView is null ? new() : (List<BaseKTPRS>)KTPRSViewModel.DataView.SourceCollection;
+                _SettingService.AppData.Signaling = SignalingViewModel.DataView is null ? new() : (List<BaseSignaling>)SignalingViewModel.DataView.SourceCollection;
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
+            }
+            
         }
         #endregion
 

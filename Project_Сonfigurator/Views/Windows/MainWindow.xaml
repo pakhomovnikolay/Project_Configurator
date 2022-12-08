@@ -68,9 +68,8 @@
         <!--Меню-->
         <Menu Grid.Row="1">
             <MenuItem Header="Меню" Height="25" Margin="10,0,0,0">
-                <MenuItem Header="Настройки" Command="{Binding CmdOpenSettingWindow}">
-                    
-                </MenuItem>
+                <MenuItem Header="Сохранить" Command="{Binding CmdSaveData}"/>
+                <MenuItem Header="Настройки" Command="{Binding CmdOpenSettingWindow}"/>
             </MenuItem>
         </Menu>
         

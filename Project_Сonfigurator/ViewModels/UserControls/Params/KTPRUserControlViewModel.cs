@@ -189,6 +189,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<BaseKTPR>();
 
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.KTPR.Count > 0)
+            {
+                var signals = Program.Settings.AppData.KTPR;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
             #region Создание параметров
             while (data_list.Count < 256)
             {

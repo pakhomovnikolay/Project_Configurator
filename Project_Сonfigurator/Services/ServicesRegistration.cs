@@ -10,6 +10,7 @@ namespace Project_Сonfigurator.Services
             .AddTransient<ILogSerivece, LogSerivece>()
             .AddTransient<ILayotRackService, LayotRackService>()
             .AddTransient<IVendorService, VendorService>()
+            .AddTransient<IDBService, DBService>()
 
             .AddSingleton<ISignalService, SignalService>()
             .AddSingleton<ISettingService, SettingService>()

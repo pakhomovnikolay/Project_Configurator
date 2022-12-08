@@ -388,7 +388,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"
+                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
                                                            Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
@@ -404,7 +404,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" FontWeight="Bold"
+                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
                                                            Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>

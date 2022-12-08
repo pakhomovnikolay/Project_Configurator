@@ -27,7 +27,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _SignalService = signalService;
 
             _DataView.Filter += OnSignalsDIFiltered;
-            GeneratedSignals();
+            if (Program.Settings.AppData is null || Program.Settings.AppData.SignalDI.Count <= 0)
+                GeneratedSignals();
+            else
+                GeneratedData();
         }
         #endregion
 
@@ -330,6 +333,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Генерируем сигналы DI, созданные во вкладке Таблица сигналов
+
+            #region Генерируем данные из ТБ
             var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
             foreach (var _USO in uso_list)
             {
@@ -341,25 +346,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         {
                             foreach (var _Channel in _Module.Channels)
                             {
-                                var signal = new SignalDI()
+                                if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
                                 {
-                                    Signal = new BaseSignal
+                                    var signal = new SignalDI()
                                     {
-                                        Index = $"{++index}",
-                                        Id = _Channel.Id,
-                                        Description = _Channel.Description,
-                                        VarName = $"di_shared[{index}]",
-                                        Area = "",
-                                        Address = $"{int.Parse(_Channel.Address) - 100000}",
-                                    }
-                                };
-                                data_list.Add(signal);
+                                        Signal = new BaseSignal
+                                        {
+                                            Index = $"{++index}",
+                                            Id = _Channel.Id,
+                                            Description = _Channel.Description,
+                                            VarName = $"di_shared[{index}]",
+                                            Area = "",
+                                            Address = $"{int.Parse(_Channel.Address) - 100000}",
+                                        }
+                                    };
+                                    data_list.Add(signal);
+                                }
                             }
                         }
                     }
                 }
             }
+            #endregion
 
+            #region Дозаполняем таблицу
             while (data_list.Count < 2500)
             {
                 var signal = new SignalDI()
@@ -379,12 +389,32 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             }
             #endregion
 
+            #endregion
+
             SelectedSignalDI = data_list[0];
             _DataView.Source = data_list;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
         #endregion 
+
+        #region Генерируем данные
+        private void GeneratedData()
+        {
+            var data_list = new List<SignalDI>();
+            var signals = Program.Settings.AppData.SignalDI;
+
+            foreach (var signal in signals)
+            {
+                data_list.Add(signal);
+            }
+
+            SelectedSignalDI = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+        }
+        #endregion
 
         #endregion
     }

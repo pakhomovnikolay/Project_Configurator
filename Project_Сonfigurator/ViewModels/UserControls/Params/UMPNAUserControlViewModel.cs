@@ -30,6 +30,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UserDialog = userDialog;
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
+
+
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
+                GeneratedSignals();
         }
         #endregion
 
@@ -1126,6 +1130,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             OnPropertyChanged(nameof(DataView));
             return;
             #endregion
+        }
+        #endregion 
+
+        #region Генерация сигналов
+        private void GeneratedSignals()
+        {
+            var data_list = new List<BaseUMPNA>();
+
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UMPNA;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            SelectedUMPNA = data_list[0];
+            _DataView.Source = data_list;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
+            return;
         }
         #endregion 
 

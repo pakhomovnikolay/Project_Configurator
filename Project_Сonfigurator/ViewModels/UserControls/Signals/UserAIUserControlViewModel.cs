@@ -228,7 +228,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             var index = 0;
             var data_list = new List<BaseSignal>();
 
-            #region Генерируем сигналы DI
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UserAI.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UserAI;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            #region Генерируем сигналы AI
             while (index < 500)
             {
                 var signal = new BaseSignal

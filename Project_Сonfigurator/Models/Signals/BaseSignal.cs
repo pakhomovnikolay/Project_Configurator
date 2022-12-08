@@ -86,7 +86,7 @@ namespace Project_Сonfigurator.Models.Signals
                 var address = 0;
                 var area = 0;
                 if (!string.IsNullOrWhiteSpace(Address))
-                    address = int.Parse(Address);
+                    int.TryParse(Address, out address);
 
                 if (!string.IsNullOrWhiteSpace(_Area))
                 {

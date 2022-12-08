@@ -225,7 +225,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<BaseParam>();
 
-            #region Генерируем сигналы DI
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UserReg.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UserReg;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            #region Генерируем регистры формируемые
             while (index < 1000)
             {
                 var signal = new BaseParam

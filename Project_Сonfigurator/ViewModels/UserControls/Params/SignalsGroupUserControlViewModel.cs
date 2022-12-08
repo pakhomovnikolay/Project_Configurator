@@ -283,6 +283,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<BaseParam>();
 
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.SignalGroup.Count > 0)
+            {
+                var signals = Program.Settings.AppData.SignalGroup;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            #region Генерируем данные
             while (data_list.Count < 256)
             {
                 var signal = new BaseParam()
@@ -297,6 +309,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 };
                 data_list.Add(signal);
             }
+            #endregion
 
             SelectedParam = data_list[0];
             _DataView.Source = data_list;

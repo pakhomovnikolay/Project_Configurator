@@ -20,7 +20,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             _LayotRackService = iLayotRackService;
 
-            OnCmdCreateNewUSOExecuted();
+            if (Program.Settings.AppData is null || Program.Settings.AppData.USOList.Count <= 0)
+                OnCmdCreateNewUSOExecuted();
+            else
+                GeneratedData();
         }
         #endregion
 
@@ -280,9 +283,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Создать новую корзину в выбранном УСО
         /// </summary>
         public ICommand CmdCreateNewRack => _CmdCreateNewRack ??= new RelayCommand(OnCmdCreateNewRackExecuted, CanCmdCreateNewRackExecute);
-        private bool CanCmdCreateNewRackExecute() => SelectedUSO is not null;
-        private void OnCmdCreateNewRackExecuted()
+        private bool CanCmdCreateNewRackExecute(object p) => SelectedUSO is not null;
+        private void OnCmdCreateNewRackExecuted(object p)
         {
+            if (p is null) return;
+            if (p is not DataGrid MyDataGrid) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+
             var modules = new List<RackModule>();
             for (int i = 0; i < 26; i++)
             {
@@ -380,6 +387,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             _LayotRackService.RefreshAddressModule(USOList);
             _DataViewRacks.Source = SelectedUSO.Racks;
             _DataViewRacks.View.Refresh();
+        }
+        #endregion
+
+        #endregion
+
+        #region Функции
+
+        #region Генерируем данные
+        private void GeneratedData()
+        {
+            foreach (var _USO in Program.Settings.AppData.USOList)
+            {
+                USOList.Add(_USO);
+            }
+            SelectedUSO = USOList[^1];
+            SelectedRack = USOList[^1].Racks[0];
+            _DataView.Source = USOList;
+            _DataView.View.Refresh();
         }
         #endregion
 

@@ -38,5 +38,12 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// </summary>
         SettingImport Import { get; set; }
         #endregion
+
+        #region Настройки подклюяения к БД
+        /// <summary>
+        /// Настройки подклюяения к БД
+        /// </summary>
+        SettingConnectDB ConnectDB { get; set; }
+        #endregion
     }
 }

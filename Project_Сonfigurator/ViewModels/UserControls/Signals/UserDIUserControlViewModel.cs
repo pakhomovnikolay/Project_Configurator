@@ -230,6 +230,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             var index = 0;
             var data_list = new List<BaseSignal>();
 
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.UserDI.Count > 0)
+            {
+                var signals = Program.Settings.AppData.UserDI;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
             #region Генерируем сигналы DI
             while (index_reg < 75)
             {

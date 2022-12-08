@@ -236,7 +236,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedParam is null) return;
-            
+
             var data_list = new List<GroupSignal>();
             foreach (GroupSignal Param in DataView)
             {
@@ -295,7 +295,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
             var NameListSelected = "Сигналы групп";
             if (App.FucusedTabControl == null) return;
-             foreach (var _Item in App.FucusedTabControl.Items)
+            foreach (var _Item in App.FucusedTabControl.Items)
             {
                 var _TabItem = _Item as TabItem;
                 if (_TabItem.Header.ToString() == NameListSelected)
@@ -377,6 +377,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<GroupSignal>();
 
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.GroupSignals.Count > 0)
+            {
+                var signals = Program.Settings.AppData.GroupSignals;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
+            #region Генерируем сигналы
             while (data_list.Count < 128)
             {
                 var signal = new GroupSignal()
@@ -397,6 +409,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 };
                 data_list.Add(signal);
             }
+            #endregion 
 
             SelectedParam = data_list[0];
             _DataView.Source = data_list;

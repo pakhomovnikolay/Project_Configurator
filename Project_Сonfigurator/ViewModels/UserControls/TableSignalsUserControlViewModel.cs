@@ -33,6 +33,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
 
             LayotRackViewModel = layotRackViewModel;
+
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.USOList.Count > 0)
+                GeneratedData();
+
         }
         #endregion
 
@@ -568,6 +572,47 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             #endregion
 
             e.Accepted = false;
+        }
+        #endregion
+
+        #region Генерируем данные
+        private void GeneratedData()
+        {
+            SelectedUSO = new USO();
+            var uso_list = new List<USO>();
+            foreach (var _USO in LayotRackViewModel.USOList)
+            {
+                var need_add_uso = false;
+                foreach (var _Rack in _USO.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        switch (_Module.Type)
+                        {
+                            case TypeModule.AI:
+                            case TypeModule.DI:
+                            case TypeModule.AO:
+                            case TypeModule.DO:
+                            case TypeModule.DA:
+                                need_add_uso = true;
+                                break;
+                        }
+                    }
+                }
+                if (need_add_uso)
+                    uso_list.Add(_USO);
+            }
+
+            if (uso_list.Count <= 0)
+                _DataView.Source = uso_list;
+            else
+            {
+                SelectedUSO = uso_list[0];
+                _DataView.Source = uso_list;
+                _DataView.View?.Refresh();
+            }
+            _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 

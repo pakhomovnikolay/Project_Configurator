@@ -236,6 +236,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var index = 0;
             var data_list = new List<BaseSignaling>();
 
+            #region При наличии данных генерируем данные
+            if (Program.Settings.AppData is not null && Program.Settings.AppData.Signaling.Count > 0)
+            {
+                var signals = Program.Settings.AppData.Signaling;
+                foreach (var signal in signals)
+                {
+                    data_list.Add(signal);
+                }
+            }
+            #endregion
+
             #region Генерируем параметры
             for (int i = 0; i < 58; i++)
             {
