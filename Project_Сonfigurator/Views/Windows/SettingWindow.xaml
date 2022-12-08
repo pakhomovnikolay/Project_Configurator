@@ -247,7 +247,7 @@
         </GroupBox>
         
         <!--Настройки испольнительных механизмов-->
-        <GroupBox Grid.Row="2" Grid.Column="1" BorderBrush="Black" Height="119">
+        <GroupBox Grid.Row="2" Grid.Column="1" BorderBrush="Black">
 
             <GroupBox.Header>
                 <TextBlock Text="Настройки испольнительных механизмов" FontWeight="Bold" Margin="5,0,5,0"/>
@@ -272,9 +272,67 @@
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdOpenWindowEditDevice}"
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-                
+
+                <TextBlock Text="" FontWeight="Bold" Margin="5,0,5,0"/>
             </DockPanel>
             
+        </GroupBox>
+
+        <!--Настройки испольнительных механизмов-->
+        <GroupBox Grid.Row="2" Grid.Column="2" BorderBrush="Black">
+
+            <GroupBox.Header>
+                <TextBlock Text="Настройки импорта ТБ" FontWeight="Bold" Margin="5,0,5,0"/>
+            </GroupBox.Header>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="3" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
+                <Border Grid.Column="0" Grid.Row="4" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White"/>
+
+                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black"/>
+                <Border Grid.Column="1" Grid.Row="4" BorderThickness="1" BorderBrush="Black"/>
+
+                <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Стартовый индекс строки:"/>
+                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Идентификатор:"/>
+                <TextBlock Grid.Column="0" Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Наименование сигнала:"/>
+                <TextBlock Grid.Column="0" Grid.Row="3" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер корзины:"/>
+                <TextBlock Grid.Column="0" Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер канала в модуле:"/>
+
+                <TextBox Grid.Column="1" Grid.Row="0" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.Import.StartIndexRow, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="1" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.Import.IndexColumnId, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="2" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.Import.IndexColumnDescription, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="3" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.Import.IndexColumnRack, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Grid.Column="1" Grid.Row="4" BorderThickness="0"
+                         TextAlignment="Left" VerticalContentAlignment="Center" Margin="1,1"
+                         Text="{Binding Config.Import.IndexColumnModule, UpdateSourceTrigger=PropertyChanged}"/>
+            </Grid> 
+
         </GroupBox>
 
         <!--Команды управления-->

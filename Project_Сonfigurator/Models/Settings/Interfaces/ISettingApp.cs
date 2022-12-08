@@ -31,5 +31,12 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// </summary>
         UMPNAParam UMPNA { get; set; }
         #endregion
+
+        #region Настройки импорта ТБ
+        /// <summary>
+        /// Настройки импорта ТБ
+        /// </summary>
+        SettingImport Import { get; set; }
+        #endregion
     }
 }

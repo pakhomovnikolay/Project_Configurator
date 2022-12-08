@@ -1,6 +1,4 @@
 ﻿using ClosedXML.Excel;
-using DocumentFormat.OpenXml.Office2010.Excel;
-using DocumentFormat.OpenXml.VariantTypes;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
@@ -333,28 +331,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 using var work_book = new XLWorkbook(PathImport);
                 var worksheet = work_book.Worksheets.Worksheet(1);
 
-                var jSh = 5;
+                var StartIndexRow = int.Parse(Program.Settings.Config.Import.StartIndexRow);
+                var IndexColumnId = int.Parse(Program.Settings.Config.Import.IndexColumnId);
+                var IndexColumnDescription = int.Parse(Program.Settings.Config.Import.IndexColumnDescription);
+                var IndexColumnRack = int.Parse(Program.Settings.Config.Import.IndexColumnRack);
+                var IndexColumnModule = int.Parse(Program.Settings.Config.Import.IndexColumnModule);
+
                 var Id = new List<string>();
                 var Description = new List<string>();
 
                 #region Формируем листы Идентификаторов и Наименования параметров
-                while (!string.IsNullOrWhiteSpace(worksheet.Cell(jSh, 3).Value.ToString()))
+                while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnRack).Value.ToString()))
                 {
-                    if (!string.IsNullOrWhiteSpace(worksheet.Cell(jSh, 5).Value.ToString()))
+                    if (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnModule).Value.ToString()))
                     {
-                        if (!worksheet.Cell(jSh, 1).Value.ToString().Contains(SelectedUSO.Name, StringComparison.CurrentCultureIgnoreCase))
-                            Id.Add(worksheet.Cell(jSh, 1).Value.ToString());
+                        if (!worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString().Contains(SelectedUSO.Name, StringComparison.CurrentCultureIgnoreCase))
+                            Id.Add(worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString());
                         else
                             Id.Add("");
 
-                        Description.Add(worksheet.Cell(jSh, 2).Value.ToString());
+                        Description.Add(worksheet.Cell(StartIndexRow, IndexColumnDescription).Value.ToString());
                     }
-                    jSh++;
+                    StartIndexRow++;
                 }
                 #endregion
 
                 #region Переописываем каналы модулей
-                jSh = 0;
+                var jSh = 0;
                 if (Id.Count > 0 && Description.Count > 0)
                 {
                     foreach (var _Rack in SelectedUSO.Racks)
@@ -374,9 +377,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 _DataViewModules.View?.Refresh();
                 OnPropertyChanged(nameof(DataViewModules));
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                UserDialog.SendMessage(Title, $"Ипорт завершен с ошибкой:\n{e}");
+                var desc = "Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу и настройки импорта";
+                UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
             }
         }
         #endregion
