@@ -6,7 +6,13 @@
 	  <Nullable>annotations</Nullable>
 	  <UseWPF>true</UseWPF>
 	  <StartupObject>Project_Сonfigurator.Program</StartupObject>
+	  <PackageIcon>MagicIcon.jpg</PackageIcon>
+	  <ApplicationIcon>Resources\Icons\MagicIcon.ico</ApplicationIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Icons\MagicIcon.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.97.0" />
@@ -16,6 +22,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Program.cs">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Compile>
     <Compile Update="Views\UserControls\Signals\SignalsAOUserControl.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
