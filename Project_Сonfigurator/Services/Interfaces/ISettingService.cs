@@ -48,7 +48,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Загрузка данных приложения
         /// </summary>
         /// <returns></returns>
-        DBData LoadData();
+        DBData LoadData(string SelectedPath = "");
         #endregion
     }
 }

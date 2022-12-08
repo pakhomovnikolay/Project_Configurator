@@ -184,7 +184,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Функции
 
         #region Генерация сигналов
-        private void GeneratedSignals()
+        public void GeneratedSignals()
         {
             var index = 0;
             var data_list = new List<BaseKTPRS>();

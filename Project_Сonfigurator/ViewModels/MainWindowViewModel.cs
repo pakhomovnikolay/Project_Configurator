@@ -207,6 +207,41 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Команда - Отркыть проект
+        private ICommand _CmdOpenProject;
+        /// <summary>
+        /// Команда - Отркыть проект
+        /// </summary>
+        public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
+        private void OnCmdOpenProjectExecuted()
+        {
+            if (UserDialog.OpenFile(Title, out string path))
+            {
+                Program.Settings.LoadData(path);
+                if (Program.Settings.AppData is not null)
+                {
+                    LayotRackViewModel.GeneratedData();
+                    TableSignalsViewModel.GeneratedData();
+
+                    UserDIViewModel.GeneratedSignals();
+                    UserAIViewModel.GeneratedSignals();
+                    SignalsDIViewModel.GeneratedData();
+                    SignalsAIViewModel.GeneratedData();
+                    SignalsDOViewModel.GeneratedData();
+                    SignalsAOViewModel.GeneratedData();
+                    UserRegUserModel.GeneratedSignals();
+                    GroupsSignalViewModel.GeneratedSignals();
+                    UZDViewModel.GeneratedSignals();
+                    UVSViewModel.GeneratedSignals();
+                    UMPNAViewModel.GeneratedSignals();
+                    KTPRViewModel.GeneratedSignals();
+                    KTPRSViewModel.GeneratedSignals();
+                    SignalingViewModel.GeneratedSignals();
+                }
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -216,7 +251,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             try
             {
-                _SettingService.AppData.USOList = TableSignalsViewModel.DataView is null ? new() : (List<USO>)TableSignalsViewModel.DataView.SourceCollection;
+                _SettingService.AppData.USOList = LayotRackViewModel.DataView is null ? new() : (List<USO>)LayotRackViewModel.DataView.SourceCollection;
                 _SettingService.AppData.UserDI = UserDIViewModel.DataView is null ? new() : (List<BaseSignal>)UserDIViewModel.DataView.SourceCollection;
                 _SettingService.AppData.UserAI = UserAIViewModel.DataView is null ? new() : (List<BaseSignal>)UserAIViewModel.DataView.SourceCollection;
                 _SettingService.AppData.SignalDI = SignalsDIViewModel.DataView is null ? new() : (List<SignalDI>)SignalsDIViewModel.DataView.SourceCollection;

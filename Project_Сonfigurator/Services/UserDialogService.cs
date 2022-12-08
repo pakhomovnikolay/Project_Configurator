@@ -30,7 +30,7 @@ namespace Project_Сonfigurator.Services
             };
 
             if (dialog.ShowDialog() != true) { return false; }
-            if (!Directory.Exists(dialog.FileName))
+            if (!File.Exists(dialog.FileName))
             {
                 SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",
                     MessageBoxButton.OK, MessageBoxImage.Warning);

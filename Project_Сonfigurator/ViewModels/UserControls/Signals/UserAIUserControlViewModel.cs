@@ -223,7 +223,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Генерация сигналов
-        private void GeneratedSignals()
+        public void GeneratedSignals()
         {
             var index = 0;
             var data_list = new List<BaseSignal>();

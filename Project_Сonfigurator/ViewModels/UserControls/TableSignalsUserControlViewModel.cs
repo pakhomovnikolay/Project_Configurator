@@ -576,7 +576,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #endregion
 
         #region Генерируем данные
-        private void GeneratedData()
+        public void GeneratedData()
         {
             SelectedUSO = new USO();
             var uso_list = new List<USO>();

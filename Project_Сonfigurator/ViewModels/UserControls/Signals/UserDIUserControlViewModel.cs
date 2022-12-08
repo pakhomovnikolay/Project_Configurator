@@ -224,7 +224,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Генерация сигналов
-        private void GeneratedSignals()
+        public void GeneratedSignals()
         {
             var index_reg = 0;
             var index = 0;

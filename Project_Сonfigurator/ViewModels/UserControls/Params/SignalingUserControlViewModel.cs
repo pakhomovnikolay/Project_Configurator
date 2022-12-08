@@ -231,7 +231,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Генерация параметров
-        private void GeneratedSignals()
+        public void GeneratedSignals()
         {
             var index = 0;
             var data_list = new List<BaseSignaling>();

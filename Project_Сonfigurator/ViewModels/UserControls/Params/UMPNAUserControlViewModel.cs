@@ -1134,7 +1134,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Генерация сигналов
-        private void GeneratedSignals()
+        public void GeneratedSignals()
         {
             var data_list = new List<BaseUMPNA>();
 

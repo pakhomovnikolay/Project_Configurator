@@ -100,12 +100,13 @@ namespace Project_Сonfigurator.Services
         /// Загрузка данных приложения
         /// </summary>
         /// <returns></returns>
-        public DBData LoadData()
+        public DBData LoadData(string SelectedPath = "")
         {
+            var path = string.IsNullOrWhiteSpace(SelectedPath) ? Program.PathConfig + "\\Data.xml" : SelectedPath;
             var SettingsAppSerializer = new XmlSerializer(typeof(DBData));
             try
             {
-                using FileStream fs = new(Program.PathConfig + "\\Data.xml", FileMode.OpenOrCreate);
+                using FileStream fs = new(path, FileMode.OpenOrCreate);
                 AppData = SettingsAppSerializer.Deserialize(fs) as DBData;
                 return AppData;
             }

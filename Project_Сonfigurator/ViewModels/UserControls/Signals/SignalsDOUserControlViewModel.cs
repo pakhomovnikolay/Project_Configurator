@@ -395,7 +395,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion 
 
         #region Генерируем данные
-        private void GeneratedData()
+        public void GeneratedData()
         {
             var data_list = new List<SignalDO>();
             var signals = Program.Settings.AppData.SignalDO;

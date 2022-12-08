@@ -395,8 +395,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Функции
 
         #region Генерируем данные
-        private void GeneratedData()
+        public void GeneratedData()
         {
+            USOList = new();
             foreach (var _USO in Program.Settings.AppData.USOList)
             {
                 USOList.Add(_USO);
@@ -405,6 +406,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             SelectedRack = USOList[^1].Racks[0];
             _DataView.Source = USOList;
             _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
