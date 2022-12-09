@@ -1,6 +1,4 @@
-﻿using Project_Сonfigurator.Models.Settings;
-
-namespace Project_Сonfigurator.Services.Interfaces
+﻿namespace Project_Сonfigurator.Services.Interfaces
 {
     public interface IVendorService
     {
@@ -10,15 +8,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         /// <param name="Item"></param>
         /// <returns></returns>
-        bool Edit(object Item); 
+        bool Edit(object Item);
         #endregion
-
-        //#region Открыть окно редактирования данных вендора
-        ///// <summary>
-        ///// Открыть окно редактирования данных вендора
-        ///// </summary>
-        ///// <returns></returns>
-        //bool EditVendor(Vendor vendor); 
-        //#endregion
     }
 }

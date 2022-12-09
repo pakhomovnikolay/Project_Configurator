@@ -1,9 +1,9 @@
-﻿using System.Globalization;
+﻿using Project_Сonfigurator.Infrastructures.Enum;
 using System;
-using System.Windows.Markup;
-using System.Windows.Data;
-using Project_Сonfigurator.Infrastructures.Enum;
+using System.Globalization;
 using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Project_Сonfigurator.Infrastructures.Converters
 {

@@ -14,10 +14,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
     public class UserAIUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
-        public UserAIUserControlViewModel(ISignalService signalService)
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
+        public UserAIUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
+            _DBService = dBService;
+
             _DataView.Filter += OnSignalsFiltered;
             GeneratedSignals();
         }
@@ -94,18 +97,30 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
-        #region Коллекция сигналов AI
+        #region Список AI формируемых
+        private List<BaseSignal> _BaseSignals = new();
         /// <summary>
-        /// Коллекция сигналов AI
+        /// Список AI формируемых
+        /// </summary>
+        public List<BaseSignal> BaseSignals
+        {
+            get => _BaseSignals;
+            set => Set(ref _BaseSignals, value);
+        }
+        #endregion
+
+        #region Коллекция сигналов AI формируемых
+        /// <summary>
+        /// Коллекция сигналов AI формируемых
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
-        #region Выбранный сигнал AI
+        #region Выбранный сигнал AI формируемых
         private BaseSignal _SelectedSignal = new();
         /// <summary>
-        /// Выбранный сигнал AI
+        /// Выбранный сигнал AI формируемых
         /// </summary>
         public BaseSignal SelectedSignal
         {
@@ -225,41 +240,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var index = 0;
-            var data_list = new List<BaseSignal>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UserAI.Count > 0)
-            {
-                var signals = Program.Settings.AppData.UserAI;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            #region Генерируем сигналы AI
-            while (index < 500)
-            {
-                var signal = new BaseSignal
-                {
-                    Index = $"{++index}",
-                    Id = "",
-                    Description = "",
-                    VarName = $"user_ai[{index}]",
-                    Area = "",
-                    Address = $"{index}",
-                    LinkValue = ""
-                };
-                data_list.Add(signal);
-            }
-            SelectedSignal = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = BaseSignals;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
         }
         #endregion 
 

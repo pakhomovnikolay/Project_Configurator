@@ -50,7 +50,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Тип параметра
         /// </summary>
-        string Type { get; set; } 
+        string Type { get; set; }
         #endregion
     }
 }

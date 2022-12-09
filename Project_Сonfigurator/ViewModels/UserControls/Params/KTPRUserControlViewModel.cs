@@ -1,7 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System.Collections.Generic;
@@ -15,11 +14,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class KTPRUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
 
-        public KTPRUserControlViewModel(ISignalService signalService)
+        public KTPRUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
+            _DBService = dBService;
 
             GeneratedSignals();
         }
@@ -93,6 +94,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                         _DataView.View.Refresh();
                 }
             }
+        }
+        #endregion
+
+        #region Список парметров
+        private List<BaseKTPR> _KTPR = new();
+        /// <summary>
+        /// Список парметров
+        /// </summary>
+        public List<BaseKTPR> KTPR
+        {
+            get => _KTPR;
+            set => Set(ref _KTPR, value);
         }
         #endregion
 
@@ -186,67 +199,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var index = 0;
-            var data_list = new List<BaseKTPR>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.KTPR.Count > 0)
-            {
-                var signals = Program.Settings.AppData.KTPR;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            #region Создание параметров
-            while (data_list.Count < 256)
-            {
-                var param = new BaseKTPR()
-                {
-                    Param = new BaseParam
-                    {
-                        Index = $"{++index}",
-                        Id = "",
-                        Description = "",
-                        VarName = $"ktpr_param[{index}]",
-                        Inv = "",
-                        TypeSignal = "",
-                        Address = ""
-                    },
-                    StateStation = "",
-                    Shoulder = "",
-                    SubShoulder = "",
-                    Autodeblok = "",
-                    NoMasked = "",
-                    StopTypeNS = "",
-                    StopTypeUMPNA = "",
-                    Type = "",
-                    ControlUTS = new BaseControlUTS(),
-                    ControlUVS = new BaseControlUVS(),
-                    ControlUZD = new BaseControlUZD(),
-                    Setpoints = new BaseSetpoints
-                    {
-                        Index = $"{index}",
-                        Value = "",
-                        Unit = "",
-                        Id = $"H{2000 + index - 1}",
-                        VarName = $"SP_STAT_PROT[{index}]",
-                        Address = $"%MW{4800 + index - 1}",
-                        Description = ""
-                    }
-                };
-
-                data_list.Add(param);
-            }
-            #endregion
-
-            SelectedParam = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = KTPR;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
         }
         #endregion 
 

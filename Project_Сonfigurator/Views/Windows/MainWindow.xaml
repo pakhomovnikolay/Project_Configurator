@@ -53,7 +53,7 @@
 
             <Button Grid.Column="4"
                         Style="{StaticResource CloseButtonStyle}"
-                        Command="{StaticResource CmdCloseWindow}"/>
+                        Command="{StaticResource CmdShutdownApplication}"/>
 
             <Button Grid.Column="3"
                         Style="{Binding ButtonChangeStateWindowStyle}"
@@ -68,14 +68,18 @@
         <!--Меню-->
         <Menu Grid.Row="1">
             <MenuItem Header="Меню" Height="25" Margin="10,0,0,0">
+                <MenuItem Header="Создать" Command="{Binding CmdCreateProject}"/>
                 <MenuItem Header="Открыть" Command="{Binding CmdOpenProject}"/>
                 <MenuItem Header="Сохранить" Command="{Binding CmdSaveData}"/>
+                <MenuItem Header="Сохранить как..." Command="{Binding CmdSaveAsData}"/>
+                <MenuItem Header="Открыть папку с проектом" Command="{Binding OpenProjectFolder}"/>
+                <Separator/>
                 <MenuItem Header="Настройки" Command="{Binding CmdOpenSettingWindow}"/>
             </MenuItem>
         </Menu>
         
         <!--Данные-->
-        <TabControl Grid.Row="2">
+        <TabControl Grid.Row="2" Visibility="{Binding VisibilityTabContol}">
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">

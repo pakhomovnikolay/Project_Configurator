@@ -6,7 +6,6 @@
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:cmd="clr-namespace:Project_Сonfigurator.Infrastructures.Commands"
-        
         BorderThickness="1"
         BorderBrush="Gray"
         WindowStartupLocation="CenterOwner"
@@ -16,6 +15,7 @@
         Title="Окно редактирования"
         Height="500"
         Width="600"
+        
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
 

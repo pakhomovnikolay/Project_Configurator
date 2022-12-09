@@ -6,7 +6,7 @@
         /// <summary>
         /// Индекс уставки
         /// </summary>
-        string Index { get; set; } 
+        string Index { get; set; }
         #endregion
 
         #region Идентификатор

@@ -144,10 +144,16 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdSaveSettingsExecuted(object p)
         {
             if (p is not Window window) return;
-            //_SettingService.Config.Vendors = Config.Vendors;
+            var msg = "Для применения настроек\nнеобходимо перезапустить приложение.\nПродолжить?";
+            if (!UserDialog.SendMessage(Title, msg, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
             _SettingService.Config = _Config;
-            if (_SettingService.Save())
-                Application.Current.Shutdown();
+            if (!_SettingService.Save())
+            {
+                UserDialog.SendMessage(Title, "Ошибка сохранения конфигурации.\nсм. лог", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
+                return;
+            }
+            Application.Current.Shutdown();
         }
         #endregion
 
@@ -217,9 +223,9 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Команда - Открыть окно настроек завдижек
+        #region Команда - Открыть окно настроек управления устройствами
         /// <summary>
-        /// Команда - Открыть окно настроек завдижек
+        /// Команда - Открыть окно настроек управления устройствами
         /// </summary>
         private ICommand _CmdOpenWindowEditDevice;
         public ICommand CmdOpenWindowEditDevice => _CmdOpenWindowEditDevice ??= new RelayCommand(OnCmdOpenWindowEditDeviceExecuted, CanCmdOpenWindowEditDeviceExecute);
@@ -263,7 +269,7 @@ namespace Project_Сonfigurator.ViewModels
                     break;
             }
 
-            
+
 
             window.ShowDialog();
         }

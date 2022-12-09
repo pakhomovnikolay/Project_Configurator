@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// <summary>
         /// Уставки
         /// </summary>
-        List<BaseText> Setpoints { get; set; } 
+        List<BaseText> Setpoints { get; set; }
         #endregion
     }
 }

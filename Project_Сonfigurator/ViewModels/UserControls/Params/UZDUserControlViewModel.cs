@@ -19,16 +19,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
 
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
         public UZDUserControlViewModel(
             ISignalService signalService,
             IUserDialogService userDialog,
+            IDBService dBService,
             TableSignalsUserControlViewModel tableSignalsViewModel)
         {
             UserDialog = userDialog;
             _SignalService = signalService;
+            _DBService = dBService;
             TableSignalsViewModel = tableSignalsViewModel;
 
             if (Program.Settings.AppData is not null && Program.Settings.AppData.UZD.Count > 0)
@@ -133,6 +136,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Список задвижек
+        private List<BaseUZD> _UZD = new();
+        /// <summary>
+        /// Список задвижек
+        /// </summary>
+        public List<BaseUZD> UZD
+        {
+            get => _UZD;
+            set => Set(ref _UZD, value);
         }
         #endregion
 
@@ -666,24 +681,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var data_list = new List<BaseUZD>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UZD.Count > 0)
-            {
-                var signals = Program.Settings.AppData.UZD;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            SelectedUZD = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = UZD;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
         }
         #endregion 
 

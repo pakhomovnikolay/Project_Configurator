@@ -1,20 +1,18 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
-using Project_Сonfigurator.Infrastructures.Commands;
-using Project_Сonfigurator.Models;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
-using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using System;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -90,6 +88,16 @@ namespace Project_Сonfigurator.ViewModels
             KTPRViewModel = kTPRViewModel;
             KTPRSViewModel = kTPRSViewModel;
             SignalingViewModel = signalingViewModel;
+
+            if (Program.Settings is not null && Program.Settings.Config is not null && !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
+            {
+                var name_project = Program.Settings.Config.PathProject.Split('\\');
+                var name = name_project[^1].Split('.');
+                Title = $"Конфигуратор проекта - {name[0]}";
+            }
+
+            if (Program.Settings.AppData is null)
+                VisibilityTabContol = Visibility.Hidden;
         }
         #endregion
 
@@ -173,6 +181,18 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Видимость панели элементов
+        private Visibility _VisibilityTabContol = Visibility.Visible;
+        /// <summary>
+        /// Видимость панели элементов
+        /// </summary>
+        public Visibility VisibilityTabContol
+        {
+            get => _VisibilityTabContol;
+            set => Set(ref _VisibilityTabContol, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -193,17 +213,39 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Команда - Сохранить данные
-        private ICommand _CmdSaveData;
+        #region Команда - Создать проект
+        private ICommand _CmdCreateProject;
         /// <summary>
-        /// Команда - Сохранить данные
+        /// Команда - Создать проект
         /// </summary>
-        public ICommand CmdSaveData => _CmdSaveData ??= new RelayCommand(OnCmdSaveDataExecuted);
-        private void OnCmdSaveDataExecuted()
+        public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
+        private void OnCmdCreateProjectExecuted()
         {
-            FormingAppDataBeforeSaving();
-            _SettingService.SaveData();
-            _DBService.GetData();
+            Program.Settings.AppData = null;
+            Program.Settings.Config.PathProject = "";
+            _SettingService.Config = Program.Settings.Config;
+            _SettingService.Save();
+            Title = $"Конфигуратор проекта";
+
+            LayotRackViewModel.GeneratedData();
+            TableSignalsViewModel.GeneratedData();
+            UserDIViewModel.GeneratedSignals();
+            UserAIViewModel.GeneratedSignals();
+            SignalsDIViewModel.GeneratedData();
+            SignalsAIViewModel.GeneratedData();
+            SignalsDOViewModel.GeneratedData();
+            SignalsAOViewModel.GeneratedData();
+            UserRegUserModel.GeneratedSignals();
+            SignalsGroupViewModel.GeneratedSignals();
+            GroupsSignalViewModel.GeneratedSignals();
+            UZDViewModel.GeneratedSignals();
+            UVSViewModel.GeneratedSignals();
+            UMPNAViewModel.GeneratedSignals();
+            KTPRViewModel.GeneratedSignals();
+            KTPRSViewModel.GeneratedSignals();
+            SignalingViewModel.GeneratedSignals();
+
+            VisibilityTabContol = Visibility.Visible;
         }
         #endregion
 
@@ -215,8 +257,9 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
         private void OnCmdOpenProjectExecuted()
         {
-            if (UserDialog.OpenFile(Title, out string path))
+            if (UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject))
             {
+                Program.Settings.Config.PathProject = path;
                 Program.Settings.LoadData(path);
                 if (Program.Settings.AppData is not null)
                 {
@@ -230,6 +273,7 @@ namespace Project_Сonfigurator.ViewModels
                     SignalsDOViewModel.GeneratedData();
                     SignalsAOViewModel.GeneratedData();
                     UserRegUserModel.GeneratedSignals();
+                    SignalsGroupViewModel.GeneratedSignals();
                     GroupsSignalViewModel.GeneratedSignals();
                     UZDViewModel.GeneratedSignals();
                     UVSViewModel.GeneratedSignals();
@@ -239,6 +283,57 @@ namespace Project_Сonfigurator.ViewModels
                     SignalingViewModel.GeneratedSignals();
                 }
             }
+
+            var name_project = Program.Settings.Config.PathProject.Split('\\');
+            var name = name_project[^1].Split('.');
+            Title = $"Конфигуратор проекта - {name[0]}";
+
+            VisibilityTabContol = Visibility.Visible;
+        }
+        #endregion
+
+        #region Команда - Сохранить данные
+        private ICommand _CmdSaveData;
+        /// <summary>
+        /// Команда - Сохранить данные
+        /// </summary>
+        public ICommand CmdSaveData => _CmdSaveData ??= new RelayCommand(OnCmdSaveDataExecuted);
+        private void OnCmdSaveDataExecuted()
+        {
+            if (!UserDialog.SaveProject(Title)) return;
+            FormingAppDataBeforeSaving();
+            _SettingService.SaveData();
+            _DBService.GetData();
+        }
+        #endregion
+
+        #region Команда - Сохранить данные как..
+        private ICommand _CmdSaveAsData;
+        /// <summary>
+        /// Команда - Сохранить данные как..
+        /// </summary>
+        public ICommand CmdSaveAsData => _CmdSaveAsData ??= new RelayCommand(OnCmdSaveAsDataExecuted);
+        private void OnCmdSaveAsDataExecuted()
+        {
+            Program.Settings.Config.PathProject = "";
+            if (!UserDialog.SaveProject(Title)) return;
+            FormingAppDataBeforeSaving();
+            _SettingService.SaveData();
+            _DBService.GetData();
+        }
+        #endregion
+
+        #region Команда - Открыть папку с проектом
+        private ICommand _OpenProjectFolder;
+        /// <summary>
+        /// Команда - Открыть папку с проектом
+        /// </summary>
+        public ICommand OpenProjectFolder => _OpenProjectFolder ??= new RelayCommand(OnOpenProjectFolderExecuted);
+        private void OnOpenProjectFolderExecuted()
+        {
+            var name_project = Program.Settings.Config.PathProject.Split('\\');
+            var name_folder = Program.Settings.Config.PathProject.Replace(name_project[^1], "");
+            Process.Start("explorer.exe", name_folder);
         }
         #endregion
 
@@ -272,7 +367,7 @@ namespace Project_Сonfigurator.ViewModels
             {
                 Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
             }
-            
+
         }
         #endregion
 

@@ -15,7 +15,7 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// <summary>
         /// Имя выбранного модуля
         /// </summary>
-        VendorModule SelectedModule { get; set; } 
+        VendorModule SelectedModule { get; set; }
         #endregion
 
         #region Список модулей

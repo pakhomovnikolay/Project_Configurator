@@ -11,5 +11,13 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <returns></returns>
         DBData GetData();
         #endregion
+
+        #region Обновление данных во ViewModels
+        /// <summary>
+        /// Обновление данных во ViewModels
+        /// </summary>
+        /// <param name="Item"></param>
+        bool RefreshDataViewModel(object Item);
+        #endregion
     }
 }

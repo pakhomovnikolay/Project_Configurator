@@ -15,10 +15,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class SignalingUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
-        public SignalingUserControlViewModel(ISignalService signalService)
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
+        public SignalingUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
+            _DBService = dBService;
 
             _DataView.Filter += OnSignalsFiltered;
             GeneratedSignals();
@@ -93,6 +95,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                         _DataView.View.Refresh();
                 }
             }
+        }
+        #endregion
+
+        #region Список параметров
+        private List<BaseSignaling> _Signaling = new();
+        /// <summary>
+        /// Список параметров
+        /// </summary>
+        public List<BaseSignaling> Signaling
+        {
+            get => _Signaling;
+            set => Set(ref _Signaling, value);
         }
         #endregion
 
@@ -233,52 +247,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация параметров
         public void GeneratedSignals()
         {
-            var index = 0;
-            var data_list = new List<BaseSignaling>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.Signaling.Count > 0)
-            {
-                var signals = Program.Settings.AppData.Signaling;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            #region Генерируем параметры
-            for (int i = 0; i < 58; i++)
-            {
-                for (int j = 0; j < 16; j++)
-                {
-                    var Param = new BaseSignaling
-                    {
-                        Param = new BaseParam
-                        {
-                            Index = $"{++index}",
-                            Id = "",
-                            Description = "",
-                            VarName = $"list5_param[{index}]",
-                            Inv = "",
-                            TypeSignal = "",
-                            Address = ""
-                        },
-                        Color = "",
-                        IndexUSO = "",
-                        TypeWarning = "",
-                        VarNameVU = $"LIST5[{i + 1}]"
-                    };
-                    data_list.Add(Param);
-                }
-            }
-
-            SelectedParam = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = Signaling;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
         }
         #endregion 
 

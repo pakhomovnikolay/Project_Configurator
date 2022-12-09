@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Models;
-using Project_Сonfigurator.Models.Settings;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -130,7 +129,7 @@ namespace Project_Сonfigurator.Views.DialogControl
             InputParam.Add(new BaseText { Text = $"Новый параметр {InputParam.Count + 1}" });
             DataGridInputParam.Items.Refresh();
             SelectedInputParam = InputParam[^1];
-            
+
         }
         #endregion
 
@@ -236,7 +235,5 @@ namespace Project_Сonfigurator.Views.DialogControl
         #region Конструктор
         public WindowEditDevice() => InitializeComponent();
         #endregion
-
-
     }
 }

@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         /// <summary>
         /// Корзина активна
         /// </summary>
-        bool IsEnable { get; set; } 
+        bool IsEnable { get; set; }
         #endregion
 
         #region Модули корзины

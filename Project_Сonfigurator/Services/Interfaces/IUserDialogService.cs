@@ -27,6 +27,18 @@ namespace Project_Сonfigurator.Services.Interfaces
         bool SaveFile(string Title, out string SelectedFile, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*");
         #endregion
 
+        #region Сохранение проекта
+        /// <summary>
+        /// Сохранение проекта
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="DefaulPath"></param>
+        /// <param name="DefaulFileName"></param>
+        /// <param name="Filter"></param>
+        /// <returns></returns>
+        bool SaveProject(string Title, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*");
+        #endregion
+
         #region Выбор пути
         /// <summary>
         /// Выбор пути

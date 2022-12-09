@@ -111,7 +111,7 @@
         /// <summary>
         /// Отключить по таймеру "Резервный" после снятия защиты
         /// </summary>
-        string OffSecondaryAfterProtTimer { get; set; } 
+        string OffSecondaryAfterProtTimer { get; set; }
         #endregion
     }
 }

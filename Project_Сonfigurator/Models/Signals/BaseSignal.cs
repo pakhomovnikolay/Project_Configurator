@@ -59,9 +59,9 @@ namespace Project_Сonfigurator.Models.Signals
                     {
                         area = 1;
                         _Area = "1";
-                    } 
+                    }
                 }
-                    
+
 
                 if (address > 0 || area > 0)
                 {

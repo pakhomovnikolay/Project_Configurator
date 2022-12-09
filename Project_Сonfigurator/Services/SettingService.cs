@@ -77,12 +77,18 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public bool SaveData()
         {
+            var path = Program.Settings.Config.PathProject;
+            //var path = string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject) ?
+            //    Program.PathConfig + $"\\Data.xml" :
+            //    Program.Settings.Config.PathProject.Contains(".xml", StringComparison.CurrentCultureIgnoreCase) ?
+            //    Program.Settings.Config.PathProject :
+            //    Program.Settings.Config.PathProject + "\\Data.xml";
 
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(DBData));
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
-                using XmlWriter xmlWriter = XmlWriter.Create(Program.PathConfig + $"\\Data.xml", xmlWriterSettings);
+                using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
 
                 //Config.SelectedPassword = Encryption(Config.SelectedPassword);
                 SettingsAppSerializer.Serialize(xmlWriter, AppData);
@@ -91,6 +97,7 @@ namespace Project_Сonfigurator.Services
             catch (Exception)
             {
                 return false;
+
             }
         }
         #endregion
@@ -102,12 +109,13 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public DBData LoadData(string SelectedPath = "")
         {
-            var path = string.IsNullOrWhiteSpace(SelectedPath) ? Program.PathConfig + "\\Data.xml" : SelectedPath;
+            var path = string.IsNullOrWhiteSpace(SelectedPath) ? Program.PathConfig + "\\ProjectData.xml" : SelectedPath;
             var SettingsAppSerializer = new XmlSerializer(typeof(DBData));
             try
             {
                 using FileStream fs = new(path, FileMode.OpenOrCreate);
                 AppData = SettingsAppSerializer.Deserialize(fs) as DBData;
+                Program.Settings.Config.PathProject = path;
                 return AppData;
             }
             catch (Exception)

@@ -1,6 +1,6 @@
 ﻿using Project_Сonfigurator.Models.Settings;
-using System.Windows;
 using System.Collections.Generic;
+using System.Windows;
 
 namespace Project_Сonfigurator.Views.DialogControl
 {

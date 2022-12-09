@@ -149,7 +149,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Временные уставки
         /// </summary>
-        List<BaseSetpoints> Setpoints { get; set; } 
+        List<BaseSetpoints> Setpoints { get; set; }
         #endregion
     }
 }

@@ -48,7 +48,7 @@
         /// <summary>
         /// Значание ссылки. Формируется с учетом области
         /// </summary>
-        string LinkValue { get; set; } 
+        string LinkValue { get; set; }
         #endregion
     }
 }

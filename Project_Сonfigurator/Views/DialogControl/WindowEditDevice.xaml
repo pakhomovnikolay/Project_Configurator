@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
+        
         BorderThickness="1"
         BorderBrush="Gray"
         WindowStartupLocation="CenterOwner"
@@ -13,7 +14,6 @@
         ResizeMode="NoResize"
         Height="800"
         Width="800"
-        
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="{Binding _Title}" 

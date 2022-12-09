@@ -14,10 +14,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class UserRegUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
-        public UserRegUserControlViewModel(ISignalService signalService)
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
+        public UserRegUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
+            _DBService = dBService;
+
             _DataView.Filter += OnSignalsFiltered;
             GeneratedSignals();
         }
@@ -89,6 +92,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     DoSelection = false;
                 }
             }
+        }
+        #endregion
+
+        #region Список регистров формируемых
+        private List<BaseParam> _BaseParams = new();
+        /// <summary>
+        /// Список регистров формируемых
+        /// </summary>
+        public List<BaseParam> BaseParams
+        {
+            get => _BaseParams;
+            set => Set(ref _BaseParams, value);
         }
         #endregion
 
@@ -222,39 +237,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var index = 0;
-            var data_list = new List<BaseParam>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UserReg.Count > 0)
-            {
-                var signals = Program.Settings.AppData.UserReg;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            #region Генерируем регистры формируемые
-            while (index < 1000)
-            {
-                var signal = new BaseParam
-                {
-                    Index = $"{++index}",
-                    Id = "",
-                    Description = "",
-                    VarName = $"user_reg[{index}]",
-                    Address = $"{index}"
-                };
-                data_list.Add(signal);
-            }
-            SelectedSignal = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = BaseParams;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
         }
         #endregion 
 

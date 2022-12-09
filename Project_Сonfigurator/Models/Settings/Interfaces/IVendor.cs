@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// <summary>
         /// Выбранный
         /// </summary>
-        VendorModuleType SelectedModuleType { get; set; } 
+        VendorModuleType SelectedModuleType { get; set; }
         #endregion
 
         #region Список модулей

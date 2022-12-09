@@ -45,5 +45,12 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// </summary>
         SettingConnectDB ConnectDB { get; set; }
         #endregion
+
+        #region Путь хранения проекта
+        /// <summary>
+        /// Путь хранения проекта
+        /// </summary>
+        string PathProject { get; set; }
+        #endregion
     }
 }

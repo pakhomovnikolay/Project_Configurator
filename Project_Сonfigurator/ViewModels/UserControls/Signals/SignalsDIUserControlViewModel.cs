@@ -17,14 +17,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
 
-        public SignalsDIUserControlViewModel(IUserDialogService userDialog, TableSignalsUserControlViewModel tableSignalsViewModel, ISignalService signalService)
+        public SignalsDIUserControlViewModel(
+            IUserDialogService userDialog,
+            ISignalService signalService,
+            IDBService dBService,
+            TableSignalsUserControlViewModel tableSignalsViewModel
+            )
         {
             UserDialog = userDialog;
             TableSignalsViewModel = tableSignalsViewModel;
             _SignalService = signalService;
+            _DBService = dBService;
 
             _DataView.Filter += OnSignalsDIFiltered;
             if (Program.Settings.AppData is null || Program.Settings.AppData.SignalDI.Count <= 0)
@@ -96,12 +103,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.RedefineSignal(SelectedSignalDI.Signal, _IsSelected, Title);
+                    if (SelectedSignalDI is not null)
+                        _SignalService.RedefineSignal(SelectedSignalDI.Signal, _IsSelected, Title);
                     DoSelection = _SignalService.DoSelection;
                     if (_IsSelected)
-                        _DataView.View.Refresh();
+                        _DataView.View?.Refresh();
                 }
             }
+        }
+        #endregion
+
+        #region Список сигналов DI
+        private List<SignalDI> _SignalsDI = new();
+        /// <summary>
+        /// Список сигналов DI
+        /// </summary>
+        public List<SignalDI> SignalsDI
+        {
+            get => _SignalsDI;
+            set => Set(ref _SignalsDI, value);
         }
         #endregion
 
@@ -401,17 +421,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Генерируем данные
         public void GeneratedData()
         {
-            var data_list = new List<SignalDI>();
-            var signals = Program.Settings.AppData.SignalDI;
-
-            foreach (var signal in signals)
-            {
-                data_list.Add(signal);
-            }
-
-            SelectedSignalDI = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = SignalsDI;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
         #endregion

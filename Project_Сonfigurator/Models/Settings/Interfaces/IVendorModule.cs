@@ -6,7 +6,7 @@
         /// <summary>
         /// Имя модуля
         /// </summary>
-        string Name { get; set; } 
+        string Name { get; set; }
         #endregion
     }
 }

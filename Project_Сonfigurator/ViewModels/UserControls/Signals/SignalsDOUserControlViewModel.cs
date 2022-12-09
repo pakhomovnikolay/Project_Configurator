@@ -17,14 +17,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
 
-        public SignalsDOUserControlViewModel(IUserDialogService userDialog, TableSignalsUserControlViewModel tableSignalsViewModel, ISignalService signalService)
+        public SignalsDOUserControlViewModel(
+            IUserDialogService userDialog,
+            ISignalService signalService,
+            IDBService dBService,
+            TableSignalsUserControlViewModel tableSignalsViewModel
+            )
         {
             UserDialog = userDialog;
             TableSignalsViewModel = tableSignalsViewModel;
             _SignalService = signalService;
+            _DBService = dBService;
 
             _DataView.Filter += OnSignalsDOFiltered;
             if (Program.Settings.AppData is null || Program.Settings.AppData.SignalDO.Count <= 0)
@@ -96,12 +103,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.RedefineSignal(SelectedSignalDO.Signal, _IsSelected, Title);
+                    if (SelectedSignalDO is not null)
+                        _SignalService.RedefineSignal(SelectedSignalDO.Signal, _IsSelected, Title);
                     DoSelection = _SignalService.DoSelection;
                     if (_IsSelected)
-                        _DataView.View.Refresh();
+                        _DataView.View?.Refresh();
                 }
             }
+        }
+        #endregion
+
+        #region Список сигналов DO
+        private List<SignalDO> _SignalsDO = new();
+        /// <summary>
+        /// Список сигналов DO
+        /// </summary>
+        public List<SignalDO> SignalsDO
+        {
+            get => _SignalsDO;
+            set => Set(ref _SignalsDO, value);
         }
         #endregion
 
@@ -397,17 +417,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Генерируем данные
         public void GeneratedData()
         {
-            var data_list = new List<SignalDO>();
-            var signals = Program.Settings.AppData.SignalDO;
-
-            foreach (var signal in signals)
-            {
-                data_list.Add(signal);
-            }
-
-            SelectedSignalDO = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = SignalsDO;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
         #endregion

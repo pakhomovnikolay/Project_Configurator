@@ -14,11 +14,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
     public class LayotRackUserControlViewModel : ViewModel
     {
         #region Конструктор
-        ILayotRackService _LayotRackService;
-
-        public LayotRackUserControlViewModel(ILayotRackService iLayotRackService)
+        private readonly ILayotRackService _LayotRackService;
+        private readonly IDBService _DBService;
+        public LayotRackUserControlViewModel(ILayotRackService iLayotRackService, IDBService dBService)
         {
             _LayotRackService = iLayotRackService;
+            _DBService = dBService;
 
             if (Program.Settings.AppData is null || Program.Settings.AppData.USOList.Count <= 0)
                 OnCmdCreateNewUSOExecuted();
@@ -397,15 +398,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            USOList = new();
-            foreach (var _USO in Program.Settings.AppData.USOList)
-            {
-                USOList.Add(_USO);
-            }
-            SelectedUSO = USOList[^1];
-            SelectedRack = USOList[^1].Racks[0];
+            _DBService.RefreshDataViewModel(this);
             _DataView.Source = USOList;
-            _DataView.View.Refresh();
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
         }
         #endregion

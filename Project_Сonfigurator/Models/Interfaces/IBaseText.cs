@@ -6,7 +6,7 @@
         /// <summary>
         /// Текс для создания массива
         /// </summary>
-        string Text { get; set; } 
+        string Text { get; set; }
         #endregion
     }
 }

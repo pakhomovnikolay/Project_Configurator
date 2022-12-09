@@ -6,7 +6,7 @@
         /// <summary>
         /// Параметры сигнала
         /// </summary>
-        BaseSignal Signal { get; set; } 
+        BaseSignal Signal { get; set; }
         #endregion
     }
 }

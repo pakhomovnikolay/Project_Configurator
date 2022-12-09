@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.Views.DialogControl;
 using System;
 using System.IO;
 using System.Windows;
@@ -50,10 +51,49 @@ namespace Project_Сonfigurator.Services
         /// <param name="DefaulFileName"></param>
         /// <param name="Filter"></param>
         /// <returns></returns>
-        public bool SaveFile(string Title, out string SelectedFile, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*")
+        public bool SaveFile(string Title, out string SelectedPath, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*")
         {
-            SelectedFile = "";
-            return false;
+            SelectedPath = "";
+            return true;
+        }
+        #endregion
+
+        #region Сохранение проекта
+        /// <summary>
+        /// Сохранение проекта
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="DefaulPath"></param>
+        /// <param name="DefaulFileName"></param>
+        /// <param name="Filter"></param>
+        /// <returns></returns>
+        public bool SaveProject(string Title, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*")
+        {
+            var _SettingService = new SettingService();
+            if (string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
+            {
+                var window = new WindowSelectPath()
+                {
+                    Owner = Application.Current.MainWindow,
+                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                    Title = Title,
+                    SelectPath = $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}"
+                };
+                if (!window.ShowDialog().Value) return false;
+                var path = window.SelectPath == $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}" ? Program.PathConfig : window.SelectPath;
+                if (!Directory.Exists(path))
+                {
+                    SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return false;
+                }
+
+                Program.Settings.Config.PathProject = $"{path}\\ProjectData.xml";
+            }
+
+            _SettingService.Config = Program.Settings.Config;
+            _SettingService.Save();
+            return true;
         }
         #endregion
 

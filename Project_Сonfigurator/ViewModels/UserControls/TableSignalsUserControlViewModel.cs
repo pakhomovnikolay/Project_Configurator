@@ -18,16 +18,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
+
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
         public TableSignalsUserControlViewModel(
             IUserDialogService userDialog,
             ISignalService signalService,
+            IDBService dBService,
             LayotRackUserControlViewModel layotRackViewModel)
         {
             UserDialog = userDialog;
             _SignalService = signalService;
+            _DBService = dBService;
             _DataViewModules.Filter += OnModulesFiltered;
             _DataView.Filter += OnUSOListFiltered;
 
@@ -110,6 +114,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Список УСО
+        private List<USO> _USOList = new();
+        /// <summary>
+        /// Список УСО
+        /// </summary>
+        public List<USO> USOList
+        {
+            get => _USOList;
+            set => Set(ref _USOList, value);
         }
         #endregion
 
@@ -578,41 +594,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            SelectedUSO = new USO();
-            var uso_list = new List<USO>();
-            foreach (var _USO in LayotRackViewModel.USOList)
-            {
-                var need_add_uso = false;
-                foreach (var _Rack in _USO.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        switch (_Module.Type)
-                        {
-                            case TypeModule.AI:
-                            case TypeModule.DI:
-                            case TypeModule.AO:
-                            case TypeModule.DO:
-                            case TypeModule.DA:
-                                need_add_uso = true;
-                                break;
-                        }
-                    }
-                }
-                if (need_add_uso)
-                    uso_list.Add(_USO);
-            }
-
-            if (uso_list.Count <= 0)
-                _DataView.Source = uso_list;
-            else
-            {
-                SelectedUSO = uso_list[0];
-                _DataView.Source = uso_list;
-                _DataView.View?.Refresh();
-            }
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = USOList;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
+
+            if (USOList is null || USOList.Count <= 0)
+            {
+                _DataViewModules.Source = null;
+                _DataViewModules.View?.Refresh();
+                OnPropertyChanged(nameof(DataViewModules));
+            }
         }
         #endregion
 

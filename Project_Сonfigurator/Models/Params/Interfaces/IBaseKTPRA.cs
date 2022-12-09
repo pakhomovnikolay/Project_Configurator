@@ -29,7 +29,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Управления вспомсистемами
         /// </summary>
-        BaseControlUVS ControlUVS { get; set; } 
+        BaseControlUVS ControlUVS { get; set; }
         #endregion
 
         #region Состояние НА
@@ -64,7 +64,7 @@ namespace Project_Сonfigurator.Models.Params.Interfaces
         /// <summary>
         /// Тип остановки МПНА
         /// </summary>
-        string StopType { get; set; } 
+        string StopType { get; set; }
         #endregion
     }
 }

@@ -201,7 +201,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
             {
                 ResultModuleList = new List<string>(PSModuleList);
             }
-            
+
         }
         #endregion
 

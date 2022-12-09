@@ -6,4 +6,5 @@
     <l:CmdHideWindow x:Key="CmdHideWindow"/>
     <l:CmdChangeStateWindow x:Key="CmdChangeStateWindow"/>
     <l:WindowDialogCloseCommand x:Key="WindowDialogCloseCommand"/>
+    <l:CmdShutdownApplication x:Key="CmdShutdownApplication"/>
 </ResourceDictionary>

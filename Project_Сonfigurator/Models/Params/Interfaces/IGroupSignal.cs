@@ -27,7 +27,7 @@
         /// <summary>
         /// Сигналы в группе "До"
         /// </summary>
-        string AddressEnd { get; set; } 
+        string AddressEnd { get; set; }
         #endregion
     }
 }

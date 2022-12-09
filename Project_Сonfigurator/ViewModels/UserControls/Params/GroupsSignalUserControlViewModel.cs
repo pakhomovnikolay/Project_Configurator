@@ -15,11 +15,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class GroupsSignalUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
 
-        public GroupsSignalUserControlViewModel(ISignalService signalService)
+        public GroupsSignalUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
+            _DBService = dBService;
 
             _DataView.Filter += OnParamFiltered;
             GeneratedSignals();
@@ -132,6 +134,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Список параметров
+        private List<GroupSignal> _GroupSignals = new();
+        /// <summary>
+        /// Список параметров
+        /// </summary>
+        public List<GroupSignal> GroupSignals
+        {
+            get => _GroupSignals;
+            set => Set(ref _GroupSignals, value);
         }
         #endregion
 
@@ -374,48 +388,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var index = 0;
-            var data_list = new List<GroupSignal>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.GroupSignals.Count > 0)
-            {
-                var signals = Program.Settings.AppData.GroupSignals;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            #region Генерируем сигналы
-            while (data_list.Count < 128)
-            {
-                var signal = new GroupSignal()
-                {
-                    AddressEnd = "",
-                    AddressStart = "",
-                    QtyInGroup = "",
-                    Param = new BaseParam
-                    {
-                        Index = $"{++index}",
-                        Id = "",
-                        Description = "",
-                        VarName = $"sig_grp[{index}]",
-                        Address = "",
-                        Inv = "",
-                        TypeSignal = ""
-                    }
-                };
-                data_list.Add(signal);
-            }
-            #endregion 
-
-            SelectedParam = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = GroupSignals;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
         }
         #endregion 
 

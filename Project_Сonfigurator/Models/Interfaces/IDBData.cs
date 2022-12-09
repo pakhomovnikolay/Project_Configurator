@@ -116,7 +116,7 @@ namespace Project_Сonfigurator.Models.Interfaces
         /// <summary>
         /// Сигнализация и общая диагностики
         /// </summary>
-        List<BaseSignaling> Signaling { get; set; } 
+        List<BaseSignaling> Signaling { get; set; }
         #endregion
     }
 }

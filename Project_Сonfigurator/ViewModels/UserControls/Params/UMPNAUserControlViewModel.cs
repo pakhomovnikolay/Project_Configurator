@@ -19,18 +19,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     {
         #region Конструктор
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
+        private readonly IDBService _DBService;
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
 
         public UMPNAUserControlViewModel(
             ISignalService signalService,
             IUserDialogService userDialog,
+            IDBService dBService,
             TableSignalsUserControlViewModel tableSignalsViewModel)
         {
             UserDialog = userDialog;
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
-
+            _DBService = dBService;
 
             if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
                 GeneratedSignals();
@@ -158,6 +160,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Список МПНА
+        private List<BaseUMPNA> _UMPNA = new();
+        /// <summary>
+        /// Список МПНА
+        /// </summary>
+        public List<BaseUMPNA> UMPNA
+        {
+            get => _UMPNA;
+            set => Set(ref _UMPNA, value);
+        }
+        #endregion
+
         #region Коллекция МПНА
         /// <summary>
         /// Коллекция МПНА
@@ -187,15 +201,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     OnPropertyChanged(nameof(DataViewOutputParam));
 
                     _DataViewKGMPNA.Source = value?.KGMPNA;
-                    _DataViewKGMPNA.View.Refresh();
+                    _DataViewKGMPNA.View?.Refresh();
                     OnPropertyChanged(nameof(DataViewKGMPNA));
 
                     _DataViewKTPRA.Source = value?.KTPRA;
-                    _DataViewKTPRA.View.Refresh();
+                    _DataViewKTPRA.View?.Refresh();
                     OnPropertyChanged(nameof(DataViewKTPRA));
 
                     _DataViewKTPRAS.Source = value?.KTPRAS;
-                    _DataViewKTPRAS.View.Refresh();
+                    _DataViewKTPRAS.View?.Refresh();
                     OnPropertyChanged(nameof(DataViewKTPRAS));
                 }
             }
@@ -1136,24 +1150,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var data_list = new List<BaseUMPNA>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
-            {
-                var signals = Program.Settings.AppData.UMPNA;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            SelectedUMPNA = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = UMPNA;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
         }
         #endregion 
 

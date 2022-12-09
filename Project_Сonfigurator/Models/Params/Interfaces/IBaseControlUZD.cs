@@ -55,7 +55,7 @@
         /// <summary>
         /// Открыть по таймеру после снятия защиты
         /// </summary>
-        string OpenAfterProtTimer { get; set; } 
+        string OpenAfterProtTimer { get; set; }
         #endregion
     }
 }

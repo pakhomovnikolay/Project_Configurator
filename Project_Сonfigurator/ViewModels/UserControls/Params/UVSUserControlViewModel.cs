@@ -20,15 +20,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Конструктор
         private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
+        private readonly IDBService _DBService;
 
         TableSignalsUserControlViewModel TableSignalsViewModel { get; }
         public UVSUserControlViewModel(
             ISignalService signalService,
             IUserDialogService userDialog,
+            IDBService dBService,
             TableSignalsUserControlViewModel tableSignalsViewModel)
         {
             UserDialog = userDialog;
             _SignalService = signalService;
+            _DBService = dBService;
             TableSignalsViewModel = tableSignalsViewModel;
 
             if (Program.Settings.AppData is not null && Program.Settings.AppData.UVS.Count > 0)
@@ -133,6 +136,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Список вспомсистем
+        private List<BaseUVS> _UVS = new();
+        /// <summary>
+        /// Список вспомсистем
+        /// </summary>
+        public List<BaseUVS> UVS
+        {
+            get => _UVS;
+            set => Set(ref _UVS, value);
         }
         #endregion
 
@@ -653,24 +668,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedSignals()
         {
-            var data_list = new List<BaseUVS>();
-
-            #region При наличии данных генерируем данные
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UVS.Count > 0)
-            {
-                var signals = Program.Settings.AppData.UVS;
-                foreach (var signal in signals)
-                {
-                    data_list.Add(signal);
-                }
-            }
-            #endregion
-
-            SelectedUVS = data_list[0];
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            _DBService.RefreshDataViewModel(this);
+            _DataView.Source = UVS;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
         }
         #endregion 
 

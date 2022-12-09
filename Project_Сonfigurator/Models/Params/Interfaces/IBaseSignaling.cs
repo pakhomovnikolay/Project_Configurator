@@ -34,7 +34,7 @@
         /// <summary>
         /// Имя переменной для ВУ
         /// </summary>
-        string VarNameVU { get; set; } 
+        string VarNameVU { get; set; }
         #endregion
     }
 }
