@@ -27,7 +27,7 @@ namespace Project_Сonfigurator.Infrastructures.Converters
                 nameof(TextFilter),
                 typeof(string),
                 typeof(FilteredBackLightConverter),
-                new PropertyMetadata(default(string))); 
+                new PropertyMetadata(default(string)));
         #endregion
 
         public object Convert(object[] v, Type t, object p, CultureInfo c)
