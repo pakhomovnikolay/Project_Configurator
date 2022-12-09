@@ -11,7 +11,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Resources\Icons\MagicIcon.ico" />
+    <None Remove="Resources\Icons\Export.ico" />
+    <None Remove="Resources\Icons\Folder.ico" />
+    <None Remove="Resources\Icons\NewFile.ico" />
+    <None Remove="Resources\Icons\OpenFile.ico" />
+    <None Remove="Resources\Icons\OpenFolder.ico" />
+    <None Remove="Resources\Icons\SaveFile.ico" />
+    <None Remove="Resources\Icons\Settings.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\Icons\MagicIcon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +31,16 @@
     <PackageReference Include="FontAwesome5" Version="2.1.11" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
     <PackageReference Include="MySqlConnector" Version="2.2.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Export.ico" />
+    <Resource Include="Resources\Icons\Folder.ico" />
+    <Resource Include="Resources\Icons\NewFile.ico" />
+    <Resource Include="Resources\Icons\OpenFile.ico" />
+    <Resource Include="Resources\Icons\OpenFolder.ico" />
+    <Resource Include="Resources\Icons\SaveFile.ico" />
+    <Resource Include="Resources\Icons\Settings.ico" />
   </ItemGroup>
 
   <ItemGroup>

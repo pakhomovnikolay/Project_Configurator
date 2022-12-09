@@ -89,13 +89,8 @@ namespace Project_Сonfigurator.ViewModels
             KTPRSViewModel = kTPRSViewModel;
             SignalingViewModel = signalingViewModel;
 
-            if (Program.Settings is not null && Program.Settings.Config is not null && !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
-            {
-                var name_project = Program.Settings.Config.PathProject.Split('\\');
-                var name = name_project[^1].Split('.');
-                Title = $"Конфигуратор проекта - {name[0]}";
-            }
 
+            SetNameProject();
             if (Program.Settings.AppData is null)
                 VisibilityTabContol = Visibility.Hidden;
         }
@@ -112,6 +107,18 @@ namespace Project_Сonfigurator.ViewModels
         {
             get => _Title;
             set => Set(ref _Title, value);
+        }
+        #endregion
+
+        #region Наименование открытого проекта
+        private string _NameProject;
+        /// <summary>
+        /// наименование открытого проекта
+        /// </summary>
+        public string NameProject
+        {
+            get => _NameProject;
+            set => Set(ref _NameProject, value);
         }
         #endregion
 
@@ -225,7 +232,7 @@ namespace Project_Сonfigurator.ViewModels
             Program.Settings.Config.PathProject = "";
             _SettingService.Config = Program.Settings.Config;
             _SettingService.Save();
-            Title = $"Конфигуратор проекта";
+            SetNameProject();
 
             LayotRackViewModel.GeneratedData();
             TableSignalsViewModel.GeneratedData();
@@ -257,37 +264,33 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
         private void OnCmdOpenProjectExecuted()
         {
-            if (UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject))
-            {
-                Program.Settings.Config.PathProject = path;
-                Program.Settings.LoadData(path);
-                if (Program.Settings.AppData is not null)
-                {
-                    LayotRackViewModel.GeneratedData();
-                    TableSignalsViewModel.GeneratedData();
+            if (!UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject)) return;
 
-                    UserDIViewModel.GeneratedSignals();
-                    UserAIViewModel.GeneratedSignals();
-                    SignalsDIViewModel.GeneratedData();
-                    SignalsAIViewModel.GeneratedData();
-                    SignalsDOViewModel.GeneratedData();
-                    SignalsAOViewModel.GeneratedData();
-                    UserRegUserModel.GeneratedSignals();
-                    SignalsGroupViewModel.GeneratedSignals();
-                    GroupsSignalViewModel.GeneratedSignals();
-                    UZDViewModel.GeneratedSignals();
-                    UVSViewModel.GeneratedSignals();
-                    UMPNAViewModel.GeneratedSignals();
-                    KTPRViewModel.GeneratedSignals();
-                    KTPRSViewModel.GeneratedSignals();
-                    SignalingViewModel.GeneratedSignals();
-                }
+            Program.Settings.Config.PathProject = path;
+            Program.Settings.LoadData(path);
+            if (Program.Settings.AppData is not null)
+            {
+                LayotRackViewModel.GeneratedData();
+                TableSignalsViewModel.GeneratedData();
+
+                UserDIViewModel.GeneratedSignals();
+                UserAIViewModel.GeneratedSignals();
+                SignalsDIViewModel.GeneratedData();
+                SignalsAIViewModel.GeneratedData();
+                SignalsDOViewModel.GeneratedData();
+                SignalsAOViewModel.GeneratedData();
+                UserRegUserModel.GeneratedSignals();
+                SignalsGroupViewModel.GeneratedSignals();
+                GroupsSignalViewModel.GeneratedSignals();
+                UZDViewModel.GeneratedSignals();
+                UVSViewModel.GeneratedSignals();
+                UMPNAViewModel.GeneratedSignals();
+                KTPRViewModel.GeneratedSignals();
+                KTPRSViewModel.GeneratedSignals();
+                SignalingViewModel.GeneratedSignals();
             }
 
-            var name_project = Program.Settings.Config.PathProject.Split('\\');
-            var name = name_project[^1].Split('.');
-            Title = $"Конфигуратор проекта - {name[0]}";
-
+            SetNameProject();
             VisibilityTabContol = Visibility.Visible;
         }
         #endregion
@@ -328,7 +331,8 @@ namespace Project_Сonfigurator.ViewModels
         /// <summary>
         /// Команда - Открыть папку с проектом
         /// </summary>
-        public ICommand OpenProjectFolder => _OpenProjectFolder ??= new RelayCommand(OnOpenProjectFolderExecuted);
+        public ICommand OpenProjectFolder => _OpenProjectFolder ??= new RelayCommand(OnOpenProjectFolderExecuted, CanOpenProjectFolderExecute);
+        private bool CanOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
         private void OnOpenProjectFolderExecuted()
         {
             var name_project = Program.Settings.Config.PathProject.Split('\\');
@@ -342,6 +346,9 @@ namespace Project_Сonfigurator.ViewModels
         #region Функции
 
         #region Формируем данные приложения перед сохранением
+        /// <summary>
+        /// Формируем данные приложения перед сохранением
+        /// </summary>
         private void FormingAppDataBeforeSaving()
         {
             try
@@ -368,6 +375,22 @@ namespace Project_Сonfigurator.ViewModels
                 Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
             }
 
+        }
+        #endregion
+
+        #region Задаем имя проекта
+        /// <summary>
+        /// Задаем имя проекта
+        /// </summary>
+        private void SetNameProject()
+        {
+            NameProject = "Новый проект";
+            if (Program.Settings is not null && Program.Settings.Config is not null && !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
+            {
+                var name_project = Program.Settings.Config.PathProject.Split('\\');
+                var name = name_project[^1].Split('.');
+                NameProject = name[0];
+            }
         }
         #endregion
 

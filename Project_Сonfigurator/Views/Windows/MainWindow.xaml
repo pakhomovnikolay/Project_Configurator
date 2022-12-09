@@ -1,33 +1,33 @@
 ﻿<Window x:Class="Project_Сonfigurator.Views.Windows.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:fa="http://schemas.fontawesome.com/icons/"
-        xmlns:l="clr-namespace:Project_Сonfigurator"
-        xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
-        xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
-        xmlns:pages_param="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-        WindowStartupLocation="CenterScreen"
-        AllowsTransparency="True"
-        WindowStyle="None"
-        BorderBrush="Black"
-        BorderThickness="1"
-        Background="AliceBlue"
-
-        DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
-        Title="{Binding Title}"
-        Height="{Binding WindowHeight}"
-        Width="{Binding WindowWidth}"
-        ResizeMode="{Binding WindowResizeMode}"
-        WindowState="{Binding WindowWindowState}"
-        >
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:fa="http://schemas.fontawesome.com/icons/"
+              xmlns:l="clr-namespace:Project_Сonfigurator"
+              xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
+              xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
+              xmlns:pages_param="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
+              WindowStartupLocation="CenterScreen"
+              AllowsTransparency="True"
+              WindowStyle="None"
+              BorderBrush="Black"
+              BorderThickness="1"
+              Background="AliceBlue"
+              
+              DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
+              Height="{Binding WindowHeight}"
+              Width="{Binding WindowWidth}"
+              ResizeMode="{Binding WindowResizeMode}"
+              WindowState="{Binding WindowWindowState}"
+              >
+    
     <Grid>
         
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition Height="135"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -66,20 +66,86 @@
         </Grid>
 
         <!--Меню-->
-        <Menu Grid.Row="1">
-            <MenuItem Header="Меню" Height="25" Margin="10,0,0,0">
-                <MenuItem Header="Создать" Command="{Binding CmdCreateProject}"/>
-                <MenuItem Header="Открыть" Command="{Binding CmdOpenProject}"/>
-                <MenuItem Header="Сохранить" Command="{Binding CmdSaveData}"/>
-                <MenuItem Header="Сохранить как..." Command="{Binding CmdSaveAsData}"/>
-                <MenuItem Header="Открыть папку с проектом" Command="{Binding OpenProjectFolder}"/>
-                <Separator/>
-                <MenuItem Header="Настройки" Command="{Binding CmdOpenSettingWindow}"/>
-            </MenuItem>
-        </Menu>
-        
+        <Ribbon Grid.Row="1" SelectedIndex="0">
+            <Ribbon.Title>
+                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
+            </Ribbon.Title>
+            <Ribbon.ApplicationMenu>
+                <RibbonApplicationMenu SmallImageSource="../../Resources/Icons/Folder.ico">
+                    <RibbonApplicationMenuItem Header="Создать" ImageSource="../../Resources/Icons/NewFile.ico"
+                                               Command="{Binding CmdCreateProject}"/>
+                    <RibbonApplicationMenuItem Header="Открыть" ImageSource="../../Resources/Icons/OpenFile.ico"
+                                               Command="{Binding CmdOpenProject}"/>
+                    <RibbonApplicationMenuItem Header="Сохранить" ImageSource="../../Resources/Icons/SaveFile.ico"
+                                               Command="{Binding CmdSaveData}"/>
+                    <RibbonApplicationMenuItem Header="Сохранить как..."
+                                               Command="{Binding CmdSaveAsData}"/>
+                    <RibbonApplicationMenuItem Header="Открыть папку с проектом" ImageSource="../../Resources/Icons/OpenFolder.ico"
+                                               Command="{Binding OpenProjectFolder}"/>
+
+                    <RibbonApplicationMenuItem Header="Настройки" VerticalAlignment="Bottom" ImageSource="../../Resources/Icons/Settings.ico"
+                                               Command="{Binding CmdOpenSettingWindow}"/>
+                </RibbonApplicationMenu>
+            </Ribbon.ApplicationMenu>
+            
+            <RibbonTab Header="Главная">
+                <RibbonGroup Header="Шрифт">
+
+                </RibbonGroup>
+            </RibbonTab>
+
+            <RibbonTab Header="Экспорт СУ">
+                <RibbonGroup Header="Данные для ПЛК" >
+                    <RibbonButton LargeImageSource="../../Resources/Icons/Export.ico" Label="Экспорт всего проекта" />
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Чтение данных с модулей" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Запись данных для модулей" />
+                    </RibbonGroup>
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AI" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DI" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DO" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AO" />
+                    </RibbonGroup>
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Диагностика" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Секции шин" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Группы сигналов" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки УСО" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки" />
+                    </RibbonGroup>
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Карта готовностей агрегатов (Лист 1)" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Общестанционные защиты (Лист 2)" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные защиты (Лист 3)" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные предупреждения (Лист 3,5)" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Предельные параметры (Лист 4)" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Лист 5" />
+                    </RibbonGroup>
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI агрегатов" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI задвижек" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI вспомсистем" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Параметры DO остальных" />
+                    </RibbonGroup>
+                    <RibbonGroup Height="100">
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO агрегатов" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO задвижек" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO вспомсистем" />
+                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO остальные" />
+                    </RibbonGroup>
+                </RibbonGroup>
+            </RibbonTab>
+
+            <RibbonTab Header="Экспорт ВУ">
+                <RibbonGroup Header="Данные SCADA">
+
+                </RibbonGroup>
+            </RibbonTab>
+        </Ribbon>
+
         <!--Данные-->
-        <TabControl Grid.Row="2" Visibility="{Binding VisibilityTabContol}">
+        <TabControl Grid.Row="2">
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">

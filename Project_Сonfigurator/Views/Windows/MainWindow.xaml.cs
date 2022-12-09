@@ -11,7 +11,6 @@ namespace Project_Сonfigurator.Views.Windows
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-
                 if (this.WindowState == WindowState.Maximized)
                 {
                     this.WindowState = WindowState.Normal;

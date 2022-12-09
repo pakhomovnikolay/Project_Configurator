@@ -12,6 +12,7 @@
         BorderBrush="Black"
         BorderThickness="1"
         Background="AliceBlue"
+        Icon="../../Resources/Icons/Settings.ico"
         
         DataContext="{Binding SettingWindowViewModels, Source={StaticResource Locator}}"
         Title="{Binding Title}"
@@ -20,7 +21,7 @@
         WindowState="{Binding WindowWindowState}"
         ResizeMode="{Binding WindowResizeMode}"
         >
-    
+
     <Grid>
         
         <!--Сетка-->
