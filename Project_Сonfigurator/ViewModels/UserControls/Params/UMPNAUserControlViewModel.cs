@@ -33,9 +33,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
             _DBService = dBService;
-
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
-                GeneratedSignals();
+            GeneratedSignals();
+            //if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
+            //    GeneratedSignals();
         }
         #endregion
 

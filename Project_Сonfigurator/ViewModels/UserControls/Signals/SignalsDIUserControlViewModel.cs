@@ -34,10 +34,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _DBService = dBService;
 
             _DataView.Filter += OnSignalsDIFiltered;
-            if (Program.Settings.AppData is null || Program.Settings.AppData.SignalDI.Count <= 0)
-                GeneratedSignals();
-            else
-                GeneratedData();
+            GeneratedSignals();
+            //if (Program.Settings.AppData is null || Program.Settings.AppData.SignalDI.Count <= 0)
+            //    GeneratedSignals();
+            //else
+            //    GeneratedData();
         }
         #endregion
 

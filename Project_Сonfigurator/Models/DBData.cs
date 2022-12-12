@@ -33,28 +33,28 @@ namespace Project_Сonfigurator.Models
         /// <summary>
         /// Сигналы DI
         /// </summary>
-        public List<SignalDI> SignalDI { get; set; }
+        public List<SignalDI> SignalDI { get; set; } = new();
         #endregion
 
         #region Сигналы AI
         /// <summary>
         /// Сигналы AI
         /// </summary>
-        public List<SignalAI> SignalAI { get; set; }
+        public List<SignalAI> SignalAI { get; set; } = new();
         #endregion
 
         #region Сигналы DO
         /// <summary>
         /// Сигналы DO
         /// </summary>
-        public List<SignalDO> SignalDO { get; set; }
+        public List<SignalDO> SignalDO { get; set; } = new();
         #endregion
 
         #region Сигналы AO
         /// <summary>
         /// Сигналы AO
         /// </summary>
-        public List<SignalAO> SignalAO { get; set; }
+        public List<SignalAO> SignalAO { get; set; } = new();
         #endregion
 
         #region Регистры формируемые

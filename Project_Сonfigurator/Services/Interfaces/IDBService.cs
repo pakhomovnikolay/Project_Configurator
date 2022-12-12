@@ -4,12 +4,35 @@ namespace Project_Сonfigurator.Services.Interfaces
 {
     public interface IDBService
     {
-        #region Функция получения данных
+        #region Данные
         /// <summary>
-        /// Функция получения данных
+        /// Данные
+        /// </summary>
+        DBData AppData { get; set; }
+        #endregion
+
+        #region Функция записи данных
+        /// <summary>
+        /// Функция записи данных
         /// </summary>
         /// <returns></returns>
-        DBData GetData();
+        bool SetData();
+        #endregion
+
+        #region Сохранение файла приложения
+        /// <summary>
+        /// Сохранение файла приложения
+        /// </summary>
+        /// <returns></returns>
+        bool SaveData();
+        #endregion
+
+        #region Загрузка файла приложения
+        /// <summary>
+        /// Загрузка файла приложения
+        /// </summary>
+        /// <returns></returns>
+        DBData LoadData(string SelectedPath = "");
         #endregion
 
         #region Обновление данных во ViewModels
@@ -18,6 +41,14 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         /// <param name="Item"></param>
         bool RefreshDataViewModel(object Item);
+        #endregion
+
+        #region Обнуление данных, при созданиии нового проекта
+        /// <summary>
+        /// Обнуление данных, при созданиии нового проекта
+        /// </summary>
+        /// <returns></returns>
+        bool ClearDataBase();
         #endregion
     }
 }

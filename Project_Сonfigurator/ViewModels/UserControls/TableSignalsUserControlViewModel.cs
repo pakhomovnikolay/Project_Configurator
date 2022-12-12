@@ -38,8 +38,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             LayotRackViewModel = layotRackViewModel;
 
-            if (Program.Settings.AppData is not null && Program.Settings.AppData.USOList.Count > 0)
-                GeneratedData();
+            GeneratedData();
+            //if (Program.Settings.AppData is not null && Program.Settings.AppData.USOList.Count > 0)
+            //    GeneratedData();
 
         }
         #endregion

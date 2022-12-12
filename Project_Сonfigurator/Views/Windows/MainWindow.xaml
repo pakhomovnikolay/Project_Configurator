@@ -70,6 +70,13 @@
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>
+            <Ribbon.QuickAccessToolBar>
+                <RibbonQuickAccessToolBar>
+                    <RibbonButton x:Name ="Save" SmallImageSource="../../Resources/Icons/Refresh.ico"
+                                  ToolTip="Обновить БД"
+                                  Command="{Binding CmdUploadDB}"/>
+                </RibbonQuickAccessToolBar>
+            </Ribbon.QuickAccessToolBar>
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="../../Resources/Icons/Folder.ico">
                     <RibbonApplicationMenuItem Header="Создать" ImageSource="../../Resources/Icons/NewFile.ico"

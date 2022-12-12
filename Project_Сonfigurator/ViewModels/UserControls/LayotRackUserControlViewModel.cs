@@ -21,10 +21,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             _LayotRackService = iLayotRackService;
             _DBService = dBService;
 
-            if (Program.Settings.AppData is null || Program.Settings.AppData.USOList.Count <= 0)
-                OnCmdCreateNewUSOExecuted();
-            else
-                GeneratedData();
+            OnCmdCreateNewUSOExecuted();
+            //if (Program.Settings.AppData is null || Program.Settings.AppData.USOList.Count <= 0)
+            //    OnCmdCreateNewUSOExecuted();
+            //else
+            //    GeneratedData();
+
+
         }
         #endregion
 

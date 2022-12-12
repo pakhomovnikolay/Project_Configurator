@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Models;
-using Project_Сonfigurator.Models.Settings;
+﻿using Project_Сonfigurator.Models.Settings;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -10,13 +9,6 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Параметры настроек
         /// </summary>
         SettingApp Config { get; set; }
-        #endregion
-
-        #region Данные
-        /// <summary>
-        /// Данные
-        /// </summary>
-        DBData AppData { get; set; }
         #endregion
 
         #region Сохранение настроек
@@ -33,22 +25,6 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         /// <returns></returns>
         SettingApp Load();
-        #endregion
-
-        #region Сохранение данные приложения
-        /// <summary>
-        /// Сохранение данные приложения
-        /// </summary>
-        /// <returns></returns>
-        bool SaveData();
-        #endregion
-
-        #region Загрузка данных приложения
-        /// <summary>
-        /// Загрузка данных приложения
-        /// </summary>
-        /// <returns></returns>
-        DBData LoadData(string SelectedPath = "");
         #endregion
     }
 }

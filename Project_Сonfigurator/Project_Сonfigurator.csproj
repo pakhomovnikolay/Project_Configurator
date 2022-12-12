@@ -16,6 +16,7 @@
     <None Remove="Resources\Icons\NewFile.ico" />
     <None Remove="Resources\Icons\OpenFile.ico" />
     <None Remove="Resources\Icons\OpenFolder.ico" />
+    <None Remove="Resources\Icons\Refresh.ico" />
     <None Remove="Resources\Icons\SaveFile.ico" />
     <None Remove="Resources\Icons\Settings.ico" />
   </ItemGroup>
@@ -39,6 +40,7 @@
     <Resource Include="Resources\Icons\NewFile.ico" />
     <Resource Include="Resources\Icons\OpenFile.ico" />
     <Resource Include="Resources\Icons\OpenFolder.ico" />
+    <Resource Include="Resources\Icons\Refresh.ico" />
     <Resource Include="Resources\Icons\SaveFile.ico" />
     <Resource Include="Resources\Icons\Settings.ico" />
   </ItemGroup>

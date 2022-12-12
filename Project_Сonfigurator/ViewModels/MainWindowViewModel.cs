@@ -91,7 +91,7 @@ namespace Project_Сonfigurator.ViewModels
 
 
             SetNameProject();
-            if (Program.Settings.AppData is null)
+            if (Program.DataBase is null)
                 VisibilityTabContol = Visibility.Hidden;
         }
         #endregion
@@ -228,7 +228,8 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            Program.Settings.AppData = null;
+            Program.DataBase.ClearDataBase();
+            _DBService.ClearDataBase();
             Program.Settings.Config.PathProject = "";
             _SettingService.Config = Program.Settings.Config;
             _SettingService.Save();
@@ -267,8 +268,13 @@ namespace Project_Сonfigurator.ViewModels
             if (!UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject)) return;
 
             Program.Settings.Config.PathProject = path;
-            Program.Settings.LoadData(path);
-            if (Program.Settings.AppData is not null)
+            Program.DataBase.AppData = Program.DataBase.LoadData(path);
+            _DBService.LoadData(path);
+            _DBService.AppData = Program.DataBase.AppData;
+            _SettingService.Config = Program.Settings.Config;
+            _SettingService.Save();
+
+            if (Program.DataBase.AppData is not null)
             {
                 LayotRackViewModel.GeneratedData();
                 TableSignalsViewModel.GeneratedData();
@@ -305,8 +311,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             if (!UserDialog.SaveProject(Title)) return;
             FormingAppDataBeforeSaving();
-            _SettingService.SaveData();
-            _DBService.GetData();
+            _DBService.SaveData();
         }
         #endregion
 
@@ -321,8 +326,7 @@ namespace Project_Сonfigurator.ViewModels
             Program.Settings.Config.PathProject = "";
             if (!UserDialog.SaveProject(Title)) return;
             FormingAppDataBeforeSaving();
-            _SettingService.SaveData();
-            _DBService.GetData();
+            _DBService.SaveData();
         }
         #endregion
 
@@ -341,6 +345,20 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Команда - Сохранить данные в БД
+        private ICommand _CmdUploadDB;
+        /// <summary>
+        /// Команда - Сохранить данные в БД
+        /// </summary>
+        public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
+        private void OnCmdUploadDBExecuted()
+        {
+            //if (!UserDialog.SaveProject(Title)) return;
+            FormingAppDataBeforeSaving();
+            _DBService.SetData();
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -353,22 +371,22 @@ namespace Project_Сonfigurator.ViewModels
         {
             try
             {
-                _SettingService.AppData.USOList = LayotRackViewModel.DataView is null ? new() : (List<USO>)LayotRackViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UserDI = UserDIViewModel.DataView is null ? new() : (List<BaseSignal>)UserDIViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UserAI = UserAIViewModel.DataView is null ? new() : (List<BaseSignal>)UserAIViewModel.DataView.SourceCollection;
-                _SettingService.AppData.SignalDI = SignalsDIViewModel.DataView is null ? new() : (List<SignalDI>)SignalsDIViewModel.DataView.SourceCollection;
-                _SettingService.AppData.SignalAI = SignalsAIViewModel.DataView is null ? new() : (List<SignalAI>)SignalsAIViewModel.DataView.SourceCollection;
-                _SettingService.AppData.SignalDO = SignalsDOViewModel.DataView is null ? new() : (List<SignalDO>)SignalsDOViewModel.DataView.SourceCollection;
-                _SettingService.AppData.SignalAO = SignalsAOViewModel.DataView is null ? new() : (List<SignalAO>)SignalsAOViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UserReg = UserRegUserModel.DataView is null ? new() : (List<BaseParam>)UserRegUserModel.DataView.SourceCollection;
-                _SettingService.AppData.SignalGroup = SignalsGroupViewModel.DataView is null ? new() : (List<BaseParam>)SignalsGroupViewModel.DataView.SourceCollection;
-                _SettingService.AppData.GroupSignals = GroupsSignalViewModel.DataView is null ? new() : (List<GroupSignal>)GroupsSignalViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UZD = UZDViewModel.DataView is null ? new() : (List<BaseUZD>)UZDViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UVS = UVSViewModel.DataView is null ? new() : (List<BaseUVS>)UVSViewModel.DataView.SourceCollection;
-                _SettingService.AppData.UMPNA = UMPNAViewModel.DataView is null ? new() : (List<BaseUMPNA>)UMPNAViewModel.DataView.SourceCollection;
-                _SettingService.AppData.KTPR = KTPRViewModel.DataView is null ? new() : (List<BaseKTPR>)KTPRViewModel.DataView.SourceCollection;
-                _SettingService.AppData.KTPRS = KTPRSViewModel.DataView is null ? new() : (List<BaseKTPRS>)KTPRSViewModel.DataView.SourceCollection;
-                _SettingService.AppData.Signaling = SignalingViewModel.DataView is null ? new() : (List<BaseSignaling>)SignalingViewModel.DataView.SourceCollection;
+                _DBService.AppData.USOList = LayotRackViewModel.DataView is null ? new() : (List<USO>)LayotRackViewModel.DataView.SourceCollection;
+                _DBService.AppData.UserDI = UserDIViewModel.DataView is null ? new() : (List<BaseSignal>)UserDIViewModel.DataView.SourceCollection;
+                _DBService.AppData.UserAI = UserAIViewModel.DataView is null ? new() : (List<BaseSignal>)UserAIViewModel.DataView.SourceCollection;
+                _DBService.AppData.SignalDI = SignalsDIViewModel.DataView is null ? new() : (List<SignalDI>)SignalsDIViewModel.DataView.SourceCollection;
+                _DBService.AppData.SignalAI = SignalsAIViewModel.DataView is null ? new() : (List<SignalAI>)SignalsAIViewModel.DataView.SourceCollection;
+                _DBService.AppData.SignalDO = SignalsDOViewModel.DataView is null ? new() : (List<SignalDO>)SignalsDOViewModel.DataView.SourceCollection;
+                _DBService.AppData.SignalAO = SignalsAOViewModel.DataView is null ? new() : (List<SignalAO>)SignalsAOViewModel.DataView.SourceCollection;
+                _DBService.AppData.UserReg = UserRegUserModel.DataView is null ? new() : (List<BaseParam>)UserRegUserModel.DataView.SourceCollection;
+                _DBService.AppData.SignalGroup = SignalsGroupViewModel.DataView is null ? new() : (List<BaseParam>)SignalsGroupViewModel.DataView.SourceCollection;
+                _DBService.AppData.GroupSignals = GroupsSignalViewModel.DataView is null ? new() : (List<GroupSignal>)GroupsSignalViewModel.DataView.SourceCollection;
+                _DBService.AppData.UZD = UZDViewModel.DataView is null ? new() : (List<BaseUZD>)UZDViewModel.DataView.SourceCollection;
+                _DBService.AppData.UVS = UVSViewModel.DataView is null ? new() : (List<BaseUVS>)UVSViewModel.DataView.SourceCollection;
+                _DBService.AppData.UMPNA = UMPNAViewModel.DataView is null ? new() : (List<BaseUMPNA>)UMPNAViewModel.DataView.SourceCollection;
+                _DBService.AppData.KTPR = KTPRViewModel.DataView is null ? new() : (List<BaseKTPR>)KTPRViewModel.DataView.SourceCollection;
+                _DBService.AppData.KTPRS = KTPRSViewModel.DataView is null ? new() : (List<BaseKTPRS>)KTPRSViewModel.DataView.SourceCollection;
+                _DBService.AppData.Signaling = SignalingViewModel.DataView is null ? new() : (List<BaseSignaling>)SignalingViewModel.DataView.SourceCollection;
             }
             catch (Exception e)
             {
