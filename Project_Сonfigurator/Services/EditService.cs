@@ -6,7 +6,7 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Services
 {
-    public class VendorService : IVendorService
+    public class EditService : IEditService
     {
         #region Редактирование объекта
         /// <summary>
@@ -16,12 +16,13 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
-        public bool Edit(object Item)
+        public bool Edit(object Item, string title = null)
         {
             if (Item is null) throw new ArgumentNullException(nameof(Item));
             return Item switch
             {
                 Vendor vendor => EditVendor(vendor),
+                SettingServerDB DB => EditServer(DB, title),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается"),
             };
         }
@@ -43,6 +44,27 @@ namespace Project_Сonfigurator.Services
             if (!dlg.ShowDialog().Value) return false;
 
             vendor = dlg.VendorData;
+            return true;
+        }
+        #endregion
+
+        #region Открыть окно редактирования данных вендора
+        /// <summary>
+        /// Открыть окно редактирования данных вендора
+        /// </summary>
+        /// <returns></returns>
+        public static bool EditServer(SettingServerDB DB, string title)
+        {
+            var dlg = new WindowEditServerDB
+            {
+                SelectedServer = DB,
+                Title = title,
+                Owner = App.FucusedWindow ?? App.ActiveWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            if (!dlg.ShowDialog().Value) return false;
+
+            DB = dlg.SelectedServer;
             return true;
         }
         #endregion

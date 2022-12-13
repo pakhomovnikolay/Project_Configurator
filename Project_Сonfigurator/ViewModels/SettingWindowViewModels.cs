@@ -16,13 +16,13 @@ namespace Project_Сonfigurator.ViewModels
     {
         #region Конструктор
         public ISettingService _SettingService;
-        public IVendorService _VendorService;
+        public IEditService _EditService;
         public IUserDialogService UserDialog;
 
-        public SettingWindowViewModels(ISettingService settingService, IVendorService vendorService, IUserDialogService userDialog)
+        public SettingWindowViewModels(ISettingService settingService, IEditService editService, IUserDialogService userDialog)
         {
             _SettingService = settingService;
-            _VendorService = vendorService;
+            _EditService = editService;
             UserDialog = userDialog;
 
             if (Config.Vendors is not null && Config.Vendors.Count > 0)
@@ -31,6 +31,14 @@ namespace Project_Сonfigurator.ViewModels
                 _DataViewVendors.Source = Config.Vendors;
                 _DataViewVendors.View.Refresh();
                 OnPropertyChanged(nameof(DataViewVendors));
+            }
+
+            if (Config.ServerDB is not null && Config.ServerDB.Count > 0)
+            {
+                SelectedServerDB = Config.ServerDB[^1];
+                _DataViewServersDB.Source = Config.ServerDB;
+                _DataViewServersDB.View.Refresh();
+                OnPropertyChanged(nameof(DataViewServersDB));
             }
 
         }
@@ -130,6 +138,26 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Коллекция серверов подключения к БД
+        /// <summary>
+        /// Коллекция серверов подключения к БД
+        /// </summary>
+        private readonly CollectionViewSource _DataViewServersDB = new();
+        public ICollectionView DataViewServersDB => _DataViewServersDB?.View;
+        #endregion
+
+        #region Выбранный сервер подключения к БД
+        private SettingServerDB _SelectedServerDB = new();
+        /// <summary>
+        /// Выбранный сервер подключения к БД
+        /// </summary>
+        public SettingServerDB SelectedServerDB
+        {
+            get => _SelectedServerDB;
+            set => Set(ref _SelectedServerDB, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -219,7 +247,7 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdEditSelectedVendorExecute(object p) => SelectedVendor is not null;
         private void OnCmdEditSelectedVendorExecuted(object p)
         {
-            if (!_VendorService.Edit(SelectedVendor)) return;
+            if (!_EditService.Edit(SelectedVendor)) return;
         }
         #endregion
 
@@ -272,6 +300,68 @@ namespace Project_Сonfigurator.ViewModels
 
 
             window.ShowDialog();
+        }
+        #endregion
+
+        #region Команда - Изменить настройки подключения к БД
+        /// <summary>
+        /// Команда - Изменить настройки подключения к БД
+        /// </summary>
+        private ICommand _CmdEditServerDB;
+        public ICommand CmdEditServerDB => _CmdEditServerDB ??= new RelayCommand(OnCmdEditServerDBExecuted, CanCmdEditServerDBExecute);
+        private bool CanCmdEditServerDBExecute(object p) => true;
+        private void OnCmdEditServerDBExecuted(object p)
+        {
+            DataGrid MyDataGrid = new();
+            if (p is DataGrid)
+            {
+                MyDataGrid = (DataGrid)p;
+            }
+            var server = new SettingServerDB();
+            if (p is null)
+            {
+                if (!_EditService.Edit(server, Title)) return;
+                Config.ServerDB.Add(server);
+                SelectedServerDB = Config.ServerDB[^1];
+            }
+            else if (MyDataGrid.SelectedItem is SettingServerDB)
+            {
+                if (!_EditService.Edit(SelectedServerDB, Title)) return;
+            }
+
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+            _DataViewServersDB.Source = Config.ServerDB;
+            _DataViewServersDB.View?.Refresh();
+
+            OnPropertyChanged(nameof(DataViewServersDB));
+        }
+        #endregion
+
+        #region Команда - Удалить выбранный сервер
+        /// <summary>
+        /// Команда - Удалить выбранный сервер
+        /// </summary>
+        private ICommand _CmdDeleteSelectedServerDB;
+        public ICommand CmdDeleteSelectedServerDB => _CmdDeleteSelectedServerDB ??= new RelayCommand(OnCmdDeleteSelectedServerDBExecuted, CanCmdDeleteSelectedServerDBExecute);
+        private bool CanCmdDeleteSelectedServerDBExecute(object p) => true;
+        private void OnCmdDeleteSelectedServerDBExecuted(object p)
+        {
+            if (p is null) return;
+            if (p is not DataGrid MyDataGrid) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранного вендора?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Yes,
+                MessageBoxOptions.None))
+                return;
+
+            Config.ServerDB.Remove(SelectedServerDB);
+            _DataViewServersDB.Source = Config.ServerDB;
+            _DataViewServersDB.View?.Refresh();
+
+            OnPropertyChanged(nameof(DataViewServersDB));
         }
         #endregion
 

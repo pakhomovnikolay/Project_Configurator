@@ -90,101 +90,136 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Функция записи данных
         /// </summary>
-        /// <param name="dBData"></param>
         /// <returns></returns>
         public bool SetData()
         {
             MySqlConnection _MySqlConnection = new();
             MySqlCommand _MySqlCommand;
             string Query;
+            bool Success;
 
             var Log = new LogSerivece();
             var DialogService = new UserDialogService();
-            var Config = Program.Settings.Config.ConnectDB;
+            var Config = Program.Settings.Config;
 
             try
             {
-                #region Создаем БД, при ее отсутствии
-                var СonnectionString =
-                            $"SERVER={Config.IPAddress};" +
-                            $"PORT={Config.Port};" +
-                            //$"DATABASE=mariadb;" +
-                            $"UID={Config.UserName};" +
-                            $"PASSWORD={Config.Password};" +
-                            $"Connection Timeout = {Config.TimeoutConnect}";
-
-                _MySqlConnection = new(СonnectionString);
-                try
+                foreach (var ConnectDB in Config.ServerDB)
                 {
-                    _MySqlConnection.Open();
+                    ConnectDB.SuccessUpdate = false;
+                    if (ConnectDB.IsSelection)
+                    {
+                        Success = false;
+                        var ip_address = Array.Empty<string>();
+                        if (ConnectDB.IPAddress is not null)
+                            ip_address = ConnectDB.IPAddress.Split(',');
 
-                    Query = $"CREATE DATABASE IF NOT EXISTS `{Config.NameDB}`;";
-                    _MySqlCommand = new MySqlCommand(Query, _MySqlConnection);
-                    _MySqlCommand.ExecuteNonQuery();
-                    _MySqlConnection.Close();
+                        foreach (var ip in ip_address)
+                        {
+                            if (_MySqlConnection.State == System.Data.ConnectionState.Open)
+                                _MySqlConnection.Close();
+
+
+                            if (Success) continue;
+
+                            #region Создаем БД, при ее отсутствии
+                            var СonnectionString =
+                                        $"SERVER={ip};" +
+                                        $"PORT={ConnectDB.Port};" +
+                                        //$"DATABASE=mariadb;" +
+                                        $"UID={ConnectDB.UserName};" +
+                                        $"PASSWORD={ConnectDB.Password};" +
+                                        $"Connection Timeout = {ConnectDB.TimeoutConnect}";
+
+                            _MySqlConnection = new(СonnectionString);
+                            try
+                            {
+                                _MySqlConnection.Open();
+
+                                Query = $"CREATE DATABASE IF NOT EXISTS `{ConnectDB.NameDB}`;";
+                                _MySqlCommand = new MySqlCommand(Query, _MySqlConnection);
+                                _MySqlCommand.ExecuteNonQuery();
+                                _MySqlConnection.Close();
+                            }
+                            catch (Exception e)
+                            {
+                                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+                                continue;
+                            }
+                            #endregion
+
+                            #region Настройки подключения
+                            try
+                            {
+                                СonnectionString =
+                                           $"SERVER={ip};" +
+                                           $"PORT={ConnectDB.Port};" +
+                                           $"DATABASE={ConnectDB.NameDB};" +
+                                           $"UID={ConnectDB.UserName};" +
+                                           $"PASSWORD={ConnectDB.Password};" +
+                                           $"Connection Timeout = {ConnectDB.TimeoutConnect}";
+                                _MySqlConnection = new(СonnectionString);
+                                _MySqlConnection.Open();
+                            }
+                            catch (Exception e)
+                            {
+                                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+                                continue;
+                            }
+
+                            #endregion
+
+                            #region Создаем данные УСО
+                            FormingDataUSO(_MySqlConnection);
+                            #endregion
+
+                            #region Создаем данные DI формируемые
+                            FormingDataUserDI(_MySqlConnection);
+                            #endregion
+
+                            #region Создаем данные AI формируемые
+                            FormingDataUserAI(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные Регистры формируемые
+                            FormingDataUserREG(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные Задвижек
+                            FormingDataUZD(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные Вспомсистем
+                            FormingDataUVS(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные МПНА
+                            FormingDataUMPNA(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные KTPR
+                            FormingDataKTPR(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные KTPRS
+                            FormingDataKTPRS(_MySqlConnection);
+                            #endregion
+
+                            #region Формируем данные Signaling
+                            FormingDataSignaling(_MySqlConnection);
+                            #endregion
+
+                            ConnectDB.SuccessUpdate = true;
+                            Success = Success || ConnectDB.SuccessUpdate;
+                        }
+                    }
                 }
-                catch (Exception e)
-                {
-                    Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-                }
-                #endregion
-
-                #region Настройки подключения
-                СonnectionString =
-                               $"SERVER={Config.IPAddress};" +
-                               $"PORT={Config.Port};" +
-                               $"DATABASE={Config.NameDB};" +
-                               $"UID={Config.UserName};" +
-                               $"PASSWORD={Config.Password};" +
-                               $"Connection Timeout = {Config.TimeoutConnect}";
-                _MySqlConnection = new(СonnectionString);
-                _MySqlConnection.Open();
-                #endregion
-
-                #region Создаем данные УСО
-                FormingDataUSO(_MySqlConnection);
-                #endregion
-
-                #region Создаем данные DI формируемые
-                FormingDataUserDI(_MySqlConnection);
-                #endregion
-
-                #region Создаем данные AI формируемые
-                FormingDataUserAI(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные Регистры формируемые
-                FormingDataUserREG(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные Задвижек
-                FormingDataUZD(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные Вспомсистем
-                FormingDataUVS(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные МПНА
-                FormingDataUMPNA(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные KTPR
-                FormingDataKTPR(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные KTPRS
-                FormingDataKTPRS(_MySqlConnection);
-                #endregion
-
-                #region Формируем данные Signaling
-                FormingDataSignaling(_MySqlConnection);
-                #endregion
-
             }
             catch (Exception e)
             {
                 Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+                Success = false;
+                return false;
             }
             finally
             {

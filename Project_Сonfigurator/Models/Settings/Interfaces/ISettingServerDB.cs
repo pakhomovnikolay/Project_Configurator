@@ -1,7 +1,21 @@
 ﻿namespace Project_Сonfigurator.Models.Settings.Interfaces
 {
-    interface ISettingConnectDB
+    interface ISettingServerDB
     {
+        #region Выбранный сервер для разлива данных
+        /// <summary>
+        /// Выбранный сервер для разлива данных
+        /// </summary>
+        bool IsSelection { get; set; }
+        #endregion
+
+        #region Описание подлключения
+        /// <summary>
+        /// Описание подлключения
+        /// </summary>
+        string DescriptionConnect { get; set; } 
+        #endregion
+
         #region Адрес подключения
         /// <summary>
         /// Адрес подключения
@@ -42,6 +56,13 @@
         /// Пароль
         /// </summary>
         string Password { get; set; }
+        #endregion
+
+        #region Состояние успешного обновления БД
+        /// <summary>
+        /// Состояние успешного обновления БД
+        /// </summary>
+        bool SuccessUpdate { get; set; } 
         #endregion
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -93,6 +94,16 @@ namespace Project_Сonfigurator.ViewModels
             SetNameProject();
             if (Program.DataBase is null)
                 VisibilityTabContol = Visibility.Hidden;
+
+
+            if (Program.Settings is not null && Program.Settings.Config is not null &&  Program.Settings.Config.ServerDB is not null)
+            {
+                IsCheckedAll= true;
+                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                {
+                    IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
+                }
+            }
         }
         #endregion
 
@@ -113,7 +124,7 @@ namespace Project_Сonfigurator.ViewModels
         #region Наименование открытого проекта
         private string _NameProject;
         /// <summary>
-        /// наименование открытого проекта
+        /// Наименование открытого проекта
         /// </summary>
         public string NameProject
         {
@@ -197,6 +208,30 @@ namespace Project_Сonfigurator.ViewModels
         {
             get => _VisibilityTabContol;
             set => Set(ref _VisibilityTabContol, value);
+        }
+        #endregion
+
+        #region Настройки приложения
+        private SettingApp _Config = Program.Settings.Config ?? new();
+        /// <summary>
+        /// Настройки приложения
+        /// </summary>
+        public SettingApp Config
+        {
+            get => _Config;
+            set => Set(ref _Config, value);
+        }
+        #endregion
+
+        #region Текущее состояние флажка "Выбрать все"
+        private bool _IsCheckedAll;
+        /// <summary>
+        /// Текущее состояние флажка "Выбрать все"
+        /// </summary>
+        public bool IsCheckedAll
+        {
+            get => _IsCheckedAll;
+            set => Set(ref _IsCheckedAll, value);
         }
         #endregion
 
@@ -353,9 +388,45 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            //if (!UserDialog.SaveProject(Title)) return;
             FormingAppDataBeforeSaving();
             _DBService.SetData();
+        }
+        #endregion
+
+        #region Команда - Снять\Установить узел для применения конфигурации
+        private ICommand _CmdSelectionServer;
+        /// <summary>
+        /// Команда - Снять\Установить узел для применения конфигурации
+        /// </summary>
+        public ICommand CmdSelectionServer => _CmdSelectionServer ??= new RelayCommand(OnCmdSelectionServerExecuted);
+        private void OnCmdSelectionServerExecuted()
+        {
+            if (Config is not null && Config.ServerDB is not null)
+            {
+                IsCheckedAll = true;
+                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                {
+                    IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
+                }
+            }
+        }
+        #endregion
+
+        #region Команда - Снять\Установить узелы для применения конфигурации
+        private ICommand _CmdSelectionAllServer;
+        /// <summary>
+        /// Команда - Снять\Установить узелы для применения конфигурации
+        /// </summary>
+        public ICommand CmdSelectionAllServer => _CmdSelectionAllServer ??= new RelayCommand(OnCmdSelectionAllServerExecuted);
+        private void OnCmdSelectionAllServerExecuted()
+        {
+            if (Config is not null && Config.ServerDB is not null)
+            {
+                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                {
+                    _ServerDB.IsSelection = IsCheckedAll;
+                }
+            }
         }
         #endregion
 

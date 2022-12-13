@@ -11,6 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Icons\DownloadStorm.ico" />
     <None Remove="Resources\Icons\Export.ico" />
     <None Remove="Resources\Icons\Folder.ico" />
     <None Remove="Resources\Icons\NewFile.ico" />
@@ -35,6 +36,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\DownloadStorm.ico" />
     <Resource Include="Resources\Icons\Export.ico" />
     <Resource Include="Resources\Icons\Folder.ico" />
     <Resource Include="Resources\Icons\NewFile.ico" />

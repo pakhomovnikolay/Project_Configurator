@@ -4,10 +4,12 @@
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:fa="http://schemas.fontawesome.com/icons/"
+              xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
               xmlns:l="clr-namespace:Project_Сonfigurator"
               xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
               xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
               xmlns:pages_param="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
+              xmlns:converter="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
               WindowStartupLocation="CenterScreen"
               WindowStyle="None"
               BorderBrush="Black"
@@ -21,13 +23,17 @@
               ResizeMode="{Binding WindowResizeMode}"
               WindowState="{Binding WindowWindowState}"
               >
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome GlassFrameThickness="{x:Static shell:WindowChrome.GlassFrameCompleteThickness}"/>
+    </WindowChrome.WindowChrome>
     
     <Grid>
-        
+
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="135"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -66,17 +72,12 @@
         </Grid>
 
         <!--Меню-->
-        <Ribbon Grid.Row="1" SelectedIndex="0">
+        <Ribbon Grid.Row="1" SelectedIndex="2">
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>
-            <Ribbon.QuickAccessToolBar>
-                <RibbonQuickAccessToolBar>
-                    <RibbonButton x:Name ="Save" SmallImageSource="../../Resources/Icons/Refresh.ico"
-                                  ToolTip="Обновить БД"
-                                  Command="{Binding CmdUploadDB}"/>
-                </RibbonQuickAccessToolBar>
-            </Ribbon.QuickAccessToolBar>
+            
+            <!--Меню приложения-->
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="../../Resources/Icons/Folder.ico">
                     <RibbonApplicationMenuItem Header="Создать" ImageSource="../../Resources/Icons/NewFile.ico"
@@ -94,13 +95,15 @@
                                                Command="{Binding CmdOpenSettingWindow}"/>
                 </RibbonApplicationMenu>
             </Ribbon.ApplicationMenu>
-            
+
+            <!--Главная-->
             <RibbonTab Header="Главная">
                 <RibbonGroup Header="Шрифт">
 
                 </RibbonGroup>
             </RibbonTab>
 
+            <!--Экспорт СУ-->
             <RibbonTab Header="Экспорт СУ">
                 <RibbonGroup Header="Данные для ПЛК" >
                     <RibbonButton LargeImageSource="../../Resources/Icons/Export.ico" Label="Экспорт всего проекта" />
@@ -144,11 +147,56 @@
                 </RibbonGroup>
             </RibbonTab>
 
-            <RibbonTab Header="Экспорт ВУ">
-                <RibbonGroup Header="Данные SCADA">
+            <!--Экспорт БД-->
+            <RibbonTab Header="Экспорт БД">
+
+                <!--Применить конфигурацию-->
+                <RibbonGroup Header="Применить конфигурацию">
+                    <StackPanel Orientation="Vertical" Width="150">
+
+                        <RibbonCheckBox IsChecked="{Binding IsCheckedAll}"
+                                        Command="{Binding CmdSelectionAllServer}">
+                            <RibbonCheckBox.Label>
+                                <Binding Path="IsCheckedAll" Converter="{StaticResource CheckBoxContentConverter}"/>
+                            </RibbonCheckBox.Label>
+                        </RibbonCheckBox>
+                        
+                        <RibbonButton ToolTip="Обновить БД выбранных узлов"
+                                      LargeImageSource="../../Resources/Icons/DownloadStorm.ico"
+                                      Command="{Binding CmdUploadDB}">
+                        </RibbonButton>
+                    </StackPanel>
+                </RibbonGroup>
+
+                <!--Узлы для применения конфигурации-->
+                <RibbonGroup Header="Узлы для применения конфигурации" Height="80"  ItemsSource="{Binding Config.ServerDB}">
+
+                    <RibbonGroup.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock>
+                                    <TextBlock.Foreground>
+                                        <Binding Path="SuccessUpdate" Converter="{StaticResource SuccessUpdateConverter}"/>
+                                    </TextBlock.Foreground>
+                                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Check"/>
+                                </TextBlock>
+                                <RibbonCheckBox Grid.Column="1" HorizontalAlignment="Left"
+                                                Command="{Binding MainWindowViewModel.CmdSelectionServer, Source={StaticResource Locator}}"
+                                                IsChecked="{Binding IsSelection, UpdateSourceTrigger=PropertyChanged}"
+                                                Label="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
+                                
+                            </Grid>
+                        </DataTemplate>
+                    </RibbonGroup.ItemTemplate>
 
                 </RibbonGroup>
+                
             </RibbonTab>
+            
         </Ribbon>
 
         <!--Данные-->
@@ -256,6 +304,6 @@
             </TabItem>
 
         </TabControl>
-        
+
     </Grid>
 </RibbonWindow>
