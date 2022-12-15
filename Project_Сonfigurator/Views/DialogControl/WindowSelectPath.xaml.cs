@@ -21,6 +21,22 @@ namespace Project_Сonfigurator.Views.DialogControl
             new PropertyMetadata("По умолчанию"));
         #endregion
 
+        #region Новое имя файла
+        public string SelectFileName
+        {
+            get => (string)GetValue(SelectFileNameProperty);
+            set => SetValue(SelectFileNameProperty, value);
+        }
+        /// <summary>
+        /// Новое имя файла
+        /// </summary>
+        public static readonly DependencyProperty SelectFileNameProperty = DependencyProperty.Register(
+            nameof(SelectFileName),
+            typeof(string),
+            typeof(WindowSelectPath),
+            new PropertyMetadata(default(string)));
+        #endregion
+
         #region Конструктор
         public WindowSelectPath() => InitializeComponent();
         #endregion
@@ -34,8 +50,12 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdSelectePath(object sender, RoutedEventArgs e)
         {
             UserDialogService DialogService = new();
-            if (!DialogService.SelectFolder(Title, out string path, SelectPath)) return;
-            SelectPath = path;
+            if (!DialogService.SelectFolder(Title, out string path, out string file_name, SelectPath)) return;
+            if (file_name == "Выберите путь")
+                file_name = "";
+
+            SelectFileName = file_name;
+            SelectPath = path + SelectFileName;
         }
         #endregion
 

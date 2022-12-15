@@ -403,7 +403,7 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding TypeWarning}"/>
+                                <TextBox TextAlignment="Center" BorderThickness="0" Background="Transparent" VerticalContentAlignment="Center" Text="{Binding TypeWarning}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>

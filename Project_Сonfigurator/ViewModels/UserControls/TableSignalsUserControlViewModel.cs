@@ -32,15 +32,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             UserDialog = userDialog;
             _SignalService = signalService;
             _DBService = dBService;
+            LayotRackViewModel = layotRackViewModel;
+
             _DataViewModules.Filter += OnModulesFiltered;
             _DataView.Filter += OnUSOListFiltered;
 
-
-            LayotRackViewModel = layotRackViewModel;
-
-            GeneratedData();
-            //if (Program.Settings.AppData is not null && Program.Settings.AppData.USOList.Count > 0)
-            //    GeneratedData();
+            _DBService.RefreshDataViewModel(this, false);
 
         }
         #endregion
@@ -150,9 +147,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             {
                 if (Set(ref _SelectedUSO, value))
                 {
-                    if (_SelectedUSO is null) return;
-                    if (_SelectedUSO.Racks is null) return;
-                    if (_SelectedUSO.Racks.Count <= 0) return;
+                    if (_SelectedUSO is null || _SelectedUSO.Racks is null || _SelectedUSO.Racks.Count <= 0)
+                    {
+                        _DataViewModules.Source = null;
+                        _DataViewModules.View?.Refresh();
+                        OnPropertyChanged(nameof(DataViewModules));
+                        return;
+                    }
 
                     var modules = new List<RackModule>();
                     foreach (var Rack in value?.Racks)
@@ -184,6 +185,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         }
                     }
                     _DataViewModules.Source = modules;
+                    _DataViewModules.View?.Refresh();
                     OnPropertyChanged(nameof(DataViewModules));
                 }
             }
@@ -400,7 +402,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             }
             catch (Exception)
             {
-                var desc = "Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу и настройки импорта";
+                var desc = "Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу,\nконфигурацию проекта и настройки импорта";
                 UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
             }
         }
@@ -595,17 +597,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = USOList;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
 
             if (USOList is null || USOList.Count <= 0)
-            {
-                _DataViewModules.Source = null;
-                _DataViewModules.View?.Refresh();
-                OnPropertyChanged(nameof(DataViewModules));
-            }
+                SelectedUSO = null;
         }
         #endregion
 

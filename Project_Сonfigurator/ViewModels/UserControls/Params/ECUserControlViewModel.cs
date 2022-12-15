@@ -3,6 +3,7 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Controls;
@@ -11,17 +12,17 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class KTPRSUserControlViewModel : ViewModel
+    public class ECUserControlViewModel : ViewModel
     {
         #region Конструктор
-        private ISignalService _SignalService;
+        private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-
-        public KTPRSUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public ECUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
             _DBService = dBService;
 
+            _DataView.Filter += OnSignalsFiltered;
             _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
@@ -29,7 +30,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Предельные параметры";
+        private string _Title = "Секции шин";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -41,7 +42,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Массив предельных параметров общестанционных защит";
+        private string _Description = "Секции шин";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -88,7 +89,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.RedefineParam(SelectedParam.Param, _IsSelected, Title);
+                    _SignalService.RedefineParam(SelectedSignal, _IsSelected, Title);
                     DoSelection = _SignalService.DoSelection;
                     if (_IsSelected)
                         _DataView.View.Refresh();
@@ -97,35 +98,47 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Список параметров
-        private List<BaseKTPRS> _KTPRS = new();
+        #region Список регистров формируемых
+        private List<BaseParam> _BaseParams = new();
         /// <summary>
-        /// Список параметров
+        /// Список регистров формируемых
         /// </summary>
-        public List<BaseKTPRS> KTPRS
+        public List<BaseParam> BaseParams
         {
-            get => _KTPRS;
-            set => Set(ref _KTPRS, value);
+            get => _BaseParams;
+            set => Set(ref _BaseParams, value);
         }
         #endregion
 
-        #region Коллекция парметров
+        #region Коллекция регистров формируемых
         /// <summary>
-        /// Коллекция парметров
+        /// Коллекция регистров формируемых
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
-        #region Выбранный параметр
-        private BaseKTPRS _SelectedParam = new();
+        #region Выбранный регистр
+        private BaseParam _SelectedSignal = new();
         /// <summary>
-        /// Выбранный параметр
+        /// Выбранный регистр
         /// </summary>
-        public BaseKTPRS SelectedParam
+        public BaseParam SelectedSignal
         {
-            get => _SelectedParam;
-            set => Set(ref _SelectedParam, value);
+            get => _SelectedSignal;
+            set => Set(ref _SelectedSignal, value);
+        }
+        #endregion
+
+        #region Текст фильтрации
+        private string _TextFilter;
+        /// <summary>
+        /// Текст фильтрации
+        /// </summary>
+        public string TextFilter
+        {
+            get => _TextFilter;
+            set => Set(ref _TextFilter, value);
         }
         #endregion
 
@@ -145,40 +158,56 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Команды
 
+        #region Команда - Обновить фильтр
+        private ICommand _CmdRefreshFilter;
+        /// <summary>
+        /// Команда - Обновить фильтр
+        /// </summary>
+        public ICommand CmdRefreshFilter => _CmdRefreshFilter ??= new RelayCommand(OnCmdRefreshFilterExecuted, CanCmdRefreshFilterExecute);
+        private bool CanCmdRefreshFilterExecute() => true;
+
+        private void OnCmdRefreshFilterExecuted()
+        {
+            if (_DataView.Source is null) return;
+            _DataView.View.Refresh();
+
+        }
+        #endregion
+
         #region Команда - Сменить адрес сигнала
         private ICommand _CmdChangeAddressSignal;
         /// <summary>
         /// Команда - Сменить адрес сигнала
         /// </summary>
         public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
-        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedParam is not null;
+        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedSignal is not null;
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedParam is null) return;
+            if (SelectedSignal is null) return;
 
-            var data_list = (List<BaseKTPRS>)_DataView.Source ?? new List<BaseKTPRS>();
-            if (Index != SelectedParam.Param.Index)
-                SelectedParam = data_list[int.Parse(Index) - 1];
+
+            if (Index != SelectedSignal.Index)
+                SelectedSignal = BaseParams[int.Parse(Index) - 1];
 
             _SignalService.DoSelection = true;
             _SignalService.ListName = Title;
             _SignalService.Type = TypeModule.Unknown;
 
             var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedParam.Param.TypeSignal) || int.Parse(SelectedParam.Param.TypeSignal) == 0)
+            if (string.IsNullOrWhiteSpace(SelectedSignal.TypeSignal) || int.Parse(SelectedSignal.TypeSignal) == 0)
             {
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedParam.Param.TypeSignal) > 1)
+            else if (int.Parse(SelectedSignal.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
                 _SignalService.Type = TypeModule.AI;
             }
-            else if (int.Parse(SelectedParam.Param.TypeSignal) > 0)
+            else if (int.Parse(SelectedSignal.TypeSignal) > 0)
             {
                 NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
@@ -202,10 +231,29 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
+        #region Фильтрация модулей
+        /// <summary>
+        /// Фильтрация модулей
+        /// </summary>
+        private void OnSignalsFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
+
+            if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                    Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+
+            e.Accepted = false;
+        }
+        #endregion
+
         #region Генерация сигналов
         public void GeneratedData()
         {
-            _DataView.Source = KTPRS;
+            _DataView.Source = BaseParams;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
         }

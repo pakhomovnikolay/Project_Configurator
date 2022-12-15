@@ -652,9 +652,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 TextAlignment="Center" VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -669,9 +669,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -688,7 +688,7 @@
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding ControlUZD.Open, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.Close, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -705,7 +705,7 @@
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding ControlUZD.Close, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUZD.Open, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -899,9 +899,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 TextAlignment="Center" VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -916,9 +916,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -1122,7 +1122,7 @@
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                         <TextBox BorderThickness="0" Background="Transparent"
                                                          TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding ControlUVS.OffPrimaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
+                                                         Text="{Binding ControlUVS.OffSecondaryAfterProt, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -1282,9 +1282,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 TextAlignment="Center" VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -1299,9 +1299,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Background="Transparent"
-                                                         VerticalContentAlignment="Center"
-                                                         Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <TextBox BorderThickness="0" Background="Transparent"
+                                                 VerticalContentAlignment="Center"
+                                                 Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>

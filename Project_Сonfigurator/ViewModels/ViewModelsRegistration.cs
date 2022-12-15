@@ -27,6 +27,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<KTPRUserControlViewModel>()
             .AddSingleton<KTPRSUserControlViewModel>()
             .AddSingleton<SignalingUserControlViewModel>()
+            .AddSingleton<ECUserControlViewModel>()
             ;
     }
 }

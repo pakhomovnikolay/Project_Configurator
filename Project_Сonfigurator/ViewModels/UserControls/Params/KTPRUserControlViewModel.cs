@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService = signalService;
             _DBService = dBService;
 
-            GeneratedSignals();
+            _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -173,11 +173,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedParam.Param.TypeSignal) > 0)
+            else if (int.Parse(SelectedParam.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+            else if (int.Parse(SelectedParam.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
+
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
@@ -197,9 +203,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Функции
 
         #region Генерация сигналов
-        public void GeneratedSignals()
+        public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = KTPR;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));

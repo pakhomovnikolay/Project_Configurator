@@ -24,16 +24,16 @@
               WindowState="{Binding WindowWindowState}"
               >
 
-    <WindowChrome.WindowChrome>
+    <!--<WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="{x:Static shell:WindowChrome.GlassFrameCompleteThickness}"/>
-    </WindowChrome.WindowChrome>
+    </WindowChrome.WindowChrome>-->
     
     <Grid>
 
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="150"/>
+            <RowDefinition Height="130"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -72,7 +72,7 @@
         </Grid>
 
         <!--Меню-->
-        <Ribbon Grid.Row="1" SelectedIndex="2">
+        <Ribbon Grid.Row="1" SelectedIndex="1">
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>
@@ -105,46 +105,106 @@
 
             <!--Экспорт СУ-->
             <RibbonTab Header="Экспорт СУ">
-                <RibbonGroup Header="Данные для ПЛК" >
-                    <RibbonButton LargeImageSource="../../Resources/Icons/Export.ico" Label="Экспорт всего проекта" />
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Чтение данных с модулей" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Запись данных для модулей" />
-                    </RibbonGroup>
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AI" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DI" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DO" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AO" />
-                    </RibbonGroup>
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Диагностика" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Секции шин" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Группы сигналов" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки УСО" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки" />
-                    </RibbonGroup>
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Карта готовностей агрегатов (Лист 1)" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Общестанционные защиты (Лист 2)" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные защиты (Лист 3)" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные предупреждения (Лист 3,5)" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Предельные параметры (Лист 4)" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Лист 5" />
-                    </RibbonGroup>
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI агрегатов" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI задвижек" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI вспомсистем" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Параметры DO остальных" />
-                    </RibbonGroup>
-                    <RibbonGroup Height="100">
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO агрегатов" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO задвижек" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO вспомсистем" />
-                        <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO остальные" />
-                    </RibbonGroup>
+                
+                <RibbonGroup>
+                    <RibbonButton LargeImageSource="../../Resources/Icons/Export.ico" Label="Экспорт всего проекта"
+                                  Command="{Binding CmdExportSU}"
+                                  CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
                 </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Чтение данных с модулей"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Запись данных для модулей"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AI"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DI"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы DO"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Сигналы AO"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Диагностика"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Секции шин"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Группы сигналов"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки УСО"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Рамки"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Карта готовностей агрегатов (Лист 1)"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Общестанционные защиты (Лист 2)"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные защиты (Лист 3)"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Агрегатные предупреждения (Лист 3,5)"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Предельные параметры (Лист 4)"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Лист 5"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI агрегатов"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI задвижек"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DI вспомсистем"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="Параметры DO остальных"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+
+                <RibbonGroup>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO агрегатов"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO задвижек"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO вспомсистем"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                    <RibbonButton SmallImageSource="../../Resources/Icons/Export.ico" Label="DO остальные"
+                                      Command="{Binding CmdExportSU}"
+                                      CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+                
             </RibbonTab>
 
             <!--Экспорт БД-->
@@ -256,6 +316,11 @@
             <TabItem Header="{Binding SignalsAOViewModel.Title}"
                      IsSelected="{Binding SignalsAOViewModel.IsSelected}">
                 <pages_signal:SignalsAOUserControl DataContext="{Binding SignalsAOViewModel}"/>
+            </TabItem>
+
+            <TabItem Header="{Binding ECViewModel.Title}"
+                     IsSelected="{Binding ECViewModel.IsSelected}">
+                <pages_param:ECUserControl DataContext="{Binding ECViewModel}"/>
             </TabItem>
 
             <TabItem Header="{Binding UserRegUserModel.Title}"

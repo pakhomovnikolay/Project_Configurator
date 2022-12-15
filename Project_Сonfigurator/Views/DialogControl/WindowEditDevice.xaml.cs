@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Models;
+using Project_Сonfigurator.Models.Setpoints;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -87,9 +88,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         #endregion
 
         #region Уставки
-        public List<BaseText> Setpoints
+        public List<BaseSetpoints> Setpoints
         {
-            get => (List<BaseText>)GetValue(SetpointsProperty);
+            get => (List<BaseSetpoints>)GetValue(SetpointsProperty);
             set => SetValue(SetpointsProperty, value);
         }
         /// <summary>
@@ -97,15 +98,15 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// </summary>
         public static readonly DependencyProperty SetpointsProperty = DependencyProperty.Register(
             nameof(Setpoints),
-            typeof(List<BaseText>),
+            typeof(List<BaseSetpoints>),
             typeof(WindowEditDevice),
-            new PropertyMetadata(default(List<BaseText>)));
+            new PropertyMetadata(default(List<BaseSetpoints>)));
         #endregion
 
         #region Выбранная уставка
-        public BaseText SelectedSetpoint
+        public BaseSetpoints SelectedSetpoint
         {
-            get => (BaseText)GetValue(SelectedSetpointProperty);
+            get => (BaseSetpoints)GetValue(SelectedSetpointProperty);
             set => SetValue(SelectedSetpointProperty, value);
         }
         /// <summary>
@@ -113,9 +114,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// </summary>
         public static readonly DependencyProperty SelectedSetpointProperty = DependencyProperty.Register(
             nameof(SelectedSetpoint),
-            typeof(BaseText),
+            typeof(BaseSetpoints),
             typeof(WindowEditDevice),
-            new PropertyMetadata(default(BaseText)));
+            new PropertyMetadata(default(BaseSetpoints)));
         #endregion
 
         #region Создать входный параметр
@@ -202,7 +203,16 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdCreateSetpoints(object sender, RoutedEventArgs e)
         {
-            Setpoints.Add(new BaseText { Text = $"Новый параметр {Setpoints.Count + 1}" });
+            Setpoints.Add(new BaseSetpoints
+            {
+                Address = "",
+                Description = $"Новый параметр {Setpoints.Count + 1}",
+                Id = "",
+                Index = "",
+                Unit = "сек.",
+                Value = "",
+                VarName = ""
+            });
             DataGridSetpoints.Items.Refresh();
             SelectedSetpoint = Setpoints[^1];
 

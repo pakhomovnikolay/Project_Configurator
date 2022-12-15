@@ -32,7 +32,7 @@
                 <ColumnDefinition Width="35"/>
             </Grid.ColumnDefinitions>
             <Border Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                <TextBlock Margin="5,0" TextAlignment="Left" VerticalAlignment="Center"
+                <TextBox Margin="5,0" BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
                      Text="{Binding SelectPath, UpdateSourceTrigger=PropertyChanged}"/>
             </Border>
             <Button Grid.Column="1" Content=". . ."

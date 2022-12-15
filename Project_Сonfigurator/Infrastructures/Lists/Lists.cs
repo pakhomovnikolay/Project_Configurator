@@ -186,6 +186,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                 {
                     if (Vendor.IsSelected)
                     {
+                        ResultModuleList.Add($"");
                         foreach (var ModuleType in Vendor.ModuleTypes)
                         {
                             ResultModuleList.Add($"- - - - - - - {ModuleType.Name} - - - - - - -");

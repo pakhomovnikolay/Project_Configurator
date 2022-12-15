@@ -34,11 +34,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _DBService = dBService;
 
             _DataView.Filter += OnSignalsAOFiltered;
-            GeneratedSignals();
-            //if (Program.Settings.AppData is null || Program.Settings.AppData.SignalAO.Count <= 0)
-            //    GeneratedSignals();
-            //else
-            //    GeneratedData();
+            _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -417,7 +413,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #region Генерируем данные
         public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = SignalsAO;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));

@@ -21,13 +21,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             _LayotRackService = iLayotRackService;
             _DBService = dBService;
 
-            OnCmdCreateNewUSOExecuted();
-            //if (Program.Settings.AppData is null || Program.Settings.AppData.USOList.Count <= 0)
-            //    OnCmdCreateNewUSOExecuted();
-            //else
-            //    GeneratedData();
-
-
+            if (Program._DBService is null || Program._DBService.AppData is null || Program._DBService.AppData.USOList.Count <= 0)
+                OnCmdCreateNewUSOExecuted();
+            else
+                _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -390,7 +387,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             _LayotRackService.RefreshAddressModule(USOList);
             _DataViewRacks.Source = SelectedUSO.Racks;
-            _DataViewRacks.View.Refresh();
+            _DataViewRacks.View?.Refresh();
+            OnPropertyChanged(nameof(_DataView));
+            OnPropertyChanged(nameof(_DataViewRacks));
+
         }
         #endregion
 
@@ -401,10 +401,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = USOList;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
+
+            if (USOList is null || USOList.Count <= 0)
+                SelectedUSO = null;
         }
         #endregion
 

@@ -47,7 +47,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <param name="SelectedPath"></param>
         /// <param name="Filter"></param>
         /// <returns></returns>
-        bool SelectFolder(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Папки (*.Folder*)|*.Folder*");
+        bool SelectFolder(string Title, out string SelectedPath, out string SelectedFile, string DefaulPath = null, string Filter = "Папки (*.Folder*)|*.Folder*");
         #endregion
 
         #region Выбрать файл для импорта ТБ

@@ -57,6 +57,13 @@ namespace Project_Сonfigurator.Models
         public List<SignalAO> SignalAO { get; set; } = new();
         #endregion
 
+        #region Секции шин
+        /// <summary>
+        /// Секции шин
+        /// </summary>
+        public List<BaseParam> ECParam { get; set; } = new();
+        #endregion
+
         #region Регистры формируемые
         /// <summary>
         /// Регистры формируемые

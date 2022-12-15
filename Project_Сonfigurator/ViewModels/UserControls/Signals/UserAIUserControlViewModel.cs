@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             _DBService = dBService;
 
             _DataView.Filter += OnSignalsFiltered;
-            GeneratedSignals();
+            _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -238,9 +238,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Генерация сигналов
-        public void GeneratedSignals()
+        public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = BaseSignals;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));

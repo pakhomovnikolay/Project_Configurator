@@ -23,7 +23,9 @@ namespace Project_Сonfigurator.ViewModels
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
         private readonly IDBService _DBService;
-        public ISettingService _SettingService;
+        public readonly ISettingService _SettingService;
+        private readonly ISUExportRedefineService _SUExportRedefineService;
+
 
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
@@ -31,6 +33,7 @@ namespace Project_Сonfigurator.ViewModels
         public SignalsAIUserControlViewModel SignalsAIViewModel { get; }
         public SignalsDOUserControlViewModel SignalsDOViewModel { get; }
         public SignalsAOUserControlViewModel SignalsAOViewModel { get; }
+        public ECUserControlViewModel ECViewModel { get; }
         public UserDIUserControlViewModel UserDIViewModel { get; }
         public UserAIUserControlViewModel UserAIViewModel { get; }
         public UserRegUserControlViewModel UserRegUserModel { get; }
@@ -48,12 +51,14 @@ namespace Project_Сonfigurator.ViewModels
             ILogSerivece logSerivece,
             IDBService dDBService,
             ISettingService settingService,
+            ISUExportRedefineService sUExportRedefineService,
             LayotRackUserControlViewModel layotRackViewModel,
             TableSignalsUserControlViewModel tableSignalsViewModel,
             SignalsDIUserControlViewModel signalsDIViewModel,
             SignalsAIUserControlViewModel signalsAIViewModel,
             SignalsDOUserControlViewModel signalsDOViewModel,
             SignalsAOUserControlViewModel signalsAOViewModel,
+            ECUserControlViewModel eCViewModel,
             UserDIUserControlViewModel userDIViewModel,
             UserAIUserControlViewModel userAIViewModel,
             UserRegUserControlViewModel userRegUserModel,
@@ -71,6 +76,7 @@ namespace Project_Сonfigurator.ViewModels
             Log = logSerivece;
             _DBService = dDBService;
             _SettingService = settingService;
+            _SUExportRedefineService = sUExportRedefineService;
 
             LayotRackViewModel = layotRackViewModel;
             TableSignalsViewModel = tableSignalsViewModel;
@@ -78,6 +84,7 @@ namespace Project_Сonfigurator.ViewModels
             SignalsAIViewModel = signalsAIViewModel;
             SignalsDOViewModel = signalsDOViewModel;
             SignalsAOViewModel = signalsAOViewModel;
+            ECViewModel = eCViewModel;
             UserDIViewModel = userDIViewModel;
             UserAIViewModel = userAIViewModel;
             UserRegUserModel = userRegUserModel;
@@ -90,20 +97,21 @@ namespace Project_Сonfigurator.ViewModels
             KTPRSViewModel = kTPRSViewModel;
             SignalingViewModel = signalingViewModel;
 
-
             SetNameProject();
-            if (Program.DataBase is null)
+            if (Program._DBService is null)
                 VisibilityTabContol = Visibility.Hidden;
 
 
-            if (Program.Settings is not null && Program.Settings.Config is not null &&  Program.Settings.Config.ServerDB is not null)
+            if (Program.Settings is not null && Program.Settings.Config is not null && Program.Settings.Config.ServerDB is not null)
             {
-                IsCheckedAll= true;
+                IsCheckedAll = true;
                 foreach (var _ServerDB in Program.Settings.Config.ServerDB)
                 {
                     IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
                 }
             }
+
+            CreateViewModels();
         }
         #endregion
 
@@ -235,6 +243,18 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Коллекция ViewModels
+        private List<object> _ViewModels = new();
+        /// <summary>
+        /// Коллекция ViewModels
+        /// </summary>
+        public List<object> ViewModels
+        {
+            get => _ViewModels;
+            set => Set(ref _ViewModels, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -263,30 +283,17 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            Program.DataBase.ClearDataBase();
+            Program._DBService.ClearDataBase();
             _DBService.ClearDataBase();
             Program.Settings.Config.PathProject = "";
             _SettingService.Config = Program.Settings.Config;
             _SettingService.Save();
             SetNameProject();
 
-            LayotRackViewModel.GeneratedData();
-            TableSignalsViewModel.GeneratedData();
-            UserDIViewModel.GeneratedSignals();
-            UserAIViewModel.GeneratedSignals();
-            SignalsDIViewModel.GeneratedData();
-            SignalsAIViewModel.GeneratedData();
-            SignalsDOViewModel.GeneratedData();
-            SignalsAOViewModel.GeneratedData();
-            UserRegUserModel.GeneratedSignals();
-            SignalsGroupViewModel.GeneratedSignals();
-            GroupsSignalViewModel.GeneratedSignals();
-            UZDViewModel.GeneratedSignals();
-            UVSViewModel.GeneratedSignals();
-            UMPNAViewModel.GeneratedSignals();
-            KTPRViewModel.GeneratedSignals();
-            KTPRSViewModel.GeneratedSignals();
-            SignalingViewModel.GeneratedSignals();
+            foreach (var _ViewModel in ViewModels)
+            {
+                _DBService.RefreshDataViewModel(_ViewModel, true);
+            }
 
             VisibilityTabContol = Visibility.Visible;
         }
@@ -303,32 +310,18 @@ namespace Project_Сonfigurator.ViewModels
             if (!UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject)) return;
 
             Program.Settings.Config.PathProject = path;
-            Program.DataBase.AppData = Program.DataBase.LoadData(path);
+            Program._DBService.AppData = Program._DBService.LoadData(path);
             _DBService.LoadData(path);
-            _DBService.AppData = Program.DataBase.AppData;
+            _DBService.AppData = Program._DBService.AppData;
             _SettingService.Config = Program.Settings.Config;
             _SettingService.Save();
 
-            if (Program.DataBase.AppData is not null)
+            if (Program._DBService.AppData is not null)
             {
-                LayotRackViewModel.GeneratedData();
-                TableSignalsViewModel.GeneratedData();
-
-                UserDIViewModel.GeneratedSignals();
-                UserAIViewModel.GeneratedSignals();
-                SignalsDIViewModel.GeneratedData();
-                SignalsAIViewModel.GeneratedData();
-                SignalsDOViewModel.GeneratedData();
-                SignalsAOViewModel.GeneratedData();
-                UserRegUserModel.GeneratedSignals();
-                SignalsGroupViewModel.GeneratedSignals();
-                GroupsSignalViewModel.GeneratedSignals();
-                UZDViewModel.GeneratedSignals();
-                UVSViewModel.GeneratedSignals();
-                UMPNAViewModel.GeneratedSignals();
-                KTPRViewModel.GeneratedSignals();
-                KTPRSViewModel.GeneratedSignals();
-                SignalingViewModel.GeneratedSignals();
+                foreach (var _ViewModel in ViewModels)
+                {
+                    _DBService.RefreshDataViewModel(_ViewModel, false);
+                }
             }
 
             SetNameProject();
@@ -360,6 +353,8 @@ namespace Project_Сonfigurator.ViewModels
         {
             Program.Settings.Config.PathProject = "";
             if (!UserDialog.SaveProject(Title)) return;
+
+            _DBService.AppData = new();
             FormingAppDataBeforeSaving();
             _DBService.SaveData();
         }
@@ -390,6 +385,20 @@ namespace Project_Сonfigurator.ViewModels
         {
             FormingAppDataBeforeSaving();
             _DBService.SetData();
+        }
+        #endregion
+
+        #region Команда - Экспорт СУ
+        private ICommand _CmdExportSU;
+        /// <summary>
+        /// Команда - Экспорт СУ
+        /// </summary>
+        public ICommand CmdExportSU => _CmdExportSU ??= new RelayCommand(OnCmdExportSUExecuted, CanCmdExportSUExecute);
+        private bool CanCmdExportSUExecute(object p) => p is not null && p is string;
+        private void OnCmdExportSUExecuted(object p)
+        {
+            var TypeExport = (string)p;
+            _SUExportRedefineService.Export(TypeExport, this);
         }
         #endregion
 
@@ -449,6 +458,7 @@ namespace Project_Сonfigurator.ViewModels
                 _DBService.AppData.SignalAI = SignalsAIViewModel.DataView is null ? new() : (List<SignalAI>)SignalsAIViewModel.DataView.SourceCollection;
                 _DBService.AppData.SignalDO = SignalsDOViewModel.DataView is null ? new() : (List<SignalDO>)SignalsDOViewModel.DataView.SourceCollection;
                 _DBService.AppData.SignalAO = SignalsAOViewModel.DataView is null ? new() : (List<SignalAO>)SignalsAOViewModel.DataView.SourceCollection;
+                _DBService.AppData.ECParam = ECViewModel.DataView is null ? new() : (List<BaseParam>)ECViewModel.DataView.SourceCollection;
                 _DBService.AppData.UserReg = UserRegUserModel.DataView is null ? new() : (List<BaseParam>)UserRegUserModel.DataView.SourceCollection;
                 _DBService.AppData.SignalGroup = SignalsGroupViewModel.DataView is null ? new() : (List<BaseParam>)SignalsGroupViewModel.DataView.SourceCollection;
                 _DBService.AppData.GroupSignals = GroupsSignalViewModel.DataView is null ? new() : (List<GroupSignal>)GroupsSignalViewModel.DataView.SourceCollection;
@@ -480,6 +490,33 @@ namespace Project_Сonfigurator.ViewModels
                 var name = name_project[^1].Split('.');
                 NameProject = name[0];
             }
+        }
+        #endregion
+
+        #region Создаем коллекцию ViewModels
+        private void CreateViewModels()
+        {
+            ViewModels = new()
+            {
+                LayotRackViewModel,
+                TableSignalsViewModel,
+                SignalsDIViewModel,
+                SignalsAIViewModel,
+                SignalsDOViewModel,
+                SignalsAOViewModel,
+                ECViewModel,
+                UserDIViewModel,
+                UserAIViewModel,
+                UserRegUserModel,
+                SignalsGroupViewModel,
+                GroupsSignalViewModel,
+                UZDViewModel,
+                UVSViewModel,
+                UMPNAViewModel,
+                KTPRViewModel,
+                KTPRSViewModel,
+                SignalingViewModel
+            };
         }
         #endregion
 

@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Models.Settings.Interfaces;
+﻿using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Models.Settings.Interfaces;
 using System.Collections.Generic;
 
 namespace Project_Сonfigurator.Models.Settings
@@ -23,7 +24,7 @@ namespace Project_Сonfigurator.Models.Settings
         /// <summary>
         /// Уставки
         /// </summary>
-        public List<BaseText> Setpoints { get; set; } = new();
+        public List<BaseSetpoints> Setpoints { get; set; } = new();
         #endregion
     }
 }

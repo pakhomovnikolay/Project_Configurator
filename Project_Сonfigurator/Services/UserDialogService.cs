@@ -80,7 +80,13 @@ namespace Project_Сonfigurator.Services
                     SelectPath = $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}"
                 };
                 if (!window.ShowDialog().Value) return false;
-                var path = window.SelectPath == $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}" ? Program.PathConfig : window.SelectPath;
+
+                var SelectPath = window.SelectPath;
+                var SelectFileName = window.SelectFileName;
+                if (!string.IsNullOrWhiteSpace(SelectFileName))
+                    SelectPath = SelectPath.Replace(SelectFileName, "");
+
+                var path = SelectPath == $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}" ? Program.PathConfig : SelectPath;
                 if (!Directory.Exists(path))
                 {
                     SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",
@@ -88,7 +94,8 @@ namespace Project_Сonfigurator.Services
                     return false;
                 }
 
-                Program.Settings.Config.PathProject = $"{path}\\ProjectData.xml";
+
+                Program.Settings.Config.PathProject = string.IsNullOrWhiteSpace(SelectFileName) ? $"{path}\\ProjectData.xml" : $"{path}\\{SelectFileName}.xml";
             }
 
             _SettingService.Config = Program.Settings.Config;
@@ -105,8 +112,9 @@ namespace Project_Сonfigurator.Services
         /// <param name="SelectedPath"></param>
         /// <param name="Filter"></param>
         /// <returns></returns>
-        public bool SelectFolder(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Папки (*.Folder*)|*.Folder*")
+        public bool SelectFolder(string Title, out string SelectedPath, out string SelectedFile, string DefaulPath = null, string Filter = "Папки (*.Folder*)|*.Folder*")
         {
+            SelectedFile = "";
             SelectedPath = "";
             var filename = "Выберите путь";
             var path = string.IsNullOrWhiteSpace(DefaulPath) ? Environment.CurrentDirectory : DefaulPath;
@@ -123,7 +131,8 @@ namespace Project_Сonfigurator.Services
             };
 
             if (dialog.ShowDialog() != true) { return false; }
-            path = dialog.FileName.Replace(filename, "");
+            SelectedFile = dialog.SafeFileName;
+            path = dialog.FileName.Replace(SelectedFile, "");
             if (!Directory.Exists(path))
             {
                 SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",

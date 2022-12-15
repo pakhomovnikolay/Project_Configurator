@@ -23,67 +23,7 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Данные
         /// </summary>
-        public DBData AppData { get; set; } = new();
-        #endregion
-
-        #region Функция получения данных
-        ///// <summary>
-        ///// Функция получения данных
-        ///// </summary>
-        ///// <returns></returns>
-        //public DBData GetData()
-        //{
-        //    var connection = new MySqlConnection();
-        //    var data_table = new DBData();
-        //    var Log = new LogSerivece();
-        //    var DialogService = new UserDialogService();
-        //    var Config = Program.Settings.Config.ConnectDB;
-
-        //    try
-        //    {
-        //        var connectionString =
-        //            $"SERVER={Config.IPAddress};" +
-        //            $"PORT={Config.Port};" +
-        //            $"DATABASE=mariadb;" +
-        //            $"UID={Config.UserName};" +
-        //            $"PASSWORD={Config.Password};" +
-        //            $"Connection Timeout = {Config.TimeoutConnect}";
-
-        //        connection = new(connectionString);
-        //        try
-        //        {
-        //            connection.Open();
-        //            string Query = $"CREATE DATABASE IF NOT EXISTS `{Config.NameDB}`;";
-        //            var mySqlCommand = new MySqlCommand(Query, connection);
-        //            mySqlCommand.ExecuteNonQuery();
-        //            connection.Close();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-        //        }
-
-        //        try
-        //        {
-        //            connection.Open();
-        //            string Query = $"USE `{Config.NameDB}` CREATE TABLE 'USO' IF NOT EXISTS `{Config.NameDB}`;";
-        //            var mySqlCommand = new MySqlCommand(Query, connection);
-        //            mySqlCommand.ExecuteNonQuery();
-        //            connection.Close();
-        //        }
-        //        catch (Exception e)
-        //        {
-        //            Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-
-        //        throw;
-        //    }
-
-        //    return data_table;
-        //}
+        public DBData AppData { get; set; }
         #endregion
 
         #region Функция записи данных
@@ -238,8 +178,15 @@ namespace Project_Сonfigurator.Services
         /// Обновление данных во ViewModels
         /// </summary>
         /// <param name="Item"></param>
-        public bool RefreshDataViewModel(object Item)
+        public bool RefreshDataViewModel(object Item, bool CreateNewProject)
         {
+            if (AppData is null && !CreateNewProject)
+            {
+                var path = string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject) ? Program.PathConfig + "\\ProjectData.xml" : Program.Settings.Config.PathProject;
+                AppData = LoadData(path);
+            }
+                
+
             if (Item is null) throw new ArgumentNullException(nameof(Item));
             return Item switch
             {
@@ -250,6 +197,7 @@ namespace Project_Сonfigurator.Services
                 SignalsAIUserControlViewModel Data => RefreshSignalsAI(Data),
                 SignalsDOUserControlViewModel Data => RefreshSignalsDO(Data),
                 SignalsAOUserControlViewModel Data => RefreshSignalsAO(Data),
+                ECUserControlViewModel Data => RefreshEC(Data),
                 UserDIUserControlViewModel Data => RefreshUserDI(Data),
                 UserAIUserControlViewModel Data => RefreshUserAI(Data),
                 UserRegUserControlViewModel Data => RefreshUserReg(Data),
@@ -277,16 +225,18 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.USOList.Count > 0)
+            {
                 foreach (var _USO in AppData.USOList)
                     Data.USOList.Add(_USO);
-            #endregion
 
-            if (Data.USOList.Count > 0)
-            {
                 Data.SelectedUSO = Data.USOList[^1];
                 Data.SelectedRack = Data.USOList[^1].Racks[0];
             }
+            #endregion
+
+            Data.GeneratedData();
             return true;
+
         }
         #endregion
 
@@ -302,6 +252,7 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.USOList.Count > 0)
+            {
                 foreach (var _USO in AppData.USOList)
                 {
                     var need_add_uso = false;
@@ -324,11 +275,11 @@ namespace Project_Сonfigurator.Services
                     if (need_add_uso)
                         Data.USOList.Add(_USO);
                 }
+                Data.SelectedUSO = Data.USOList[0];
+            }
             #endregion
 
-            if (Data.USOList.Count > 0)
-                Data.SelectedUSO = Data.USOList[0];
-
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -344,13 +295,15 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.SignalDI.Count > 0)
+            {
                 foreach (var signal in AppData.SignalDI)
                     Data.SignalsDI.Add(signal);
+
+                Data.SelectedSignalDI = Data.SignalsDI[0];
+            }
             #endregion
 
-            if (Data.SignalsDI.Count > 0)
-                Data.SelectedSignalDI = Data.SignalsDI[0];
-
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -366,13 +319,16 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.SignalAI.Count > 0)
+            {
                 foreach (var signal in AppData.SignalAI)
                     Data.SignalsAI.Add(signal);
-            #endregion
 
-            if (Data.SignalsAI.Count > 0)
                 Data.SelectedSignalAI = Data.SignalsAI[0];
 
+            }
+            #endregion
+            
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -388,13 +344,15 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.SignalDO.Count > 0)
+            {
                 foreach (var signal in AppData.SignalDO)
                     Data.SignalsDO.Add(signal);
+
+                Data.SelectedSignalDO = Data.SignalsDO[0];
+            }
             #endregion
 
-            if (Data.SignalsDO.Count > 0)
-                Data.SelectedSignalDO = Data.SignalsDO[0];
-
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -410,13 +368,59 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.SignalAO.Count > 0)
+            {
                 foreach (var signal in AppData.SignalAO)
                     Data.SignalsAO.Add(signal);
+
+                Data.SelectedSignalAO = Data.SignalsAO[0];
+            } 
             #endregion
 
-            if (Data.SignalsAO.Count > 0)
-                Data.SelectedSignalAO = Data.SignalsAO[0];
+            Data.GeneratedData();
+            return true;
+        }
+        #endregion
 
+        #region Обновляем данные Секции шин
+        /// <summary>
+        /// Обновляем данные Секции шин
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshEC(ECUserControlViewModel Data)
+        {
+            Data.BaseParams = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.ECParam.Count > 0)
+            {
+                foreach (var signal in AppData.ECParam)
+                    Data.BaseParams.Add(signal);
+
+                Data.SelectedSignal = Data.BaseParams[0];
+                Data.GeneratedData();
+                return true;
+            }
+            #endregion
+
+            #region Генерируем сигналы DI
+            for (int i = 0; i < 100; i++)
+            {
+                var signal = new BaseParam
+                {
+                    Index = $"{Data.BaseParams.Count + 1}",
+                    Id = "",
+                    Description = "",
+                    VarName = $"EC_KTP_P[{Data.BaseParams.Count + 1}]",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = ""
+                };
+                Data.BaseParams.Add(signal);
+            }
+            Data.SelectedSignal = Data.BaseParams[0];
+            #endregion
+
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -436,6 +440,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.UserDI)
                     Data.BaseSignals.Add(signal);
 
+                Data.SelectedSignal = Data.BaseSignals[0];
+                Data.GeneratedData();
                 return true;
             }
             #endregion
@@ -461,6 +467,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedSignal = Data.BaseSignals[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -480,6 +487,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.UserAI)
                     Data.BaseSignals.Add(signal);
 
+                Data.SelectedSignal = Data.BaseSignals[0];
+                Data.GeneratedData();
                 return true;
             }
 
@@ -503,6 +512,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedSignal = Data.BaseSignals[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -522,6 +532,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.UserReg)
                     Data.BaseParams.Add(signal);
 
+                Data.SelectedSignal = Data.BaseParams[0];
+                Data.GeneratedData();
                 return true;
             }
 
@@ -543,6 +555,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedSignal = Data.BaseParams[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -562,6 +575,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.SignalGroup)
                     Data.BaseParams.Add(signal);
 
+                Data.SelectedParam = Data.BaseParams[0];
+                Data.GeneratedData();
                 return true;
             }
 
@@ -585,6 +600,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedParam = Data.BaseParams[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -604,6 +620,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.GroupSignals)
                     Data.GroupSignals.Add(signal);
 
+                Data.SelectedParam = Data.GroupSignals[0];
+                Data.GeneratedData();
                 return true;
             }
 
@@ -633,6 +651,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedParam = Data.GroupSignals[0];
             #endregion 
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -648,13 +667,15 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.UZD.Count > 0)
+            {
                 foreach (var signal in AppData.UZD)
                     Data.UZD.Add(signal);
 
-            if (Data.UZD.Count > 0)
                 Data.SelectedUZD = Data.UZD[0];
+            }
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -670,13 +691,15 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.UVS.Count > 0)
+            {
                 foreach (var signal in AppData.UVS)
                     Data.UVS.Add(signal);
 
-            if (Data.UVS.Count > 0)
                 Data.SelectedUVS = Data.UVS[0];
+            } 
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -692,13 +715,15 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.UMPNA.Count > 0)
+            {
                 foreach (var signal in AppData.UMPNA)
                     Data.UMPNA.Add(signal);
 
-            if (Data.UMPNA.Count > 0)
                 Data.SelectedUMPNA = Data.UMPNA[0];
+            }
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -714,8 +739,14 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.KTPR.Count > 0)
+            {
                 foreach (var signal in AppData.KTPR)
                     Data.KTPR.Add(signal);
+
+                Data.SelectedParam = Data.KTPR[0];
+                Data.GeneratedData();
+                return true;
+            }
             #endregion
 
             #region Генерируем регистры формируемые
@@ -761,6 +792,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedParam = Data.KTPR[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -776,8 +808,14 @@ namespace Project_Сonfigurator.Services
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.KTPRS.Count > 0)
+            {
                 foreach (var signal in AppData.KTPRS)
                     Data.KTPRS.Add(signal);
+
+                Data.SelectedParam = Data.KTPRS[0];
+                Data.GeneratedData();
+                return true;
+            }
             #endregion
 
             #region Генерируем регистры формируемые
@@ -817,6 +855,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedParam = Data.KTPRS[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion
@@ -836,15 +875,14 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.Signaling)
                     Data.Signaling.Add(signal);
 
+                Data.SelectedParam = Data.Signaling[0];
+                Data.GeneratedData();
                 return true;
             }
-
             #endregion
 
             #region Генерируем регистры формируемые
-            var qty = Data.Signaling.Count / 16;
-            qty = 58 - qty;
-            for (int i = 0; i < qty; i++)
+            for (int i = 0; i < 58; i++)
             {
                 for (int j = 0; j < 16; j++)
                 {
@@ -871,6 +909,7 @@ namespace Project_Сonfigurator.Services
             Data.SelectedParam = Data.Signaling[0];
             #endregion
 
+            Data.GeneratedData();
             return true;
         }
         #endregion

@@ -33,9 +33,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService = signalService;
             _DBService = dBService;
             TableSignalsViewModel = tableSignalsViewModel;
-            GeneratedSignals();
-            //if (Program.Settings.AppData is not null && Program.Settings.AppData.UZD.Count > 0)
-            //    GeneratedSignals();
+            _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -395,9 +393,16 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
             {
-                NameListSelected = "Сигналы AI";
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
+            {
+                NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+
+
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
@@ -509,10 +514,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
                     Id = $"H{8000 + index_setpoints + i}",
-                    Unit = "",
-                    Value = "",
+                    Unit = Program.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = Program.Settings.Config.UZD.Setpoints[i].Value,
                     Address = $"%MW{3000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UZD.Setpoints[i].Text
+                    Description = Program.Settings.Config.UZD.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -621,10 +626,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
                     Id = $"H{8000 + index_setpoints + i}",
-                    Unit = "",
-                    Value = "",
+                    Unit = Program.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = Program.Settings.Config.UZD.Setpoints[i].Value,
                     Address = $"%MW{3000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UZD.Setpoints[i].Text
+                    Description = Program.Settings.Config.UZD.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -679,12 +684,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Генерация сигналов
-        public void GeneratedSignals()
+        public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = UZD;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
+
+            if (UZD is null || UZD.Count <= 0)
+                SelectedUZD = null;
         }
         #endregion 
 

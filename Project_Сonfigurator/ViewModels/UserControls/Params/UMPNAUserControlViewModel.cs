@@ -33,9 +33,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService = signalService;
             TableSignalsViewModel = tableSignalsViewModel;
             _DBService = dBService;
-            GeneratedSignals();
-            //if (Program.Settings.AppData is not null && Program.Settings.AppData.UMPNA.Count > 0)
-            //    GeneratedSignals();
+            _DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -406,10 +404,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Команда - удалить вспомсистему
+        #region Команда - удалить МПНА
         private ICommand _CmdDeleteUMPNA;
         /// <summary>
-        /// Команда - удалить вспомсистему
+        /// Команда - удалить МПНА
         /// </summary>
         public ICommand CmdDeleteUMPNA => _CmdDeleteUMPNA ??= new RelayCommand(OnCmdDeleteUMPNAExecuted, CanCmdDeleteUMPNAExecute);
         private bool CanCmdDeleteUMPNAExecute() => SelectedUMPNA is not null && !string.IsNullOrWhiteSpace(SelectedUMPNA.Description);
@@ -526,9 +524,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
 
@@ -609,11 +612,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 0)
+            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
+
+
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
@@ -656,11 +666,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 0)
+            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
+
+
+
+
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
@@ -703,11 +722,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 NameListSelected = "Сигналы DI";
                 _SignalService.Type = TypeModule.DI;
             }
-            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 0)
+            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
+                _SignalService.Type = TypeModule.AI;
+            }
+            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
                 _SignalService.Type = TypeModule.DI;
             }
+
+
 
             if (App.FucusedTabControl == null) return;
             foreach (var _Item in App.FucusedTabControl.Items)
@@ -786,10 +812,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
                     Id = $"H{6000 + index_setpoints + i}",
-                    Unit = "",
-                    Value = "",
+                    Unit = Program.Settings.Config.UMPNA.Setpoints[i].Unit,
+                    Value = Program.Settings.Config.UMPNA.Setpoints[i].Value,
                     Address = $"%MW{5000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Text
+                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -998,10 +1024,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
                     Id = $"H{6000 + index_setpoints + i}",
-                    Unit = "",
-                    Value = "",
+                    Unit = Program.Settings.Config.UMPNA.Setpoints[i].Unit,
+                    Value = Program.Settings.Config.UMPNA.Setpoints[i].Value,
                     Address = $"%MW{5000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Text
+                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -1148,12 +1174,16 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Генерация сигналов
-        public void GeneratedSignals()
+        public void GeneratedData()
         {
-            _DBService.RefreshDataViewModel(this);
             _DataView.Source = UMPNA;
             _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
+
+            if (UMPNA is null || UMPNA.Count <= 0)
+            {
+                SelectedUMPNA = null;
+            }
         }
         #endregion 
 

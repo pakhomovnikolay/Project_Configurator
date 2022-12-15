@@ -56,6 +56,13 @@ namespace Project_Сonfigurator.Models.Interfaces
         List<SignalAO> SignalAO { get; set; }
         #endregion
 
+        #region Секции шин
+        /// <summary>
+        /// Секции шин
+        /// </summary>
+        List<BaseParam> ECParam { get; set; }
+        #endregion
+
         #region Регистры формируемые
         /// <summary>
         /// Регистры формируемые

@@ -40,7 +40,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Обновление данных во ViewModels
         /// </summary>
         /// <param name="Item"></param>
-        bool RefreshDataViewModel(object Item);
+        bool RefreshDataViewModel(object Item, bool CreateNewProject);
         #endregion
 
         #region Обнуление данных, при созданиии нового проекта
