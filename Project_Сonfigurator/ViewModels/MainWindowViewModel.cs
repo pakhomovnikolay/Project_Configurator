@@ -255,6 +255,18 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Коллекция ViewModelsHeader
+        private List<string> _ViewModelsHeader = new();
+        /// <summary>
+        /// Коллекция ViewModelsHeader
+        /// </summary>
+        public List<string> ViewModelsHeader
+        {
+            get => _ViewModelsHeader;
+            set => Set(ref _ViewModelsHeader, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -516,6 +528,28 @@ namespace Project_Сonfigurator.ViewModels
                 KTPRViewModel,
                 KTPRSViewModel,
                 SignalingViewModel
+            };
+
+            ViewModelsHeader = new()
+            {
+                LayotRackViewModel.Title,
+                TableSignalsViewModel.Title,
+                SignalsDIViewModel.Title,
+                SignalsAIViewModel.Title,
+                SignalsDOViewModel.Title,
+                SignalsAOViewModel.Title,
+                ECViewModel.Title,
+                UserDIViewModel.Title,
+                UserAIViewModel.Title,
+                UserRegUserModel.Title,
+                SignalsGroupViewModel.Title,
+                GroupsSignalViewModel.Title,
+                UZDViewModel.Title,
+                UVSViewModel.Title,
+                UMPNAViewModel.Title,
+                KTPRViewModel.Title,
+                KTPRSViewModel.Title,
+                SignalingViewModel.Title
             };
         }
         #endregion

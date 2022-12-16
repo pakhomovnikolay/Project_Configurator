@@ -10,4 +10,6 @@
 
     <l:CmdNextItemTabPanel x:Key="CmdNextItemTabPanel"/>
     <l:CmdPrevItemTabPanel x:Key="CmdPrevItemTabPanel"/>
+    <l:CmdSelectedTabPanelItem x:Key="CmdSelectedTabPanelItem"/>
+    
 </ResourceDictionary>
