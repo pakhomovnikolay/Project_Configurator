@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands.Base;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Project_Сonfigurator.Infrastructures.Commands

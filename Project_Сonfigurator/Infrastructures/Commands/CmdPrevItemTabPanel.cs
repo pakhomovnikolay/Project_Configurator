@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands.Base;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
@@ -21,8 +20,8 @@ namespace Project_Сonfigurator.Infrastructures.Commands
                 return;
             }
 
-            _TabControl.SelectedIndex = ++TabIndex;
-            if (TabIndex >= (_TabControl.Items.Count - 1))
+            _TabControl.SelectedIndex = --TabIndex;
+            if (TabIndex <= 0)
             {
                 _ScrollViewer.ScrollToLeftEnd();
                 return;
