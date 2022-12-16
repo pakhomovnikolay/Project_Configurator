@@ -265,15 +265,42 @@
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition Height="auto"/>
                         </Grid.RowDefinitions>
-                        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" Grid.Row="1" Margin="0,-5,0,0">
-                            <TabPanel IsItemsHost="True" Margin="10,5,10,3" Grid.Column="1"/>
-
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,2" Grid.Row="1" VerticalAlignment="Top">
+                            <Button Height="25" Width="25" Margin="0,0"
+                                            Style="{StaticResource CustomButtonStyle}"
+                                            Command="{StaticResource CmdPrevItemTabPanel}"
+                                            CommandParameter="{Binding ElementName=ScrollViewer}"
+                                            >
+                                
+                                <Button.Content>
+                                    <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
+                                </Button.Content>
+                            </Button>
+                            <Button Height="25" Width="25" Margin="1,0"
+                                            Style="{StaticResource CustomButtonStyle}"
+                                            Command="{StaticResource CmdNextItemTabPanel}"
+                                            CommandParameter="{Binding ElementName=ScrollViewer}"
+                                            >
+                                
+                                <Button.Content>
+                                    <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
+                                </Button.Content>
+                            </Button>
+                        </StackPanel>
+                        <ScrollViewer HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Disabled" x:Name="ScrollViewer"
+                                      Grid.Row="1" Grid.Column="1" Margin="0,-5,0,0" CanContentScroll="True"
+                                      >
+                            <TabPanel IsItemsHost="True" Margin="0,5,10,5" Grid.Column="1"/>
                         </ScrollViewer>
-                        <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0"/>
+                        <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="2"/>
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
