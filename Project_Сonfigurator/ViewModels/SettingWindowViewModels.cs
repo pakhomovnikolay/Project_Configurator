@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -300,6 +301,75 @@ namespace Project_Сonfigurator.ViewModels
 
 
             window.ShowDialog();
+        }
+        #endregion
+
+        #region Команда - Открыть окно настроек параметров
+        /// <summary>
+        /// Команда - Открыть окно настроек параметров
+        /// </summary>
+        private ICommand _CmdOpenWindowEditDefaultMapDefence;
+        public ICommand CmdOpenWindowEditDefaultMapDefence => _CmdOpenWindowEditDefaultMapDefence ??= new RelayCommand(OnCmdOpenWindowEditDefaultMapDefenceExecuted, CanCmdOpenWindowEditDefaultMapDefenceExecute);
+        private bool CanCmdOpenWindowEditDefaultMapDefenceExecute(object p) => SelectedVendor is not null;
+        private void OnCmdOpenWindowEditDefaultMapDefenceExecuted(object p)
+        {
+            if (p is not string Content) return;
+            if (string.IsNullOrWhiteSpace(Content)) return;
+
+            var window = new WindowEditDefaultMapDefense()
+            {
+                Title = Content,
+                DefaultMap = Config.DefualtMapKGMPNA,
+                Owner = App.ActiveWindow ?? App.FucusedWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            switch (Content)
+            {
+                case "Настройка карты агрегатных готовностей":
+                    window.DefaultMap = Config.DefualtMapKGMPNA;
+                    break;
+                case "Настройка карты общестанционных защит":
+                    window.DefaultMap = Config.DefualtMapKTPR;
+                    break;
+                case "Настройка карты агрегатных защит":
+                    window.DefaultMap = Config.DefualtMapKTPRA;
+                    break;
+                case "Настройка карты предельных параметров агрегатных защит":
+                    window.DefaultMap = Config.DefualtMapKTPRAS;
+                    break;
+                case "Настройка карты предельных параметров общестанционных защит":
+                    window.DefaultMap = Config.DefualtMapKTPRS;
+                    break;
+                case "Настройка карты общесистемной сигнализации":
+                    window.DefaultMap = Config.DefualtMapSignaling;
+                    break;
+                default:
+                    break;
+            }
+            if (!window.ShowDialog().Value) return;
+            switch (Content)
+            {
+                case "Настройка карты агрегатных готовностей":
+                    Config.DefualtMapKGMPNA = window.DefaultMap;
+                    break;
+                case "Настройка карты общестанционных защит":
+                    Config.DefualtMapKTPR = window.DefaultMap;
+                    break;
+                case "Настройка карты агрегатных защит":
+                    Config.DefualtMapKTPRA = window.DefaultMap;
+                    break;
+                case "Настройка карты предельных параметров агрегатных защит":
+                    Config.DefualtMapKTPRAS = window.DefaultMap;
+                    break;
+                case "Настройка карты предельных параметров общестанционных защит":
+                    Config.DefualtMapKTPRS = window.DefaultMap;
+                    break;
+                case "Настройка карты общесистемной сигнализации":
+                    Config.DefualtMapSignaling = window.DefaultMap;
+                    break;
+                default:
+                    break;
+            }
         }
         #endregion
 

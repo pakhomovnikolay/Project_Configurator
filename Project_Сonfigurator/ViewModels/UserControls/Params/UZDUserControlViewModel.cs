@@ -285,33 +285,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdDeleteUZDExecuted()
         {
-            var data_list = (List<BaseUZD>)_DataView.Source ?? new List<BaseUZD>();
-            var index = data_list.IndexOf(SelectedUZD);
-            data_list.Remove(SelectedUZD);
+            var index = UZD.IndexOf(SelectedUZD);
+            UZD.Remove(SelectedUZD);
 
-            if (data_list.Count > 0)
+            if (UZD.Count > 0)
             {
                 if (index > 0)
-                    SelectedUZD = data_list[index - 1];
+                    SelectedUZD = UZD[index - 1];
                 else
-                    SelectedUZD = data_list[index];
+                    SelectedUZD = UZD[index];
             }
             else
             {
                 SelectedUZD = null;
             }
-
-            _DataViewInputParam.Source = SelectedUZD?.InputParam;
-            _DataViewInputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUZD?.OutputParam;
-            _DataViewOutputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            RefreshIndexUZD(SelectedUZD);
         }
         #endregion
 
@@ -329,7 +317,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            var data_list = new List<BaseUZD>();
+            UZD = new();
             foreach (var DataView in TableSignalsViewModel.DataView)
             {
                 var uso = DataView as USO;
@@ -339,27 +327,34 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         foreach (var Channel in _Module.Channels)
                         {
-                            if (Channel.Description.Contains("задвижк", StringComparison.CurrentCultureIgnoreCase) ||
+                            if ((Channel.Description.Contains("задвижк", StringComparison.CurrentCultureIgnoreCase) ||
                                 Channel.Description.Contains("клапан", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("клоп", StringComparison.CurrentCultureIgnoreCase))
+                                Channel.Description.Contains("клоп", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
                             {
+                                var name = "";
                                 var index_dot = Channel.Description.IndexOf(".");
                                 var qty = Channel.Description.Length;
-                                var name = Channel.Description.Remove(index_dot, qty - index_dot);
+                                if (index_dot > 0)
+                                    name = Channel.Description.Remove(index_dot, qty - index_dot);
                                 var fl_tmp = false;
-                                foreach (var item in data_list)
+                                foreach (var item in UZD)
                                 {
-                                    if (item.Description == name)
+                                    if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
                                         fl_tmp = true;
                                 }
-                                if (!fl_tmp)
-                                    ImportUZD(name, data_list);
+                                if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
+                                    ImportUZD(name, UZD);
                             }
                         }
                     }
                 }
-
             }
+
+            SelectedUZD = UZD[0];
+            _DataView.Source = UZD;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
@@ -460,9 +455,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Создаем задвижку
         private void CreateUZD()
         {
-            var data_list = (List<BaseUZD>)_DataView.Source ?? new List<BaseUZD>();
-
-            var index = data_list.Count + 1;
+            var index = UZD.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
             var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;
             var index_output_param = (index - 1) * Program.Settings.Config.UZD.OutputParams.Count;
@@ -548,31 +541,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 OutputParam = new List<BaseParam>(OutputParam),
                 Setpoints = new List<BaseSetpoints>(Setpoints)
             };
-            data_list.Add(signal);
+            UZD.Add(signal);
             #endregion
 
-            SelectedUZD = data_list[^1];
-            SelectedInputParam = SelectedUZD.InputParam[0];
-            SelectedOutputParam = SelectedUZD.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUZD.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUZD.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
+            SelectedUZD = UZD[^1];
+            _DataView.Source = UZD;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
             #endregion
         }
         #endregion 
 
         #region Импортируем задвижки
-        private void ImportUZD(string Description, List<BaseUZD> data_list)
+        private static void ImportUZD(string Description, List<BaseUZD> data_list)
         {
             var index = data_list.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
@@ -663,22 +644,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             data_list.Add(signal);
             #endregion
 
-            SelectedUZD = data_list[^1];
-            SelectedInputParam = SelectedUZD.InputParam[0];
-            SelectedOutputParam = SelectedUZD.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUZD.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUZD.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
             #endregion
         }
         #endregion 
@@ -692,6 +657,56 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
             if (UZD is null || UZD.Count <= 0)
                 SelectedUZD = null;
+        }
+        #endregion 
+
+        #region Обновление индексов
+        public void RefreshIndexUZD(BaseUZD selectedUZD = null)
+        {
+            SelectedUZD = new();
+            var index = 0;
+            foreach (var item in UZD)
+            {
+                index++;
+                item.VarName = $"uzd_param[{index}]";
+                var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
+                var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;
+                var index_output_param = (index - 1) * Program.Settings.Config.UZD.OutputParams.Count;
+
+                #region Уставки
+                var i = 0;
+                foreach (var _Setpoint in item.Setpoints)
+                {
+                    _Setpoint.VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]";
+                    _Setpoint.Id = $"H{8000 + index_setpoints + i}";
+                    _Setpoint.Address = $"%MW{3000 + index_setpoints + i}";
+                    i++;
+                }
+                #endregion
+
+                #region Входные параметры
+                i = 0;
+                foreach (var _InputParam in item.InputParam)
+                {
+                    _InputParam.VarName = $"ZD_DI_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+
+                #region Выходные параметры
+                i = 0;
+                foreach (var _OutputParam in item.OutputParam)
+                {
+                    _OutputParam.VarName = $"ZD_DO_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+            }
+
+            SelectedUZD = selectedUZD ?? UZD[0];
+            _DataView.Source = UZD;
+            _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion 
 

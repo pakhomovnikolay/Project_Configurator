@@ -248,10 +248,10 @@
         </GroupBox>
         
         <!--Настройки испольнительных механизмов-->
-        <GroupBox Grid.Row="2" Grid.Column="1" BorderBrush="Black">
+        <GroupBox Grid.Row="3" Grid.Column="0" BorderBrush="Black">
 
             <GroupBox.Header>
-                <TextBlock Text="Настройки испольнительных механизмов" FontWeight="Bold" Margin="5,0,5,0"/>
+                <TextBlock Text="Настройки параметров" FontWeight="Bold" Margin="5,0,5,0"/>
             </GroupBox.Header>
 
             <DockPanel>
@@ -272,6 +272,42 @@
                         Height="30" Margin="1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdOpenWindowEditDevice}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты агрегатных готовностей"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты общестанционных защит"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты агрегатных защит"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты предельных параметров агрегатных защит"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты предельных параметров общестанционных защит"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
+                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                <Button DockPanel.Dock="Top" Content="Настройка карты общесистемной сигнализации"
+                        Height="30" Margin="1"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
 
                 <TextBlock Text="" FontWeight="Bold" Margin="5,0,5,0"/>

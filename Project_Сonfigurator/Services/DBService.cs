@@ -185,7 +185,7 @@ namespace Project_Сonfigurator.Services
                 var path = string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject) ? Program.PathConfig + "\\ProjectData.xml" : Program.Settings.Config.PathProject;
                 AppData = LoadData(path);
             }
-                
+
 
             if (Item is null) throw new ArgumentNullException(nameof(Item));
             return Item switch
@@ -327,7 +327,7 @@ namespace Project_Сonfigurator.Services
 
             }
             #endregion
-            
+
             Data.GeneratedData();
             return true;
         }
@@ -373,7 +373,7 @@ namespace Project_Сonfigurator.Services
                     Data.SignalsAO.Add(signal);
 
                 Data.SelectedSignalAO = Data.SignalsAO[0];
-            } 
+            }
             #endregion
 
             Data.GeneratedData();
@@ -696,7 +696,7 @@ namespace Project_Сonfigurator.Services
                     Data.UVS.Add(signal);
 
                 Data.SelectedUVS = Data.UVS[0];
-            } 
+            }
             #endregion
 
             Data.GeneratedData();
@@ -750,7 +750,9 @@ namespace Project_Сonfigurator.Services
             #endregion
 
             #region Генерируем регистры формируемые
-            while (Data.KTPR.Count < 256)
+            var DefualtMapKTPR = Program.Settings.Config.DefualtMapKTPR;
+
+            for (int i = 0; i < 256; i++)
             {
                 var param = new BaseKTPR()
                 {
@@ -758,10 +760,10 @@ namespace Project_Сonfigurator.Services
                     {
                         Index = $"{Data.KTPR.Count + 1}",
                         Id = "",
-                        Description = "",
+                        Description = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Description}",
                         VarName = $"ktpr_param[{Data.KTPR.Count + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Inv = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Inv}",
+                        TypeSignal = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.TypeSignal}",
                         Address = ""
                     },
                     StateStation = "",
@@ -778,8 +780,8 @@ namespace Project_Сonfigurator.Services
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{Data.KTPR.Count + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Value}",
+                        Unit = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Unit}",
                         Id = $"H{2000 + Data.KTPR.Count}",
                         VarName = $"SP_STAT_PROT[{Data.KTPR.Count + 1}]",
                         Address = $"%MW{4800 + Data.KTPR.Count}",
@@ -819,7 +821,9 @@ namespace Project_Сonfigurator.Services
             #endregion
 
             #region Генерируем регистры формируемые
-            while (Data.KTPRS.Count < 256)
+            var DefualtMapKTPRS = Program.Settings.Config.DefualtMapKTPRS;
+
+            for (int i = 0; i < 256; i++)
             {
                 var param = new BaseKTPRS()
                 {
@@ -827,10 +831,10 @@ namespace Project_Сonfigurator.Services
                     {
                         Index = $"{Data.KTPRS.Count + 1}",
                         Id = "",
-                        Description = "",
+                        Description = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Description}",
                         VarName = $"ktprs_param[{Data.KTPRS.Count + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Inv = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Inv}",
+                        TypeSignal = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.TypeSignal}",
                         Address = ""
                     },
                     TypeWarning = "",
@@ -841,17 +845,17 @@ namespace Project_Сonfigurator.Services
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{Data.KTPRS.Count + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Value}",
+                        Unit = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Unit}",
                         Id = $"H{5000 + Data.KTPRS.Count}",
                         VarName = $"SP_CRIT_PROT[{Data.KTPRS.Count + 1}]",
                         Address = $"%MW{4600 + Data.KTPRS.Count}",
                         Description = ""
                     }
                 };
-
                 Data.KTPRS.Add(param);
             }
+
             Data.SelectedParam = Data.KTPRS[0];
             #endregion
 

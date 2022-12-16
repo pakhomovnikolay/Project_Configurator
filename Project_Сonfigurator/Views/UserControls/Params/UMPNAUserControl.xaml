@@ -14,14 +14,34 @@
     <Grid>
         
         <!--Сетка-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" MaxWidth="500" MinWidth="135"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Row="1" Width="2" Background="Transparent" Panel.ZIndex="9999"/>
 
+        <!--Верхняя панель-->
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
+                           TextAlignment="Center" VerticalAlignment="Center"
+                           FontWeight="Bold" FontSize="16"
+                           Text="{Binding Description}"/>
+
+            </Grid>
+        </Border>
+
         <!--Список МНПА-->
-        <GroupBox Grid.Column="0" BorderBrush="Black">
+        <GroupBox Grid.Row="1" Grid.Column="0" BorderBrush="Black">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="Список МНПА"/>
             </GroupBox.Header>
@@ -98,8 +118,8 @@
             </Grid>
         </GroupBox>
 
-        <!--Данные выбранной задвижки-->
-        <GroupBox Grid.Column="1" BorderBrush="Black">
+        <!--Данные выбранного МНПА-->
+        <GroupBox Grid.Row="1" Grid.Column="1" BorderBrush="Black">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedUMPNA.Description, FallbackValue='Выберите МНПА', TargetNullValue='Добавьте МНПА'}" />
             </GroupBox.Header>
@@ -334,7 +354,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
+                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
                                                     <TextBlock TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0"
                                                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
@@ -414,7 +434,7 @@
                 </TabItem>
 
                 <TabItem Header="Ввод\Вывод">
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" MaxWidth="1700" HorizontalScrollBarVisibility="Auto">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                         <Grid>
 
                             <Grid.RowDefinitions>
@@ -594,7 +614,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1133">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -745,7 +765,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1133">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -887,7 +907,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="120">
+                                <DataGridTemplateColumn Width="140">
                                     <DataGridTemplateColumn.Header>
                                         <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
@@ -1001,7 +1021,7 @@
                                 <DataGridTemplateColumn Width="120">
                                     <DataGridTemplateColumn.Header>
                                         <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя.&#x0a;переменной" Margin="0,0,0,5"/>
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
                                         </Border>
                                     </DataGridTemplateColumn.Header>
                                     <DataGridTemplateColumn.CellTemplate>
@@ -1207,7 +1227,7 @@
                                             </DataGridTemplateColumn.CellTemplate>
                                         </DataGridTemplateColumn>
 
-                                        <DataGridTemplateColumn Width="120">
+                                        <DataGridTemplateColumn Width="140">
                                             <DataGridTemplateColumn.Header>
                                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
@@ -2320,7 +2340,7 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="120">
+                                <DataGridTemplateColumn Width="140">
                                     <DataGridTemplateColumn.Header>
                                         <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>

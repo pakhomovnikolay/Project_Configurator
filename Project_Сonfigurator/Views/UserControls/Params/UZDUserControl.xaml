@@ -44,7 +44,8 @@
                                     <ColumnDefinition/>
                                 </Grid.ColumnDefinitions>
                                 <Ellipse Grid.Column="0" Fill="LightGray" Width="5" Height="5"/>
-                                <TextBlock Grid.Column="1" Margin="5,0,0,0" Text="{Binding Description}"/>
+                                <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center"
+                                           Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                             </Grid>
                             
                         </DataTemplate>
@@ -290,20 +291,20 @@
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" Text="Карта временных уставок"/>
                             </Border>
                             <DataGrid Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="17"
-                                  BorderThickness="0"
-                                  BorderBrush="Black"
-                                  AutoGenerateColumns="False"
-                                  CanUserAddRows="False"
-                                  CanUserReorderColumns="False"
-                                  CanUserResizeRows="False"
-                                  GridLinesVisibility="None"
-                                  CanUserResizeColumns="False"
-                                  SelectionMode="Single"
-                                  SelectionUnit="FullRow"
-                                  Background="Gray"
-                                  HeadersVisibility="Column"
-                                  ItemsSource="{Binding Setpoints}"
-                                  >
+                                          BorderThickness="0"
+                                          BorderBrush="Black"
+                                          AutoGenerateColumns="False"
+                                          CanUserAddRows="False"
+                                          CanUserReorderColumns="False"
+                                          CanUserResizeRows="False"
+                                          GridLinesVisibility="None"
+                                          CanUserResizeColumns="False"
+                                          SelectionMode="Single"
+                                          SelectionUnit="FullRow"
+                                          Background="Gray"
+                                          HeadersVisibility="Column"
+                                          ItemsSource="{Binding Setpoints}"
+                                          >
 
                                 <DataGrid.Resources>
 
@@ -383,7 +384,7 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
+                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
                                                     <TextBlock TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Margin="5,0"
                                                            Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
@@ -431,9 +432,10 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
+                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                                     <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                           Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                                                             Background="Transparent"
+                                                             Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -447,9 +449,10 @@
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
+                                                <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                                                     <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                           Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"/>
+                                                             Background="Transparent"
+                                                             Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -473,7 +476,7 @@
                                 <RowDefinition Height="35"/>
                                 <RowDefinition Height="auto"/>
                             </Grid.RowDefinitions>
-                            
+
                             <Border Grid.Row="0" Margin="0,2" CornerRadius="2"
                                     BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" Text="Ссылки дискретных входов"/>
@@ -659,7 +662,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    
+
                                 </DataGrid.Columns>
 
                             </DataGrid>
@@ -770,7 +773,7 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    
+
                                     <DataGridTemplateColumn Width="230">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
@@ -810,15 +813,15 @@
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
-                                    
+
                                 </DataGrid.Columns>
 
                             </DataGrid>
-                            
+
                         </Grid>
                     </ScrollViewer>
                 </TabItem>
-                
+
             </TabControl>
         </GroupBox>
         

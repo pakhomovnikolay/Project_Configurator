@@ -53,5 +53,47 @@ namespace Project_Сonfigurator.Models.Settings
         /// </summary>
         public string PathProject { get; set; }
         #endregion
+
+        #region Карта агрегатных готовностей по умолчанию
+        /// <summary>
+        /// Карта агрегатных готовностей по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapKGMPNA { get; set; }
+        #endregion
+
+        #region Карта общестанционных защит по умолчанию
+        /// <summary>
+        /// Карта общестанционных защит по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapKTPR { get; set; }
+        #endregion
+
+        #region Карта агрегатных защит по умолчанию
+        /// <summary>
+        /// Карта агрегатных защит по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapKTPRA { get; set; }
+        #endregion
+
+        #region Карта предельных параметров агрегатных защит по умолчанию
+        /// <summary>
+        /// Карта предельных параметров агрегатных защит по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapKTPRAS { get; set; }
+        #endregion
+
+        #region Карта предельных параметров общестанционных защит по умолчанию
+        /// <summary>
+        /// Карта предельных параметров общестанционных защит по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapKTPRS { get; set; }
+        #endregion
+
+        #region Карта общесистемных параметров по умолчанию
+        /// <summary>
+        /// Карта общесистемных параметров по умолчанию
+        /// </summary>
+        public List<SettingDefualtDefenseMap> DefualtMapSignaling { get; set; }
+        #endregion
     }
 }

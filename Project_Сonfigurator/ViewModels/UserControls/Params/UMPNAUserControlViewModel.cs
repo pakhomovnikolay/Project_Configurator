@@ -52,7 +52,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Текущие массивы состояний МПНА";
+        private string _Description = "Текущие массивы состояний МПНА. НЕ ЗАБУДЬТЕ ЗАПОЛНИТЬ НАСТРОЙКИ КАРТ";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -414,40 +414,29 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdDeleteUMPNAExecuted()
         {
-            var data_list = (List<BaseUMPNA>)_DataView.Source ?? new List<BaseUMPNA>();
-            var index = data_list.IndexOf(SelectedUMPNA);
-            data_list.Remove(SelectedUMPNA);
+            var index = UMPNA.IndexOf(SelectedUMPNA);
+            UMPNA.Remove(SelectedUMPNA);
 
-            if (data_list.Count > 0)
+            if (UMPNA.Count > 0)
             {
                 if (index > 0)
-                    SelectedUMPNA = data_list[index - 1];
+                    SelectedUMPNA = UMPNA[index - 1];
                 else
-                    SelectedUMPNA = data_list[index];
+                    SelectedUMPNA = UMPNA[index];
             }
             else
             {
                 SelectedUMPNA = null;
             }
 
-            _DataViewInputParam.Source = SelectedUMPNA?.InputParam;
-            _DataViewInputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUMPNA?.OutputParam;
-            _DataViewOutputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            RefreshIndexUMPNA(SelectedUMPNA);
         }
         #endregion
 
-        #region Команда - Импортировать вспомсистемы из таблицы сигналов
+        #region Команда - Импортировать МПНА из таблицы сигналов
         private ICommand _CmdImportUMPNA;
         /// <summary>
-        /// Команда - Импортировать вспомсистемы из таблицы сигналов
+        /// Команда - Импортировать МПНА из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUMPNA => _CmdImportUMPNA ??= new RelayCommand(OnCmdImportUMPNAExecuted, CanCmdImportUMPNAExecute);
         private bool CanCmdImportUMPNAExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
@@ -458,20 +447,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            var data_list = new List<BaseUMPNA>();
-            foreach (var DataView in TableSignalsViewModel.DataView)
+            UMPNA = new();
+
+            #region Ищем МНА
+            foreach (var DataView in TableSignalsViewModel.USOList)
             {
-                var uso = DataView as USO;
-                foreach (var _Rack in uso.Racks)
+                foreach (var _Rack in DataView.Racks)
                 {
                     foreach (var _Module in _Rack.Modules)
                     {
                         foreach (var Channel in _Module.Channels)
                         {
-                            if (Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("подпор", StringComparison.CurrentCultureIgnoreCase))
+                            if ((Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
                             {
                                 if (!string.IsNullOrWhiteSpace(Channel.Description))
                                 {
@@ -479,13 +468,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                     var qty = Channel.Description.Length;
                                     var name = Channel.Description.Remove(index_dot, qty - index_dot);
                                     var fl_tmp = false;
-                                    foreach (var item in data_list)
+                                    foreach (var item in UMPNA)
                                     {
                                         if (item.Description == name)
                                             fl_tmp = true;
                                     }
                                     if (!fl_tmp)
-                                        ImportUMPNA(name, data_list);
+                                        ImportUMPNA(name, UMPNA);
                                 }
 
                             }
@@ -493,6 +482,48 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     }
                 }
             }
+            #endregion
+
+            #region Ищем ПНА
+            foreach (var DataView in TableSignalsViewModel.USOList)
+            {
+                foreach (var _Rack in DataView.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        foreach (var Channel in _Module.Channels)
+                        {
+                            if ((Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("подпор", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                if (!string.IsNullOrWhiteSpace(Channel.Description))
+                                {
+                                    var index_dot = Channel.Description.IndexOf(".");
+                                    var qty = Channel.Description.Length;
+                                    var name = Channel.Description.Remove(index_dot, qty - index_dot);
+                                    var fl_tmp = false;
+                                    foreach (var item in UMPNA)
+                                    {
+                                        if (item.Description == name)
+                                            fl_tmp = true;
+                                    }
+                                    if (!fl_tmp)
+                                        ImportUMPNA(name, UMPNA);
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            SelectedUMPNA = UMPNA[^1];
+            _DataView.Source = UMPNA;
+            _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
@@ -755,12 +786,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Создаем МПНА
         private void CreateUMPNA()
         {
-            var data_list = (List<BaseUMPNA>)_DataView.Source ?? new List<BaseUMPNA>();
-
-            var index = data_list.Count + 1;
+            var index = UMPNA.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
             var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
             var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+
+            var DefualtMapKGMPNA = Program.Settings.Config.DefualtMapKGMPNA;
+            var DefualtMapKTPRA = Program.Settings.Config.DefualtMapKTPRA;
+            var DefualtMapKTPRAS = Program.Settings.Config.DefualtMapKTPRAS;
+
             var InputParam = new List<BaseParam>();
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
@@ -768,7 +802,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var KTPRA = new List<BaseKTPRA>();
             var KTPRAS = new List<BaseKTPRAS>();
 
-            #region Создаем задвижку
+            #region Создаем МПНА
 
             #region Входные параметры
             for (int i = 0; i < Program.Settings.Config.UMPNA.InputParams.Count; i++)
@@ -832,24 +866,22 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"kgmpna_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
+                        VarName = $"kgmpna_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
+                        Unit = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
                         Id = $"H{1000 + j}",
                         Description = "",
                         VarName = $"SP_NA_READY[{j + 1}]",
-                        Address = $"MW{6500 + j}"
+                        Address = $"%MW{6500 + j}"
                     }
-
-
                 };
                 KGMPNA.Add(Param);
             }
@@ -870,17 +902,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"ktpra_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
+                        VarName = $"ktpra_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
+                        Unit = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
                         Id = $"H{3000 + j}",
                         VarName = $"SP_NA_PROT[{j + 1}]",
                         Address = $"%MW{5200 + j}",
@@ -903,10 +935,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"ktpras_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
+                        VarName = $"ktpras_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
                         Address = ""
                     },
                     TypeWarning = "",
@@ -917,7 +949,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
-            #region Генерируем задвижки
+            #region Генерируем МПНА
             var signal = new BaseUMPNA
             {
                 Index = $"{index}",
@@ -938,41 +970,29 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 KTPRA = new List<BaseKTPRA>(KTPRA),
                 KTPRAS = new List<BaseKTPRAS>(KTPRAS)
             };
-            data_list.Add(signal);
+            UMPNA.Add(signal);
             #endregion
 
-            SelectedUMPNA = data_list[^1];
-            SelectedInputParam = SelectedUMPNA.InputParam[0];
-            SelectedOutputParam = SelectedUMPNA.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUMPNA.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUMPNA.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-
-            _DataViewKGMPNA.Source = SelectedUMPNA.KGMPNA;
-            _DataViewKGMPNA.View.Refresh();
-            OnPropertyChanged(nameof(DataViewKGMPNA));
-
-            _DataView.Source = data_list;
+            SelectedUMPNA = UMPNA[^1];
+            _DataView.Source = UMPNA;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
-            return;
             #endregion
         }
         #endregion 
 
         #region Импортируем МПНА
-        private void ImportUMPNA(string Description, List<BaseUMPNA> data_list)
+        private static void ImportUMPNA(string Description, List<BaseUMPNA> data_list)
         {
             var index = data_list.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
             var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
             var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+
+            var DefualtMapKGMPNA = Program.Settings.Config.DefualtMapKGMPNA;
+            var DefualtMapKTPRA = Program.Settings.Config.DefualtMapKTPRA;
+            var DefualtMapKTPRAS = Program.Settings.Config.DefualtMapKTPRAS;
+
             var InputParam = new List<BaseParam>();
             var OutputParam = new List<BaseParam>();
             var Setpoints = new List<BaseSetpoints>();
@@ -1044,24 +1064,22 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"kgmpna_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
+                        VarName = $"kgmpna_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
+                        Unit = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
                         Id = $"H{1000 + j}",
                         Description = "",
                         VarName = $"SP_NA_READY[{j + 1}]",
-                        Address = $"MW{6500 + j}"
+                        Address = $"%MW{6500 + j}"
                     }
-
-
                 };
                 KGMPNA.Add(Param);
             }
@@ -1082,17 +1100,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"ktpra_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
+                        VarName = $"ktpra_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = "",
-                        Unit = "",
+                        Value = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
+                        Unit = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
                         Id = $"H{3000 + j}",
                         VarName = $"SP_NA_PROT[{j + 1}]",
                         Address = $"%MW{5200 + j}",
@@ -1115,10 +1133,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = "",
-                        VarName = $"ktpras_param[{i + 1}]",
-                        Inv = "",
-                        TypeSignal = "",
+                        Description = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
+                        VarName = $"ktpras_param[{index},{i + 1}]",
+                        Inv = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
+                        TypeSignal = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
                         Address = ""
                     },
                     TypeWarning = "",
@@ -1133,7 +1151,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var signal = new BaseUMPNA
             {
                 Index = $"{index}",
-                Description = $"МПНА №{index}",
+                Description = $"{Description}",
                 VarName = $"umpna_param[{index}]",
                 ShortDescription = "",
                 IndexPZ = "",
@@ -1153,22 +1171,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             data_list.Add(signal);
             #endregion
 
-            SelectedUMPNA = data_list[^1];
-            SelectedInputParam = SelectedUMPNA.InputParam[0];
-            SelectedOutputParam = SelectedUMPNA.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUMPNA.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUMPNA.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
             #endregion
         }
         #endregion 
@@ -1184,6 +1186,92 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 SelectedUMPNA = null;
             }
+        }
+        #endregion 
+
+        #region Обновление индексов
+        public void RefreshIndexUMPNA(BaseUMPNA selectedUMPNA = null)
+        {
+            SelectedUMPNA = new();
+            var index = 0;
+            foreach (var item in UMPNA)
+            {
+                index++;
+                item.VarName = $"umpna_param[{index}]";
+                var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
+                var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
+                var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+
+                #region Уставки
+                var i = 0;
+                foreach (var _Setpoint in item.Setpoints)
+                {
+                    _Setpoint.VarName = $"SP_TM_NA[{index_setpoints + i + 1}]";
+                    _Setpoint.Id = $"H{6000 + index_setpoints + i}";
+                    _Setpoint.Address = $"%MW{5000 + index_setpoints + i}";
+                    i++;
+                }
+                #endregion
+
+                #region Входные параметры
+                i = 0;
+                foreach (var _InputParam in item.InputParam)
+                {
+                    _InputParam.VarName = $"NA_DI_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+
+                #region Выходные параметры
+                i = 0;
+                foreach (var _OutputParam in item.OutputParam)
+                {
+                    _OutputParam.VarName = $"NA_DO_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+
+                #region Параметры готовностей
+                i = 0;
+                foreach (var _KGMPNA in item.KGMPNA)
+                {
+                    var j = (index - 1) * 48 + i;
+                    _KGMPNA.Param.VarName = $"kgmpna_param[{index},{i + 1}]";
+                    _KGMPNA.Setpoints.Id = $"H{1000 + j}";
+                    _KGMPNA.Setpoints.VarName = $"SP_NA_READY[{j + 1}]";
+                    _KGMPNA.Setpoints.Address = $"%MW{6500 + j}";
+                    i++;
+                }
+                #endregion
+
+                #region Параметры защит
+                i = 0;
+                foreach (var _KTPRA in item.KTPRA)
+                {
+                    var j = (index - 1) * 128 + i;
+                    _KTPRA.Param.VarName = $"ktpra_param[{index},{i + 1}]";
+                    _KTPRA.Setpoints.Id = $"H{3000 + j}";
+                    _KTPRA.Setpoints.VarName = $"SP_NA_PROT[{j + 1}]";
+                    _KTPRA.Setpoints.Address = $"%MW{5200 + j}";
+                    i++;
+                }
+                #endregion
+
+                #region Параметры предельных параметров
+                i = 0;
+                foreach (var _KTPRAS in item.KTPRAS)
+                {
+                    var j = (index - 1) * 128 + i;
+                    _KTPRAS.Param.VarName = $"ktpras_param[{index},{i + 1}]";
+                    i++;
+                }
+                #endregion
+            }
+
+            SelectedUMPNA = selectedUMPNA ?? UMPNA[0];
+            _DataView.Source = UMPNA;
+            _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion 
 

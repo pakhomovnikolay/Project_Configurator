@@ -285,33 +285,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdDeleteUVSExecuted()
         {
-            var data_list = (List<BaseUVS>)_DataView.Source ?? new List<BaseUVS>();
-            var index = data_list.IndexOf(SelectedUVS);
-            data_list.Remove(SelectedUVS);
+            var index = UVS.IndexOf(SelectedUVS);
+            UVS.Remove(SelectedUVS);
 
-            if (data_list.Count > 0)
+            if (UVS.Count > 0)
             {
                 if (index > 0)
-                    SelectedUVS = data_list[index - 1];
+                    SelectedUVS = UVS[index - 1];
                 else
-                    SelectedUVS = data_list[index];
+                    SelectedUVS = UVS[index];
             }
             else
             {
                 SelectedUVS = null;
             }
-
-            _DataViewInputParam.Source = SelectedUVS?.InputParam;
-            _DataViewInputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUVS?.OutputParam;
-            _DataViewOutputParam.View?.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            RefreshIndexUZD(SelectedUVS);
         }
         #endregion
 
@@ -329,35 +317,44 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            var data_list = new List<BaseUVS>();
-            foreach (var DataView in TableSignalsViewModel.DataView)
+            UVS = new();
+            foreach (var DataView in TableSignalsViewModel.USOList)
             {
-                var uso = DataView as USO;
-                foreach (var _Rack in uso.Racks)
+                foreach (var _Rack in DataView.Racks)
                 {
                     foreach (var _Module in _Rack.Modules)
                     {
                         foreach (var Channel in _Module.Channels)
                         {
-                            if (Channel.Description.Contains("насос", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase))
+                            if ((Channel.Description.Contains("насос", StringComparison.Ordinal) ||
+                                Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase) &&
+                                !Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) &&
+                                !Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase))
                             {
+                                var name = "";
                                 var index_dot = Channel.Description.IndexOf(".");
                                 var qty = Channel.Description.Length;
-                                var name = Channel.Description.Remove(index_dot, qty - index_dot);
+                                if (index_dot > 0)
+                                    name = Channel.Description.Remove(index_dot, qty - index_dot);
                                 var fl_tmp = false;
-                                foreach (var item in data_list)
+                                foreach (var item in UVS)
                                 {
-                                    if (item.Description == name)
+                                    if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
                                         fl_tmp = true;
                                 }
-                                if (!fl_tmp)
-                                    ImportUVS(name, data_list);
+                                if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
+                                    ImportUVS(name, UVS);
                             }
                         }
                     }
                 }
             }
+
+            SelectedUVS = UVS[^1];
+            _DataView.Source = UVS;
+            _DataView.View.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
@@ -457,9 +454,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Создаем вспомсистему
         private void CreateUVS()
         {
-            var data_list = (List<BaseUVS>)_DataView.Source ?? new List<BaseUVS>();
-
-            var index = data_list.Count + 1;
+            var index = UVS.Count + 1;
             var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
             var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
             var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
@@ -539,23 +534,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 OutputParam = new List<BaseParam>(OutputParam),
                 Setpoints = new List<BaseSetpoints>(Setpoints)
             };
-            data_list.Add(signal);
+            UVS.Add(signal);
             #endregion
 
-            SelectedUVS = data_list[^1];
-            SelectedInputParam = SelectedUVS.InputParam[0];
-            SelectedOutputParam = SelectedUVS.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUVS.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUVS.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
+            SelectedUVS = UVS[^1];
+            _DataView.Source = UVS;
+            _DataView.View?.Refresh();
             OnPropertyChanged(nameof(DataView));
             return;
             #endregion
@@ -563,7 +547,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Импортируем вспомсистемы
-        private void ImportUVS(string Description, List<BaseUVS> data_list)
+        private static void ImportUVS(string Description, List<BaseUVS> data_list)
         {
 
             var index = data_list.Count + 1;
@@ -649,22 +633,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             data_list.Add(signal);
             #endregion
 
-            SelectedUVS = data_list[^1];
-            SelectedInputParam = SelectedUVS.InputParam[0];
-            SelectedOutputParam = SelectedUVS.OutputParam[0];
-
-            _DataViewInputParam.Source = SelectedUVS.InputParam;
-            _DataViewInputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewInputParam));
-
-            _DataViewOutputParam.Source = SelectedUVS.OutputParam;
-            _DataViewOutputParam.View.Refresh();
-            OnPropertyChanged(nameof(DataViewOutputParam));
-
-            _DataView.Source = data_list;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
             #endregion
         }
         #endregion 
@@ -678,6 +646,56 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
             if (UVS is null || UVS.Count <= 0)
                 SelectedUVS = null;
+        }
+        #endregion 
+
+        #region Обновление индексов
+        public void RefreshIndexUZD(BaseUVS selectedUVS = null)
+        {
+            SelectedUVS = new();
+            var index = 0;
+            foreach (var item in UVS)
+            {
+                index++;
+                item.VarName = $"uvs_param[{index}]";
+                var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
+                var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
+                var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
+
+                #region Уставки
+                var i = 0;
+                foreach (var _Setpoint in item.Setpoints)
+                {
+                    _Setpoint.VarName = $"SP_TM_VS[{index_setpoints + i + 1}]";
+                    _Setpoint.Id = $"H{7000 + index_setpoints + i}";
+                    _Setpoint.Address = $"%MW{2000 + index_setpoints + i}";
+                    i++;
+                }
+                #endregion
+
+                #region Входные параметры
+                i = 0;
+                foreach (var _InputParam in item.InputParam)
+                {
+                    _InputParam.VarName = $"VS_DI_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+
+                #region Выходные параметры
+                i = 0;
+                foreach (var _OutputParam in item.OutputParam)
+                {
+                    _OutputParam.VarName = $"VS_DO_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+            }
+
+            SelectedUVS = selectedUVS ?? UVS[0];
+            _DataView.Source = UVS;
+            _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion 
 
