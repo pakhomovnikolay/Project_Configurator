@@ -260,7 +260,7 @@
         </Ribbon>
 
         <!--Данные-->
-        <TabControl Grid.Row="2">
+        <TabControl Grid.Row="2" SelectedIndex="{Binding SelectedTabIndex}">
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -279,7 +279,7 @@
                                             Command="{StaticResource CmdPrevItemTabPanel}"
                                             CommandParameter="{Binding ElementName=ScrollViewer}"
                                             >
-                                
+
                                 <Button.Content>
                                     <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
                                 </Button.Content>
@@ -289,7 +289,7 @@
                                             Command="{StaticResource CmdNextItemTabPanel}"
                                             CommandParameter="{Binding ElementName=ScrollViewer}"
                                             >
-                                
+
                                 <Button.Content>
                                     <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
                                 </Button.Content>
@@ -300,16 +300,17 @@
                                           HorizontalContentAlignment="Center"
                                           Background="#FFE5E5E5"
                                           BorderBrush="#FFACACAC"
-                                          IsHitTestVisible="True"
+                                          IsChecked="{Binding MainWindowViewModel.ToggleButtonIsChecked, UpdateSourceTrigger=PropertyChanged, Source={StaticResource Locator}}"
                                           >
                                 <fa:FontAwesome FontSize="10" Icon="Solid_EllipsisH" Foreground="LightSlateGray"/>
                             </ToggleButton>
                             <Popup AllowsTransparency="False" StaysOpen="False" x:Name="Popup"
                                    PlacementTarget="{Binding ElementName=TypeDB}"
-                                   IsOpen="{Binding IsChecked, ElementName=TypeDB}"
+                                   IsOpen="{Binding MainWindowViewModel.ToggleButtonIsChecked, Source={StaticResource Locator}}"
                                    >
                                 <!---->
-                                <ListView ItemsSource="{Binding DataContext.ViewModelsHeader, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
+                                <ListView ItemsSource="{Binding MainWindowViewModel.ViewModelsHeader, Source={StaticResource Locator}}"
+                                          SelectedItem="{Binding MainWindowViewModel.SelectedViewModelsHeader, UpdateSourceTrigger=PropertyChanged, Source={StaticResource Locator}}"
                                          >
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
@@ -322,9 +323,8 @@
                                             <TextBlock TextAlignment="Left" Background="Transparent" Text="{Binding .}">
                                                 <TextBlock.InputBindings>
                                                     <MouseBinding Gesture="LeftDoubleClick"
-                                                                  Command="{StaticResource CmdSelectedTabPanelItem}"
-                                                                  CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListBox}}"
-                                                                  CommandTarget="{Binding IsOpen, RelativeSource={RelativeSource AncestorType=Popup}}"
+                                                                  Command="{Binding MainWindowViewModel.CmdSelectedTabPanelItem, Source={StaticResource Locator}}"
+                                                                  CommandParameter="{Binding ElementName=ScrollViewer}"
                                                                   />
                                                 </TextBlock.InputBindings>
                                             </TextBlock>
@@ -333,7 +333,7 @@
                                 </ListView>
                             </Popup>
                         </StackPanel>
-                        
+
                         <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" x:Name="ScrollViewer"
                                       Grid.Row="1" Grid.Column="1" Margin="0,-5,0,0" CanContentScroll="True"
                                       >

@@ -14,20 +14,24 @@ namespace Project_Сonfigurator.Infrastructures.Commands
             if (p is not ScrollViewer _ScrollViewer) return;
 
             var TabIndex = _TabControl.SelectedIndex;
-            if (TabIndex <= 0)
-            {
-                _ScrollViewer.ScrollToLeftEnd();
-                return;
-            }
-
+            _ScrollViewer.ScrollToHorizontalOffset(_ScrollViewer.HorizontalOffset - 100);
+            if (TabIndex <= 0) return;
             _TabControl.SelectedIndex = --TabIndex;
-            if (TabIndex <= 0)
-            {
-                _ScrollViewer.ScrollToLeftEnd();
-                return;
-            }
 
-            _ScrollViewer.LineLeft();
+            //if (TabIndex <= 0)
+            //{
+            //    _ScrollViewer.ScrollToLeftEnd();
+            //    return;
+            //}
+
+            //_TabControl.SelectedIndex = --TabIndex;
+            //if (TabIndex <= 0)
+            //{
+            //    _ScrollViewer.ScrollToLeftEnd();
+            //    return;
+            //}
+
+            //_ScrollViewer.LineLeft();
 
         }
     }

@@ -12,8 +12,12 @@ using Project_Сonfigurator.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Reflection.Metadata.Ecma335;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
+using System.Linq;
+using System.Threading;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -24,6 +28,8 @@ namespace Project_Сonfigurator.ViewModels
         private readonly ILogSerivece Log;
         private readonly IDBService _DBService;
         public readonly ISettingService _SettingService;
+
+
         private readonly ISUExportRedefineService _SUExportRedefineService;
 
 
@@ -267,6 +273,42 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Выбранный ViewModelsHeader
+        private string _SelectedViewModelsHeader;
+        /// <summary>
+        /// Выбранный ViewModelsHeader
+        /// </summary>
+        public string SelectedViewModelsHeader
+        {
+            get => _SelectedViewModelsHeader;
+            set => Set(ref _SelectedViewModelsHeader, value);
+        }
+        #endregion
+
+        #region Состояние ToggleButton
+        private bool _ToggleButtonIsChecked;
+        /// <summary>
+        /// Состояние ToggleButton
+        /// </summary>
+        public bool ToggleButtonIsChecked
+        {
+            get => _ToggleButtonIsChecked;
+            set => Set(ref _ToggleButtonIsChecked, value);
+        }
+        #endregion
+
+        #region Выбранная вкладка
+        private int _SelectedTabIndex;
+        /// <summary>
+        /// Выбранная вкладка
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get => _SelectedTabIndex;
+            set => Set(ref _SelectedTabIndex, value);
+        }
+        #endregion
+
         #endregion
 
         #region Команды
@@ -446,6 +488,69 @@ namespace Project_Сonfigurator.ViewModels
                 foreach (var _ServerDB in Program.Settings.Config.ServerDB)
                 {
                     _ServerDB.IsSelection = IsCheckedAll;
+                }
+            }
+        }
+        #endregion
+
+        #region Команда - Выбрать вкладку
+        private ICommand _CmdSelectedTabPanelItem;
+        /// <summary>
+        /// Команда - Выбрать вкладку
+        /// </summary>
+        public ICommand CmdSelectedTabPanelItem => _CmdSelectedTabPanelItem ??= new RelayCommand(OnCmdSelectedTabPanelItemExecuted, CanCmdSelectedTabPanelItemExecute);
+        private bool CanCmdSelectedTabPanelItemExecute(object p) => p is ScrollViewer;
+        private void OnCmdSelectedTabPanelItemExecuted(object p)
+        {
+            ToggleButtonIsChecked = false;
+            var _TabControl = App.FucusedTabControl;
+            if (_TabControl == null) return;
+            if (p is not ScrollViewer _ScrollViewer) return;
+            var ScrollToEnd = false;
+
+            foreach (var _TabItem in from object _Item in _TabControl.Items
+                                     let _TabItem = _Item as TabItem
+                                     where _TabItem.Header.ToString() == SelectedViewModelsHeader
+                                     select _TabItem)
+            {
+                var SelectedIndex = _TabControl.Items.IndexOf(_TabItem);
+
+
+
+                //if (SelectedIndex >= _TabControl.SelectedIndex)
+                //    _ScrollViewer.ScrollToHorizontalOffset(_ScrollViewer.HorizontalOffset + _TabItem.Header.ToString().Length * 5);
+                //else
+                //    _ScrollViewer.ScrollToHorizontalOffset(_ScrollViewer.HorizontalOffset - _TabItem.Header.ToString().Length * 5);
+
+                //_TabControl.SelectedIndex = SelectedIndex;
+
+
+                if (SelectedIndex >= (_TabControl.Items.Count - 1))
+                {
+                    _TabControl.SelectedIndex = SelectedIndex;
+                    _ScrollViewer.ScrollToRightEnd();
+                    ScrollToEnd = true;
+                }
+                else if (SelectedIndex <= 0)
+                {
+                    _TabControl.SelectedIndex = SelectedIndex;
+                    _ScrollViewer.ScrollToLeftEnd();
+                    ScrollToEnd = true;
+                }
+
+                if (!ScrollToEnd)
+                {
+                    if (SelectedIndex >= _TabControl.SelectedIndex)
+                    {
+                        _TabControl.SelectedIndex = SelectedIndex;
+                        _ScrollViewer.LineRight();
+                    }
+
+                    else if (SelectedIndex <= _TabControl.SelectedIndex)
+                    {
+                        _TabControl.SelectedIndex = SelectedIndex;
+                        _ScrollViewer.LineLeft();
+                    }
                 }
             }
         }
