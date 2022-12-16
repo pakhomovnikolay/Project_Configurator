@@ -3,7 +3,6 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.Views.DialogControl;
 using System;
-using System.Linq;
 using System.Windows;
 
 namespace Project_Сonfigurator.Services
@@ -496,7 +495,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт чтения данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadInputs(object item) => true;
+        private static bool ExportReadInputs(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт записи данных с модулей
@@ -504,7 +510,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт записи данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadOutputs(object item) => true;
+        private static bool ExportReadOutputs(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Сигналы AI"
@@ -516,6 +529,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных аналоговых параметров =========================================== *)\n\r";
 
             #region Формируем данные
@@ -523,6 +537,7 @@ namespace Project_Сonfigurator.Services
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
                 {
+                    flAllowedPrint = true;
                     fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
 
                     var VarName = _Param.Signal.VarName;
@@ -539,10 +554,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ai",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -559,14 +578,17 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var Params = ViewModel.SignalsDIViewModel.SignalsDI;
+            var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных дискретных параметров =========================================== *)\n\r";
             var fNumReal = "";
             var fNumImin = "";
 
+            #region Формируем данные
             foreach (var _Param in Params)
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
                 {
+                    flAllowedPrint = true;
                     var VarName = _Param.Signal.VarName;
                     var Link = TextToInt(_Param.Signal.Address);
 
@@ -580,11 +602,16 @@ namespace Project_Сonfigurator.Services
                 }
             }
             fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
+            #endregion
+
+            if (!flAllowedPrint)
+                return false;
 
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_di",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -601,14 +628,17 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var Params = ViewModel.SignalsDIViewModel.SignalsDI;
+            var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных дискретных параметров =========================================== *)\n\r";
             var fNumReal = "";
             var fNumImin = "";
 
+            #region Формируем данные
             foreach (var _Param in Params)
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
                 {
+                    flAllowedPrint = true;
                     var VarName = _Param.Signal.VarName;
                     var Link = TextToInt(_Param.Signal.Address);
 
@@ -627,11 +657,16 @@ namespace Project_Сonfigurator.Services
                 }
             }
             fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
+            #endregion
+
+            if (!flAllowedPrint)
+                return false;
 
             var FileViewer = new WindowTextEditor()
             {
                 Title = "set_out_do",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -644,7 +679,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Сигналы AO"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAO(object item) => true;
+        private static bool ExportSignalsAO(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Диагностика"
@@ -652,7 +694,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Диагностика"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDiagnostics(object item) => true;
+        private static bool ExportDiagnostics(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Секции шин"
@@ -664,6 +713,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var Params = ViewModel.ECViewModel.BaseParams;
+            var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка сигналов секций шин =========================================== *)\n\r";
 
             #region Формируем данные
@@ -671,6 +721,7 @@ namespace Project_Сonfigurator.Services
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Address))
                 {
+                    flAllowedPrint = true;
                     var TypeSignal = TextToInt(_Param.TypeSignal);
                     var Address = TextToInt(_Param.Address);
                     var Inv = TextToBool(_Param.Inv);
@@ -681,10 +732,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ec",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -702,6 +757,7 @@ namespace Project_Сonfigurator.Services
             var ViewModel = item as MainWindowViewModel;
             var Params = ViewModel.GroupsSignalViewModel.GroupSignals;
             var ParParams = ViewModel.SignalsGroupViewModel.BaseParams;
+            var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка сигналов групп =========================================== *)\n\r";
 
             #region Формируем данные
@@ -711,6 +767,7 @@ namespace Project_Сonfigurator.Services
                 {
                     fNum += $"(* ======== {_Param.Param.Description} ======== *)\n";
 
+                    flAllowedPrint = true;
                     var qty = TextToInt(_Param.QtyInGroup);
                     var fst = TextToInt(_Param.AddressStart) - 1;
                     var lst = TextToInt(_Param.AddressEnd);
@@ -730,10 +787,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_siggrp",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -746,7 +807,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Рамки УСО"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrameUSO(object item) => true;
+        private static bool ExportFrameUSO(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Рамки"
@@ -754,7 +822,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Рамки"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrame(object item) => true;
+        private static bool ExportFrame(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Карта готовностей агрегатов (Лист 1)"
@@ -766,6 +841,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров карты готовности насосных агрегатов ============================= *)\n\r";
 
             #region Формируем данные
@@ -775,6 +851,7 @@ namespace Project_Сonfigurator.Services
                 {
                     if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
                     {
+                        flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                         var TypeSignal = TextToInt(_Param.Param.TypeSignal);
@@ -790,10 +867,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_kgmpna",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -810,6 +891,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var _Params = ViewModel.KTPRViewModel.KTPR;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров общестанционных защит ============================= *)\n\r";
 
             #region Формируем данные
@@ -817,6 +899,7 @@ namespace Project_Сonfigurator.Services
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
                 {
+                    flAllowedPrint = true;
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                     var TypeSignal = TextToInt(_Param.Param.TypeSignal);
@@ -860,10 +943,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ktpr",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -880,6 +967,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров агрегатных защит ============================= *)\n\r";
 
             #region Формируем данные
@@ -889,6 +977,7 @@ namespace Project_Сonfigurator.Services
                 {
                     if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
                     {
+                        flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                         var TypeSignal = TextToInt(_Param.Param.TypeSignal);
@@ -909,10 +998,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ktpra",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -929,6 +1022,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка предельных параметров агрегатных защит ============================= *)\n\r";
 
             #region Формируем данные
@@ -938,6 +1032,7 @@ namespace Project_Сonfigurator.Services
                 {
                     if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
                     {
+                        flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                         var TypeSignal = TextToInt(_Param.Param.TypeSignal);
@@ -954,11 +1049,14 @@ namespace Project_Сonfigurator.Services
                 }
             }
             #endregion
+            if (!flAllowedPrint)
+                return false;
 
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ktpras",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -975,6 +1073,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var _Params = ViewModel.KTPRSViewModel.KTPRS;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка предельных параметров общестанционныз защит ============================= *)\n\r";
 
             #region Формируем данные
@@ -982,6 +1081,7 @@ namespace Project_Сonfigurator.Services
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
                 {
+                    flAllowedPrint = true;
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                     var TypeSignal = TextToInt(_Param.Param.TypeSignal);
@@ -998,10 +1098,15 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_ktprs",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -1018,6 +1123,7 @@ namespace Project_Сonfigurator.Services
         {
             var ViewModel = item as MainWindowViewModel;
             var _Params = ViewModel.SignalingViewModel.Signaling;
+            var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка общих сигналов системы диагностики ============================= *)\n\r";
 
             #region Формируем данные
@@ -1048,10 +1154,14 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
+            if (!flAllowedPrint)
+                return false;
+
             var FileViewer = new WindowTextEditor()
             {
                 Title = "get_in_list5",
                 TextView = fNum,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
                 Owner = Application.Current.MainWindow
             };
             FileViewer.Show();
@@ -1064,7 +1174,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DI(object item) => true;
+        private static bool ExportUMPNA_DI(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DI задвижек"
@@ -1072,7 +1189,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DI(object item) => true;
+        private static bool ExportUZD_DI(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DI вспомсистем"
@@ -1080,7 +1204,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DI(object item) => true;
+        private static bool ExportUVS_DI(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "Параметры DO остальных"
@@ -1088,7 +1219,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Параметры DO остальных"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Param(object item) => true;
+        private static bool ExportDO_Param(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DO агрегатов"
@@ -1096,7 +1234,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DO(object item) => true;
+        private static bool ExportUMPNA_DO(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DO задвижек"
@@ -1104,7 +1249,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DO(object item) => true;
+        private static bool ExportUZD_DO(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DO вспомсистем"
@@ -1112,7 +1264,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DO(object item) => true;
+        private static bool ExportUVS_DO(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
 
         #region Экспорт "DO остальные"
@@ -1120,7 +1279,14 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO остальные"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Others(object item) => true;
+        private static bool ExportDO_Others(object item)
+        {
+            var flAllowedPrint = false;
+            if (!flAllowedPrint)
+                return false;
+
+            return true;
+        }
         #endregion
     }
 }
