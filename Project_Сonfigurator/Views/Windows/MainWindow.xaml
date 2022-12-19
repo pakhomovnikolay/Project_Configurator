@@ -277,7 +277,7 @@
                             <Button Height="20" Width="25" Margin="0,0"
                                             Style="{StaticResource CustomButtonStyle}"
                                             Command="{StaticResource CmdPrevItemTabPanel}"
-                                            CommandParameter="{Binding ElementName=ScrollViewer}"
+                                            CommandParameter="{Binding ElementName=MyScrollViewer}"
                                             >
 
                                 <Button.Content>
@@ -287,7 +287,7 @@
                             <Button Height="20" Width="25" Margin="1,0"
                                             Style="{StaticResource CustomButtonStyle}"
                                             Command="{StaticResource CmdNextItemTabPanel}"
-                                            CommandParameter="{Binding ElementName=ScrollViewer}"
+                                            CommandParameter="{Binding ElementName=MyScrollViewer}"
                                             >
 
                                 <Button.Content>
@@ -324,7 +324,7 @@
                                                 <TextBlock.InputBindings>
                                                     <MouseBinding Gesture="LeftDoubleClick"
                                                                   Command="{Binding MainWindowViewModel.CmdSelectedTabPanelItem, Source={StaticResource Locator}}"
-                                                                  CommandParameter="{Binding ElementName=ScrollViewer}"
+                                                                  CommandParameter="{Binding ElementName=MyScrollViewer}"
                                                                   />
                                                 </TextBlock.InputBindings>
                                             </TextBlock>
@@ -334,16 +334,16 @@
                             </Popup>
                         </StackPanel>
 
-                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" x:Name="ScrollViewer"
-                                      Grid.Row="1" Grid.Column="1" Margin="0,-5,0,0" CanContentScroll="True"
+                        <ScrollViewer HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Disabled" x:Name="MyScrollViewer"
+                                      Grid.Row="1" Grid.Column="1" Margin="0,-5,0,0"
                                       >
-                            <TabPanel IsItemsHost="True" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1"/>
+                            <TabPanel IsItemsHost="True" Margin="0,5,10,5" Grid.Column="1" Grid.Row="1" ScrollViewer.CanContentScroll="True"/>
                         </ScrollViewer>
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="2"/>
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
-
+            
             <TabItem Header="{Binding LayotRackViewModel.Title}"
                      IsSelected="{Binding LayotRackViewModel.IsSelected}">
                 <pages:LayotRackUserControl DataContext="{Binding LayotRackViewModel}"/>

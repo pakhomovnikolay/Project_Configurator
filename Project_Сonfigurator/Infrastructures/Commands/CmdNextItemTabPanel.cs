@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands.Base;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
@@ -15,30 +14,14 @@ namespace Project_Сonfigurator.Infrastructures.Commands
             if (p is not ScrollViewer _ScrollViewer) return;
 
             var TabIndex = _TabControl.SelectedIndex;
-            _ScrollViewer.ScrollToHorizontalOffset(_ScrollViewer.HorizontalOffset + 100);
             if (TabIndex >= (_TabControl.Items.Count - 1)) return;
+
+            var _TabItem = _TabControl.Items[TabIndex] as TabItem;
+            _ScrollViewer.ScrollToHorizontalOffset(_ScrollViewer.HorizontalOffset + _TabItem.ActualWidth);
             _TabControl.SelectedIndex = ++TabIndex;
 
-
-
-
-            //if (TabIndex >= (_TabControl.Items.Count - 1)) return;
-
-            //_TabControl.SelectedIndex = ++TabIndex;
-            //if (TabIndex >= (_TabControl.Items.Count - 1))
-            //{
-            //    _ScrollViewer.ScrollToRightEnd();
-            //    return;
-            //}
-
-            //_TabControl.SelectedIndex = ++TabIndex;
-            //if (TabIndex >= (_TabControl.Items.Count - 1))
-            //{
-            //    _ScrollViewer.ScrollToRightEnd();
-            //    return;
-            //}
-
-            //_ScrollViewer.LineRight();
+            if (TabIndex >= (_TabControl.Items.Count - 1))
+                _ScrollViewer.ScrollToRightEnd();
         }
     }
 }
