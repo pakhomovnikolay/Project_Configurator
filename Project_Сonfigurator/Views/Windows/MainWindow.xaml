@@ -273,7 +273,7 @@
                             <RowDefinition/>
                             <RowDefinition Height="25"/>
                         </Grid.RowDefinitions>
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Top" Background="AntiqueWhite">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="1" VerticalAlignment="Top">
                             <Button Height="20" Width="25" Margin="0,0" BorderThickness="0"
                                             Style="{StaticResource CustomButtonStyle}"
                                             Command="{StaticResource CmdPrevItemTabPanel}"
@@ -294,7 +294,7 @@
                                     <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
                                 </Button.Content>
                             </Button>
-                            <ToggleButton x:Name="TypeDB" Grid.Row="1" Grid.Column="1" Width="30"
+                            <ToggleButton x:Name="TypeDB" Grid.Row="1" Grid.Column="1" Width="30" Height="18"
                                           BorderThickness="0"
                                           VerticalContentAlignment="Center"
                                           HorizontalContentAlignment="Center"
@@ -302,6 +302,14 @@
                                           BorderBrush="#FFACACAC"
                                           IsChecked="{Binding MainWindowViewModel.ToggleButtonIsChecked, UpdateSourceTrigger=PropertyChanged, Source={StaticResource Locator}}"
                                           >
+                                <ToggleButton.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="5"/>
+                                        <Style.Triggers>
+                                            
+                                        </Style.Triggers>
+                                    </Style>
+                                </ToggleButton.Resources>
                                 <fa:FontAwesome FontSize="10" Icon="Solid_EllipsisH" Foreground="LightSlateGray"/>
                             </ToggleButton>
                             <Popup AllowsTransparency="False" StaysOpen="False" x:Name="Popup"
@@ -436,7 +444,12 @@
                      IsSelected="{Binding SignalingViewModel.IsSelected}">
                 <pages_param:SignalingUserControl DataContext="{Binding SignalingViewModel}"/>
             </TabItem>
-            
+
+            <TabItem Header="{Binding UTSViewModel.Title}"
+                     IsSelected="{Binding UTSViewModel.IsSelected}">
+                <pages_param:UTSUserControl DataContext="{Binding UTSViewModel}"/>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

@@ -1,9 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
-using Project_Сonfigurator.Models.LayotRack;
-using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Models.Signals;
-using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -13,13 +9,10 @@ using Project_Сonfigurator.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Xml.Linq;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -53,6 +46,8 @@ namespace Project_Сonfigurator.ViewModels
         public KTPRUserControlViewModel KTPRViewModel { get; }
         public KTPRSUserControlViewModel KTPRSViewModel { get; }
         public SignalingUserControlViewModel SignalingViewModel { get; }
+        public UTSUserControlViewModel UTSViewModel { get; }
+
 
         public MainWindowViewModel(
             IUserDialogService userDialog,
@@ -77,7 +72,8 @@ namespace Project_Сonfigurator.ViewModels
             UMPNAUserControlViewModel uMPNAViewModel,
             KTPRUserControlViewModel kTPRViewModel,
             KTPRSUserControlViewModel kTPRSViewModel,
-            SignalingUserControlViewModel signalingViewModel
+            SignalingUserControlViewModel signalingViewModel,
+            UTSUserControlViewModel uTSViewModel
             )
         {
             UserDialog = userDialog;
@@ -104,6 +100,7 @@ namespace Project_Сonfigurator.ViewModels
             KTPRViewModel = kTPRViewModel;
             KTPRSViewModel = kTPRSViewModel;
             SignalingViewModel = signalingViewModel;
+            UTSViewModel = uTSViewModel;
 
             SetNameProject();
             if (Program._DBService is null)
@@ -565,23 +562,24 @@ namespace Project_Сonfigurator.ViewModels
         {
             try
             {
-                _DBService.AppData.USOList = LayotRackViewModel.DataView is null ? new() : (List<USO>)LayotRackViewModel.DataView.SourceCollection;
-                _DBService.AppData.UserDI = UserDIViewModel.DataView is null ? new() : (List<BaseSignal>)UserDIViewModel.DataView.SourceCollection;
-                _DBService.AppData.UserAI = UserAIViewModel.DataView is null ? new() : (List<BaseSignal>)UserAIViewModel.DataView.SourceCollection;
-                _DBService.AppData.SignalDI = SignalsDIViewModel.DataView is null ? new() : (List<SignalDI>)SignalsDIViewModel.DataView.SourceCollection;
-                _DBService.AppData.SignalAI = SignalsAIViewModel.DataView is null ? new() : (List<SignalAI>)SignalsAIViewModel.DataView.SourceCollection;
-                _DBService.AppData.SignalDO = SignalsDOViewModel.DataView is null ? new() : (List<SignalDO>)SignalsDOViewModel.DataView.SourceCollection;
-                _DBService.AppData.SignalAO = SignalsAOViewModel.DataView is null ? new() : (List<SignalAO>)SignalsAOViewModel.DataView.SourceCollection;
-                _DBService.AppData.ECParam = ECViewModel.DataView is null ? new() : (List<BaseParam>)ECViewModel.DataView.SourceCollection;
-                _DBService.AppData.UserReg = UserRegUserModel.DataView is null ? new() : (List<BaseParam>)UserRegUserModel.DataView.SourceCollection;
-                _DBService.AppData.SignalGroup = SignalsGroupViewModel.DataView is null ? new() : (List<BaseParam>)SignalsGroupViewModel.DataView.SourceCollection;
-                _DBService.AppData.GroupSignals = GroupsSignalViewModel.DataView is null ? new() : (List<GroupSignal>)GroupsSignalViewModel.DataView.SourceCollection;
-                _DBService.AppData.UZD = UZDViewModel.DataView is null ? new() : (List<BaseUZD>)UZDViewModel.DataView.SourceCollection;
-                _DBService.AppData.UVS = UVSViewModel.DataView is null ? new() : (List<BaseUVS>)UVSViewModel.DataView.SourceCollection;
-                _DBService.AppData.UMPNA = UMPNAViewModel.DataView is null ? new() : (List<BaseUMPNA>)UMPNAViewModel.DataView.SourceCollection;
-                _DBService.AppData.KTPR = KTPRViewModel.DataView is null ? new() : (List<BaseKTPR>)KTPRViewModel.DataView.SourceCollection;
-                _DBService.AppData.KTPRS = KTPRSViewModel.DataView is null ? new() : (List<BaseKTPRS>)KTPRSViewModel.DataView.SourceCollection;
-                _DBService.AppData.Signaling = SignalingViewModel.DataView is null ? new() : (List<BaseSignaling>)SignalingViewModel.DataView.SourceCollection;
+                _DBService.AppData.USOList = LayotRackViewModel.USOList is null ? new() : LayotRackViewModel.USOList;
+                _DBService.AppData.UserDI = UserDIViewModel.BaseSignals is null ? new() : UserDIViewModel.BaseSignals;
+                _DBService.AppData.UserAI = UserAIViewModel.BaseSignals is null ? new() : UserAIViewModel.BaseSignals;
+                _DBService.AppData.SignalDI = SignalsDIViewModel.SignalsDI is null ? new() : SignalsDIViewModel.SignalsDI;
+                _DBService.AppData.SignalAI = SignalsAIViewModel.SignalsAI is null ? new() : SignalsAIViewModel.SignalsAI;
+                _DBService.AppData.SignalDO = SignalsDOViewModel.SignalsDO is null ? new() : SignalsDOViewModel.SignalsDO;
+                _DBService.AppData.SignalAO = SignalsAOViewModel.SignalsAO is null ? new() : SignalsAOViewModel.SignalsAO;
+                _DBService.AppData.ECParam = ECViewModel.BaseParams is null ? new() : ECViewModel.BaseParams;
+                _DBService.AppData.UserReg = UserRegUserModel.BaseParams is null ? new() : UserRegUserModel.BaseParams;
+                _DBService.AppData.SignalGroup = SignalsGroupViewModel.BaseParams is null ? new() : SignalsGroupViewModel.BaseParams;
+                _DBService.AppData.GroupSignals = GroupsSignalViewModel.GroupSignals is null ? new() : GroupsSignalViewModel.GroupSignals;
+                _DBService.AppData.UZD = UZDViewModel.UZD is null ? new() : UZDViewModel.UZD;
+                _DBService.AppData.UVS = UVSViewModel.UVS is null ? new() : UVSViewModel.UVS;
+                _DBService.AppData.UMPNA = UMPNAViewModel.UMPNA is null ? new() : UMPNAViewModel.UMPNA;
+                _DBService.AppData.KTPR = KTPRViewModel.KTPR is null ? new() : KTPRViewModel.KTPR;
+                _DBService.AppData.KTPRS = KTPRSViewModel.KTPRS is null ? new() : KTPRSViewModel.KTPRS;
+                _DBService.AppData.Signaling = SignalingViewModel.Signaling is null ? new() : SignalingViewModel.Signaling;
+                _DBService.AppData.UTS = UTSViewModel.UTS is null ? new() : UTSViewModel.UTS;
             }
             catch (Exception e)
             {
@@ -629,7 +627,8 @@ namespace Project_Сonfigurator.ViewModels
                 UMPNAViewModel,
                 KTPRViewModel,
                 KTPRSViewModel,
-                SignalingViewModel
+                SignalingViewModel,
+                UTSViewModel
             };
 
             ViewModelsHeader = new()
@@ -651,7 +650,8 @@ namespace Project_Сonfigurator.ViewModels
                 UMPNAViewModel.Title,
                 KTPRViewModel.Title,
                 KTPRSViewModel.Title,
-                SignalingViewModel.Title
+                SignalingViewModel.Title,
+                UTSViewModel.Title
             };
         }
         #endregion

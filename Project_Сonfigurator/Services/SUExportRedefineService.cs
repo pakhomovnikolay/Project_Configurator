@@ -1490,12 +1490,44 @@ namespace Project_Сonfigurator.Services
         private static bool ExportDO_Param(object item)
         {
             var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UVSViewModel.UVS;
+            var Params = ViewModel.UTSViewModel.UTS;
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка общесистемных выходных параметров =========================================== *)\n\r";
 
             #region Формируем данные
-            
+            foreach (var _Param in Params)
+            {
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
+                {
+                    flAllowedPrint = true;
+                    fNum += $"(* =========================================== {_Param.Param.Description} =========================================== *)\n\r";
+
+                    var VarName = _Param.Param.VarName;
+                    var Inv = TextToBool(_Param.Param.Inv);
+
+                    var KCOAddress = TextToInt(_Param.KCO.Address);
+
+                    var SODAddress = TextToInt(_Param.SignalSOD.Address);
+                    var SODTypeSignal = TextToInt(_Param.Param.TypeSignal);
+
+                    var SODErrAddress = TextToInt(_Param.SignalErrSOD.Address);
+                    var SODErrTypeSignal = TextToInt(_Param.Param.TypeSignal);
+
+                    fNum += VarName + $".enable := TRUE;\n";
+                    fNum += VarName + $".EnableCVCheck := {TextToSbool(_Param.TypeCOz)};\n";
+                    fNum += VarName + $".APT_OFF := {TextToSbool(_Param.AptOff)};\n";
+                    fNum += VarName + $".uts_type := {TextToSint(_Param.Type)};\n";
+
+                    fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n";
+                    fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
+                    fNum += VarName + $".TypeCV := {TextToSint(_Param.TypeCOz)};\n";
+                    fNum += VarName + $".LockEnable := {TextToSint(_Param.IndexGroup)};\n\r";
+
+                    fNum += $"{GenInSignal(21, KCOAddress, $"{VarName}.InCorrCV", Inv)}\n";
+                    fNum += $"{GenInSignal(SODTypeSignal, SODAddress, $"{VarName}.InTriggerSOD", Inv)}\n";
+                    fNum += $"{GenInSignal(SODErrTypeSignal, SODErrAddress, $"{VarName}.Err_SOD", Inv)}\n";
+                }
+            }
             #endregion
 
             if (!flAllowedPrint)
@@ -1665,12 +1697,28 @@ namespace Project_Сonfigurator.Services
         private static bool ExportDO_Others(object item)
         {
             var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UVSViewModel.UVS;
+            var Params = ViewModel.UTSViewModel.UTS;
             var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных сигналов вспомсистем =========================================== *)\n\r";
+            var fNum = "(* =========================================== Обработка общесистемных выходных сигналов =========================================== *)\n\r";
 
             #region Формируем данные
+            foreach (var _Param in Params)
+            {
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
+                {
+                    flAllowedPrint = true;
+                    var Address = TextToInt(_Param.Param.Address);
+                    var Index = TextToInt(_Param.Param.Index);
+                    var VarName = _Param.Param.VarName;
 
+                    fNum += Index switch
+                    {
+                        1 => $"NPS_STATE.RING_BRU := {GenOutSignal(Address, $"{VarName}.Uts.NU")}\t(* {_Param.Param.Description} *)\n",
+                        2 => $"NPS_STATE.RING := {VarName}\t(* {_Param.Param.Description} *)\n",
+                        _ => $"{GenOutSignal(Address, VarName)}\t(* {_Param.Param.Description} *)\n",
+                    };
+                }
+            }
             #endregion
 
             if (!flAllowedPrint)

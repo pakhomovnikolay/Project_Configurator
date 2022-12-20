@@ -126,5 +126,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public List<BaseSignaling> Signaling { get; set; } = new();
         #endregion
+
+        #region Табло и сирены
+        /// <summary>
+        /// Табло и сирены
+        /// </summary>
+        public List<BaseUTS> UTS { get; set; } = new();
+        #endregion
     }
 }

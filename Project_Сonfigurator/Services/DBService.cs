@@ -189,6 +189,10 @@ namespace Project_Сonfigurator.Services
                             FormingDataSignaling(_MySqlConnection);
                             #endregion
 
+                            #region Формируем данные UTS
+                            FormingDataUTS(_MySqlConnection);
+                            #endregion
+
                             ConnectDB.SuccessUpdate = true;
                             Success = Success || ConnectDB.SuccessUpdate;
                         }
@@ -249,6 +253,7 @@ namespace Project_Сonfigurator.Services
                 KTPRUserControlViewModel Data => RefreshKTPR(Data),
                 KTPRSUserControlViewModel Data => RefreshKTPRS(Data),
                 SignalingUserControlViewModel Data => RefreshSignaling(Data),
+                UTSUserControlViewModel Data => RefreshUTS(Data),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается")
             };
         }
@@ -955,6 +960,88 @@ namespace Project_Сonfigurator.Services
 
             Data.GeneratedData();
             return true;
+        }
+        #endregion
+
+        #region Обновляем данные UTS
+        /// <summary>
+        /// Обновляем данные UTS
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshUTS(UTSUserControlViewModel Data)
+        {
+            Data.UTS = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.UTS.Count > 0)
+            {
+                foreach (var signal in AppData.UTS)
+                    Data.UTS.Add(signal);
+
+                Data.SelectedUTS = Data.UTS[0];
+                Data.GeneratedData();
+                return true;
+            }
+            #endregion
+
+            #region Генерируем регистры формируемые
+            for (int i = 0; i < 256; i++)
+            {
+                var param = new BaseUTS
+                {
+                    Type = "",
+                    LockEnable = "",
+                    TypeCOz = "",
+                    IndexPZ = "",
+                    AptOff = "",
+                    IndexGroup = "",
+                    Param = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"uts_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    KCO = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"uts_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    SignalSOD = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"uts_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    },
+                    SignalErrSOD = new BaseParam
+                    {
+                        Index = $"{i + 1}",
+                        Id = "",
+                        Description = "",
+                        VarName = $"uts_param[{i + 1}]",
+                        Inv = "",
+                        TypeSignal = "",
+                        Address = ""
+                    }
+                };
+                Data.UTS.Add(param);
+            }
+            Data.SelectedUTS = Data.UTS[0];
+            Data.GeneratedData();
+            return true;
+            #endregion
         }
         #endregion
 
@@ -2424,6 +2511,86 @@ namespace Project_Сonfigurator.Services
                         $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
                         $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
                         $"'{_Param.VarNameVU}', '{(int.Parse(_Param.Param.Index) - 1) % 16}', '{_Param.Color}', '{_Param.IndexUSO}', '{_Param.TypeWarning}'),";
+                }
+
+                if (string.IsNullOrWhiteSpace(QueryPar)) return;
+                QueryPar = QueryPar.TrimEnd(',') + ";";
+                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
+                _MySqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+            }
+            #endregion
+
+        }
+        #endregion
+
+        #region Формируем данные UTS
+        /// <summary>
+        /// Формируем данные UTS
+        /// </summary>
+        /// <param name="mySqlConnection"></param>
+        /// <returns></returns>
+        private void FormingDataUTS(MySqlConnection mySqlConnection)
+        {
+            var Log = new LogSerivece();
+
+            #region Удаляем таблицу
+            var Query = $"DROP TABLE IF EXISTS `UTS`";
+            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
+            _MySqlCommand.ExecuteNonQuery();
+            #endregion
+
+            #region Создаем таблицу
+            try
+            {
+                Query =
+                    $"CREATE TABLE `UTS`(" +
+                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    $"`ID` TEXT," +
+                    $"`DESCRIPTION` TEXT," +
+                    $"`VAR_NAME` TEXT," +
+                    $"`TYPE_SIGNAL` TEXT," +
+                    $"`ADDRESS` TEXT," +
+                    $"`LOCK_ENABLE` TEXT," +
+                    $"`INDEX_PZ` TEXT," +
+                    $"`APT_OFF` TEXT," +
+                    $"`INDEX_GROUP` TEXT," +
+                    $"`TYPE_KCO` TEXT," +
+                    $"`ADDRESS_KCO` TEXT," +
+                    $"`TYPE_SIGNAL_SOD` TEXT," +
+                    $"`ADDRESS_SOD` TEXT," +
+                    $"`TYPE_SIGNALERR_SOD` TEXT," +
+                    $"`ADDRESS_ERR_SOD` TEXT," +
+                    $"PRIMARY KEY(`INDEX`));";
+
+                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
+                _MySqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+            }
+            #endregion
+
+            #region Наполняем таблицу данными
+            try
+            {
+                Query =
+                    $"INSERT INTO UTS (ID, DESCRIPTION, VAR_NAME, TYPE_SIGNAL, ADDRESS, LOCK_ENABLE, INDEX_PZ, APT_OFF, INDEX_GROUP, " +
+                    $"TYPE_KCO, ADDRESS_KCO, TYPE_SIGNAL_SOD, ADDRESS_SOD, TYPE_SIGNALERR_SOD, ADDRESS_ERR_SOD) VALUES";
+
+                var QueryPar = "";
+                foreach (var _Param in AppData.UTS)
+                {
+                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                    QueryPar +=
+                        $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Type}', '{_Param.Param.Address}', " +
+                        $"'{_Param.LockEnable}', '{_Param.IndexPZ}', '{_Param.AptOff}', '{_Param.IndexGroup}', " +
+                        $"'{_Param.KCO.TypeSignal}', '{_Param.KCO.Address}', '{_Param.SignalSOD.TypeSignal}', '{_Param.SignalSOD.Address}', " +
+                        $"'{_Param.SignalErrSOD.TypeSignal}', '{_Param.SignalErrSOD.Address}'),";
                 }
 
                 if (string.IsNullOrWhiteSpace(QueryPar)) return;

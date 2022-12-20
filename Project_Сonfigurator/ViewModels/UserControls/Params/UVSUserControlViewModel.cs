@@ -8,6 +8,7 @@ using Project_Сonfigurator.ViewModels.Base;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -399,15 +400,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
 
             if (App.FucusedTabControl == null) return;
-            foreach (var _Item in App.FucusedTabControl.Items)
-            {
-                var _TabItem = _Item as TabItem;
-                if (_TabItem.Header.ToString() == NameListSelected)
-                {
-                    App.FucusedTabControl.SelectedItem = _TabItem;
-                    break;
-                }
-            }
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as TabItem
+                                     where _TabItem.Header.ToString() == NameListSelected
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -434,16 +431,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService.Type = TypeModule.DO;
 
             var NameListSelected = "Сигналы DO";
+
             if (App.FucusedTabControl == null) return;
-            foreach (var _Item in App.FucusedTabControl.Items)
-            {
-                var _TabItem = _Item as TabItem;
-                if (_TabItem.Header.ToString() == NameListSelected)
-                {
-                    App.FucusedTabControl.SelectedItem = _TabItem;
-                    break;
-                }
-            }
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as TabItem
+                                     where _TabItem.Header.ToString() == NameListSelected
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using System.Linq;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
@@ -199,15 +200,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             _SignalService.Id = SelectedSignal.Id;
             _SignalService.Description = SelectedSignal.Description;
 
-            foreach (var _Item in App.FucusedTabControl.Items)
-            {
-                var _TabItem = _Item as TabItem;
-                if (_TabItem.Header.ToString() == _SignalService.ListName)
-                {
-                    App.FucusedTabControl.SelectedItem = _TabItem;
-                    break;
-                }
-            }
+            if (App.FucusedTabControl == null) return;
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as TabItem
+                                     where _TabItem.Header.ToString() == _SignalService.ListName
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
