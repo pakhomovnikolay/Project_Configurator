@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Models.Interfaces;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using System.Collections.Generic;
 
@@ -132,6 +133,13 @@ namespace Project_Сonfigurator.Models
         /// Табло и сирены
         /// </summary>
         public List<BaseUTS> UTS { get; set; } = new();
+        #endregion
+
+        #region Уставки Real
+        /// <summary>
+        /// Уставки Real
+        /// </summary>
+        public List<BaseSetpointsReal> SetpointsReal { get; set; } = new();
         #endregion
     }
 }

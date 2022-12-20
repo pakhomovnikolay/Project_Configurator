@@ -308,12 +308,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<SignalDO>();
+            SignalsDO = new();
 
             #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
-                while (data_list.Count < 2500)
+                while (SignalsDO.Count < 2500)
                 {
                     var signal = new SignalDO()
                     {
@@ -328,11 +328,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                             LinkValue = ""
                         }
                     };
-                    data_list.Add(signal);
+                    SignalsDO.Add(signal);
                 }
 
-                SelectedSignalDO = data_list[0];
-                _DataView.Source = data_list;
+                SelectedSignalDO = SignalsDO[0];
+                _DataView.Source = SignalsDO;
                 _DataView.View.Refresh();
                 OnPropertyChanged(nameof(DataView));
                 return;
@@ -367,7 +367,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                                             Address = $"{int.Parse(_Channel.Address) - 200000}",
                                         }
                                     };
-                                    data_list.Add(signal);
+                                    SignalsDO.Add(signal);
                                 }
 
                             }
@@ -378,7 +378,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Дозаполняем таблицу
-            while (data_list.Count < 2500)
+            while (SignalsDO.Count < 2500)
             {
                 var signal = new SignalDO()
                 {
@@ -393,14 +393,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         LinkValue = ""
                     }
                 };
-                data_list.Add(signal);
+                SignalsDO.Add(signal);
             }
             #endregion
 
             #endregion
 
-            SelectedSignalDO = data_list[0];
-            _DataView.Source = data_list;
+            SelectedSignalDO = SignalsDO[0];
+            _DataView.Source = SignalsDO;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }

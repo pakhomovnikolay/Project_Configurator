@@ -2,14 +2,17 @@
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Models.LayotRack.Interfaces;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -26,13 +29,19 @@ namespace Project_Сonfigurator.Services
         public DBData AppData { get; set; }
         #endregion
 
-        #region Функция записи данных
+        #region Записи данных в БД
+
+        #region Запрос записи данных
         /// <summary>
-        /// Функция записи данных
+        /// Запрос записи данных
         /// </summary>
         /// <returns></returns>
-        public bool SetData()
+        public bool RequestSetData(List<object> _ViewModels)
         {
+            #region Формируем данные приложения перед сохранением
+            FormingAppDataBeforeSaving(_ViewModels);
+            #endregion
+
             MySqlConnection _MySqlConnection = new();
             MySqlCommand _MySqlCommand;
             string Query;
@@ -44,6 +53,7 @@ namespace Project_Сonfigurator.Services
 
             try
             {
+                #region Сохраняем данные
                 foreach (var ConnectDB in Config.ServerDB)
                 {
                     ConnectDB.SuccessUpdate = false;
@@ -109,95 +119,532 @@ namespace Project_Сonfigurator.Services
 
                             #endregion
 
-                            #region Создаем данные УСО
-                            FormingDataUSO(_MySqlConnection);
-                            #endregion
 
-                            #region Создаем данные DI формируемые
-                            FormingDataUserDI(_MySqlConnection);
-                            #endregion
+                            foreach (var item in _ViewModels)
+                            {
+                                List<string> FieldValue = new();
+                                switch (item)
+                                {
+                                    #region Компоновка корзин
+                                    case LayotRackUserControlViewModel:
 
-                            #region Создаем данные AI формируемые
-                            FormingDataUserAI(_MySqlConnection);
-                            #endregion
+                                        List<string> Field = new() {
+                                            "`USO_NAME`", "`RACK_NAME`", "`MODULE_TYPE`", "`MODULE_NAME`", "`CHANNEL_INDEX`", "`CHANNEL_ID`",
+                                            "`CHANNEL_DESCRIPTION`", "`VAR_NAME_SU`", "`BIT`", "`ADDRESS`", "`VAR_NAME_VU`" };
 
-                            #region Создаем данные Сигналы DI
-                            FormingDataSignalsDI(_MySqlConnection);
-                            #endregion
+                                        foreach (var _USO in AppData.USOList)
+                                        {
+                                            foreach (var _Rack in _USO.Racks)
+                                            {
+                                                foreach (var _Module in _Rack.Modules)
+                                                {
+                                                    if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
+                                                    if (_Module.Channels.Count <= 0)
+                                                    {
 
-                            #region Создаем данные Сигналы AI
-                            FormingDataSignalsAI(_MySqlConnection);
-                            #endregion
+                                                        var _FieldValue =
+                                                            $"('{_USO.Name}', '{_Rack.Name}', '{_Module.Type}', '{_Module.Name}', " +
+                                                            $"'{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}'),";
+                                                        FieldValue.Add(_FieldValue);
+                                                    }
+                                                    foreach (var _Channel in _Module.Channels)
+                                                    {
+                                                        var _FieldValue =
+                                                            $"('{_USO.Name}', '{_Rack.Name}', '{_Module.Type}', '{_Module.Name}', " +
+                                                            $"'{_Channel.Index}', '{_Channel.Id}', '{_Channel.Description}', '{_Channel.VarName}', " +
+                                                            $"'{_Channel.Bit}', '{_Channel.Address}', '{_Channel.VarNameVU}'),";
+                                                        FieldValue.Add(_FieldValue);
+                                                    }
+                                                }
+                                            }
+                                        }
 
-                            #region Создаем данные Сигналы DO
-                            FormingDataSignalsDO(_MySqlConnection);
-                            #endregion
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "USO", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
 
-                            #region Создаем данные Сигналы AO
-                            FormingDataSignalsAO(_MySqlConnection);
-                            #endregion
+                                    #region Сигналы DI
+                                    case SignalsDIUserControlViewModel:
 
-                            #region Создаем данные Секции шин
-                            FormingDataSignalsEC(_MySqlConnection);
-                            #endregion
+                                        Field = new() {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`AREA`", "`ADDRESS`", "`LINK_VALUE`", "`ADDRESS_SIG`" };
 
-                            #region Формируем данные Регистры формируемые
-                            FormingDataUserREG(_MySqlConnection);
-                            #endregion
+                                        foreach (var _Signal in AppData.SignalDI)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', " +
+                                                $"'{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
+                                                $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
 
-                            #region Формируем данные Сигналы групп
-                            FormingDataSignalGroup(_MySqlConnection);
-                            #endregion
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SIGNAL_DI", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
 
-                            #region Формируем данные Группы сигналов
-                            FormingDataGroupSignal(_MySqlConnection);
-                            #endregion
+                                    #region Сигналы AI
+                                    case SignalsAIUserControlViewModel:
 
-                            #region Формируем данные Задвижек
-                            FormingDataUZD(_MySqlConnection);
-                            #endregion
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`AREA`", "`ADDRESS`", "`LINK_VALUE`", "`ADDRESS_SIG`",
+                                            "`INDEX_UMPNA`", "`UNIT`", "`TYPE_VIBRATION`", "`INDEX_PZ`", "`TYPE_PI`", "`INDEX_BD`",
+                                            "`LEVEL_RPP`", "`ADDRESS_UTS`", "`CONVERTER_KGS`"
+                                        };
 
-                            #region Формируем данные Вспомсистем
-                            FormingDataUVS(_MySqlConnection);
-                            #endregion
+                                        foreach (var _Signal in AppData.SignalAI)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
+                                                $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}', " +
+                                                $"'{_Signal.IndexNA}', '{_Signal.Unit}', '{_Signal.TypeVibration}', '{_Signal.IndexPZ}', " +
+                                                $"'{_Signal.TypePI}', '{_Signal.IndexBD}', '{_Signal.LevelRPP}', '{_Signal.AddresUTS}', '{_Signal.ConverterKgs}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
 
-                            #region Формируем данные МПНА
-                            FormingDataUMPNA(_MySqlConnection);
-                            #endregion
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SIGNAL_AI", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
 
-                            #region Формируем данные KGMPNA
-                            FormingDataKGMPNA(_MySqlConnection);
-                            #endregion
+                                    #region Сигналы DO
+                                    case SignalsDOUserControlViewModel:
 
-                            #region Формируем данные KTPRA
-                            FormingDataKTPRA(_MySqlConnection);
-                            #endregion
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`AREA`", "`ADDRESS`", "`LINK_VALUE`", "`ADDRESS_SIG`" };
 
-                            #region Формируем данные KTPRAS
-                            FormingDataKTPRAS(_MySqlConnection);
-                            #endregion
+                                        foreach (var _Signal in AppData.SignalDO)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
+                                                $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
 
-                            #region Формируем данные KTPR
-                            FormingDataKTPR(_MySqlConnection);
-                            #endregion
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SIGNAL_DO", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
 
-                            #region Формируем данные KTPRS
-                            FormingDataKTPRS(_MySqlConnection);
-                            #endregion
+                                    #region Сигналы AO
+                                    case SignalsAOUserControlViewModel:
 
-                            #region Формируем данные Signaling
-                            FormingDataSignaling(_MySqlConnection);
-                            #endregion
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`AREA`", "`ADDRESS`", "`LINK_VALUE`", "`ADDRESS_SIG`" };
 
-                            #region Формируем данные UTS
-                            FormingDataUTS(_MySqlConnection);
-                            #endregion
+                                        foreach (var _Signal in AppData.SignalAO)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
+                                                $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SIGNAL_AO", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region Секции шин
+                                    case ECUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`LINK_ADDRESSVALUE`" };
+
+                                        foreach (var _Param in AppData.ECParam)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', '{_Param.Inv}', " +
+                                                $"'{_Param.TypeSignal}', '{_Param.Address}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "PARAM_EC", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region DI формируемые
+                                    case UserDIUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`BIT`", "`ADDRESS`" };
+
+                                        foreach (var _Param in AppData.UserDI)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', " +
+                                                $"'{(int.Parse(_Param.Index) - 1) % 16}', '{_Param.Address}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "USER_DI", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region AI формируемые
+                                    case UserAIUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`ADDRESS`" };
+
+                                        foreach (var _Param in AppData.UserAI)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue = $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', '{_Param.Address}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "USER_AI", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region Регистры формируемые
+                                    case UserRegUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`ADDRESS_VU`" };
+
+                                        foreach (var _Param in AppData.UserReg)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue = $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', '{_Param.Address}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "USER_REG", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region Сигналы групп
+                                    case SignalsGroupUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`ADDRESS_SIG`" };
+
+                                        foreach (var _Param in AppData.SignalGroup)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Id}', '{_Param.Description}', '{_Param.Inv}', " +
+                                                $"'{_Param.TypeSignal}', '{_Param.Address}', '{_Param.Index}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SIGNAL_GROUP", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region Группы сигналов
+                                    case GroupsSignalUserControlViewModel:
+
+                                        Field = new() { "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`QTY`", "`ADDRESS_START`", "`ADDRESS_END`", "`ADDRESS_SIG`" };
+
+                                        foreach (var _Param in AppData.GroupSignals)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.QtyInGroup}', " +
+                                                $"'{_Param.AddressStart}', '{_Param.AddressEnd}', '{_Param.Param.Index}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "GROUP_SIGNAL", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region UZD
+                                    case UZDUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`DESCRIPTION`", "`VAR_NAME`", "`SHORT_NAME`", "`INDEX_EC`", "`INDEX_GROUP`", "`NAME_GROUP`",
+                                            "`DIST`", "`DOUBLE_STOP`", "`BUR`", "`COz`", "`CZz`", "`EC`", "`CHECK_STATE`",
+                                            "`RS_OFF`", "`TYPE`", "`INDEX_PZ`", "`INDEX_BD`"
+                                        };
+
+
+                                        foreach (var _Param in AppData.UZD)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Description}', '{_Param.VarName}', '{_Param.ShortDescription}', '{_Param.IndexEC}', '{_Param.IndexGroup}', " +
+                                                $"'{_Param.DescriptionGroup}', '{_Param.Dist}', '{_Param.DoubleStop}', '{_Param.Bur}', '{_Param.COz}', '{_Param.CZz}', " +
+                                                $"'{_Param.EC}', '{_Param.CheckState}', '{_Param.RsOff}', '{_Param.TypeZD}', '{_Param.IndexPZ}', '{_Param.IndexBD}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "UZD", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region UVS
+                                    case UVSUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`DESCRIPTION`", "`VAR_NAME`", "`SHORT_NAME`", "`INDEX_EC`", "`INDEX_GROUP`", "`NAME_GROUP`",
+                                            "`RESERVABLE`", "`TYPE_PRESSURE`", "`COz`", "`ONE_PRESSURE_SENSOR_GROUP`", "`TYPE`"
+                                        };
+
+                                        foreach (var _Param in AppData.UVS)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Description}', '{_Param.VarName}', '{_Param.ShortDescription}', '{_Param.IndexEC}', " +
+                                                $"'{_Param.IndexGroup}', '{_Param.DescriptionGroup}', '{_Param.Reservable}', '{_Param.TypePressure}', " +
+                                                $"'{_Param.COz}', '{_Param.OnePressureSensorGroup}', '{_Param.TypePressure}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "UVS", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region UMPNA
+                                    case UMPNAUserControlViewModel:
+
+                                        #region Данные UMPNA
+                                        Field = new()
+                                        {
+                                            "`DESCRIPTION`", "`VAR_NAME`", "`SHORT_NAME`", "`INDEX_PZ`", "`INDEX_VZ`", "`TYPE`",
+                                            "`INDEX_GROUP_MS`", "`USED_MCP`", "`USED_KPD`", "`QTY_BUTTON_STOP`"
+                                        };
+
+                                        foreach (var _Param in AppData.UMPNA)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Description}', '{_Param.VarName}', '{_Param.ShortDescription}', '{_Param.IndexPZ}', " +
+                                                $"'{_Param.IndexVZ}', '{_Param.TypeUMPNA}', '{_Param.IndexGroupMS}', '{_Param.UsedMCP}', " +
+                                                $"'{_Param.UsedKPD}', '{_Param.CountButtonStop}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "UMPNA", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        #endregion
+
+                                        #region Данные KGMPNA
+                                        FieldValue = new();
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`NO_MASKED`"
+                                        };
+
+                                        foreach (var _UMPNA in AppData.UMPNA)
+                                        {
+                                            foreach (var _Param in _UMPNA.KGMPNA)
+                                            {
+                                                if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                                var _FieldValue =
+                                                    $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Param.Inv}', " +
+                                                    $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.NoMasked}'),";
+                                                FieldValue.Add(_FieldValue);
+                                            }
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "KGMPNA", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        #endregion
+
+                                        #region Данные KTPRA
+                                        FieldValue = new();
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`STATE`", "`NO_MASKED`",
+                                            "`AVR`", "`TYPE`", "`STOP_TYPE`"
+                                        };
+
+                                        foreach (var _UMPNA in AppData.UMPNA)
+                                        {
+                                            foreach (var _Param in _UMPNA.KTPRA)
+                                            {
+                                                if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                                var _FieldValue =
+                                                    $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Param.Inv}', " +
+                                                    $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.StateUMPNA}', '{_Param.NoMasked}', " +
+                                                    $"'{_Param.AVR}', '{_Param.Type}', '{_Param.StopType}'),";
+                                                FieldValue.Add(_FieldValue);
+                                            }
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "KTPRA", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        #endregion
+
+                                        #region Данные KTPRAS
+                                        FieldValue = new();
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`STATE`", "`TYPE_WARNING`", "`TYPE`"
+                                        };
+
+                                        foreach (var _UMPNA in AppData.UMPNA)
+                                        {
+                                            foreach (var _Param in _UMPNA.KTPRAS)
+                                            {
+                                                if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                                var _FieldValue =
+                                                    $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
+                                                    $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
+                                                    $"'{_Param.StateUMPNA}', '{_Param.TypeWarning}', '{_Param.Type}'),";
+                                                FieldValue.Add(_FieldValue);
+                                            }
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "KTPRAS", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        #endregion
+
+                                        break;
+                                    #endregion
+
+                                    #region KTPR
+                                    case KTPRUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`",
+                                            "`STATE_STATION`", "`SHOULDER`", "`SUB_SHOULDER`", "`AUTODEBLOCK`", "`NO_MASKED`",
+                                            "`STOP_TYPE_STATION`", "`STOP_TYPE_NA`", "`TYPE`"
+                                        };
+
+                                        foreach (var _Param in AppData.KTPR)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
+                                                $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
+                                                $"'{_Param.StateStation}', '{_Param.Shoulder}', '{_Param.SubShoulder}', " +
+                                                $"'{_Param.Autodeblok}', '{_Param.NoMasked}', '{_Param.StopTypeNS}', '{_Param.StopTypeUMPNA}', '{_Param.Type}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "KTPR", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region KTPRS
+                                    case KTPRSUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`TYPE_WARNING`", "`TYPE`"
+                                        };
+
+                                        foreach (var _Param in AppData.KTPRS)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
+                                                $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
+                                                $"'{_Param.TypeWarning}', '{_Param.Type}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "KTPRS", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region Signaling
+                                    case SignalingUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`INV`", "`TYPE_SIGNAL`", "`ADDRESS`", "`VAR_NAME_VU`", "`BIT`",
+                                            "`COLOR`", "`USO_INDEX`", "`TYPE_WARNING`"
+                                        };
+
+                                        foreach (var _Param in AppData.Signaling)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
+                                                $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
+                                                $"'{_Param.VarNameVU}', '{(int.Parse(_Param.Param.Index) - 1) % 16}', " +
+                                                $"'{_Param.Color}', '{_Param.IndexUSO}', '{_Param.TypeWarning}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "Signaling", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                    #endregion
+
+                                    #region UTS
+                                    case UTSUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`TYPE_SIGNAL`", "`ADDRESS`", "`LOCK_ENABLE`", "`INDEX_PZ`", "`APT_OFF`",
+                                            "`INDEX_GROUP`", "`TYPE_KCO`", "`ADDRESS_KCO`", "`TYPE_SIGNAL_SOD`", "`ADDRESS_SOD`", "`TYPE_SIGNALERR_SOD`", "`ADDRESS_ERR_SOD`"
+                                        };
+
+                                        foreach (var _Param in AppData.UTS)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Type}', '{_Param.Param.Address}', " +
+                                                $"'{_Param.LockEnable}', '{_Param.IndexPZ}', '{_Param.AptOff}', '{_Param.IndexGroup}', " +
+                                                $"'{_Param.KCO.TypeSignal}', '{_Param.KCO.Address}', '{_Param.SignalSOD.TypeSignal}', '{_Param.SignalSOD.Address}', " +
+                                                $"'{_Param.SignalErrSOD.TypeSignal}', '{_Param.SignalErrSOD.Address}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "UTS", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
+                                        #endregion
+
+                                }
+                            }
+
+
+
+                            //        //UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
+                            //        _ => throw new NotSupportedException($"Редактирование объекта типа {item.GetType().Name} не поддерживается")
+                            //    };
+                            //}
+
 
                             ConnectDB.SuccessUpdate = true;
                             Success = Success || ConnectDB.SuccessUpdate;
                         }
                     }
-                }
+                } 
+                #endregion
             }
             catch (Exception e)
             {
@@ -213,6 +660,120 @@ namespace Project_Сonfigurator.Services
 
             return true;
         }
+        #endregion
+
+        #region Формируем данные приложения перед сохранением
+        /// <summary>
+        /// Формируем данные приложения перед сохранением
+        /// </summary>
+        public void FormingAppDataBeforeSaving(List<object> _ViewModels)
+        {
+            var Log = new LogSerivece();
+            try
+            {
+                foreach (var item in _ViewModels)
+                {
+                    object _Data = item switch
+                    {
+                        LayotRackUserControlViewModel Data => AppData.USOList = Data.USOList is null ? new() : Data.USOList,
+                        SignalsDIUserControlViewModel Data => AppData.SignalDI = Data.SignalsDI is null ? new() : Data.SignalsDI,
+                        SignalsAIUserControlViewModel Data => AppData.SignalAI = Data.SignalsAI is null ? new() : Data.SignalsAI,
+                        SignalsDOUserControlViewModel Data => AppData.SignalDO = Data.SignalsDO is null ? new() : Data.SignalsDO,
+                        SignalsAOUserControlViewModel Data => AppData.SignalAO = Data.SignalsAO is null ? new() : Data.SignalsAO,
+                        ECUserControlViewModel Data => AppData.ECParam = Data.BaseParams is null ? new() : Data.BaseParams,
+                        UserDIUserControlViewModel Data => AppData.UserDI = Data.BaseSignals is null ? new() : Data.BaseSignals,
+                        UserAIUserControlViewModel Data => AppData.UserAI = Data.BaseSignals is null ? new() : Data.BaseSignals,
+                        UserRegUserControlViewModel Data => AppData.UserReg = Data.BaseParams is null ? new() : Data.BaseParams,
+                        SignalsGroupUserControlViewModel Data => AppData.SignalGroup = Data.BaseParams is null ? new() : Data.BaseParams,
+                        GroupsSignalUserControlViewModel Data => AppData.GroupSignals = Data.GroupSignals is null ? new() : Data.GroupSignals,
+                        UZDUserControlViewModel Data => AppData.UZD = Data.UZD is null ? new() : Data.UZD,
+                        UVSUserControlViewModel Data => AppData.UVS = Data.UVS is null ? new() : Data.UVS,
+                        UMPNAUserControlViewModel Data => AppData.UMPNA = Data.UMPNA is null ? new() : Data.UMPNA,
+                        KTPRUserControlViewModel Data => AppData.KTPR = Data.KTPR is null ? new() : Data.KTPR,
+                        KTPRSUserControlViewModel Data => AppData.KTPRS = Data.KTPRS is null ? new() : Data.KTPRS,
+                        SignalingUserControlViewModel Data => AppData.Signaling = Data.Signaling is null ? new() : Data.Signaling,
+                        UTSUserControlViewModel Data => AppData.UTS = Data.UTS is null ? new() : Data.UTS,
+                        UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
+                        _ => null
+                    };
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
+            }
+
+        }
+        #endregion
+
+        #region Формируем данные для БД
+        /// <summary>
+        /// Формируем данные УСО
+        /// </summary>
+        /// <param name="mySqlConnection"></param>
+        /// <returns></returns>
+        private static string FormingData(MySqlConnection mySqlConnection, string NameTable, List<string> Field, List<string> FieldValue)
+        {
+            var Log = new LogSerivece();
+
+            #region Удаляем таблицу
+            var Query = $"DROP TABLE IF EXISTS `{NameTable}`";
+            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
+            _MySqlCommand.ExecuteNonQuery();
+            #endregion
+
+            #region Создаем таблицу
+            try
+            {
+                Query = $"CREATE TABLE `{NameTable}`(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,";
+                foreach (var item in Field)
+                {
+                    Query += $"{item} TEXT,";
+                }
+                Query += $"PRIMARY KEY(`INDEX`));";
+
+                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
+                _MySqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+                return "";
+            }
+            #endregion
+
+            #region Наполняем таблицу данными
+            try
+            {
+                Query = $"INSERT INTO {NameTable} (";
+                foreach (var item in Field)
+                {
+                    var _item = item.Replace("`", "");
+                    Query += $"{_item},";
+                }
+                Query = Query.TrimEnd(',');
+                Query += $") VALUES";
+
+                var QueryPar = "";
+                foreach (var item in FieldValue)
+                {
+                    QueryPar += $"{item}";
+                }
+                QueryPar = QueryPar.TrimEnd(',');
+
+                return Query + QueryPar;
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
+                return "";
+            }
+            #endregion
+
+        }
+        #endregion
+
         #endregion
 
         #region Обновление данных во ViewModels
@@ -254,6 +815,7 @@ namespace Project_Сonfigurator.Services
                 KTPRSUserControlViewModel Data => RefreshKTPRS(Data),
                 SignalingUserControlViewModel Data => RefreshSignaling(Data),
                 UTSUserControlViewModel Data => RefreshUTS(Data),
+                UstRealUserControlViewModel Data => RefreshUstReal(Data),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается")
             };
         }
@@ -1045,6 +1607,53 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
+        #region Обновляем данные Уставки Real
+        /// <summary>
+        /// Обновляем данные Уставки Real
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshUstReal(UstRealUserControlViewModel Data)
+        {
+            Data.Setpoints = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.SetpointsReal.Count > 0)
+            {
+                foreach (var signal in AppData.SetpointsReal)
+                    Data.Setpoints.Add(signal);
+
+                Data.SelectedParam = Data.Setpoints[0];
+                Data.GeneratedData();
+                return true;
+            }
+            #endregion
+
+            #region Генерируем регистры формируемые
+            for (int i = 0; i < 100; i++)
+            {
+                var param = new BaseSetpointsReal
+                {
+                    QtySimbolsComma = "",
+                    Setpoints = new()
+                    {
+                        Index = $"{i + 1}",
+                        Id = $"FL{(i + 1):###}",
+                        Description = "",
+                        VarName = $"SP_REAL[{i + 1}]",
+                        Address = $"%MW{1000 + i}",
+                        Value = "",
+                        Unit = "",
+                    }
+                };
+                Data.Setpoints.Add(param);
+            }
+            Data.SelectedParam = Data.Setpoints[0];
+            Data.GeneratedData();
+            return true;
+            #endregion
+        }
+        #endregion
+
         #endregion
 
         #region Сохранение файла приложения
@@ -1104,1509 +1713,6 @@ namespace Project_Сonfigurator.Services
             AppData = null;
             return true;
         }
-        #endregion
-
-        #region Формируем данные для БД
-
-        #region Формируем данные УСО
-        /// <summary>
-        /// Формируем данные УСО
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUSO(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `USO`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `USO`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`USO_NAME` TEXT," +
-                    $"`RACK_NAME` TEXT," +
-                    $"`MODULE_TYPE` TEXT," +
-                    $"`MODULE_NAME` TEXT," +
-                    $"`CHANNEL_INDEX` TEXT," +
-                    $"`CHANNEL_ID` TEXT," +
-                    $"`CHANNEL_DESCRIPTION` TEXT," +
-                    $"`VAR_NAME_SU` TEXT," +
-                    $"`BIT` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`VAR_NAME_VU` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO USO (USO_NAME, RACK_NAME, MODULE_TYPE, MODULE_NAME, CHANNEL_INDEX," +
-                    $"CHANNEL_ID, CHANNEL_DESCRIPTION, VAR_NAME_SU, BIT, ADDRESS, VAR_NAME_VU) VALUES";
-                var QueryPar = "";
-                foreach (var _USO in AppData.USOList)
-                {
-                    foreach (var _Rack in _USO.Racks)
-                    {
-                        foreach (var _Module in _Rack.Modules)
-                        {
-                            if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
-                            if (_Module.Channels.Count <= 0)
-                            {
-                                QueryPar +=
-                                    $"('{_USO.Name}', '{_Rack.Name}', '{_Module.Type}', '{_Module.Name}', " +
-                                    $"'{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}'),";
-                            }
-                            foreach (var _Channel in _Module.Channels)
-                            {
-                                QueryPar +=
-                                    $"('{_USO.Name}', '{_Rack.Name}', '{_Module.Type}', '{_Module.Name}', " +
-                                    $"'{_Channel.Index}', '{_Channel.Id}', '{_Channel.Description}', '{_Channel.VarName}', " +
-                                    $"'{_Channel.Bit}', '{_Channel.Address}', '{_Channel.VarNameVU}'),";
-                            }
-                        }
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные DI формируемые
-        /// <summary>
-        /// Формируем данные DI формируемые
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUserDI(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `USER_DI`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `USER_DI`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`BIT` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO USER_DI (ID, DESCRIPTION, VAR_NAME, BIT, ADDRESS) VALUES";
-                var QueryPar = "";
-                foreach (var _UserDI in AppData.UserDI)
-                {
-                    if (string.IsNullOrWhiteSpace(_UserDI.Id) && string.IsNullOrWhiteSpace(_UserDI.Description)) continue;
-                    QueryPar += $"('{_UserDI.Id}', '{_UserDI.Description}', '{_UserDI.VarName}', '{(int.Parse(_UserDI.Index) - 1) % 16}', '{_UserDI.Address}'),";
-
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные AI формируемые
-        /// <summary>
-        /// Формируем данные AI формируемые
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUserAI(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `USER_AI`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `USER_AI`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO USER_AI (ID, DESCRIPTION, VAR_NAME, ADDRESS) VALUES";
-                var QueryPar = "";
-                foreach (var _UserAI in AppData.UserAI)
-                {
-                    if (string.IsNullOrWhiteSpace(_UserAI.Id) && string.IsNullOrWhiteSpace(_UserAI.Description)) continue;
-                    QueryPar += $"('{_UserAI.Id}', '{_UserAI.Description}', '{_UserAI.VarName}', '{_UserAI.Address}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Сигналы DI
-        /// <summary>
-        /// Формируем данные Сигналы DI
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalsDI(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `SIGNAL_DI`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `SIGNAL_DI`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`AREA` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`LINK_VALUE` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO SIGNAL_DI (ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
-                var QueryPar = "";
-                foreach (var _Signal in AppData.SignalDI)
-                {
-                    if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
-                    QueryPar +=
-                        $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', " +
-                        $"'{_Signal.Signal.Area}', '{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
-
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Сигналы AI
-        /// <summary>
-        /// Формируем данные Сигналы AI
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalsAI(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `SIGNAL_AI`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `SIGNAL_AI`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`AREA` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`LINK_VALUE` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"`INDEX_UMPNA` TEXT," +
-                    $"`UNIT` TEXT," +
-                    $"`TYPE_VIBRATION` TEXT," +
-                    $"`INDEX_PZ` TEXT," +
-                    $"`TYPE_PI` TEXT," +
-                    $"`INDEX_BD` TEXT," +
-                    $"`LEVEL_RPP` TEXT," +
-                    $"`ADDRESS_UTS` TEXT," +
-                    $"`CONVERTER_KGS` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO SIGNAL_AI (ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG, " +
-                    $"INDEX_UMPNA, UNIT, TYPE_VIBRATION, INDEX_PZ, TYPE_PI, INDEX_BD, LEVEL_RPP, ADDRESS_UTS, CONVERTER_KGS) VALUES";
-
-                var QueryPar = "";
-                foreach (var _Signal in AppData.SignalAI)
-                {
-                    if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
-                    QueryPar +=
-                        $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
-                        $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}', " +
-                        $"'{_Signal.IndexNA}', '{_Signal.Unit}', '{_Signal.TypeVibration}', '{_Signal.IndexPZ}', " +
-                        $"'{_Signal.TypePI}', '{_Signal.IndexBD}', '{_Signal.LevelRPP}', '{_Signal.AddresUTS}', '{_Signal.ConverterKgs}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Сигналы DO
-        /// <summary>
-        /// Формируем данные Сигналы DO
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalsDO(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `SIGNAL_DO`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `SIGNAL_DO`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`AREA` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`LINK_VALUE` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO SIGNAL_DO (ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
-                var QueryPar = "";
-                foreach (var _Signal in AppData.SignalDO)
-                {
-                    if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
-                    QueryPar +=
-                        $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
-                        $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
-
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Сигналы AO
-        /// <summary>
-        /// Формируем данные Сигналы AO
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalsAO(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `SIGNAL_AO`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `SIGNAL_AO`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`AREA` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`LINK_VALUE` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO SIGNAL_AO (ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
-                var QueryPar = "";
-                foreach (var _Signal in AppData.SignalAO)
-                {
-                    if (string.IsNullOrWhiteSpace(_Signal.Signal.Id) && string.IsNullOrWhiteSpace(_Signal.Signal.Description)) continue;
-                    QueryPar +=
-                        $"('{_Signal.Signal.Id}', '{_Signal.Signal.Description}', '{_Signal.Signal.VarName}', '{_Signal.Signal.Area}', " +
-                        $"'{_Signal.Signal.Address}', '{_Signal.Signal.LinkValue}', '{_Signal.Signal.Index}'),";
-
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Секции шин
-        /// <summary>
-        /// Формируем данные Секции шин
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalsEC(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `PARAM_EC`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `PARAM_EC`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO PARAM_EC (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.ECParam)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
-                    QueryPar +=
-                        $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', '{_Param.Inv}', " +
-                        $"'{_Param.TypeSignal}', '{_Param.Address}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Регистры формируемые
-        /// <summary>
-        /// Формируем данные Регистры формируемые
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUserREG(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `USER_REG`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query = $"CREATE TABLE `USER_REG`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`ADDRESS_VU` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO USER_REG (ID, DESCRIPTION, VAR_NAME, ADDRESS_VU) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.UserReg)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
-                    QueryPar += $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', '{_Param.Address}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Сигналы групп
-        /// <summary>
-        /// Формируем данные Сигналы групп
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignalGroup(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `SIGNAL_GROUP`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `SIGNAL_GROUP`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO SIGNAL_GROUP (ID, DESCRIPTION, INV, TYPE_SIGNAL, ADDRESS, ADDRESS_SIG) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.SignalGroup)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
-                    QueryPar += $"('{_Param.Id}', '{_Param.Description}', '{_Param.Inv}', '{_Param.TypeSignal}', '{_Param.Address}', '{_Param.Index}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Группы сигналов
-        /// <summary>
-        /// Формируем данные Группы сигналов
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataGroupSignal(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `GROUP_SIGNAL`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `GROUP_SIGNAL`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`QTY` TEXT," +
-                    $"`ADDRESS_START` TEXT," +
-                    $"`ADDRESS_END` TEXT," +
-                    $"`ADDRESS_SIG` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO GROUP_SIGNAL (ID, DESCRIPTION, VAR_NAME, QTY, ADDRESS_START, ADDRESS_END, ADDRESS_SIG) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.GroupSignals)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    QueryPar += $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.QtyInGroup}', " +
-                        $"'{_Param.AddressStart}', '{_Param.AddressEnd}', '{_Param.Param.Index}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Задвижек
-        /// <summary>
-        /// Формируем данные Задвижек
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUZD(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `UZD`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `UZD`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`SHORT_NAME` TEXT," +
-                    $"`INDEX_EC` TEXT," +
-                    $"`INDEX_GROUP` TEXT," +
-                    $"`NAME_GROUP` TEXT," +
-
-                    $"`DIST` TEXT," +
-                    $"`DOUBLE_STOP` TEXT," +
-                    $"`BUR` TEXT," +
-                    $"`COz` TEXT," +
-                    $"`CZz` TEXT," +
-                    $"`EC` TEXT," +
-                    $"`CHECK_STATE` TEXT," +
-                    $"`RS_OFF` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"`INDEX_PZ` TEXT," +
-                    $"`INDEX_BD` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO UZD (DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_EC, INDEX_GROUP, NAME_GROUP, " +
-                    $"DIST, DOUBLE_STOP, BUR, COz, CZz, EC, CHECK_STATE, RS_OFF, TYPE, INDEX_PZ, INDEX_BD) VALUES";
-                var QueryPar = "";
-                foreach (var _UZD in AppData.UZD)
-                {
-                    QueryPar +=
-                        $"('{_UZD.Description}', '{_UZD.VarName}', '{_UZD.ShortDescription}', '{_UZD.IndexEC}', '{_UZD.IndexGroup}', '{_UZD.DescriptionGroup}'," +
-                        $"'{_UZD.Dist}', '{_UZD.DoubleStop}', '{_UZD.Bur}', '{_UZD.COz}', '{_UZD.CZz}', '{_UZD.EC}', '{_UZD.CheckState}', '{_UZD.RsOff}', " +
-                        $"'{_UZD.TypeZD}', '{_UZD.IndexPZ}', '{_UZD.IndexBD}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные Вспомсистем
-        /// <summary>
-        /// Формируем данные Вспомсистем
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUVS(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `UVS`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `UVS`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`SHORT_NAME` TEXT," +
-                    $"`INDEX_EC` TEXT," +
-                    $"`INDEX_GROUP` TEXT," +
-                    $"`NAME_GROUP` TEXT," +
-                    $"`RESERVABLE` TEXT," +
-                    $"`TYPE_PRESSURE` TEXT," +
-                    $"`COz` TEXT," +
-                    $"`ONE_PRESSURE_SENSOR_GROUP` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO UVS (DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_EC, INDEX_GROUP, NAME_GROUP," +
-                    $"RESERVABLE, TYPE_PRESSURE, COz, ONE_PRESSURE_SENSOR_GROUP, TYPE) VALUES";
-                var QueryPar = "";
-                foreach (var _UVS in AppData.UVS)
-                {
-
-                    QueryPar +=
-                        $"('{_UVS.Description}', '{_UVS.VarName}', '{_UVS.ShortDescription}', '{_UVS.IndexEC}', '{_UVS.IndexGroup}', '{_UVS.DescriptionGroup}', " +
-                        $"'{_UVS.Reservable}', '{_UVS.TypePressure}', '{_UVS.COz}', '{_UVS.OnePressureSensorGroup}', '{_UVS.TypePressure}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные МПНА
-        /// <summary>
-        /// Формируем данные МПНА
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUMPNA(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `UMPNA`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query = $"CREATE TABLE `UMPNA`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`SHORT_NAME` TEXT," +
-                    $"`INDEX_PZ` TEXT," +
-                    $"`INDEX_VZ` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"`INDEX_GROUP_MS` TEXT," +
-                    $"`USED_MCP` TEXT," +
-                    $"`USED_KPD` TEXT," +
-                    $"`QTY_BUTTON_STOP` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO UMPNA (DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_PZ, INDEX_VZ, TYPE, INDEX_GROUP_MS, USED_MCP, USED_KPD, QTY_BUTTON_STOP) VALUES";
-                var QueryPar = "";
-                foreach (var _UMPNA in AppData.UMPNA)
-                {
-
-                    QueryPar +=
-                        $"('{_UMPNA.Description}', '{_UMPNA.VarName}', '{_UMPNA.ShortDescription}', '{_UMPNA.IndexPZ}', '{_UMPNA.IndexVZ}', '{_UMPNA.TypeUMPNA}', " +
-                        $"'{_UMPNA.IndexGroupMS}', '{_UMPNA.UsedMCP}', '{_UMPNA.UsedKPD}', '{_UMPNA.CountButtonStop}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные KGMPNA
-        /// <summary>
-        /// Формируем данные KGMPNA
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataKGMPNA(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `KGMPNA`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `KGMPNA`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`NO_MASKED` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO KGMPNA (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, NO_MASKED) VALUES";
-                var QueryPar = "";
-                foreach (var _UMPNA in AppData.UMPNA)
-                {
-                    foreach (var _Param in _UMPNA.KGMPNA)
-                    {
-                        if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                        QueryPar +=
-                            $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Param.Inv}', " +
-                            $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.NoMasked}'),";
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные KTPRA
-        /// <summary>
-        /// Формируем данные KTPRA
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataKTPRA(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `KTPRA`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `KTPRA`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`STATE` TEXT," +
-                    $"`NO_MASKED` TEXT," +
-                    $"`AVR` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"`STOP_TYPE` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO KTPRA (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, STATE, NO_MASKED, AVR, TYPE, STOP_TYPE) VALUES";
-                var QueryPar = "";
-                foreach (var _UMPNA in AppData.UMPNA)
-                {
-                    foreach (var _Param in _UMPNA.KTPRA)
-                    {
-                        if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                        QueryPar +=
-                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Param.Inv}', " +
-                                $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.StateUMPNA}', '{_Param.NoMasked}', " +
-                                $"'{_Param.AVR}', '{_Param.Type}', '{_Param.StopType}'),";
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные KTPRAS
-        /// <summary>
-        /// Формируем данные KTPRAS
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataKTPRAS(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `KTPRAS`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `KTPRAS`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`STATE` TEXT," +
-                    $"`TYPE_WARNING` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO KTPRAS (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, STATE, TYPE_WARNING, TYPE) VALUES";
-                var QueryPar = "";
-                foreach (var _UMPNA in AppData.UMPNA)
-                {
-                    foreach (var _Param in _UMPNA.KTPRAS)
-                    {
-                        if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                        QueryPar +=
-                                $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
-                                $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
-                                $"'{_Param.StateUMPNA}', '{_Param.TypeWarning}', '{_Param.Type}'),";
-                    }
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные KTPR
-        /// <summary>
-        /// Формируем данные KTPR
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataKTPR(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `KTPR`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `KTPR`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`STATE_STATION` TEXT," +
-                    $"`SHOULDER` TEXT," +
-                    $"`SUB_SHOULDER` TEXT," +
-                    $"`AUTODEBLOCK` TEXT," +
-                    $"`NO_MASKED` TEXT," +
-                    $"`STOP_TYPE_STATION` TEXT," +
-                    $"`STOP_TYPE_NA` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO KTPR (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS," +
-                    $"STATE_STATION, SHOULDER, SUB_SHOULDER, AUTODEBLOCK, NO_MASKED, STOP_TYPE_STATION, STOP_TYPE_NA, TYPE) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.KTPR)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    QueryPar +=
-                        $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
-                        $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
-                        $"'{_Param.StateStation}', '{_Param.Shoulder}', '{_Param.SubShoulder}', " +
-                        $"'{_Param.Autodeblok}', '{_Param.NoMasked}', '{_Param.StopTypeNS}', '{_Param.StopTypeUMPNA}', '{_Param.Type}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные KTPRS
-        /// <summary>
-        /// Формируем данные KTPRS
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataKTPRS(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `KTPRS`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `KTPRS`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`TYPE_WARNING` TEXT," +
-                    $"`TYPE` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query = $"INSERT INTO KTPRS (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, TYPE_WARNING, TYPE) VALUES";
-                var QueryPar = "";
-                foreach (var _Param in AppData.KTPRS)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    QueryPar +=
-                        $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
-                        $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
-                        $"'{_Param.TypeWarning}', '{_Param.Type}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные сигнализации и общесистемная диагностика
-        /// <summary>
-        /// Формируем данные сигнализации и общесистемная диагностика
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataSignaling(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `Signaling`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `Signaling`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`INV` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`VAR_NAME_VU` TEXT," +
-                    $"`BIT` TEXT," +
-                    $"`COLOR` TEXT," +
-                    $"`USO_INDEX` TEXT," +
-                    $"`TYPE_WARNING` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO Signaling (ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, " +
-                    $"VAR_NAME_VU, BIT, COLOR, USO_INDEX, TYPE_WARNING) VALUES";
-
-                var QueryPar = "";
-                foreach (var _Param in AppData.Signaling)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    QueryPar +=
-                        $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', " +
-                        $"'{_Param.Param.Inv}', '{_Param.Param.TypeSignal}', '{_Param.Param.Address}', " +
-                        $"'{_Param.VarNameVU}', '{(int.Parse(_Param.Param.Index) - 1) % 16}', '{_Param.Color}', '{_Param.IndexUSO}', '{_Param.TypeWarning}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
-        #region Формируем данные UTS
-        /// <summary>
-        /// Формируем данные UTS
-        /// </summary>
-        /// <param name="mySqlConnection"></param>
-        /// <returns></returns>
-        private void FormingDataUTS(MySqlConnection mySqlConnection)
-        {
-            var Log = new LogSerivece();
-
-            #region Удаляем таблицу
-            var Query = $"DROP TABLE IF EXISTS `UTS`";
-            var _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-            _MySqlCommand.ExecuteNonQuery();
-            #endregion
-
-            #region Создаем таблицу
-            try
-            {
-                Query =
-                    $"CREATE TABLE `UTS`(" +
-                    $"`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
-                    $"`ID` TEXT," +
-                    $"`DESCRIPTION` TEXT," +
-                    $"`VAR_NAME` TEXT," +
-                    $"`TYPE_SIGNAL` TEXT," +
-                    $"`ADDRESS` TEXT," +
-                    $"`LOCK_ENABLE` TEXT," +
-                    $"`INDEX_PZ` TEXT," +
-                    $"`APT_OFF` TEXT," +
-                    $"`INDEX_GROUP` TEXT," +
-                    $"`TYPE_KCO` TEXT," +
-                    $"`ADDRESS_KCO` TEXT," +
-                    $"`TYPE_SIGNAL_SOD` TEXT," +
-                    $"`ADDRESS_SOD` TEXT," +
-                    $"`TYPE_SIGNALERR_SOD` TEXT," +
-                    $"`ADDRESS_ERR_SOD` TEXT," +
-                    $"PRIMARY KEY(`INDEX`));";
-
-                _MySqlCommand = new MySqlCommand(Query, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-            #region Наполняем таблицу данными
-            try
-            {
-                Query =
-                    $"INSERT INTO UTS (ID, DESCRIPTION, VAR_NAME, TYPE_SIGNAL, ADDRESS, LOCK_ENABLE, INDEX_PZ, APT_OFF, INDEX_GROUP, " +
-                    $"TYPE_KCO, ADDRESS_KCO, TYPE_SIGNAL_SOD, ADDRESS_SOD, TYPE_SIGNALERR_SOD, ADDRESS_ERR_SOD) VALUES";
-
-                var QueryPar = "";
-                foreach (var _Param in AppData.UTS)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    QueryPar +=
-                        $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Type}', '{_Param.Param.Address}', " +
-                        $"'{_Param.LockEnable}', '{_Param.IndexPZ}', '{_Param.AptOff}', '{_Param.IndexGroup}', " +
-                        $"'{_Param.KCO.TypeSignal}', '{_Param.KCO.Address}', '{_Param.SignalSOD.TypeSignal}', '{_Param.SignalSOD.Address}', " +
-                        $"'{_Param.SignalErrSOD.TypeSignal}', '{_Param.SignalErrSOD.Address}'),";
-                }
-
-                if (string.IsNullOrWhiteSpace(QueryPar)) return;
-                QueryPar = QueryPar.TrimEnd(',') + ";";
-                _MySqlCommand = new MySqlCommand(Query + QueryPar, mySqlConnection);
-                _MySqlCommand.ExecuteNonQuery();
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Подключения к БД: {e.Message}", App.NameApp);
-            }
-            #endregion
-
-        }
-        #endregion
-
         #endregion
     }
 }

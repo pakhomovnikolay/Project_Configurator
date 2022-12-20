@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Models;
+using System.Collections.Generic;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -11,12 +12,20 @@ namespace Project_Сonfigurator.Services.Interfaces
         DBData AppData { get; set; }
         #endregion
 
-        #region Функция записи данных
+        #region Запрос записи данных
         /// <summary>
-        /// Функция записи данных
+        /// Запрос записи данных
         /// </summary>
         /// <returns></returns>
-        bool SetData();
+        bool RequestSetData(List<object> _ViewModels);
+        #endregion
+
+        #region Формируем данные приложения перед сохранением
+        /// <summary>
+        /// Формируем данные приложения перед сохранением
+        /// </summary>
+        /// <param name="_ViewModels"></param>
+        void FormingAppDataBeforeSaving(List<object> _ViewModels); 
         #endregion
 
         #region Сохранение файла приложения

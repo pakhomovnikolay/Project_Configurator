@@ -312,12 +312,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<SignalDI>();
+            SignalsDI = new();
 
             #region Генерируем сигналы DI, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
-                while (data_list.Count < 2500)
+                while (SignalsDI.Count < 2500)
                 {
                     var signal = new SignalDI()
                     {
@@ -332,11 +332,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                             LinkValue = ""
                         }
                     };
-                    data_list.Add(signal);
+                    SignalsDI.Add(signal);
                 }
 
-                SelectedSignalDI = data_list[0];
-                _DataView.Source = data_list;
+                SelectedSignalDI = SignalsDI[0];
+                _DataView.Source = SignalsDI;
                 _DataView.View.Refresh();
                 OnPropertyChanged(nameof(DataView));
                 return;
@@ -371,7 +371,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                                             Address = $"{int.Parse(_Channel.Address) - 100000}",
                                         }
                                     };
-                                    data_list.Add(signal);
+                                    SignalsDI.Add(signal);
                                 }
                             }
                         }
@@ -381,7 +381,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Дозаполняем таблицу
-            while (data_list.Count < 2500)
+            while (SignalsDI.Count < 2500)
             {
                 var signal = new SignalDI()
                 {
@@ -396,14 +396,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         LinkValue = ""
                     }
                 };
-                data_list.Add(signal);
+                SignalsDI.Add(signal);
             }
             #endregion
 
             #endregion
 
-            SelectedSignalDI = data_list[0];
-            _DataView.Source = data_list;
+            SelectedSignalDI = SignalsDI[0];
+            _DataView.Source = SignalsDI;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }

@@ -312,14 +312,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<SignalAI>();
+            SignalsAI = new();
 
             #region Генерируем сигналы AI, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel.LayotRackViewModel is null ||
                 TableSignalsViewModel.LayotRackViewModel.USOList is null ||
                 TableSignalsViewModel.LayotRackViewModel.USOList.Count < 0)
             {
-                while (data_list.Count < 500)
+                while (SignalsAI.Count < 500)
                 {
                     var signal = new SignalAI()
                     {
@@ -334,11 +334,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                             LinkValue = ""
                         }
                     };
-                    data_list.Add(signal);
+                    SignalsAI.Add(signal);
                 }
 
-                SelectedSignalAI = data_list[0];
-                _DataView.Source = data_list;
+                SelectedSignalAI = SignalsAI[0];
+                _DataView.Source = SignalsAI;
                 _DataView.View.Refresh();
                 OnPropertyChanged(nameof(DataView));
                 return;
@@ -373,7 +373,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                                             Address = $"{int.Parse(_Channel.Address)}",
                                         }
                                     };
-                                    data_list.Add(signal);
+                                    SignalsAI.Add(signal);
                                 }
                             }
                         }
@@ -383,7 +383,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Дозаполняем таблицу
-            while (data_list.Count < 500)
+            while (SignalsAI.Count < 500)
             {
                 var signal = new SignalAI()
                 {
@@ -398,14 +398,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         LinkValue = ""
                     }
                 };
-                data_list.Add(signal);
+                SignalsAI.Add(signal);
             }
             #endregion
 
             #endregion
 
-            SelectedSignalAI = data_list[0];
-            _DataView.Source = data_list;
+            SelectedSignalAI = SignalsAI[0];
+            _DataView.Source = SignalsAI;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }

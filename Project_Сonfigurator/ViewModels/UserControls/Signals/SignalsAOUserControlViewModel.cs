@@ -308,12 +308,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void GeneratedSignals()
         {
             var index = 0;
-            var data_list = new List<SignalAO>();
+            SignalsAO = new();
 
             #region Генерируем сигналы AO, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
             {
-                while (data_list.Count < 500)
+                while (SignalsAO.Count < 500)
                 {
                     var signal = new SignalAO()
                     {
@@ -328,11 +328,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                             LinkValue = ""
                         }
                     };
-                    data_list.Add(signal);
+                    SignalsAO.Add(signal);
                 }
 
-                SelectedSignalAO = data_list[0];
-                _DataView.Source = data_list;
+                SelectedSignalAO = SignalsAO[0];
+                _DataView.Source = SignalsAO;
                 _DataView.View.Refresh();
                 OnPropertyChanged(nameof(DataView));
                 return;
@@ -367,7 +367,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                                             Address = $"{int.Parse(_Channel.Address) - 300000}",
                                         }
                                     };
-                                    data_list.Add(signal);
+                                    SignalsAO.Add(signal);
                                 }
                             }
                         }
@@ -377,7 +377,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #endregion
 
             #region Дозаполняем таблицу
-            while (data_list.Count < 500)
+            while (SignalsAO.Count < 500)
             {
                 var signal = new SignalAO()
                 {
@@ -392,14 +392,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         LinkValue = ""
                     }
                 };
-                data_list.Add(signal);
+                SignalsAO.Add(signal);
             }
             #endregion
 
             #endregion
 
-            SelectedSignalAO = data_list[0];
-            _DataView.Source = data_list;
+            SelectedSignalAO = SignalsAO[0];
+            _DataView.Source = SignalsAO;
             _DataView.View.Refresh();
             OnPropertyChanged(nameof(DataView));
         }

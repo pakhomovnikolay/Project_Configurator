@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -19,15 +20,16 @@ namespace Project_Сonfigurator.ViewModels
     public class MainWindowViewModel : ViewModel
     {
         #region Конструктор
+
+        #region Сервисы
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece Log;
         private readonly IDBService _DBService;
         public readonly ISettingService _SettingService;
-
-
         private readonly ISUExportRedefineService _SUExportRedefineService;
+        #endregion
 
-
+        #region ViewModels
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
         public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
         public SignalsDIUserControlViewModel SignalsDIViewModel { get; }
@@ -47,15 +49,21 @@ namespace Project_Сonfigurator.ViewModels
         public KTPRSUserControlViewModel KTPRSViewModel { get; }
         public SignalingUserControlViewModel SignalingViewModel { get; }
         public UTSUserControlViewModel UTSViewModel { get; }
-
+        public UstRealUserControlViewModel UstRealViewModel { get; } 
+        #endregion
 
         public MainWindowViewModel(
-            IUserDialogService userDialog,
+
+        #region Сервисы
+        IUserDialogService userDialog,
             ILogSerivece logSerivece,
             IDBService dDBService,
             ISettingService settingService,
             ISUExportRedefineService sUExportRedefineService,
-            LayotRackUserControlViewModel layotRackViewModel,
+        #endregion
+
+        #region ViewModels
+        LayotRackUserControlViewModel layotRackViewModel,
             TableSignalsUserControlViewModel tableSignalsViewModel,
             SignalsDIUserControlViewModel signalsDIViewModel,
             SignalsAIUserControlViewModel signalsAIViewModel,
@@ -73,15 +81,21 @@ namespace Project_Сonfigurator.ViewModels
             KTPRUserControlViewModel kTPRViewModel,
             KTPRSUserControlViewModel kTPRSViewModel,
             SignalingUserControlViewModel signalingViewModel,
-            UTSUserControlViewModel uTSViewModel
+            UTSUserControlViewModel uTSViewModel,
+            UstRealUserControlViewModel ustRealViewModel 
+        #endregion
+
             )
         {
+            #region Сервисы
             UserDialog = userDialog;
             Log = logSerivece;
             _DBService = dDBService;
             _SettingService = settingService;
             _SUExportRedefineService = sUExportRedefineService;
+            #endregion
 
+            #region ViewModels
             LayotRackViewModel = layotRackViewModel;
             TableSignalsViewModel = tableSignalsViewModel;
             SignalsDIViewModel = signalsDIViewModel;
@@ -101,12 +115,19 @@ namespace Project_Сonfigurator.ViewModels
             KTPRSViewModel = kTPRSViewModel;
             SignalingViewModel = signalingViewModel;
             UTSViewModel = uTSViewModel;
+            UstRealViewModel = ustRealViewModel;
+            #endregion
 
+            #region Задаем имя проекта
             SetNameProject();
+            #endregion
+
+            #region Скрываем TabControl, при отсутствии данных
             if (Program._DBService is null)
                 VisibilityTabContol = Visibility.Hidden;
+            #endregion
 
-
+            #region Формируем состояния выбранных узлов для импорта данных в БД
             if (Program.Settings is not null && Program.Settings.Config is not null && Program.Settings.Config.ServerDB is not null)
             {
                 IsCheckedAll = true;
@@ -115,8 +136,12 @@ namespace Project_Сonfigurator.ViewModels
                     IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
                 }
             }
+            #endregion
 
+            #region Создаем список ViewModels
             CreateViewModels();
+            #endregion
+
         }
         #endregion
 
@@ -391,8 +416,12 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdSaveDataExecuted()
         {
             if (!UserDialog.SaveProject(Title)) return;
-            FormingAppDataBeforeSaving();
+            _DBService.FormingAppDataBeforeSaving(ViewModels);
             _DBService.SaveData();
+
+
+            //FormingAppDataBeforeSaving();
+            //_DBService.SaveData();
         }
         #endregion
 
@@ -408,8 +437,10 @@ namespace Project_Сonfigurator.ViewModels
             if (!UserDialog.SaveProject(Title)) return;
 
             _DBService.AppData = new();
-            FormingAppDataBeforeSaving();
+            _DBService.FormingAppDataBeforeSaving(ViewModels);
             _DBService.SaveData();
+            //FormingAppDataBeforeSaving();
+            //_DBService.SaveData();
         }
         #endregion
 
@@ -436,8 +467,10 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            FormingAppDataBeforeSaving();
-            _DBService.SetData();
+            CreateViewModels();
+            _DBService.RequestSetData(ViewModels);
+            //FormingAppDataBeforeSaving();
+            //_DBService.SetData();
         }
         #endregion
 
@@ -554,40 +587,7 @@ namespace Project_Сonfigurator.ViewModels
 
         #region Функции
 
-        #region Формируем данные приложения перед сохранением
-        /// <summary>
-        /// Формируем данные приложения перед сохранением
-        /// </summary>
-        private void FormingAppDataBeforeSaving()
-        {
-            try
-            {
-                _DBService.AppData.USOList = LayotRackViewModel.USOList is null ? new() : LayotRackViewModel.USOList;
-                _DBService.AppData.UserDI = UserDIViewModel.BaseSignals is null ? new() : UserDIViewModel.BaseSignals;
-                _DBService.AppData.UserAI = UserAIViewModel.BaseSignals is null ? new() : UserAIViewModel.BaseSignals;
-                _DBService.AppData.SignalDI = SignalsDIViewModel.SignalsDI is null ? new() : SignalsDIViewModel.SignalsDI;
-                _DBService.AppData.SignalAI = SignalsAIViewModel.SignalsAI is null ? new() : SignalsAIViewModel.SignalsAI;
-                _DBService.AppData.SignalDO = SignalsDOViewModel.SignalsDO is null ? new() : SignalsDOViewModel.SignalsDO;
-                _DBService.AppData.SignalAO = SignalsAOViewModel.SignalsAO is null ? new() : SignalsAOViewModel.SignalsAO;
-                _DBService.AppData.ECParam = ECViewModel.BaseParams is null ? new() : ECViewModel.BaseParams;
-                _DBService.AppData.UserReg = UserRegUserModel.BaseParams is null ? new() : UserRegUserModel.BaseParams;
-                _DBService.AppData.SignalGroup = SignalsGroupViewModel.BaseParams is null ? new() : SignalsGroupViewModel.BaseParams;
-                _DBService.AppData.GroupSignals = GroupsSignalViewModel.GroupSignals is null ? new() : GroupsSignalViewModel.GroupSignals;
-                _DBService.AppData.UZD = UZDViewModel.UZD is null ? new() : UZDViewModel.UZD;
-                _DBService.AppData.UVS = UVSViewModel.UVS is null ? new() : UVSViewModel.UVS;
-                _DBService.AppData.UMPNA = UMPNAViewModel.UMPNA is null ? new() : UMPNAViewModel.UMPNA;
-                _DBService.AppData.KTPR = KTPRViewModel.KTPR is null ? new() : KTPRViewModel.KTPR;
-                _DBService.AppData.KTPRS = KTPRSViewModel.KTPRS is null ? new() : KTPRSViewModel.KTPRS;
-                _DBService.AppData.Signaling = SignalingViewModel.Signaling is null ? new() : SignalingViewModel.Signaling;
-                _DBService.AppData.UTS = UTSViewModel.UTS is null ? new() : UTSViewModel.UTS;
-            }
-            catch (Exception e)
-            {
-                Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
-            }
-
-        }
-        #endregion
+        
 
         #region Задаем имя проекта
         /// <summary>
@@ -628,7 +628,8 @@ namespace Project_Сonfigurator.ViewModels
                 KTPRViewModel,
                 KTPRSViewModel,
                 SignalingViewModel,
-                UTSViewModel
+                UTSViewModel,
+                UstRealViewModel
             };
 
             ViewModelsHeader = new()
@@ -651,7 +652,8 @@ namespace Project_Сonfigurator.ViewModels
                 KTPRViewModel.Title,
                 KTPRSViewModel.Title,
                 SignalingViewModel.Title,
-                UTSViewModel.Title
+                UTSViewModel.Title,
+                UstRealViewModel.Title
             };
         }
         #endregion

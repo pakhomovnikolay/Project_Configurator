@@ -29,6 +29,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<SignalingUserControlViewModel>()
             .AddSingleton<ECUserControlViewModel>()
             .AddSingleton<UTSUserControlViewModel>()
+            .AddSingleton<UstRealUserControlViewModel>()
             ;
     }
 }
