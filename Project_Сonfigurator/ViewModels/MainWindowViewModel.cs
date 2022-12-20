@@ -3,6 +3,7 @@ using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -12,10 +13,13 @@ using Project_Сonfigurator.Views.Windows;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Xml.Linq;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -259,10 +263,10 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Коллекция ViewModelsHeader
+        #region Список имен вкладок, для быстрого перехода
         private List<string> _ViewModelsHeader = new();
         /// <summary>
-        /// Коллекция ViewModelsHeader
+        /// Список имен вкладок, для быстрого перехода
         /// </summary>
         public List<string> ViewModelsHeader
         {
@@ -271,10 +275,10 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Выбранный ViewModelsHeader
+        #region Выбранная вкладка, из списка вкладок
         private string _SelectedViewModelsHeader;
         /// <summary>
-        /// Выбранный ViewModelsHeader
+        /// Выбранная вкладка, из списка вкладок
         /// </summary>
         public string SelectedViewModelsHeader
         {
@@ -303,48 +307,7 @@ namespace Project_Сonfigurator.ViewModels
         public int SelectedTabIndex
         {
             get => _SelectedTabIndex;
-            set
-            {
-                var _TabControl = App.FucusedTabControl;
-                var _TabItem = _TabControl.Items[_SelectedTabIndex] as TabItem;
-
-
-                if (Set(ref _SelectedTabIndex, value))
-                {
-                    if (_SelectedTabIndex >= (_TabControl.Items.Count - 1))
-                    {
-                        MyScrollViewer.ScrollToRightEnd();
-                        return;
-                    }
-                    else if (_SelectedTabIndex <= 0)
-                    {
-                        MyScrollViewer.ScrollToLeftEnd();
-                        return;
-                    }
-
-                    if (_SelectedTabIndex >= _TabControl.SelectedIndex)
-                    {
-                        MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + _TabItem.ActualWidth);
-                    }
-
-                    else if (_SelectedTabIndex <= _TabControl.SelectedIndex)
-                    {
-                        MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - _TabItem.ActualWidth);
-                    }
-                }
-            }
-        }
-        #endregion
-
-        #region Данные ScrollViewer
-        private ScrollViewer _MyScrollViewer;
-        /// <summary>
-        /// Данные ScrollViewer 
-        /// </summary>
-        public ScrollViewer MyScrollViewer
-        {
-            get => _MyScrollViewer;
-            set => Set(ref _MyScrollViewer, value);
+            set => Set(ref _SelectedTabIndex, value);
         }
         #endregion
 
@@ -545,43 +508,47 @@ namespace Project_Сonfigurator.ViewModels
 
             ToggleButtonIsChecked = false;
             var _TabControl = App.FucusedTabControl;
-            MyScrollViewer = p as ScrollViewer;
             if (_TabControl == null) return;
-            if (MyScrollViewer == null) return;
-
-            var ScrollToEnd = false;
+            if (p is not ScrollViewer MyScrollViewer) return;
 
             foreach (var _TabItem in from object _Item in _TabControl.Items
                                      let _TabItem = _Item as TabItem
                                      where _TabItem.Header.ToString() == SelectedViewModelsHeader
                                      select _TabItem)
             {
-                var SelectedIndex = _TabControl.Items.IndexOf(_TabItem);
-                if (SelectedIndex >= (_TabControl.Items.Count - 1))
+                var SelectedIndex = _TabControl.SelectedIndex;
+                _TabControl.SelectedItem = _TabItem;
+                if (_TabControl.SelectedIndex == (_TabControl.Items.Count - 1))
                 {
                     MyScrollViewer.ScrollToRightEnd();
-                    ScrollToEnd = true;
+                    return;
                 }
-                else if (SelectedIndex <= 0)
+                else if (_TabControl.SelectedIndex == 0)
                 {
                     MyScrollViewer.ScrollToLeftEnd();
-                    ScrollToEnd = true;
+                    return;
                 }
-
-                if (!ScrollToEnd)
+                var Offset = 0d;
+                if (_TabControl.SelectedIndex > SelectedIndex)
                 {
-                    if (SelectedIndex >= _TabControl.SelectedIndex)
+                    for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
                     {
-                        MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + _TabItem.ActualWidth);
-                    }
+                        var _Item = _TabControl.Items[i] as TabItem;
+                        Offset += _Item.ActualWidth;
 
-                    else if (SelectedIndex <= _TabControl.SelectedIndex)
-                    {
-                        MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - _TabItem.ActualWidth);
                     }
+                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
                 }
 
-                _TabControl.SelectedItem = _TabItem;
+                else if (_TabControl.SelectedIndex < SelectedIndex)
+                {
+                    for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
+                    {
+                        var _Item = _TabControl.Items[i] as TabItem;
+                        Offset += _Item.ActualWidth;
+                    }
+                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
+                }
             }
         }
         #endregion
