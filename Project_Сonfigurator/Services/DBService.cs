@@ -626,18 +626,33 @@ namespace Project_Сonfigurator.Services
                                         _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "UTS", Field, FieldValue), _MySqlConnection);
                                         _MySqlCommand.ExecuteNonQuery();
                                         break;
+                                    #endregion
+
+                                    #region SETPOINTS_REAL
+                                    case UstRealUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`ADDRESS`", "`VALUE`", "`UNIT`", "`QTY_SIMBOLS_COMMA`"
+                                        };
+
+                                        foreach (var _Param in AppData.SetpointsReal)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Setpoints.Id) && string.IsNullOrWhiteSpace(_Param.Setpoints.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Setpoints.Id}', '{_Param.Setpoints.Description}', '{_Param.Setpoints.VarName}', " +
+                                                $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}', '{_Param.QtySimbolsComma}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SETPOINTS_REAL", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
                                         #endregion
 
                                 }
                             }
-
-
-
-                            //        //UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
-                            //        _ => throw new NotSupportedException($"Редактирование объекта типа {item.GetType().Name} не поддерживается")
-                            //    };
-                            //}
-
 
                             ConnectDB.SuccessUpdate = true;
                             Success = Success || ConnectDB.SuccessUpdate;
@@ -1637,10 +1652,10 @@ namespace Project_Сonfigurator.Services
                     Setpoints = new()
                     {
                         Index = $"{i + 1}",
-                        Id = $"FL{(i + 1):###}",
+                        Id = $"FL{(i + 1):000}",
                         Description = "",
                         VarName = $"SP_REAL[{i + 1}]",
-                        Address = $"%MW{1000 + i}",
+                        Address = $"{1000 + i}",
                         Value = "",
                         Unit = "",
                     }

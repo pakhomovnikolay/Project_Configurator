@@ -450,6 +450,11 @@
                 <pages_param:UTSUserControl DataContext="{Binding UTSViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UstRealViewModel.Title}"
+                     IsSelected="{Binding UstRealViewModel.IsSelected}">
+                <pages_param:UstRealUserControl DataContext="{Binding UstRealViewModel}"/>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

@@ -1,13 +1,11 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -49,7 +47,7 @@ namespace Project_Сonfigurator.ViewModels
         public KTPRSUserControlViewModel KTPRSViewModel { get; }
         public SignalingUserControlViewModel SignalingViewModel { get; }
         public UTSUserControlViewModel UTSViewModel { get; }
-        public UstRealUserControlViewModel UstRealViewModel { get; } 
+        public UstRealUserControlViewModel UstRealViewModel { get; }
         #endregion
 
         public MainWindowViewModel(
@@ -82,7 +80,7 @@ namespace Project_Сonfigurator.ViewModels
             KTPRSUserControlViewModel kTPRSViewModel,
             SignalingUserControlViewModel signalingViewModel,
             UTSUserControlViewModel uTSViewModel,
-            UstRealUserControlViewModel ustRealViewModel 
+            UstRealUserControlViewModel ustRealViewModel
         #endregion
 
             )
@@ -418,10 +416,6 @@ namespace Project_Сonfigurator.ViewModels
             if (!UserDialog.SaveProject(Title)) return;
             _DBService.FormingAppDataBeforeSaving(ViewModels);
             _DBService.SaveData();
-
-
-            //FormingAppDataBeforeSaving();
-            //_DBService.SaveData();
         }
         #endregion
 
@@ -439,8 +433,6 @@ namespace Project_Сonfigurator.ViewModels
             _DBService.AppData = new();
             _DBService.FormingAppDataBeforeSaving(ViewModels);
             _DBService.SaveData();
-            //FormingAppDataBeforeSaving();
-            //_DBService.SaveData();
         }
         #endregion
 
@@ -469,8 +461,6 @@ namespace Project_Сonfigurator.ViewModels
         {
             CreateViewModels();
             _DBService.RequestSetData(ViewModels);
-            //FormingAppDataBeforeSaving();
-            //_DBService.SetData();
         }
         #endregion
 
@@ -586,8 +576,6 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Функции
-
-        
 
         #region Задаем имя проекта
         /// <summary>
