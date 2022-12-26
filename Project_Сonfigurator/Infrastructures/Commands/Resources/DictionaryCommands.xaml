@@ -10,5 +10,8 @@
 
     <l:CmdNextItemTabPanel x:Key="CmdNextItemTabPanel"/>
     <l:CmdPrevItemTabPanel x:Key="CmdPrevItemTabPanel"/>
-    
+
+    <l:CmdScrollToLeftEnd x:Key="CmdScrollToLeftEnd"/>
+    <l:CmdScrollToRightEnd x:Key="CmdScrollToRightEnd"/>
+
 </ResourceDictionary>

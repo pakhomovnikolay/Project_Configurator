@@ -528,8 +528,6 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdSelectedTabPanelItemExecute(object p) => p is ScrollViewer;
         private void OnCmdSelectedTabPanelItemExecuted(object p)
         {
-            if (p is not ScrollViewer) return;
-
             ToggleButtonIsChecked = false;
             var _TabControl = App.FucusedTabControl;
             if (_TabControl == null) return;
