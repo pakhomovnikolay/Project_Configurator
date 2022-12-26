@@ -48,6 +48,8 @@ namespace Project_Сonfigurator.ViewModels
         public SignalingUserControlViewModel SignalingViewModel { get; }
         public UTSUserControlViewModel UTSViewModel { get; }
         public UstRealUserControlViewModel UstRealViewModel { get; }
+        public UstCommonUserControlViewModel UstCommonViewModel { get; }
+        
         #endregion
 
         public MainWindowViewModel(
@@ -80,7 +82,8 @@ namespace Project_Сonfigurator.ViewModels
             KTPRSUserControlViewModel kTPRSViewModel,
             SignalingUserControlViewModel signalingViewModel,
             UTSUserControlViewModel uTSViewModel,
-            UstRealUserControlViewModel ustRealViewModel
+            UstRealUserControlViewModel ustRealViewModel,
+            UstCommonUserControlViewModel ustCommonViewModel
         #endregion
 
             )
@@ -114,6 +117,7 @@ namespace Project_Сonfigurator.ViewModels
             SignalingViewModel = signalingViewModel;
             UTSViewModel = uTSViewModel;
             UstRealViewModel = ustRealViewModel;
+            UstCommonViewModel = ustCommonViewModel;
             #endregion
 
             #region Задаем имя проекта
@@ -617,7 +621,8 @@ namespace Project_Сonfigurator.ViewModels
                 KTPRSViewModel,
                 SignalingViewModel,
                 UTSViewModel,
-                UstRealViewModel
+                UstRealViewModel,
+                UstCommonViewModel
             };
 
             ViewModelsHeader = new()
@@ -641,7 +646,8 @@ namespace Project_Сonfigurator.ViewModels
                 KTPRSViewModel.Title,
                 SignalingViewModel.Title,
                 UTSViewModel.Title,
-                UstRealViewModel.Title
+                UstRealViewModel.Title,
+                UstCommonViewModel.Title
             };
         }
         #endregion

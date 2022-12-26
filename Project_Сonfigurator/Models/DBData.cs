@@ -141,5 +141,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public List<BaseSetpointsReal> SetpointsReal { get; set; } = new();
         #endregion
+
+        #region Уставки общие
+        /// <summary>
+        /// Уставки общие
+        /// </summary>
+        public List<BaseSetpoints> SetpointsCommon { get; set; } = new();
+        #endregion
     }
 }

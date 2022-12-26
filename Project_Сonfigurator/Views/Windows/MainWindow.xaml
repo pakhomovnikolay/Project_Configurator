@@ -455,6 +455,11 @@
                 <pages_param:UstRealUserControl DataContext="{Binding UstRealViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding UstCommonViewModel.Title}"
+                     IsSelected="{Binding UstCommonViewModel.IsSelected}">
+                <pages_param:UstCommonUserControl DataContext="{Binding UstCommonViewModel}"/>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

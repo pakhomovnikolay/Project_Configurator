@@ -2,12 +2,10 @@
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
-using Project_Сonfigurator.Models.LayotRack.Interfaces;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
-using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -119,7 +117,7 @@ namespace Project_Сonfigurator.Services
 
                             #endregion
 
-
+                            #region Формируем данные для БД
                             foreach (var item in _ViewModels)
                             {
                                 List<string> FieldValue = new();
@@ -649,16 +647,40 @@ namespace Project_Сonfigurator.Services
                                         _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SETPOINTS_REAL", Field, FieldValue), _MySqlConnection);
                                         _MySqlCommand.ExecuteNonQuery();
                                         break;
+                                    #endregion
+
+                                    #region Врем. уставки общие
+                                    case UstCommonUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`ID`", "`DESCRIPTION`", "`VAR_NAME`", "`ADDRESS`", "`VALUE`", "`UNIT`"
+                                        };
+
+                                        foreach (var _Param in AppData.SetpointsCommon)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', " +
+                                                $"'{_Param.Address}', '{_Param.Value}', '{_Param.Unit}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SETPOINTS_COMMON", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
                                         #endregion
 
                                 }
                             }
+                            #endregion
 
                             ConnectDB.SuccessUpdate = true;
                             Success = Success || ConnectDB.SuccessUpdate;
                         }
                     }
-                } 
+                }
                 #endregion
             }
             catch (Exception e)
@@ -709,6 +731,7 @@ namespace Project_Сonfigurator.Services
                         SignalingUserControlViewModel Data => AppData.Signaling = Data.Signaling is null ? new() : Data.Signaling,
                         UTSUserControlViewModel Data => AppData.UTS = Data.UTS is null ? new() : Data.UTS,
                         UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
+                        UstCommonUserControlViewModel Data => AppData.SetpointsCommon = Data.Setpoints is null ? new() : Data.Setpoints,
                         _ => null
                     };
                 }
@@ -831,6 +854,7 @@ namespace Project_Сonfigurator.Services
                 SignalingUserControlViewModel Data => RefreshSignaling(Data),
                 UTSUserControlViewModel Data => RefreshUTS(Data),
                 UstRealUserControlViewModel Data => RefreshUstReal(Data),
+                UstCommonUserControlViewModel Data => RefreshUstReal(Data),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается")
             };
         }
@@ -1659,6 +1683,49 @@ namespace Project_Сonfigurator.Services
                         Value = "",
                         Unit = "",
                     }
+                };
+                Data.Setpoints.Add(param);
+            }
+            Data.SelectedParam = Data.Setpoints[0];
+            Data.GeneratedData();
+            return true;
+            #endregion
+        }
+        #endregion
+
+        #region Обновляем данные общих уставок
+        /// <summary>
+        /// Обновляем данные общих уставок
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshUstReal(UstCommonUserControlViewModel Data)
+        {
+            Data.Setpoints = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.SetpointsCommon.Count > 0)
+            {
+                foreach (var signal in AppData.SetpointsCommon)
+                    Data.Setpoints.Add(signal);
+
+                Data.SelectedParam = Data.Setpoints[0];
+                Data.GeneratedData();
+                return true;
+            }
+            #endregion
+
+            #region Генерируем регистры формируемые
+            for (int i = 0; i < 400; i++)
+            {
+                var param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    Id = $"H{(1 + i):000}",
+                    Description = "",
+                    VarName = $"SP_TM_COMMON[{i + 1}]",
+                    Address = $"{1000 + i}",
+                    Value = "",
+                    Unit = "",
                 };
                 Data.Setpoints.Add(param);
             }

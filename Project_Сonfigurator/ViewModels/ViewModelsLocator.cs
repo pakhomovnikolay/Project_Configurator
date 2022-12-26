@@ -29,6 +29,8 @@ namespace Project_Сonfigurator.ViewModels
         public SignalingUserControlViewModel SignalingUserControlViewModel => App.Services.GetRequiredService<SignalingUserControlViewModel>();
         public UTSUserControlViewModel UTSUserControlViewModel => App.Services.GetRequiredService<UTSUserControlViewModel>();
         public UstRealUserControlViewModel UstRealUserControlViewModel => App.Services.GetRequiredService<UstRealUserControlViewModel>();
+        public UstCommonUserControlViewModel UstCommonUserControlViewModel => App.Services.GetRequiredService<UstCommonUserControlViewModel>();
+        
 
     }
 }

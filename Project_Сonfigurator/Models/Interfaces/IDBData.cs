@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using System.Collections.Generic;
 
@@ -124,6 +125,27 @@ namespace Project_Сonfigurator.Models.Interfaces
         /// Сигнализация и общая диагностики
         /// </summary>
         List<BaseSignaling> Signaling { get; set; }
+        #endregion
+
+        #region Табло и сирены
+        /// <summary>
+        /// Табло и сирены
+        /// </summary>
+        List<BaseUTS> UTS { get; set; }
+        #endregion
+
+        #region Уставки Real
+        /// <summary>
+        /// Уставки Real
+        /// </summary>
+        List<BaseSetpointsReal> SetpointsReal { get; set; }
+        #endregion
+
+        #region Уставки общие
+        /// <summary>
+        /// Уставки общие
+        /// </summary>
+        List<BaseSetpoints> SetpointsCommon { get; set; }
         #endregion
     }
 }

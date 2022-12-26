@@ -7,12 +7,12 @@ using System.Windows.Data;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UstRealUserControlViewModel : ViewModel
+    public class UstCommonUserControlViewModel : ViewModel
     {
         #region Конструктор
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public UstRealUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public UstCommonUserControlViewModel(ISignalService signalService, IDBService dBService)
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -24,7 +24,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Параметры
 
         #region Заголовок вкладки
-        private string _Title = "Уставки Real";
+        private string _Title = "Врем. уставки общие";
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
@@ -36,7 +36,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Описание вкладки
-        private string _Description = "Уставки типа Real";
+        private string _Description = " Временные уставки общие";
         /// <summary>
         /// Описание вкладки
         /// </summary>
@@ -90,32 +90,32 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Список уставок типа Real
-        private List<BaseSetpointsReal> _Setpoints = new();
+        #region Список уставок
+        private List<BaseSetpoints> _Setpoints = new();
         /// <summary>
-        /// Список уставок типа Real
+        /// Список уставок
         /// </summary>
-        public List<BaseSetpointsReal> Setpoints
+        public List<BaseSetpoints> Setpoints
         {
             get => _Setpoints;
             set => Set(ref _Setpoints, value);
         }
         #endregion
 
-        #region Коллекция уставок типа Real
+        #region Коллекция уставок
         /// <summary>
-        /// Коллекция уставок типа Real
+        /// Коллекция уставок
         /// </summary>
         private readonly CollectionViewSource _DataView = new();
         public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранная уставка
-        private BaseSetpointsReal _SelectedParam = new();
+        private BaseSetpoints _SelectedParam = new();
         /// <summary>
         /// Выбранная уставка
         /// </summary>
-        public BaseSetpointsReal SelectedParam
+        public BaseSetpoints SelectedParam
         {
             get => _SelectedParam;
             set => Set(ref _SelectedParam, value);
