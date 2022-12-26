@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - диалоговое окно
+    /// </summary>
     public class WindowDialogCloseCommand : Command
     {
         public bool? DialogResult { get; set; }

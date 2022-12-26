@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - закрыть окно
+    /// </summary>
     public class CmdCloseWindow : Command
     {
         protected override bool CanExecute(object parameter) =>

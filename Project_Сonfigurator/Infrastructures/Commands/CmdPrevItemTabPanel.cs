@@ -3,6 +3,9 @@ using System.Windows.Controls;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - сместь ScrollViewer в лево
+    /// </summary>
     public class CmdPrevItemTabPanel : Command
     {
         protected override bool CanExecute(object p) => p is ScrollViewer;

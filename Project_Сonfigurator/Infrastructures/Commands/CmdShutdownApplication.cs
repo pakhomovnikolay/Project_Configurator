@@ -4,6 +4,9 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - закрыть приложение
+    /// </summary>
     public class CmdShutdownApplication : Command
     {
         protected override bool CanExecute(object parameter) =>

@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - свернуть окно
+    /// </summary>
     public class CmdHideWindow : Command
     {
         protected override bool CanExecute(object parameter) =>

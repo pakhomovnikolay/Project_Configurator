@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
 {
+    /// <summary>
+    /// Команда - изменить состояние окна
+    /// </summary>
     public class CmdChangeStateWindow : Command
     {
         protected override bool CanExecute(object parameter) =>
