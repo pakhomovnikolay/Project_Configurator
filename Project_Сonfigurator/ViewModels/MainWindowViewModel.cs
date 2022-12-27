@@ -353,7 +353,7 @@ namespace Project_Сonfigurator.ViewModels
             {
                 Owner = Application.Current.MainWindow
             };
-            window.ShowDialog();
+            window.Show();
         }
         #endregion
 
