@@ -30,7 +30,7 @@ namespace Project_Сonfigurator.ViewModels
         public UTSUserControlViewModel UTSUserControlViewModel => App.Services.GetRequiredService<UTSUserControlViewModel>();
         public UstRealUserControlViewModel UstRealUserControlViewModel => App.Services.GetRequiredService<UstRealUserControlViewModel>();
         public UstCommonUserControlViewModel UstCommonUserControlViewModel => App.Services.GetRequiredService<UstCommonUserControlViewModel>();
-        
+        public HandMapUserControlViewModel HandMapUserControlViewModel => App.Services.GetRequiredService<HandMapUserControlViewModel>();
 
     }
 }

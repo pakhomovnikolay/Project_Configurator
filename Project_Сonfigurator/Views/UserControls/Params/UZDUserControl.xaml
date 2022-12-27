@@ -113,11 +113,11 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0,5,0,0">
-                                <TabPanel IsItemsHost="True" Margin="10,5,10,3" Grid.Column="1"/>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0">
+                                <TabPanel IsItemsHost="True" Margin="5,5,0,0" Grid.Column="1"/>
 
                             </ScrollViewer>
-                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="1"/>
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="0,5,0,0" ContentSource="SelectedContent" Grid.Row="1"/>
                         </Grid>
                     </ControlTemplate>
                 </TabControl.Template>
@@ -179,38 +179,203 @@
                             </Border>
                             <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="11" BorderThickness="1,1,2,2" BorderBrush="Black" Background="White">
                                 <DockPanel>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slDist"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Задвижка с ключем&#x0a;Дистанция/По месту"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slDist"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="sl2Stop"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Задвижка с раздельными кнопками&#x0a;СТОП ОТКРЫТИЯ и СТОП ЗАКРЫТИЯ"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="sl2Stop"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slBUR"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Задвижка с электронным&#x0a;блоком управления"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slBUR"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slCOz"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Наличие контроля&#x0a;цепей открытия"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slCOz"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slCZz"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Наличие контроля&#x0a;цепей закрытия"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slCZz"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slYesEC"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Отдельный сигнал наличия&#x0a;напряжения на задвижке"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slYesEC"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="80">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="slCheckState"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="80"
+                                            ToolTip="Замораживать обработку&#x0a;при подозрительном&#x0a;изменении состояния"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="slCheckState"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="70">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="RS_OFF"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="70"
+                                            ToolTip="Интерфейсный канал&#x0a;связи не используется"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="RS_OFF"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Тип ЗД"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="
+1 - Агрегатные&#x0a;
+2 - СОУ (СОУ ССВД)&#x0a;
+3 - ССВД&#x0a;
+4 - Пожарная&#x0a;
+5 - Пожарная (бак дозатор)&#x0a;
+6 - Пожарная (общая для всех зон)&#x0a;
+7 - клапан без концевиков&#x0a;
+8 - клапан с концевиком (КВО)&#x0a;
+9 - клапан регулирующий (с концевиками)&#x0a;
+10 - клапан регулирующий (с концевиками и 2 DO без удерживания&#x0a;DO при сработки концевиков)&#x0a;"
+                                            >
+                                        
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Тип ЗД"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Номер ПЗ"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Номер пож. зоны"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Номер ПЗ"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,0,0" BorderBrush="Black" Background="White" Width="75">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Номер БД"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="75"
+                                            ToolTip="Номер бака-дозатора"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Номер БД"/>
+                                        </Grid>
                                     </Border>
                                 </DockPanel>
                             </Border>
@@ -229,7 +394,7 @@
                                     </Border>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" Width="100">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding IndexEC, UpdateSourceTrigger=PropertyChanged}"/>
+                                                 Text="{Binding IndexEC, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" Width="100">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
@@ -241,7 +406,7 @@
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="75">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding Dist, UpdateSourceTrigger=PropertyChanged}"/>
+                                                 Text="{Binding Dist, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="75">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
@@ -605,10 +770,22 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="80">
                                         <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
+                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White" ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="10"/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <Border Grid.Row="0">
+                                                        <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                        <Border.LayoutTransform>
+                                                            <RotateTransform Angle="90"/>
+                                                        </Border.LayoutTransform>
+                                                    </Border>
+                                                    <TextBlock Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
+                                                </Grid>
                                             </Border>
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
@@ -623,7 +800,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="80">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -646,7 +823,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1175">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -774,7 +951,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="230">
+                                    <DataGridTemplateColumn Width="190">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -797,7 +974,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1175">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>

@@ -23,14 +23,25 @@
 
         <!--Верхняя панель-->
         <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  BorderThickness="1,1,1,1" Background="#FFCCFFCC" BorderBrush="Black">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center"
-                       FontWeight="Bold" FontSize="16"
-                       Text="{Binding Description}"/>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Content="Импорт диагностики" Margin="2" FontWeight="Bold"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdImportServiceSignal}"/>
+                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
+                           VerticalAlignment="Center" HorizontalAlignment="Center"
+                           FontWeight="Bold" FontSize="16"
+                           Text="{Binding Description}"/>
+            </Grid>
+            
         </Border>
 
         <!--Данные-->
         <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black"
-                Margin="5,5,0,0" Background="AntiqueWhite" Width="1715" HorizontalAlignment="Left">
+                Margin="0,1,0,0" Background="AntiqueWhite" Width="1715" HorizontalAlignment="Left">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
@@ -57,7 +68,7 @@
             </Grid>
         </Border>
         <DataGrid Grid.Row="2" Grid.Column="1"
-                  Margin="5,5,0,0"
+                  Margin="0,1,0,0"
                   BorderThickness="1"
                   BorderBrush="Black"
                   AutoGenerateColumns="False"
@@ -234,8 +245,22 @@
 
                 <DataGridTemplateColumn Width="80">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала"/>
+                        <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White"
+                                ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}"
+                                >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0">
+                                    <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                    <Border.LayoutTransform>
+                                        <RotateTransform Angle="90"/>
+                                    </Border.LayoutTransform>
+                                </Border>
+                                <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,-10,0,5"/>
+                            </Grid>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
@@ -351,17 +376,77 @@
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Цвет&#x0a;сообщения" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Border x:Name="border" BorderBrush="Black">
+                                <Border.BorderThickness>
+                                    <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
+                                </Border.BorderThickness>
+                                <StackPanel>
+                                    <ToggleButton x:Name="ListModule"
+                                                  BorderThickness="0"
+                                                  VerticalContentAlignment="Center"
+                                                  HorizontalContentAlignment="Stretch"
+                                                  Background="#FFE5E5E5"
+                                                  BorderBrush="#FFACACAC"
+                                                  Height="{Binding ElementName=border, Path=ActualHeight}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </ToggleButton>
+                                    <Popup AllowsTransparency="False"
+                                           StaysOpen="False"
+                                           PlacementTarget="{Binding ElementName=ListModule}"
+                                           IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                        <ListView MaxHeight="250"
+                                                  ItemsSource="{Binding ColorList, Source={StaticResource Lists}}"
+                                                  SelectedItem="{Binding Color, UpdateSourceTrigger=PropertyChanged}"
+                                                  >
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="20"/>
+                                                            <ColumnDefinition/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Rectangle Margin="0,0,5,0" Stroke="Black">
+                                                            <Rectangle.Fill>
+                                                                <Binding Path="." Converter="{StaticResource BrushConverter}"/>
+                                                            </Rectangle.Fill>
+                                                        </Rectangle>
+                                                        <TextBlock Grid.Column="1" Text="{Binding}"/>
+                                                    </Grid>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Popup>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="0" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Background="Transparent">
+                            <Border BorderBrush="Black">
+                                <Border.Background>
+                                    <Binding Path="Color" Converter="{StaticResource BrushConverter}"/>
+                                </Border.Background>
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Color}"/>
+                                <TextBox TextAlignment="Center" VerticalAlignment="Center"
+                                         BorderThickness="0" Background="Transparent"
+                                         Text="{Binding Color,UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.InputBindings>
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                              Command="{Binding DataContext.CmdSelecteColor,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                              />
+                                    </TextBox.InputBindings>
+                                </TextBox>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -373,6 +458,40 @@
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер шкафа,&#x0a;если это&#x0a;служебный сигнал"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Border x:Name="border" BorderBrush="Black">
+                                <Border.BorderThickness>
+                                    <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
+                                </Border.BorderThickness>
+                                <StackPanel>
+                                    <ToggleButton x:Name="ListModule"
+                                                  BorderThickness="0"
+                                                  VerticalContentAlignment="Center"
+                                                  HorizontalContentAlignment="Stretch"
+                                                  Background="#FFE5E5E5"
+                                                  BorderBrush="#FFACACAC"
+                                                  Height="{Binding ElementName=border, Path=ActualHeight}">
+                                        <TextBlock HorizontalAlignment="Center"
+                                                   TextAlignment="Center"
+                                                   Text="{Binding IndexUSO, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </ToggleButton>
+                                    <Popup AllowsTransparency="False"
+                                           StaysOpen="False"
+                                           PlacementTarget="{Binding ElementName=ListModule}"
+                                           IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                        <ListView MaxHeight="250"
+                                                  ItemsSource="{Binding USOList, Source={StaticResource Lists}}"
+                                                  SelectedIndex="{Binding IndexUSO, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                                  >
+                                        </ListView>
+                                    </Popup>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                    
+                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
@@ -382,7 +501,29 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding IndexUSO}"/>
+                                <TextBox TextAlignment="Center" VerticalAlignment="Center"
+                                         BorderThickness="0" Background="Transparent"
+                                         Text="{Binding IndexUSO}">
+                                    <TextBox.InputBindings>
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                              Command="{Binding DataContext.CmdSelecteUSO,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                              />
+                                    </TextBox.InputBindings>
+                                </TextBox>
+                                
+                                
+                                
+                                <!--<TextBox TextAlignment="Center" VerticalAlignment="Center" Text="{Binding IndexUSO}">
+                                    <TextBox.InputBindings>
+                                        <MouseBinding Gesture="LeftDoubleClick"
+                                                              Command="{Binding DataContext.CmdSelecteUSO,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                              />
+                                    </TextBox.InputBindings>
+                                </TextBox>-->
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
@@ -390,8 +531,22 @@
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,2,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Настройка&#x0a;сигнализации"/>
+                        <Border BorderThickness="0,1,2,2" BorderBrush="Black" Background="White"
+                                ToolTip="{Binding SettingsWarning, Source={StaticResource ToolTipParam}}"
+                                >
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0">
+                                    <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                    <Border.LayoutTransform>
+                                        <RotateTransform Angle="90"/>
+                                    </Border.LayoutTransform>
+                                </Border>
+                                <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Настройка&#x0a;сигнализации" Margin="0,-10,0,5"/>
+                            </Grid>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>
@@ -414,4 +569,5 @@
         </DataGrid>
 
     </Grid>
+    
 </UserControl>

@@ -86,7 +86,7 @@ namespace Project_Сonfigurator.Infrastructures.ToolTips
             typeof(string),
             typeof(ToolTipParam),
             new PropertyMetadata(
-                "Указываем номер агрегата к которому\nотносится сигнал вибрации"));
+                "Указываем номер агрегата к которому\nотносится сигнал вибрации.\n0 - не вибрация"));
         #endregion
 
         #region Всплывающая подсказка "Короткое описание параметра для ВУ"
@@ -472,10 +472,50 @@ namespace Project_Сonfigurator.Infrastructures.ToolTips
             typeof(string),
             typeof(ToolTipParam),
             new PropertyMetadata(
-                "0 - отключено\n" +
+                "0(пусто) - Отключено\n" +
                 "1 - Сообщение и звук\n" +
                 "2 - Сообщение"));
         #endregion
 
+        #region Всплывающая подсказка "Флаг табло: АПТ Отключено"
+        /// <summary>
+        /// Всплывающая подсказка "Флаг табло: АПТ Отключено"
+        /// </summary>
+        public string UTS_AptOff
+        {
+            get => (string)GetValue(UTS_AptOffProperty);
+            set => SetValue(UTS_AptOffProperty, value);
+        }
+
+        public static readonly DependencyProperty UTS_AptOffProperty = DependencyProperty.Register(
+            nameof(UTS_AptOff),
+            typeof(string),
+            typeof(ToolTipParam),
+            new PropertyMetadata(
+                "Флаг табло:\n" +
+                "АПТ Отключено\n"));
+        #endregion
+
+        #region Всплывающая подсказка "Тип цепей включения"
+        /// <summary>
+        /// Всплывающая подсказка "Тип цепей включения"
+        /// </summary>
+        public string UTS_CBType
+        {
+            get => (string)GetValue(UTS_CBTypeProperty);
+            set => SetValue(UTS_CBTypeProperty, value);
+        }
+
+        public static readonly DependencyProperty UTS_CBTypeProperty = DependencyProperty.Register(
+            nameof(UTS_CBType),
+            typeof(string),
+            typeof(ToolTipParam),
+            new PropertyMetadata(
+                "Проверка исправности цепей включения\n" +
+                "0 - Нет целостности\n" +
+                "1 - Есть целостнотсь(диагностика КЗ и обрывы)\n" +
+                "2 - есть целоснтность(нет диагностики КЗ и обрыва)\n"
+                ));
+        #endregion
     }
 }

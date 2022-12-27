@@ -148,5 +148,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public List<BaseSetpoints> SetpointsCommon { get; set; } = new();
         #endregion
+
+        #region Карта ручного ввода
+        /// <summary>
+        /// Карта ручного ввода
+        /// </summary>
+        public List<BaseParam> HandMap { get; set; } = new();
+        #endregion
     }
 }

@@ -475,6 +475,11 @@
                 <pages_param:UstCommonUserControl DataContext="{Binding UstCommonViewModel}"/>
             </TabItem>
 
+            <TabItem Header="{Binding HandMapUserModel.Title}"
+                     IsSelected="{Binding HandMapUserModel.IsSelected}">
+                <pages_param:HandMapUserControl DataContext="{Binding HandMapUserModel}"/>
+            </TabItem>
+
         </TabControl>
 
     </Grid>

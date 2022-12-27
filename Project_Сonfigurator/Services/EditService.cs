@@ -48,9 +48,9 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
-        #region Открыть окно редактирования данных вендора
+        #region Открыть окно редактирования узлов подключения к БД
         /// <summary>
-        /// Открыть окно редактирования данных вендора
+        /// Открыть окно редактирования узлов подключения к БД
         /// </summary>
         /// <returns></returns>
         public static bool EditServer(SettingServerDB DB, string title)

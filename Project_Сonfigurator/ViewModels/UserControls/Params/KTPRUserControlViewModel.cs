@@ -194,6 +194,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Выбрать состояние сработки защиты
+        private ICommand _CmdSelecteStateStation;
+        /// <summary>
+        /// Команда - Выбрать состояние сработки защиты
+        /// </summary>
+        public ICommand CmdSelecteStateStation => _CmdSelecteStateStation ??= new RelayCommand(OnCmdSelecteStateStationExecuted, CanCmdSelecteStateStationExecute);
+        private bool CanCmdSelecteStateStationExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteStateStationExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
+        }
+        #endregion
+
         #endregion
 
         #region Функции

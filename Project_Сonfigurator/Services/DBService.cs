@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -670,6 +671,29 @@ namespace Project_Сonfigurator.Services
                                         _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "SETPOINTS_COMMON", Field, FieldValue), _MySqlConnection);
                                         _MySqlCommand.ExecuteNonQuery();
                                         break;
+                                    #endregion
+
+                                    #region Карта ручн ввода
+                                    case HandMapUserControlViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`DESCRIPTION`", "`VAR_NAME`", "`BIT`"
+                                        };
+
+                                        foreach (var _Param in AppData.HandMap)
+                                        {
+                                            var iSh = int.TryParse(_Param.Index, out int _Index);
+                                            if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                            var _FieldValue =
+                                                $"('{_Param.Description}', '{_Param.VarName}', '{_Index % 16}'),";
+                                            FieldValue.Add(_FieldValue);
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "HAND_MAP", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
                                         #endregion
 
                                 }
@@ -732,6 +756,7 @@ namespace Project_Сonfigurator.Services
                         UTSUserControlViewModel Data => AppData.UTS = Data.UTS is null ? new() : Data.UTS,
                         UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
                         UstCommonUserControlViewModel Data => AppData.SetpointsCommon = Data.Setpoints is null ? new() : Data.Setpoints,
+                        HandMapUserControlViewModel Data => AppData.HandMap = Data.BaseParams is null ? new() : Data.BaseParams,
                         _ => null
                     };
                 }
@@ -855,6 +880,7 @@ namespace Project_Сonfigurator.Services
                 UTSUserControlViewModel Data => RefreshUTS(Data),
                 UstRealUserControlViewModel Data => RefreshUstReal(Data),
                 UstCommonUserControlViewModel Data => RefreshUstReal(Data),
+                HandMapUserControlViewModel Data => RefreshHandMap(Data),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается")
             };
         }
@@ -875,8 +901,9 @@ namespace Project_Сonfigurator.Services
                 foreach (var _USO in AppData.USOList)
                     Data.USOList.Add(_USO);
 
-                Data.SelectedUSO = Data.USOList[^1];
-                Data.SelectedRack = Data.USOList[^1].Racks[0];
+                Data.SelectedUSO = Data.USOList[0];
+                if (Data.USOList[0].Racks.Count > 0)
+                    Data.SelectedRack = Data.USOList[0].Racks[0];
             }
             #endregion
 
@@ -1550,7 +1577,7 @@ namespace Project_Сonfigurator.Services
                         },
                         Color = "",
                         IndexUSO = "",
-                        TypeWarning = "",
+                        TypeWarning = "1",
                         VarNameVU = $"LIST5[{i + 1}]"
                     };
                     Data.Signaling.Add(param);
@@ -1736,6 +1763,50 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
+        #region Обновляем карту ручного ввода
+        /// <summary>
+        /// Обновляем карту ручного ввода
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshHandMap(HandMapUserControlViewModel Data)
+        {
+            Data.BaseParams = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.HandMap.Count > 0)
+            {
+                foreach (var signal in AppData.HandMap)
+                    Data.BaseParams.Add(signal);
+
+                Data.SelectedSignal = Data.BaseParams[0];
+                Data.GeneratedData();
+                return true;
+            }
+            #endregion
+
+            #region Генерируем регистры формируемые
+            for (int i = 0; i < 256; i++)
+            {
+                var iSh = i / 16 + 1;
+                var param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    Id = "",
+                    Description = "",
+                    VarName = $"HAND_MAP[{iSh}]",
+                    Address = "",
+                    Inv = "",
+                    TypeSignal = ""
+                };
+                Data.BaseParams.Add(param);
+            }
+            Data.SelectedSignal = Data.BaseParams[0];
+            Data.GeneratedData();
+            return true;
+            #endregion
+        }
+        #endregion
+
         #endregion
 
         #region Сохранение файла приложения
@@ -1752,6 +1823,9 @@ namespace Project_Сonfigurator.Services
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
                 using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
                 SettingsAppSerializer.Serialize(xmlWriter, AppData);
+                var UserDialog = new UserDialogService();
+                UserDialog.SendMessage("Управление приложением", "Документ успешно сохранен.",
+                    MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
                 return true;
             }
             catch (Exception)

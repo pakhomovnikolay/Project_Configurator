@@ -753,6 +753,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Выбрать состояние сработки защиты
+        private ICommand _CmdSelecteStateUMPNA;
+        /// <summary>
+        /// Команда - Выбрать состояние сработки защиты
+        /// </summary>
+        public ICommand CmdSelecteStateUMPNA => _CmdSelecteStateUMPNA ??= new RelayCommand(OnCmdSelecteStateUMPNAExecuted, CanCmdSelecteStateUMPNAExecute);
+        private bool CanCmdSelecteStateUMPNAExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteStateUMPNAExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
+        }
+        #endregion
+
         #endregion
 
         #region Функции

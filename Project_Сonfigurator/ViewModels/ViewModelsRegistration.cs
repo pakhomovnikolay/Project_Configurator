@@ -31,6 +31,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UTSUserControlViewModel>()
             .AddSingleton<UstRealUserControlViewModel>()
             .AddSingleton<UstCommonUserControlViewModel>()
+            .AddSingleton<HandMapUserControlViewModel>()
             ;
     }
 }

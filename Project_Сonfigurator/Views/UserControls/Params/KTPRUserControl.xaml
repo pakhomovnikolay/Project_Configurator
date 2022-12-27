@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="4,0"
+        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0"
                 BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC"
                 >
             <Grid>
@@ -47,11 +47,11 @@
                             <RowDefinition Height="auto"/>
                             <RowDefinition />
                         </Grid.RowDefinitions>
-                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0,5,0,0">
-                            <TabPanel IsItemsHost="True" Margin="10,5,10,3" Grid.Column="1"/>
+                        <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0">
+                            <TabPanel IsItemsHost="True" Margin="2,5,0,0" Grid.Column="1"/>
 
                         </ScrollViewer>
-                        <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="1"/>
+                        <ContentPresenter x:Name="PART_SelectedContentHost" Margin="0" ContentSource="SelectedContent" Grid.Row="1"/>
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
@@ -201,8 +201,22 @@
 
                         <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}"
+                                        >
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -241,16 +255,66 @@
 
                         <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Состояние&#x0a;станции" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding StateStation, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Состояние&#x0a;станции" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="border" BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <StackPanel>
+                                            <ToggleButton x:Name="ListModule"
+                                                                  BorderThickness="0"
+                                                                  VerticalContentAlignment="Center"
+                                                                  HorizontalContentAlignment="Stretch"
+                                                                  Background="#FFE5E5E5"
+                                                                  BorderBrush="#FFACACAC"
+                                                                  Height="{Binding ElementName=border, Path=ActualHeight}">
+                                                <TextBlock HorizontalAlignment="Center"
+                                                           TextAlignment="Center"
+                                                           Text="{Binding StateStation}">
+                                                </TextBlock>
+                                            </ToggleButton>
+                                            <Popup AllowsTransparency="False"
+                                                   StaysOpen="False"
+                                                   PlacementTarget="{Binding ElementName=ListModule}"
+                                                   IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                                <ListBox MaxHeight="250"
+                                                         ItemsSource="{Binding StateStation, Source={StaticResource Lists}}"
+                                                         SelectedIndex="{Binding StateStation, UpdateSourceTrigger=PropertyChanged, Mode=OneWayToSource}"
+                                                         />
+                                            </Popup>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
                                         <TextBox BorderThickness="0" TextAlignment="Center"
-                                         VerticalContentAlignment="Center" Background="Transparent"
-                                         Text="{Binding StateStation}"/>
+                                                 VerticalContentAlignment="Center" Background="Transparent"
+                                                 Text="{Binding StateStation}">
+                                            <TextBox.InputBindings>
+                                                <MouseBinding Gesture="LeftDoubleClick"
+                                                              Command="{Binding DataContext.CmdSelecteStateStation,
+                                                    RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                              CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                                              />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -258,8 +322,21 @@
 
                         <DataGridTemplateColumn Width="120">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты к группе" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding Shoulder, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты к группе" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -275,8 +352,21 @@
 
                         <DataGridTemplateColumn Width="120">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты&#x0a;к подгруппе" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding SubShoulder, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Принадлежность&#x0a;защиты&#x0a;к подгруппе" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -292,8 +382,21 @@
 
                         <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Автодеблок" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding AutoDeblock, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Автодеблок" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -326,8 +429,21 @@
 
                         <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;станции" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding StopTypeStation, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;станции" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -343,8 +459,21 @@
 
                         <DataGridTemplateColumn Width="80">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;МПНА" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding StopTypeNA, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Способ&#x0a;остановки&#x0a;МПНА" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>
@@ -360,8 +489,21 @@
 
                         <DataGridTemplateColumn Width="60">
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;защиты" Margin="0,0,0,5"/>
+                                <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White"
+                                        ToolTip="{Binding TypeProt, Source={StaticResource ToolTipParam}}">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="10"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0">
+                                            <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                            <Border.LayoutTransform>
+                                                <RotateTransform Angle="90"/>
+                                            </Border.LayoutTransform>
+                                        </Border>
+                                        <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;защиты" Margin="0,-10,0,5"/>
+                                    </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
                             <DataGridTemplateColumn.CellTemplate>

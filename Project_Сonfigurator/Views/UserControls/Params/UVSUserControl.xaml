@@ -111,11 +111,11 @@
                                 <RowDefinition Height="auto"/>
                                 <RowDefinition />
                             </Grid.RowDefinitions>
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0,5,0,0">
-                                <TabPanel IsItemsHost="True" Margin="10,5,10,3" Grid.Column="1"/>
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0">
+                                <TabPanel IsItemsHost="True" Margin="5,5,0,0" Grid.Column="1"/>
 
                             </ScrollViewer>
-                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="1"/>
+                            <ContentPresenter x:Name="PART_SelectedContentHost" Margin="0,5,0,0" ContentSource="SelectedContent" Grid.Row="1"/>
                         </Grid>
                     </ControlTemplate>
                 </TabControl.Template>
@@ -176,20 +176,99 @@
                             </Border>
                             <Border Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="5" BorderThickness="1,1,2,2" BorderBrush="Black" Background="White">
                                 <DockPanel>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Наличие&#x0a;резервного&#x0a;насоса"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90"
+                                            ToolTip="Возможность установки резерва в группе"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Наличие&#x0a;резервного&#x0a;насоса"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Тип датчика&#x0a;давления"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90"
+                                            ToolTip="
+0 - Без датчика давления&#x0a;
+1 - Дискретный датчик давления&#x0a;
+2 - Аналоговый датчик давления"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Тип датчика&#x0a;давления"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Наличие&#x0a;цепей&#x0a;включения"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90"
+                                            ToolTip="Флаг наличия контроля цепей включения МП"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Наличие&#x0a;цепей&#x0a;включения"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Одно&#x0a;давление&#x0a;на группу"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90"
+                                            ToolTip="Флаг использовать контроль&#x0a;давления, один датчик на группу"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Одно&#x0a;давление&#x0a;на группу"/>
+                                        </Grid>
                                     </Border>
-                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Margin="5,0" Text="Тип группы&#x0a;вспомсистем"/>
+                                    <Border BorderThickness="0,0,1,0" BorderBrush="Black" Background="White" Width="90"
+                                            ToolTip="
+1 - Централизованная МС&#x0a;
+2 - Индивидуальная МС&#x0a;
+3 - НОУ (НОУ ССВД)&#x0a;
+4 - Приточные вентиляторы&#x0a;
+5 - Крышные вентиляторы&#x0a;
+6 - Пожарные насос"
+                                            >
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="10"/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
+                                            <Border Grid.Row="0">
+                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                <Border.LayoutTransform>
+                                                    <RotateTransform Angle="90"/>
+                                                </Border.LayoutTransform>
+                                            </Border>
+                                            <TextBlock Grid.Row="1" TextAlignment="Center" VerticalAlignment="Center" Margin="0,-10,0,0" Text="Тип группы&#x0a;вспомсистем"/>
+                                        </Grid>
                                     </Border>
                                 </DockPanel>
                             </Border>
@@ -558,10 +637,22 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="80">
                                         <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
+                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White" ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="10"/>
+                                                        <RowDefinition/>
+                                                    </Grid.RowDefinitions>
+                                                    <Border Grid.Row="0">
+                                                        <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                                        <Border.LayoutTransform>
+                                                            <RotateTransform Angle="90"/>
+                                                        </Border.LayoutTransform>
+                                                    </Border>
+                                                    <TextBlock Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
+                                                </Grid>
                                             </Border>
                                         </DataGridTemplateColumn.Header>
                                         <DataGridTemplateColumn.CellTemplate>
@@ -576,7 +667,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="100">
+                                    <DataGridTemplateColumn Width="80">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -599,7 +690,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1175">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>
@@ -727,7 +818,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="230">
+                                    <DataGridTemplateColumn Width="190">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение" Margin="0,0,0,5"/>
@@ -750,7 +841,7 @@
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
 
-                                    <DataGridTemplateColumn Width="1135">
+                                    <DataGridTemplateColumn Width="1175">
                                         <DataGridTemplateColumn.Header>
                                             <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала" Margin="0,0,0,5"/>

@@ -285,6 +285,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
+        #region Команда - Выбрать МПНА
+        private ICommand _CmdSelecteUMPNA;
+        /// <summary>
+        /// Команда - Выбрать МПНА
+        /// </summary>
+        public ICommand CmdSelecteUMPNA => _CmdSelecteUMPNA ??= new RelayCommand(OnCmdSelecteUMPNAExecuted, CanCmdSelecteUMPNAExecute);
+        private bool CanCmdSelecteUMPNAExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteUMPNAExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
+        }
+        #endregion
+
         #endregion
 
         #region Функции

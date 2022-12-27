@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -16,12 +17,22 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
     public class SignalingUserControlViewModel : ViewModel
     {
         #region Конструктор
+        public LayotRackUserControlViewModel LayotRackViewModel { get; }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public SignalingUserControlViewModel(ISignalService signalService, IDBService dBService)
+        private readonly IUserDialogService UserDialog;
+        public SignalingUserControlViewModel(
+            ISignalService signalService,
+            IDBService dBService,
+            IUserDialogService userDialog,
+            LayotRackUserControlViewModel layotRackViewModel
+            )
         {
             _SignalService = signalService;
             _DBService = dBService;
+            UserDialog = userDialog;
+            LayotRackViewModel = layotRackViewModel;
 
             _DataView.Filter += OnSignalsFiltered;
             _DBService.RefreshDataViewModel(this, false);
@@ -90,6 +101,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
+                    if (SelectedParam is null) return;
                     _SignalService.RedefineParam(SelectedParam.Param, _IsSelected, Title);
                     DoSelection = _SignalService.DoSelection;
                     if (_IsSelected)
@@ -220,6 +232,182 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                      where _TabItem.Header.ToString() == NameListSelected
                                      select _TabItem)
                 App.FucusedTabControl.SelectedItem = _TabItem;
+        }
+        #endregion
+
+        #region Команда - Выбрать цвет сообщения
+        private ICommand _CmdSelecteColor;
+        /// <summary>
+        /// Команда - Выбрать цвет сообщения
+        /// </summary>
+        public ICommand CmdSelecteColor => _CmdSelecteColor ??= new RelayCommand(OnCmdSelecteColorExecuted, CanCmdSelecteColorExecute);
+        private bool CanCmdSelecteColorExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteColorExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
+        }
+        #endregion
+
+        #region Команда - Выбрать УСО
+        private ICommand _CmdSelecteUSO;
+        /// <summary>
+        /// Команда - Выбрать УСО
+        /// </summary>
+        public ICommand CmdSelecteUSO => _CmdSelecteUSO ??= new RelayCommand(OnCmdSelecteUSOExecuted, CanCmdSelecteUSOExecute);
+        private bool CanCmdSelecteUSOExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteUSOExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
+        }
+        #endregion
+
+        #region Команда - Выбрать УСО
+        private ICommand _CmdImportServiceSignal;
+        /// <summary>
+        /// Команда - Выбрать УСО
+        /// </summary>
+        public ICommand CmdImportServiceSignal => _CmdImportServiceSignal ??= new RelayCommand(OnCmdImportServiceSignalExecuted, CanCmdImportServiceSignalExecute);
+        private bool CanCmdImportServiceSignalExecute(object p) => LayotRackViewModel is not null;
+
+        private void OnCmdImportServiceSignalExecuted(object p)
+        {
+            if (LayotRackViewModel.USOList is null) return;
+            if (LayotRackViewModel.USOList.Count <= 0) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+
+            #region Генерируем регистры формируемые
+            Signaling = new();
+            for (int i = 0; i < 58; i++)
+            {
+                for (int j = 0; j < 16; j++)
+                {
+                    var param = new BaseSignaling
+                    {
+                        Param = new BaseParam
+                        {
+                            Index = $"{Signaling.Count + 1}",
+                            Id = "",
+                            Description = "",
+                            VarName = $"list5_param[{Signaling.Count + 1}]",
+                            Inv = "",
+                            TypeSignal = "",
+                            Address = ""
+                        },
+                        Color = "",
+                        IndexUSO = "",
+                        TypeWarning = "1",
+                        VarNameVU = $"LIST5[{i + 1}]"
+                    };
+                    Signaling.Add(param);
+                }
+            }
+            #endregion
+
+            #region Переописываем сигналы диагностики
+            var USOList = LayotRackViewModel.USOList;
+            var index = 0;
+            bool flNeedShift;
+            var USONameException = new List<string>();
+            foreach (var _USO in USOList)
+                if (_USO.Racks is null || _USO.Racks.Count <= 0)
+                    USONameException.Add(_USO.Name);
+
+            foreach (var _USO in USOList)
+            {
+                foreach (var _Rack in _USO.Racks)
+                {
+                    flNeedShift = false;
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        foreach (var _Channel in _Module.Channels)
+                        {
+                            if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                var flTmp = false;
+
+                                foreach (var item in USONameException)
+                                {
+                                    if (_Channel.Description.Contains(item, StringComparison.CurrentCultureIgnoreCase))
+                                        flTmp = true;
+
+
+                                }
+                                if (!flTmp)
+                                {
+                                    flNeedShift = true;
+                                    Signaling[index].Param.Id = _Channel.Id;
+                                    Signaling[index].Param.Description = _Channel.Description;
+                                    Signaling[index].IndexUSO = _USO.Index;
+
+                                    Signaling[index].Color = "Красный";
+                                    if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
+                                        Signaling[index].Color = "Желтый";
+
+                                    index++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (flNeedShift)
+                        index += 5;
+                }
+            }
+            #endregion
+
+            #region Ищем имена УСО исключенй
+            if (USONameException is not null && USONameException.Count > 0)
+            {
+                foreach (var item in USONameException)
+                {
+                    foreach (var _USO in USOList)
+                    {
+                        foreach (var _Rack in _USO.Racks)
+                        {
+                            flNeedShift = false;
+                            foreach (var _Module in _Rack.Modules)
+                            {
+                                foreach (var _Channel in _Module.Channels)
+                                {
+
+                                    if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+
+                                        if (_Channel.Description.Contains(item, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            flNeedShift = true;
+                                            Signaling[index].Param.Id = _Channel.Id;
+                                            Signaling[index].Param.Description = _Channel.Description;
+
+                                            Signaling[index].Color = "Красный";
+                                            if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
+                                                Signaling[index].Color = "Желтый";
+
+                                            foreach (var __USO in USOList)
+                                                if (__USO.Name == item)
+                                                    Signaling[index].IndexUSO = __USO.Index;
+                                            index++;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (flNeedShift)
+                                index += 5;
+                        }
+                    }
+                }
+            }
+            #endregion
+
+            GeneratedData();
+
         }
         #endregion
 

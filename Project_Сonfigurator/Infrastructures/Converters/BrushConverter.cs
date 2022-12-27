@@ -11,8 +11,18 @@ namespace Project_Сonfigurator.Infrastructures.Converters
     {
         public object Convert(object v, Type t, object p, CultureInfo c)
         {
-            if (v is not Color brush) return null;
-            return new SolidColorBrush(brush);
+            if (v is not string) return null;
+
+            Brush brush = v switch
+            {
+
+                "Красный" => Brushes.Red,
+                "Желтый" => Brushes.Yellow,
+                "Зеленый" => Brushes.Green,
+                _ => Brushes.Transparent,
+            };
+
+            return brush;
         }
 
         public object ConvertBack(object v, Type t, object p, CultureInfo c)

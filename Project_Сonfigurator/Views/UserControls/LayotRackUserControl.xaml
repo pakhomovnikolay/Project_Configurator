@@ -406,9 +406,7 @@
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <Border BorderThickness="1,2,0,1" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock Background="White" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}">
-
-                                                </TextBlock>
+                                                <TextBlock Background="White" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}"/>
                                             </Border>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

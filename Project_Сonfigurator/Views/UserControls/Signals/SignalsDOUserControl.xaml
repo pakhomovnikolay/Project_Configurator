@@ -44,7 +44,7 @@
         <!--Данные-->
         <Border Grid.Row="1" Grid.Column="1"
                 BorderThickness="1" BorderBrush="Black"
-                Margin="5,5,0,0" Background="AntiqueWhite"
+                Margin="0,1,0,0" Background="AntiqueWhite"
                 Width="1390" HorizontalAlignment="Left">
             <Grid>
 
@@ -73,7 +73,7 @@
             </Grid>
         </Border>
         <DataGrid Grid.Row="2" Grid.Column="1"
-                  Margin="5,5,0,0"
+                  Margin="0,1,0,0"
                   BorderThickness="0"
                   BorderBrush="Black"
                   AutoGenerateColumns="False"
@@ -196,12 +196,24 @@
 
                 <DataGridTemplateColumn Width="25">
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Обл." Margin="0,0,0,5">
-                                <TextBlock.LayoutTransform>
-                                    <RotateTransform Angle="-90"/>
-                                </TextBlock.LayoutTransform>
-                            </TextBlock>
+                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White" ToolTip="{Binding Area, Source={StaticResource ToolTipParam}}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="10"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Border Grid.Row="0">
+                                    <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
+                                    <Border.LayoutTransform>
+                                        <RotateTransform Angle="90"/>
+                                    </Border.LayoutTransform>
+                                </Border>
+                                <TextBlock Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" Text="Обл." Margin="0,0,0,5">
+                                    <TextBlock.LayoutTransform>
+                                        <RotateTransform Angle="-90"/>
+                                    </TextBlock.LayoutTransform>
+                                </TextBlock>
+                            </Grid>
                         </Border>
                     </DataGridTemplateColumn.Header>
                     <DataGridTemplateColumn.CellTemplate>

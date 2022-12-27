@@ -49,7 +49,7 @@ namespace Project_Сonfigurator.ViewModels
         public UTSUserControlViewModel UTSViewModel { get; }
         public UstRealUserControlViewModel UstRealViewModel { get; }
         public UstCommonUserControlViewModel UstCommonViewModel { get; }
-        
+        public HandMapUserControlViewModel HandMapUserModel { get; }
         #endregion
 
         public MainWindowViewModel(
@@ -83,7 +83,8 @@ namespace Project_Сonfigurator.ViewModels
             SignalingUserControlViewModel signalingViewModel,
             UTSUserControlViewModel uTSViewModel,
             UstRealUserControlViewModel ustRealViewModel,
-            UstCommonUserControlViewModel ustCommonViewModel
+            UstCommonUserControlViewModel ustCommonViewModel,
+            HandMapUserControlViewModel handMapUserModel
         #endregion
 
             )
@@ -118,6 +119,7 @@ namespace Project_Сonfigurator.ViewModels
             UTSViewModel = uTSViewModel;
             UstRealViewModel = ustRealViewModel;
             UstCommonViewModel = ustCommonViewModel;
+            HandMapUserModel = handMapUserModel;
             #endregion
 
             #region Задаем имя проекта
@@ -620,7 +622,8 @@ namespace Project_Сonfigurator.ViewModels
                 SignalingViewModel,
                 UTSViewModel,
                 UstRealViewModel,
-                UstCommonViewModel
+                UstCommonViewModel,
+                HandMapUserModel
             };
 
             ViewModelsHeader = new()
@@ -645,7 +648,8 @@ namespace Project_Сonfigurator.ViewModels
                 SignalingViewModel.Title,
                 UTSViewModel.Title,
                 UstRealViewModel.Title,
-                UstCommonViewModel.Title
+                UstCommonViewModel.Title,
+                HandMapUserModel.Title
             };
         }
         #endregion
