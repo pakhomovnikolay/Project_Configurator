@@ -4,8 +4,11 @@ using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,9 +19,9 @@ namespace Project_Сonfigurator.ViewModels
     public class SettingWindowViewModels : ViewModel
     {
         #region Конструктор
-        public ISettingService _SettingService;
-        public IEditService _EditService;
-        public IUserDialogService UserDialog;
+        private ISettingService _SettingService;
+        private IEditService _EditService;
+        private IUserDialogService UserDialog;
 
         public SettingWindowViewModels(ISettingService settingService, IEditService editService, IUserDialogService userDialog)
         {
@@ -182,7 +185,11 @@ namespace Project_Сonfigurator.ViewModels
                 UserDialog.SendMessage(Title, "Ошибка сохранения конфигурации.\nсм. лог", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
+
+            
+
             Application.Current.Shutdown();
+
         }
         #endregion
 
@@ -434,6 +441,40 @@ namespace Project_Сonfigurator.ViewModels
             OnPropertyChanged(nameof(DataViewServersDB));
         }
         #endregion
+
+        #endregion
+
+        #region Функции
+
+        //#region Зашифровать файл настроек
+        //private string ConfigEncrypt()
+        //{
+        //    var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
+        //    var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
+
+        //    _ProccessCancellation = new CancellationTokenSource();
+
+        //    try
+        //    {
+        //        _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
+        //    }
+        //    catch (OperationCanceledException e)
+        //    {
+        //        Debug.WriteLine("Error in EncryptorAsync:\r\n{0}", e);
+        //    }
+        //    finally
+        //    {
+        //        _ProccessCancellation.Dispose();
+        //        _ProccessCancellation = null;
+        //    }
+
+        //    return FileNameEncrypt;
+        //}
+        //#endregion
+
+        //#region Расшифровать файл настроек
+
+        //#endregion
 
         #endregion
     }

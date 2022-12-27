@@ -78,5 +78,14 @@ namespace Project_Сonfigurator.Services.Interfaces
             MessageBoxResult ResultType = MessageBoxResult.OK,
             MessageBoxOptions Options = MessageBoxOptions.DefaultDesktopOnly);
         #endregion
+
+        #region Удалить файл
+        /// <summary>
+        /// Удалить файл
+        /// </summary>
+        /// <param name="SelectedFile"></param>
+        /// <returns></returns>
+        bool DeleteFile(string SelectedFile);
+        #endregion
     }
 }

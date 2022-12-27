@@ -11,6 +11,7 @@ namespace Project_Сonfigurator.Services
             .AddTransient<ILayotRackService, LayotRackService>()
             .AddTransient<IEditService, EditService>()
             .AddTransient<ISUExportRedefineService, SUExportRedefineService>()
+            .AddTransient<IEncryptorService, EncryptorService>()
 
             .AddSingleton<IDBService, DBService>()
             .AddSingleton<ISignalService, SignalService>()

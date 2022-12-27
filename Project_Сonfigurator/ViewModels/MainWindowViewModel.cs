@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -55,7 +56,7 @@ namespace Project_Сonfigurator.ViewModels
         public MainWindowViewModel(
 
         #region Сервисы
-        IUserDialogService userDialog,
+            IUserDialogService userDialog,
             ILogSerivece logSerivece,
             IDBService dDBService,
             ISettingService settingService,
@@ -465,7 +466,7 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            CreateViewModels();
+            //CreateViewModels();
             _DBService.RequestSetData(ViewModels);
         }
         #endregion

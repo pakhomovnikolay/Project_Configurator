@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using Microsoft.Extensions.FileProviders;
+using Microsoft.Win32;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using System;
@@ -197,6 +198,22 @@ namespace Project_Сonfigurator.Services
             MessageBoxImage ImageType = MessageBoxImage.Information,
             MessageBoxResult ResultType = MessageBoxResult.OK,
             MessageBoxOptions Options = MessageBoxOptions.DefaultDesktopOnly) => MessageBox.Show(Message, Title, ButtonType, ImageType, ResultType, Options) == ResultType;
+        #endregion
+
+        #region Удалить файл
+        /// <summary>
+        /// Удалить файл
+        /// </summary>
+        /// <param name="SelectedFile"></param>
+        /// <returns></returns>
+        public bool DeleteFile(string SelectedFile)
+        {
+            if (!File.Exists(SelectedFile))
+                return false;
+
+            File.Delete(SelectedFile);
+            return true;
+        }
         #endregion
     }
 }

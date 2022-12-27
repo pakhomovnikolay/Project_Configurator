@@ -1,8 +1,10 @@
 ﻿using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -10,6 +12,8 @@ namespace Project_Сonfigurator.Services
 {
     public class SettingService : ISettingService
     {
+        private const string __EncryptedFileSuffix = ".etd";
+
         #region Параметры настроек
         /// <summary>
         /// Параметры настроек
@@ -24,14 +28,33 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public bool Save()
         {
+            IEncryptorService _Encryptor = new EncryptorService();
+            IUserDialogService UserDialog = new UserDialogService();
+
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
                 using XmlWriter xmlWriter = XmlWriter.Create(Program.PathConfig + "\\Config.xml", xmlWriterSettings);
 
-                //Config.SelectedPassword = Encryption(Config.SelectedPassword);
                 SettingsAppSerializer.Serialize(xmlWriter, Config);
+                xmlWriter.Close();
+
+                var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
+                var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
+                try
+                {
+                    _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
+                }
+                catch (OperationCanceledException e)
+                {
+                    Debug.WriteLine("Error in EncryptorAsync:\r\n{0}", e);
+                }
+                finally
+                {
+                    UserDialog.DeleteFile(FileNameEncrypt);
+                }
+
                 return true;
             }
             catch (Exception)
@@ -48,6 +71,14 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public SettingApp Load()
         {
+            IEncryptorService _Encryptor = new EncryptorService();
+            IUserDialogService UserDialog = new UserDialogService();
+
+            var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
+            var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
+
+
+            _Encryptor.Decryptor(FileNameEncrypted, FileNameEncrypt, "");
             var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
             try
             {
@@ -58,6 +89,10 @@ namespace Project_Сonfigurator.Services
             catch (Exception)
             {
                 return Config = new();
+            }
+            finally
+            {
+                UserDialog.DeleteFile(FileNameEncrypt);
             }
         }
         #endregion

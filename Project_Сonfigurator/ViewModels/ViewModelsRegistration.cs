@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -32,6 +33,8 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UstRealUserControlViewModel>()
             .AddSingleton<UstCommonUserControlViewModel>()
             .AddSingleton<HandMapUserControlViewModel>()
+
+            .AddSingleton<IViewModel, MainWindowViewModel>()
             ;
     }
 }

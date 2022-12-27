@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
+﻿using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 namespace Project_Сonfigurator.ViewModels.Base
 {
-    public class ViewModel : INotifyPropertyChanged
+    public class ViewModel : INotifyPropertyChanged, IViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

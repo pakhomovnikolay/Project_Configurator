@@ -85,7 +85,7 @@ namespace Project_Сonfigurator.Services
                             {
                                 _MySqlConnection.Open();
 
-                                Query = $"CREATE DATABASE IF NOT EXISTS `{ConnectDB.NameDB}`;";
+                                Query = $"CREATE DATABASE IF NOT EXISTS `{ConnectDB.NameDB}` COLLATE = 'utf8mb4_general_ci';";
                                 _MySqlCommand = new MySqlCommand(Query, _MySqlConnection);
                                 _MySqlCommand.ExecuteNonQuery();
                                 _MySqlConnection.Close();
@@ -133,14 +133,17 @@ namespace Project_Сonfigurator.Services
 
                                         foreach (var _USO in AppData.USOList)
                                         {
+                                            if (string.IsNullOrWhiteSpace(_USO.Name)) continue;
+
                                             foreach (var _Rack in _USO.Racks)
                                             {
+                                                if (string.IsNullOrWhiteSpace(_Rack.Name)) continue;
+
                                                 foreach (var _Module in _Rack.Modules)
                                                 {
                                                     if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
                                                     if (_Module.Channels.Count <= 0)
                                                     {
-
                                                         var _FieldValue =
                                                             $"('{_USO.Name}', '{_Rack.Name}', '{_Module.Type}', '{_Module.Name}', " +
                                                             $"'{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}', '{"-"}'),";

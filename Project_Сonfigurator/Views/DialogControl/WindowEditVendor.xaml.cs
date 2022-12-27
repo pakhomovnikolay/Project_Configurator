@@ -82,7 +82,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdCreateTypeModule(object sender, RoutedEventArgs e)
         {
-
+            
             VendorData.ModuleTypes.Add(new VendorModuleType()
             {
                 Name = $"Новый тип модуля {VendorData.ModuleTypes.Count + 1}",
