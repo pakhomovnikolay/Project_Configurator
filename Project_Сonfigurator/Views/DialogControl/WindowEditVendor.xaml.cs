@@ -54,22 +54,6 @@ namespace Project_Сonfigurator.Views.DialogControl
             new PropertyMetadata(default(VendorModule)));
         #endregion
 
-        #region Данные выбранного модуля
-        private int SelectedIndexVendorModuleType
-        {
-            get => (int)GetValue(SelectedIndexVendorModuleTypeProperty);
-            set => SetValue(SelectedIndexVendorModuleTypeProperty, value);
-        }
-        /// <summary>
-        /// Данные выбранного модуля
-        /// </summary>
-        private static readonly DependencyProperty SelectedIndexVendorModuleTypeProperty = DependencyProperty.Register(
-            nameof(SelectedIndexVendorModuleType),
-            typeof(int),
-            typeof(WindowEditVendor),
-            new PropertyMetadata(default(int)));
-        #endregion
-
         #region Конструктор
         public WindowEditVendor() => InitializeComponent();
         #endregion
@@ -128,7 +112,8 @@ namespace Project_Сonfigurator.Views.DialogControl
         {
             SelectedVendorModuleTypeData.Modules.Add(new VendorModule() { Name = $"Новый модуль {SelectedVendorModuleTypeData.Modules.Count + 1}" });
             SelectedVendorModuleTypeData.SelectedModule = SelectedVendorModuleTypeData.Modules[^1];
-            DataGridModules.Items.Refresh();
+            //DataGridModules.Items.Refresh();
+            DataGridTypeModule.Items.Refresh();
         }
         #endregion
 
@@ -151,7 +136,7 @@ namespace Project_Сonfigurator.Views.DialogControl
                 else
                     SelectedVendorModuleData = SelectedVendorModuleTypeData.Modules[index];
             }
-            DataGridModules.Items.Refresh();
+            DataGridTypeModule.Items.Refresh();
         }
         #endregion
 
