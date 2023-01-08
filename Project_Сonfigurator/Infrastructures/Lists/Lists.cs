@@ -140,7 +140,7 @@ namespace Project_Сonfigurator.Infrastructures.Lists
             {
                 _ColorList = new List<string>()
                 {
-                    "Нет цвета",
+                    "",
                     "Красный",
                     "Желтый",
                     "Зеленый"

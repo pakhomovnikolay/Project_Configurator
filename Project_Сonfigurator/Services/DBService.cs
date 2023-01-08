@@ -6,6 +6,7 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -697,6 +698,36 @@ namespace Project_Сonfigurator.Services
                                         _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "HAND_MAP", Field, FieldValue), _MySqlConnection);
                                         _MySqlCommand.ExecuteNonQuery();
                                         break;
+                                    #endregion
+
+                                    #region Сообщения
+                                    case MessageWindowViewModel:
+
+                                        Field = new()
+                                        {
+                                            "`NAME_TAB`", "`SYSTEM`", "`DESCRIPTION`", "`COLOR`", "`NEED_ACK`", "`PATH_SOUND`",
+                                            "`TYPE_SOUND`", "`NEED_PLAY`", "`HIDE`", "`LEVEL_ACCESS`"
+                                        };
+
+                                        foreach (var _Param in AppData.Messages)
+                                        {
+                                            foreach (var _Message in _Param.Messages)
+                                            {
+                                                if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
+
+                                                var _FieldValue =
+                                                    $"('{_Param.Description}', '{_Param.IndexSystem}', " +
+                                                    $"'{_Message.Description}', '{_Message.Color}', '{_Message.NeedAck}', '{_Message.PathSound}', " +
+                                                    $"'{_Message.TypeSound}', '{_Message.NeedPlay}', '{_Message.Hide}', '{_Message.LevelAccess}'),";
+
+                                                FieldValue.Add(_FieldValue);
+                                            }
+                                        }
+
+                                        if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                        _MySqlCommand = new MySqlCommand(FormingData(_MySqlConnection, "MESSAGES", Field, FieldValue), _MySqlConnection);
+                                        _MySqlCommand.ExecuteNonQuery();
+                                        break;
                                         #endregion
 
                                 }
@@ -760,6 +791,7 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
                         UstCommonUserControlViewModel Data => AppData.SetpointsCommon = Data.Setpoints is null ? new() : Data.Setpoints,
                         HandMapUserControlViewModel Data => AppData.HandMap = Data.BaseParams is null ? new() : Data.BaseParams,
+                        MessageWindowViewModel Data => AppData.Messages = Data.Messages is null ? new() : Data.Messages,
                         _ => null
                     };
                 }
@@ -884,6 +916,8 @@ namespace Project_Сonfigurator.Services
                 UstRealUserControlViewModel Data => RefreshUstReal(Data),
                 UstCommonUserControlViewModel Data => RefreshUstReal(Data),
                 HandMapUserControlViewModel Data => RefreshHandMap(Data),
+                MessageWindowViewModel Data => RefreshMessages(Data),
+
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается")
             };
         }
@@ -1806,6 +1840,32 @@ namespace Project_Сonfigurator.Services
             Data.SelectedSignal = Data.BaseParams[0];
             Data.GeneratedData();
             return true;
+            #endregion
+        }
+        #endregion
+
+        #region Обновляем карту ручного ввода
+        /// <summary>
+        /// Обновляем карту ручного ввода
+        /// </summary>
+        /// <returns></returns>
+        private bool RefreshMessages(MessageWindowViewModel Data)
+        {
+            Data.Messages = new();
+
+            #region При наличии данных генерируем данные
+            if (AppData is not null && AppData.Messages.Count > 0)
+            {
+                foreach (var signal in AppData.Messages)
+                    Data.Messages.Add(signal);
+
+                Data.SelectedMessages = Data.Messages[0];
+                Data.SelectedMessage = Data.SelectedMessages.Messages[0];
+                Data.GeneratedData();
+                return true;
+            }
+
+            return false;
             #endregion
         }
         #endregion

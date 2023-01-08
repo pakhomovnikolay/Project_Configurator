@@ -33,6 +33,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UstRealUserControlViewModel>()
             .AddSingleton<UstCommonUserControlViewModel>()
             .AddSingleton<HandMapUserControlViewModel>()
+            .AddSingleton<MessageWindowViewModel>()
 
             .AddSingleton<IViewModel, MainWindowViewModel>()
             ;

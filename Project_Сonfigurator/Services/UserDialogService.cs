@@ -155,7 +155,7 @@ namespace Project_Сonfigurator.Services
         /// <param name="DefaulPath"></param>
         /// <param name="Filter"></param>
         /// <returns></returns>
-        public bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Книга Excel (*.xlsx*)|*.xlsx*")
+        public bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Файлы (*.*)|*.*")
         {
             SelectedPath = "";
             var path = string.IsNullOrWhiteSpace(DefaulPath) ? Environment.CurrentDirectory : DefaulPath;

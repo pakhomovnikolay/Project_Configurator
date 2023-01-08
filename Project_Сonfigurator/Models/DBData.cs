@@ -155,5 +155,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public List<BaseParam> HandMap { get; set; } = new();
         #endregion
+
+        #region Сообщения
+        /// <summary>
+        /// Сообщения
+        /// </summary>
+        public List<CollectionMessage> Messages { get; set; } = new();
+        #endregion
     }
 }

@@ -59,7 +59,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <param name="DefaulPath"></param>
         /// <param name="Filter"></param>
         /// <returns></returns>
-        bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Книга Excel (*.xlsx*)|*.xlsx*");
+        bool SelectFile(string Title, out string SelectedPath, string DefaulPath = null, string Filter = "Файлы (*.*)|*.*");
         #endregion
 
         #region Отправка сообщений пользователю

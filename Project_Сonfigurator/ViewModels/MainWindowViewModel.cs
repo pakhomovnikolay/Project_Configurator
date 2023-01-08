@@ -2,7 +2,6 @@
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
-using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -51,6 +50,7 @@ namespace Project_Сonfigurator.ViewModels
         public UstRealUserControlViewModel UstRealViewModel { get; }
         public UstCommonUserControlViewModel UstCommonViewModel { get; }
         public HandMapUserControlViewModel HandMapUserModel { get; }
+        public MessageWindowViewModel MessageViewModel { get; }
         #endregion
 
         public MainWindowViewModel(
@@ -85,7 +85,8 @@ namespace Project_Сonfigurator.ViewModels
             UTSUserControlViewModel uTSViewModel,
             UstRealUserControlViewModel ustRealViewModel,
             UstCommonUserControlViewModel ustCommonViewModel,
-            HandMapUserControlViewModel handMapUserModel
+            HandMapUserControlViewModel handMapUserModel,
+            MessageWindowViewModel messageViewModel
         #endregion
 
             )
@@ -121,6 +122,7 @@ namespace Project_Сonfigurator.ViewModels
             UstRealViewModel = ustRealViewModel;
             UstCommonViewModel = ustCommonViewModel;
             HandMapUserModel = handMapUserModel;
+            MessageViewModel = messageViewModel;
             #endregion
 
             #region Задаем имя проекта
@@ -578,6 +580,24 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Команда - Открыть окно сообщений
+        private ICommand _CmdOpenMessageWindow;
+        /// <summary>
+        /// Команда - Открыть окно сообщений
+        /// </summary>
+        public ICommand CmdOpenMessageWindow => _CmdOpenMessageWindow ??= new RelayCommand(OnCmdOpenMessageWindowExecuted, CanCmdOpenMessageWindowExecute);
+        private bool CanCmdOpenMessageWindowExecute(object p) => true;
+        private void OnCmdOpenMessageWindowExecuted(object p)
+        {
+            var window = new MessageWindow()
+            {
+                Owner = Application.Current.MainWindow,
+                WindowStartupLocation= WindowStartupLocation.CenterScreen,
+            };
+            window.Show();
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -624,7 +644,8 @@ namespace Project_Сonfigurator.ViewModels
                 UTSViewModel,
                 UstRealViewModel,
                 UstCommonViewModel,
-                HandMapUserModel
+                HandMapUserModel,
+                MessageViewModel
             };
 
             ViewModelsHeader = new()
