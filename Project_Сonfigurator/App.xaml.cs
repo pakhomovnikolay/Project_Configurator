@@ -21,7 +21,7 @@ namespace Project_Сonfigurator
         {
             get
             {
-                var Content = Current.MainWindow.Content;
+                var Content = ActiveWindow.Content ?? FucusedWindow.Content;
                 var _Grid = Content as Grid;
                 var _FucusedTabControl = new TabControl();
                 foreach (var Children in _Grid.Children)

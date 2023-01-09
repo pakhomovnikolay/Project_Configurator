@@ -1,27 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Project_Сonfigurator.Views.Windows
 {
-    /// <summary>
-    /// Логика взаимодействия для MessageWindow.xaml
-    /// </summary>
-    public partial class MessageWindow : Window
+    public partial class MessageWindow
     {
-        public MessageWindow()
+        public MessageWindow() => InitializeComponent();
+
+        private void TextBlock_MouseMove(object sender, MouseEventArgs e)
         {
-            InitializeComponent();
+            if (e.LeftButton == MouseButtonState.Pressed)
+            {
+                if (this.WindowState == WindowState.Maximized)
+                {
+                    this.WindowState = WindowState.Normal;
+                    this.Top = e.GetPosition(this).Y / 2;
+                    DragMove();
+                }
+                else
+                    DragMove();
+            }
         }
     }
 }

@@ -54,6 +54,13 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         string PathProject { get; set; }
         #endregion
 
+        #region Путь хранения настроек проекта
+        /// <summary>
+        /// Путь хранения настроек проекта
+        /// </summary>
+        string PathConfig { get; set; }
+        #endregion
+
         #region Карта агрегатных готовностей по умолчанию
         /// <summary>
         /// Карта агрегатных готовностей по умолчанию

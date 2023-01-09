@@ -7,7 +7,7 @@ namespace Project_Сonfigurator
 {
     public class Program
     {
-        public static readonly SettingService Settings = new();
+        public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService _DBService = new DBService();
         public static string PathConfig = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + $"\\{App.NameApp}";
 

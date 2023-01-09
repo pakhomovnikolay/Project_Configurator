@@ -4,6 +4,7 @@ using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
@@ -12,6 +13,7 @@ using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -22,6 +24,8 @@ namespace Project_Сonfigurator.Services
 {
     public class DBService : IDBService
     {
+        private const string __EncryptedFileSuffix = ".myprojectodb";
+
         #region Данные
         /// <summary>
         /// Данные
@@ -791,7 +795,7 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => AppData.SetpointsReal = Data.Setpoints is null ? new() : Data.Setpoints,
                         UstCommonUserControlViewModel Data => AppData.SetpointsCommon = Data.Setpoints is null ? new() : Data.Setpoints,
                         HandMapUserControlViewModel Data => AppData.HandMap = Data.BaseParams is null ? new() : Data.BaseParams,
-                        MessageWindowViewModel Data => AppData.Messages = Data.Messages is null ? new() : Data.Messages,
+                        MessageWindowViewModel Data => AppData.Messages = Data.CollectionMessages is null ? new() : Data.CollectionMessages,
                         _ => null
                     };
                 }
@@ -1844,22 +1848,22 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
-        #region Обновляем карту ручного ввода
+        #region Обновляем Коллекцию сообщений
         /// <summary>
-        /// Обновляем карту ручного ввода
+        /// Обновляем Коллекцию сообщений
         /// </summary>
         /// <returns></returns>
         private bool RefreshMessages(MessageWindowViewModel Data)
         {
-            Data.Messages = new();
+            Data.CollectionMessages = new();
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.Messages.Count > 0)
             {
                 foreach (var signal in AppData.Messages)
-                    Data.Messages.Add(signal);
+                    Data.CollectionMessages.Add(signal);
 
-                Data.SelectedMessages = Data.Messages[0];
+                Data.SelectedMessages = Data.CollectionMessages[0];
                 Data.SelectedMessage = Data.SelectedMessages.Messages[0];
                 Data.GeneratedData();
                 return true;
@@ -1880,13 +1884,35 @@ namespace Project_Сonfigurator.Services
         public bool SaveData()
         {
             var path = Program.Settings.Config.PathProject;
+            IEncryptorService _Encryptor = new EncryptorService();
+            IUserDialogService UserDialog = new UserDialogService();
+
+
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(DBData));
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
                 using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
                 SettingsAppSerializer.Serialize(xmlWriter, AppData);
-                var UserDialog = new UserDialogService();
+                xmlWriter.Close();
+
+                var FileNameEncrypt = path;
+                var FileNameEncrypted = path.Replace(".xml", __EncryptedFileSuffix);
+
+                try
+                {
+                    _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
+                }
+                catch (OperationCanceledException e)
+                {
+                    Debug.WriteLine("Error in EncryptorAsync:\r\n{0}", e);
+                }
+                finally
+                {
+                    UserDialog.DeleteFile(FileNameEncrypt);
+                }
+
+
                 UserDialog.SendMessage("Управление приложением", "Документ успешно сохранен.",
                     MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
                 return true;
@@ -1906,18 +1932,29 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public DBData LoadData(string SelectedPath = "")
         {
+            IEncryptorService _Encryptor = new EncryptorService();
+            IUserDialogService UserDialog = new UserDialogService();
+
             var path = string.IsNullOrWhiteSpace(SelectedPath) ? Program.PathConfig + "\\ProjectData.xml" : SelectedPath;
+
+            var FileNameEncrypt = path;
+            var FileNameEncrypted = path.Replace(".xml", __EncryptedFileSuffix);
+
+            _Encryptor.Decryptor(FileNameEncrypted, FileNameEncrypt, "");
             var SettingsAppSerializer = new XmlSerializer(typeof(DBData));
             try
             {
-                using FileStream fs = new(path, FileMode.OpenOrCreate);
+                using FileStream fs = new(FileNameEncrypt, FileMode.OpenOrCreate);
                 AppData = SettingsAppSerializer.Deserialize(fs) as DBData;
-                Program.Settings.Config.PathProject = path;
                 return AppData;
             }
             catch (Exception)
             {
                 return AppData = null;
+            }
+            finally
+            {
+                UserDialog.DeleteFile(FileNameEncrypt);
             }
         }
         #endregion

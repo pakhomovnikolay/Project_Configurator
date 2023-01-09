@@ -24,6 +24,10 @@
               WindowState="{Binding WindowWindowState}"
               >
 
+    <RibbonWindow.InputBindings>
+        <KeyBinding Modifiers="Ctrl" Key="S" Command="{Binding CmdSaveData}"/>
+    </RibbonWindow.InputBindings>
+
     <!--<WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="{x:Static shell:WindowChrome.GlassFrameCompleteThickness}"/>
     </WindowChrome.WindowChrome>-->
@@ -33,7 +37,7 @@
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="130"/>
+            <RowDefinition Height="135"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -89,8 +93,9 @@
                     <RibbonApplicationMenuItem Header="Сохранить как..."
                                                Command="{Binding CmdSaveAsData}"/>
                     <RibbonApplicationMenuItem Header="Открыть папку с проектом" ImageSource="../../Resources/Icons/OpenFolder.ico"
-                                               Command="{Binding OpenProjectFolder}"/>
-
+                                               Command="{Binding CmdOpenProjectFolder}"/>
+                    <RibbonApplicationMenuItem Header="Открыть папку с настройками проектом" ImageSource="../../Resources/Icons/OpenFolder.ico"
+                                               Command="{Binding CmdOpenSettingsProjectFolder}"/>
                     <RibbonApplicationMenuItem Header="Настройки" VerticalAlignment="Bottom" ImageSource="../../Resources/Icons/Settings.ico"
                                                Command="{Binding CmdOpenSettingWindow}"/>
                 </RibbonApplicationMenu>
@@ -103,7 +108,8 @@
                 </RibbonGroup>
 
                 <RibbonGroup Header="Сообщения">
-                    <RibbonButton Label="Открыть окно сообщений"
+                    <RibbonButton Height="25" VerticalContentAlignment="Center"
+                                  Label="Открыть окно сообщений"
                                   Command="{Binding CmdOpenMessageWindow}"
                                   />
                 </RibbonGroup>
@@ -369,7 +375,7 @@
                                       Grid.Row="1" Grid.Column="1"
                                       Margin="0,-5,0,0"
                                       >
-                            <TabPanel IsItemsHost="True" Margin="0,5,0,5" Grid.Column="1" Grid.Row="1"/>
+                            <TabPanel IsItemsHost="True" Margin="0,5" Grid.Column="1" Grid.Row="1"/>
                         </ScrollViewer>
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="3"/>
                     </Grid>

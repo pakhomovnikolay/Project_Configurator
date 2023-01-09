@@ -1,14 +1,10 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -186,7 +182,7 @@ namespace Project_Сonfigurator.ViewModels
                 return;
             }
 
-            
+
 
             Application.Current.Shutdown();
 
@@ -389,28 +385,36 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdEditServerDBExecute(object p) => true;
         private void OnCmdEditServerDBExecuted(object p)
         {
-            DataGrid MyDataGrid = new();
-            if (p is DataGrid)
-            {
-                MyDataGrid = (DataGrid)p;
-            }
-            var server = new SettingServerDB();
-            if (p is null)
-            {
-                if (!_EditService.Edit(server, Title)) return;
-                Config.ServerDB.Add(server);
-                SelectedServerDB = Config.ServerDB[^1];
-            }
-            else if (MyDataGrid.SelectedItem is SettingServerDB)
-            {
-                if (!_EditService.Edit(SelectedServerDB, Title)) return;
-            }
-
-            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+            Config.ServerDB.Add(new SettingServerDB());
+            SelectedServerDB = Config.ServerDB[^1];
             _DataViewServersDB.Source = Config.ServerDB;
             _DataViewServersDB.View?.Refresh();
 
             OnPropertyChanged(nameof(DataViewServersDB));
+
+
+            //DataGrid MyDataGrid = new();
+            //if (p is DataGrid)
+            //{
+            //    MyDataGrid = (DataGrid)p;
+            //}
+            //var server = new SettingServerDB();
+            //if (p is null)
+            //{
+            //    if (!_EditService.Edit(server, Title)) return;
+            //    Config.ServerDB.Add(server);
+            //    SelectedServerDB = Config.ServerDB[^1];
+            //}
+            //else if (MyDataGrid.SelectedItem is SettingServerDB)
+            //{
+            //    if (!_EditService.Edit(SelectedServerDB, Title)) return;
+            //}
+
+            //if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+            //_DataViewServersDB.Source = Config.ServerDB;
+            //_DataViewServersDB.View?.Refresh();
+
+            //OnPropertyChanged(nameof(DataViewServersDB));
         }
         #endregion
 
@@ -441,40 +445,6 @@ namespace Project_Сonfigurator.ViewModels
             OnPropertyChanged(nameof(DataViewServersDB));
         }
         #endregion
-
-        #endregion
-
-        #region Функции
-
-        //#region Зашифровать файл настроек
-        //private string ConfigEncrypt()
-        //{
-        //    var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
-        //    var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
-
-        //    _ProccessCancellation = new CancellationTokenSource();
-
-        //    try
-        //    {
-        //        _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
-        //    }
-        //    catch (OperationCanceledException e)
-        //    {
-        //        Debug.WriteLine("Error in EncryptorAsync:\r\n{0}", e);
-        //    }
-        //    finally
-        //    {
-        //        _ProccessCancellation.Dispose();
-        //        _ProccessCancellation = null;
-        //    }
-
-        //    return FileNameEncrypt;
-        //}
-        //#endregion
-
-        //#region Расшифровать файл настроек
-
-        //#endregion
 
         #endregion
     }

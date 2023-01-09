@@ -30,18 +30,18 @@ namespace Project_Сonfigurator.Services
         {
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
-
+            Config.PathConfig = Program.PathConfig + "\\Config.xml";
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
-                using XmlWriter xmlWriter = XmlWriter.Create(Program.PathConfig + "\\Config.xml", xmlWriterSettings);
+                using XmlWriter xmlWriter = XmlWriter.Create(Config.PathConfig, xmlWriterSettings);
 
                 SettingsAppSerializer.Serialize(xmlWriter, Config);
                 xmlWriter.Close();
 
-                var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
-                var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
+                var FileNameEncrypt = Config.PathConfig;
+                var FileNameEncrypted = Config.PathConfig.Replace(".xml", __EncryptedFileSuffix)/* Program.PathConfig + "\\Config" + __EncryptedFileSuffix*/;
                 try
                 {
                     _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");

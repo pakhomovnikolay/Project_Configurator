@@ -29,7 +29,18 @@ namespace Project_Сonfigurator.Models.Settings
         /// <summary>
         /// Описание подлключения
         /// </summary>
-        public string DescriptionConnect { get; set; }
+        public string DescriptionConnect
+        {
+            get => (string)GetValue(DescriptionConnectProperty);
+            set => SetValue(DescriptionConnectProperty, value);
+        }
+
+        public static readonly DependencyProperty DescriptionConnectProperty =
+            DependencyProperty.Register(
+                nameof(DescriptionConnect),
+                typeof(string),
+                typeof(SettingServerDB),
+                new PropertyMetadata(default(string)));
         #endregion
 
         #region Адрес подключения

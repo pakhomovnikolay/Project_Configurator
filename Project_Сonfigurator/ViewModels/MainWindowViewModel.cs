@@ -446,16 +446,32 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Команда - Открыть папку с проектом
-        private ICommand _OpenProjectFolder;
+        private ICommand _CmdOpenProjectFolder;
         /// <summary>
         /// Команда - Открыть папку с проектом
         /// </summary>
-        public ICommand OpenProjectFolder => _OpenProjectFolder ??= new RelayCommand(OnOpenProjectFolderExecuted, CanOpenProjectFolderExecute);
-        private bool CanOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
-        private void OnOpenProjectFolderExecuted()
+        public ICommand CmdOpenProjectFolder => _CmdOpenProjectFolder ??= new RelayCommand(OnCmdOpenProjectFolderExecuted, CanCmdOpenProjectFolderExecute);
+        private bool CanCmdOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
+        private void OnCmdOpenProjectFolderExecuted()
         {
             var name_project = Program.Settings.Config.PathProject.Split('\\');
-            var name_folder = Program.Settings.Config.PathProject.Replace(name_project[^1], "");
+            var name_folder = Program.Settings.Config.PathProject.Replace(name_project[^1], "").TrimEnd('\\');
+            Process.Start("explorer.exe", name_folder);
+        }
+        #endregion
+
+        #region Команда - Открыть папку с настройками проекта
+        private ICommand _CmdOpenSettingsProjectFolder;
+        /// <summary>
+        /// Команда - Открыть папку с настройками проекта
+        /// </summary>
+        public ICommand CmdOpenSettingsProjectFolder => _CmdOpenSettingsProjectFolder ??= new RelayCommand(OnCmdOpenSettingsProjectFolderExecuted, CanCmdOpenSettingsProjectFolderExecute);
+        private bool CanCmdOpenSettingsProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
+        private void OnCmdOpenSettingsProjectFolderExecuted()
+        {
+
+            var name_project = Program.Settings.Config.PathConfig.Split('\\');
+            var name_folder = Program.Settings.Config.PathConfig.Replace(name_project[^1], "").TrimEnd('\\');
             Process.Start("explorer.exe", name_folder);
         }
         #endregion
@@ -468,7 +484,6 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            //CreateViewModels();
             _DBService.RequestSetData(ViewModels);
         }
         #endregion
@@ -592,7 +607,7 @@ namespace Project_Сonfigurator.ViewModels
             var window = new MessageWindow()
             {
                 Owner = Application.Current.MainWindow,
-                WindowStartupLocation= WindowStartupLocation.CenterScreen,
+                WindowStartupLocation = WindowStartupLocation.CenterScreen,
             };
             window.Show();
         }
