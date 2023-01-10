@@ -30,7 +30,7 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Данные
         /// </summary>
-        public DBData AppData { get; set; }
+        public DBData AppData { get; set; } = new();
         #endregion
 
         #region Записи данных в БД

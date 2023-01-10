@@ -327,7 +327,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Удалить выбранную корзину в выбранном УСО
         /// </summary>
         public ICommand CmdDeleteSelectedRack => _CmdDeleteSelectedRack ??= new RelayCommand(OnCmdDeleteSelectedRackExecuted, CanCmdDeleteSelectedRackExecute);
-        private bool CanCmdDeleteSelectedRackExecute() => SelectedRack is not null && SelectedUSO.Index != "1";
+        private bool CanCmdDeleteSelectedRackExecute() => SelectedRack is not null && SelectedUSO is not null && SelectedUSO.Index != "1";
         private void OnCmdDeleteSelectedRackExecuted()
         {
             var index = SelectedUSO.Racks.IndexOf(SelectedRack);

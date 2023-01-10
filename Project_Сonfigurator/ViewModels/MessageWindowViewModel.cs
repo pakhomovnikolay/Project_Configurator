@@ -230,10 +230,12 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdCreateCollectionMessagesExecuted(object p)
         {
             if (p is not ScrollViewer MyScrollViewer) return;
-
-            SelectedMessages = CollectionMessages[^2];
-            SelectedTabItem = SelectedMessages;
-            SelectedMessage = SelectedMessages.Messages[0];
+            if (CollectionMessages.Count > 0)
+            {
+                SelectedMessages = CollectionMessages[^2];
+                SelectedTabItem = SelectedMessages;
+                SelectedMessage = SelectedMessages.Messages[0];
+            }
 
             var msg = Enumerable.Range(1, 4095).Select(i => new BaseMessage() { Index = i.ToString() });
             CollectionMessages.Add(new CollectionMessage { IndexSystem = "", Description = $"Сообщение {CollectionMessages.Count}", Messages = new List<BaseMessage>(msg) });
@@ -245,6 +247,7 @@ namespace Project_Сonfigurator.ViewModels
             OnCmdSelectedTabPanelItemExecuted(MyScrollViewer);
             _DataView.Source = CollectionMessages;
             _DataView.View?.Refresh();
+            OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
