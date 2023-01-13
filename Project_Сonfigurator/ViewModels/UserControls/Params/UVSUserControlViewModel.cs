@@ -5,8 +5,10 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -16,9 +18,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UVSUserControlViewModel : ViewModel
+    public class UVSUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public UVSUserControlViewModel()
+        {
+            Title = "Настройки вспомсистем";
+            Description = "Текущие массивы состояний вспомсистем";
+            UsingUserControl = new UVSUserControl();
+        }
+
         private readonly IUserDialogService UserDialog;
         private ISignalService _SignalService;
         private readonly IDBService _DBService;
@@ -28,7 +37,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             ISignalService signalService,
             IUserDialogService userDialog,
             IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel)
+            TableSignalsUserControlViewModel tableSignalsViewModel) : this()
         {
             UserDialog = userDialog;
             _SignalService = signalService;
@@ -39,54 +48,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Настройки вспомсистем";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Текущие массивы состояний вспомсистем";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -139,11 +100,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список вспомсистем
-        private List<BaseUVS> _UVS = new();
+        private ObservableCollection<BaseUVS> _UVS = new();
         /// <summary>
         /// Список вспомсистем
         /// </summary>
-        public List<BaseUVS> UVS
+        public ObservableCollection<BaseUVS> UVS
         {
             get => _UVS;
             set => Set(ref _UVS, value);
@@ -449,17 +410,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void CreateUVS()
         {
             var index = UVS.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
+            var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
             #region Создаем вспомсистему
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -469,14 +430,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UVS.InputParams[i].Text
+                    Description = App.Settings.Config.UVS.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -486,24 +447,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UVS.OutputParams[i].Text
+                    Description = App.Settings.Config.UVS.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UVS.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
                     Id = $"H{7000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UVS.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UVS.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UVS.Setpoints[i].Value,
                     Address = $"%MW{2000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UVS.Setpoints[i].Description
+                    Description = App.Settings.Config.UVS.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -524,9 +485,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 Reservable = "",
                 TypeGroup = "",
                 TypePressure = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
             };
             UVS.Add(signal);
             #endregion
@@ -541,21 +502,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Импортируем вспомсистемы
-        private static void ImportUVS(string Description, List<BaseUVS> data_list)
+        private static void ImportUVS(string Description, ObservableCollection<BaseUVS> data_list)
         {
 
             var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
+            var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
             #region Создаем вспомсистему
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -565,14 +526,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UVS.InputParams[i].Text
+                    Description = App.Settings.Config.UVS.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UVS.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -582,24 +543,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UVS.OutputParams[i].Text
+                    Description = App.Settings.Config.UVS.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UVS.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
                     Id = $"H{7000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UVS.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UVS.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UVS.Setpoints[i].Value,
                     Address = $"%MW{2000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UVS.Setpoints[i].Description
+                    Description = App.Settings.Config.UVS.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -620,9 +581,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 Reservable = "",
                 TypeGroup = "",
                 TypePressure = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
             };
             data_list.Add(signal);
             #endregion
@@ -652,9 +613,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 index++;
                 item.VarName = $"uvs_param[{index}]";
-                var index_setpoints = (index - 1) * Program.Settings.Config.UVS.Setpoints.Count;
-                var index_input_param = (index - 1) * Program.Settings.Config.UVS.InputParams.Count;
-                var index_output_param = (index - 1) * Program.Settings.Config.UVS.OutputParams.Count;
+                var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+                var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+                var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
 
                 #region Уставки
                 var i = 0;

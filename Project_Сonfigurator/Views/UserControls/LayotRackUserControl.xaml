@@ -5,16 +5,19 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls"
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls"
              d:Background="AliceBlue"
-             d:DataContext="{Binding LayotRackUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:LayotRackUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
     <Grid>
 
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
             <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
@@ -23,36 +26,11 @@
             <ColumnDefinition MinWidth="183" Width="200"/>
             <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Row="2" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
-
-        <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="200"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
-                           TextAlignment="Center" VerticalAlignment="Center"
-                           FontWeight="Bold" FontSize="16"
-                           Text="{Binding Description}"/>
-
-                <Button Margin="2" FontWeight="Bold"
-                        ToolTip="Обновить адреса модулей"
-                        Content="Обновить адреса модулей"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdRefreshAddressModules}"
-                        CommandParameter="{Binding ElementName=RackDataGrid}"
-                        />
-
-            </Grid>
-        </Border>
-
+        <GridSplitter Grid.Row="1" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
+        
         <!--Список УСО-->
-        <TextBlock Grid.Row="1" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Margin="3,0,0,0">
+        <TextBlock Grid.Row="0" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3,0,0,0">
             <Button Margin="2" ToolTip="Добавить шкаф" Width="70"
                     Style="{StaticResource CustomButtonStyle}"
                     Command="{Binding CmdCreateNewUSO}"
@@ -90,9 +68,9 @@
                 </Button.Content>
             </Button>
         </StackPanel>
-        <ListView Grid.Row="2" Margin="5,5,0,0"
+        <ListView Grid.Row="1" Margin="5,5,0,0"
                   BorderBrush="Black"
-                  ItemsSource="{Binding DataView}"
+                  ItemsSource="{Binding USOList}"
                   SelectedItem="{Binding SelectedUSO}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
@@ -104,14 +82,14 @@
         </ListView>
 
         <!--Данные-->
-        <StackPanel Grid.Row="1" Grid.Column="1" Margin="10,5,0,0" Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,5,0,0" Orientation="Horizontal">
             <TextBlock TextAlignment="Left" VerticalAlignment="Center" Text="Выбранное УСО:" FontWeight="Bold"/>
             <TextBox Margin="5,0,0,0" Width="500" ToolTip="Укажите новое имя УСО"
                      TextAlignment="Left" VerticalContentAlignment="Center" 
                      Text="{Binding SelectedUSO.Name, UpdateSourceTrigger=PropertyChanged}"
                      />
         </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.Column="1" Margin="5,0,0,0">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0">
             <Button Margin="2" ToolTip="Добавить корзину" Width="70"
                     Style="{StaticResource CustomButtonStyle}"
                     Command="{Binding CmdCreateNewRack}"
@@ -150,7 +128,7 @@
                 </Button.Content>
             </Button>
         </StackPanel>
-        <DataGrid Grid.Row="2" Grid.Column="1"
+        <DataGrid Grid.Row="1" Grid.Column="1"
                   x:Name="RackDataGrid"
                   Margin="5,5,0,0"
                   BorderThickness="0"
@@ -168,7 +146,7 @@
                   ScrollViewer.IsDeferredScrollingEnabled="True"
                   VirtualizingPanel.IsVirtualizing="True"
                   VirtualizingPanel.IsContainerVirtualizable="True"
-                  ItemsSource="{Binding DataViewRacks}"
+                  ItemsSource="{Binding SelectedUSO.Racks}"
                   SelectedItem="{Binding SelectedRack}"
                   >
 

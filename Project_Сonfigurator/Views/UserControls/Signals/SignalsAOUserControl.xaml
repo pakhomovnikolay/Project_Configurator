@@ -5,45 +5,25 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
-             
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Signals"
              d:Background="AliceBlue"
-             d:DataContext="{Binding SignalsAOUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:SignalsAOUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
     <Grid>
         
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
-                           TextAlignment="Center" VerticalAlignment="Center"
-                           FontWeight="Bold" FontSize="16"
-                           Text="{Binding Description}"/>
-                <Button Margin="2" FontWeight="Bold"
-                        ToolTip="Импорт сигналов AO из ТБ"
-                        Content="Генерировать таблицу"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdGeneratedTable}"
-                        />
-
-            </Grid>
-        </Border>
         
         <!--Данные-->
-        <Border Grid.Row="1" Grid.Column="1"
+        <Border Grid.Row="0"
                 BorderThickness="1" BorderBrush="Black"
                 Margin="0,1,0,0" Background="AntiqueWhite"
                 Width="1390" HorizontalAlignment="Left">
@@ -73,7 +53,7 @@
 
             </Grid>
         </Border>
-        <DataGrid Grid.Row="2" Grid.Column="1"
+        <DataGrid Grid.Row="1"
                   Margin="0,1,0,0"
                   BorderThickness="0"
                   BorderBrush="Black"

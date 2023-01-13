@@ -5,13 +5,17 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-            
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
              d:Background="AliceBlue"
-             d:DataContext="{Binding UVSUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:UVSUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
     <Grid>
+        
         <!--Сетка-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200" MaxWidth="500" MinWidth="135"/>

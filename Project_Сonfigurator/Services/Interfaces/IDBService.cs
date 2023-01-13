@@ -1,5 +1,5 @@
 ﻿using Project_Сonfigurator.Models;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -17,7 +17,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Запрос записи данных
         /// </summary>
         /// <returns></returns>
-        bool RequestSetData(List<object> _ViewModels);
+        bool RequestSetData(ObservableCollection<object> _ViewModels);
         #endregion
 
         #region Формируем данные приложения перед сохранением
@@ -25,7 +25,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Формируем данные приложения перед сохранением
         /// </summary>
         /// <param name="_ViewModels"></param>
-        void FormingAppDataBeforeSaving(List<object> _ViewModels); 
+        void FormingAppDataBeforeSaving(ObservableCollection<object> _ViewModels);
         #endregion
 
         #region Сохранение файла приложения

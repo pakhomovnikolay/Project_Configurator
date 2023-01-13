@@ -1,7 +1,8 @@
-﻿using Microsoft.Extensions.FileProviders;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
+using Project_Сonfigurator.Views.Windows;
 using System;
 using System.IO;
 using System.Windows;
@@ -10,6 +11,16 @@ namespace Project_Сonfigurator.Services
 {
     public class UserDialogService : IUserDialogService
     {
+        #region Конструктор
+        private MainWindow? _MainWindow;
+        private SettingWindow? _SettingWindow;
+        private MessageWindow? _MessageWindow;
+        private readonly IServiceProvider _Services;
+
+        public UserDialogService() { }
+        public UserDialogService(IServiceProvider Services) : this() => _Services = Services;
+        #endregion
+
         #region Открытие файла
         /// <summary>
         /// Открытие файла
@@ -71,7 +82,7 @@ namespace Project_Сonfigurator.Services
         public bool SaveProject(string Title, string DefaulPath = null, string DefaulFileName = null, string Filter = "Все файлы (*.*)|*.*")
         {
             var _SettingService = new SettingService();
-            if (string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
+            if (string.IsNullOrWhiteSpace(App.Settings.Config.PathProject))
             {
                 var window = new WindowSelectPath()
                 {
@@ -87,7 +98,7 @@ namespace Project_Сonfigurator.Services
                 if (!string.IsNullOrWhiteSpace(SelectFileName))
                     SelectPath = SelectPath.Replace(SelectFileName, "");
 
-                var path = SelectPath == $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}" ? Program.PathConfig : SelectPath;
+                var path = SelectPath == $"По умолчанию - ...\\AppData\\Roaming\\{App.NameApp}" ? App.PathConfig : SelectPath;
                 if (!Directory.Exists(path))
                 {
                     SendMessage("Выбор пути для сохранения", "Указанный путь не существует.\nВыберите другой путь для сохранения.",
@@ -96,10 +107,10 @@ namespace Project_Сonfigurator.Services
                 }
 
 
-                Program.Settings.Config.PathProject = string.IsNullOrWhiteSpace(SelectFileName) ? $"{path}\\ProjectData.xml" : $"{path}\\{SelectFileName}.xml";
+                App.Settings.Config.PathProject = string.IsNullOrWhiteSpace(SelectFileName) ? $"{path}\\ProjectData.xml" : $"{path}\\{SelectFileName}.xml";
             }
 
-            _SettingService.Config = Program.Settings.Config;
+            _SettingService.Config = App.Settings.Config;
             _SettingService.Save();
             return true;
         }
@@ -213,6 +224,59 @@ namespace Project_Сonfigurator.Services
 
             File.Delete(SelectedFile);
             return true;
+        }
+        #endregion
+
+        #region Открыть главное окно приложения
+        /// <summary>
+        /// Открыть главное окно приложения
+        /// </summary>
+        public void OpenMainWindow()
+        {
+            if (_MainWindow is { } window) { window.Show(); return; }
+
+            window = _Services.GetRequiredService<MainWindow>();
+            window.Closed += (_, _) => _MainWindow = null;
+            _MainWindow = window;
+            window.Show();
+        }
+        #endregion
+
+        #region Открыть окно настроек приложения
+        /// <summary>
+        /// Открыть окно настроек приложения
+        /// </summary>
+        public void OpenSettingsWindow()
+        {
+            if (_SettingWindow is { } window) { window.Show(); return; }
+
+            window = _Services.GetRequiredService<SettingWindow>();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _SettingWindow = null;
+
+
+            _SettingWindow = window;
+            window.Show();
+        }
+        #endregion
+
+        #region Открыть окно сообщений
+        /// <summary>
+        /// Открыть окно сообщений
+        /// </summary>
+        public void OpenMessageWindow()
+        {
+            if (_MessageWindow is { } window) { window.Show(); return; }
+
+            window = _Services.GetRequiredService<MessageWindow>();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _MessageWindow = null;
+
+
+            _MessageWindow = window;
+            window.Show();
         }
         #endregion
     }

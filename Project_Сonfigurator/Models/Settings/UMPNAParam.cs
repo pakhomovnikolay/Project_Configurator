@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Settings.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Settings
 {
@@ -10,21 +11,21 @@ namespace Project_Сonfigurator.Models.Settings
         /// <summary>
         /// Входые параметры
         /// </summary>
-        public List<BaseText> InputParams { get; set; } = new();
+        public ObservableCollection<BaseText> InputParams { get; set; } = new();
         #endregion
 
         #region Выходые параметры
         /// <summary>
         /// Выходые параметры
         /// </summary>
-        public List<BaseText> OutputParams { get; set; } = new();
+        public ObservableCollection<BaseText> OutputParams { get; set; } = new();
         #endregion
 
         #region Уставки
         /// <summary>
         /// Уставки
         /// </summary>
-        public List<BaseSetpoints> Setpoints { get; set; } = new();
+        public ObservableCollection<BaseSetpoints> Setpoints { get; set; } = new();
         #endregion
     }
 }

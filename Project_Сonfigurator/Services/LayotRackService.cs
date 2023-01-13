@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services
 {
@@ -53,7 +54,7 @@ namespace Project_Сonfigurator.Services
                     {
                         _Module.StartAddress = "";
                         _Module.EndAddress = "";
-                        _Module.Channels = new List<Channel>();
+                        _Module.Channels = new ObservableCollection<Channel>();
 
                         switch (_Module.Type)
                         {

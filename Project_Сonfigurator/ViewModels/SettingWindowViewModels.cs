@@ -4,6 +4,7 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -15,11 +16,16 @@ namespace Project_Сonfigurator.ViewModels
     public class SettingWindowViewModels : ViewModel
     {
         #region Конструктор
+        public SettingWindowViewModels()
+        {
+            Title = "Настройки";
+        }
+
         private ISettingService _SettingService;
         private IEditService _EditService;
         private IUserDialogService UserDialog;
 
-        public SettingWindowViewModels(ISettingService settingService, IEditService editService, IUserDialogService userDialog)
+        public SettingWindowViewModels(ISettingService settingService, IEditService editService, IUserDialogService userDialog) : this()
         {
             _SettingService = settingService;
             _EditService = editService;
@@ -45,18 +51,6 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Параметры
-
-        #region Заголовок окна
-        private string _Title = "Настройки";
-        /// <summary>
-        /// Заголовок окна
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
 
         #region Высота окна
         private int _WindowHeight = 1000;
@@ -107,7 +101,7 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Настройки приложения
-        private SettingApp _Config = Program.Settings.Config ?? new();
+        private SettingApp _Config = App.Settings.Config ?? new();
         /// <summary>
         /// Настройки приложения
         /// </summary>
@@ -202,7 +196,7 @@ namespace Project_Сonfigurator.ViewModels
             {
                 Name = $"Новый вендор {Config.Vendors.Count + 1}",
                 IsSelected = false,
-                ModuleTypes = new List<VendorModuleType>(),
+                ModuleTypes = new ObservableCollection<VendorModuleType>(),
                 SelectedModuleType = new()
             };
 

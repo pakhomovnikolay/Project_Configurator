@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Models.Params.Interfaces;
 using Project_Сonfigurator.Models.Setpoints;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Params
 {
@@ -94,21 +95,21 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Входные параметры
         /// </summary>
-        public List<BaseParam> InputParam { get; set; }
+        public ObservableCollection<BaseParam> InputParam { get; set; }
         #endregion
 
         #region Выходные параметры
         /// <summary>
         /// Выходные параметры
         /// </summary>
-        public List<BaseParam> OutputParam { get; set; }
+        public ObservableCollection<BaseParam> OutputParam { get; set; }
         #endregion
 
         #region Временные уставки
         /// <summary>
         /// Временные уставки
         /// </summary>
-        public List<BaseSetpoints> Setpoints { get; set; }
+        public ObservableCollection<BaseSetpoints> Setpoints { get; set; }
         #endregion
     }
 }

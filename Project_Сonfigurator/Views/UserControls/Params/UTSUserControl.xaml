@@ -5,38 +5,18 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-             
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
              d:Background="AliceBlue"
-             d:DataContext="{Binding UTSUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:UTSUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
     <Grid>
-
-        <!--Сетка-->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-
-        <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="2" BorderBrush="Black" Background="#FFCCFFCC">
-            <Grid>
-
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
-                           TextAlignment="Center" VerticalAlignment="Center"
-                           FontWeight="Bold" FontSize="16"
-                           Text="{Binding Description}"/>
-
-            </Grid>
-        </Border>
         
-        <DataGrid Grid.Row="1" Grid.Column="1"
-                  Margin="0,1"
+        <DataGrid Margin="0,1"
                   BorderThickness="0"
                   BorderBrush="Black"
                   AutoGenerateColumns="False"

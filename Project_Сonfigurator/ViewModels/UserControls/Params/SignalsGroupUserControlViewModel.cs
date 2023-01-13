@@ -3,8 +3,10 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -13,13 +15,20 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class SignalsGroupUserControlViewModel : ViewModel
+    public class SignalsGroupUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public SignalsGroupUserControlViewModel()
+        {
+            Title = "Сигналы групп";
+            Description = "Список сигналов состоящих в группе";
+            UsingUserControl = new SignalsGroupUserControl();
+        }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
 
-        public SignalsGroupUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public SignalsGroupUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -30,54 +39,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Сигналы групп";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Список сигналов состоящих в группе";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -101,11 +62,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список параметр
-        private List<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _BaseParams = new();
         /// <summary>
         /// Список параметр
         /// </summary>
-        public List<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> BaseParams
         {
             get => _BaseParams;
             set => Set(ref _BaseParams, value);
@@ -190,7 +151,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedParam is null) return;
 
-            var data_list = new List<BaseParam>();
+            var data_list = new ObservableCollection<BaseParam>();
             foreach (BaseParam Param in DataView)
             {
                 data_list.Add(Param);
@@ -245,7 +206,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (App.FucusedTabControl == null) return;
             if (!_SignalService.DoSelection) return;
 
-            var data_list = new List<BaseParam>();
+            var data_list = new ObservableCollection<BaseParam>();
             foreach (BaseParam Signal in DataView)
             {
                 data_list.Add(Signal);

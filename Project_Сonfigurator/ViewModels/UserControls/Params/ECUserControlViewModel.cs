@@ -3,8 +3,11 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Controls;
@@ -13,12 +16,20 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class ECUserControlViewModel : ViewModel
+    public class ECUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public ECUserControlViewModel()
+        {
+            Title = "Секции шин";
+            Description = "Секции шин";
+            UsingUserControl = new ECUserControl();
+        }
+
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public ECUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public ECUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -29,54 +40,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Секции шин";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Секции шин";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -100,11 +63,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список регистров формируемых
-        private List<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _BaseParams = new();
         /// <summary>
         /// Список регистров формируемых
         /// </summary>
-        public List<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> BaseParams
         {
             get => _BaseParams;
             set => Set(ref _BaseParams, value);

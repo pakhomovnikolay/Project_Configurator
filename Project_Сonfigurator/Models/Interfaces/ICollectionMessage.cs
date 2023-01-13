@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Interfaces
 {
@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.Interfaces
         /// <summary>
         /// Коллекция сообщений
         /// </summary>
-        List<BaseMessage> Messages { get; set; }
+        ObservableCollection<BaseMessage> Messages { get; set; }
         #endregion
     }
 }

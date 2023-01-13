@@ -4,12 +4,8 @@
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
               xmlns:fa="http://schemas.fontawesome.com/icons/"
-              xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
               xmlns:l="clr-namespace:Project_Сonfigurator"
-              xmlns:pages="clr-namespace:Project_Сonfigurator.Views.UserControls"
-              xmlns:pages_signal="clr-namespace:Project_Сonfigurator.Views.UserControls.Signals"
-              xmlns:pages_param="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-              xmlns:converter="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
+              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
               WindowStartupLocation="CenterScreen"
               WindowStyle="None"
               BorderBrush="Black"
@@ -17,7 +13,7 @@
               Background="AliceBlue"
               Margin="0,25,0,0"
               
-              DataContext="{Binding MainWindowViewModel, Source={StaticResource Locator}}"
+              d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=True}"
               Height="{Binding WindowHeight}"
               Width="{Binding WindowWidth}"
               ResizeMode="{Binding WindowResizeMode}"
@@ -80,7 +76,7 @@
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>
-            
+
             <!--Меню приложения-->
             <Ribbon.ApplicationMenu>
                 <RibbonApplicationMenu SmallImageSource="../../Resources/Icons/Folder.ico">
@@ -117,7 +113,7 @@
 
             <!--Экспорт СУ-->
             <RibbonTab Header="Экспорт СУ">
-                
+
                 <RibbonGroup>
                     <RibbonButton LargeImageSource="../../Resources/Icons/Export.ico" Label="Экспорт всего проекта"
                                   Command="{Binding CmdExportSU}"
@@ -216,7 +212,7 @@
                                       Command="{Binding CmdExportSU}"
                                       CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
                 </RibbonGroup>
-                
+
             </RibbonTab>
 
             <!--Экспорт БД-->
@@ -232,7 +228,7 @@
                                 <Binding Path="IsCheckedAll" Converter="{StaticResource CheckBoxContentConverter}"/>
                             </RibbonCheckBox.Label>
                         </RibbonCheckBox>
-                        
+
                         <RibbonButton ToolTip="Обновить БД выбранных узлов"
                                       LargeImageSource="../../Resources/Icons/DownloadStorm.ico"
                                       Command="{Binding CmdUploadDB}">
@@ -257,22 +253,22 @@
                                         <fa:FontAwesome Grid.Column="0" Icon="Solid_Check"/>
                                 </TextBlock>
                                 <RibbonCheckBox Grid.Column="1" HorizontalAlignment="Left"
-                                                Command="{Binding MainWindowViewModel.CmdSelectionServer, Source={StaticResource Locator}}"
+                                                Command="{Binding DataContext.CmdSelectionServer, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
                                                 IsChecked="{Binding IsSelection, UpdateSourceTrigger=PropertyChanged}"
                                                 Label="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
-                                
+
                             </Grid>
                         </DataTemplate>
                     </RibbonGroup.ItemTemplate>
 
                 </RibbonGroup>
-                
+
             </RibbonTab>
-            
+
         </Ribbon>
 
         <!--Данные-->
-        <TabControl Grid.Row="2" SelectedIndex="{Binding SelectedTabIndex}">
+        <TabControl Grid.Row="2" ItemsSource="{Binding ViewModelUserControls}" SelectedIndex="{Binding SelectedTabIndex}">
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -313,7 +309,7 @@
                                           HorizontalContentAlignment="Center"
                                           Background="#FFE5E5E5"
                                           BorderBrush="#FFACACAC"
-                                          IsChecked="{Binding MainWindowViewModel.ToggleButtonIsChecked, UpdateSourceTrigger=PropertyChanged, Source={StaticResource Locator}}"
+                                          IsChecked="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
                                           >
                                 <ToggleButton.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -327,12 +323,13 @@
                             </ToggleButton>
                             <Popup AllowsTransparency="False" StaysOpen="False" x:Name="Popup"
                                    PlacementTarget="{Binding ElementName=TypeDB}"
-                                   IsOpen="{Binding MainWindowViewModel.ToggleButtonIsChecked, Source={StaticResource Locator}}"
+                                   IsOpen="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
                                    >
-                                <!---->
-                                <ListView ItemsSource="{Binding MainWindowViewModel.ViewModelsHeader, Source={StaticResource Locator}}"
-                                          SelectedItem="{Binding MainWindowViewModel.SelectedViewModelsHeader, UpdateSourceTrigger=PropertyChanged, Source={StaticResource Locator}}"
-                                         >
+
+                                <ListView ItemsSource="{Binding DataContext.ViewModelUserControls, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
+                                          SelectedItem="{Binding DataContext.SelectedViewModel, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
+                                          >
+
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="ListViewItem">
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
@@ -341,10 +338,10 @@
                                     </ListView.ItemContainerStyle>
                                     <ListView.ItemTemplate>
                                         <DataTemplate>
-                                            <TextBlock TextAlignment="Left" Background="Transparent" Text="{Binding .}">
+                                            <TextBlock TextAlignment="Left" Background="Transparent" Text="{Binding Title}">
                                                 <TextBlock.InputBindings>
                                                     <MouseBinding Gesture="LeftDoubleClick"
-                                                                  Command="{Binding MainWindowViewModel.CmdSelectedTabPanelItem, Source={StaticResource Locator}}"
+                                                                  Command="{Binding DataContext.CmdSelectedTabPanelItem, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
                                                                   CommandParameter="{Binding ElementName=MyScrollViewer}"
                                                                   />
                                                 </TextBlock.InputBindings>
@@ -375,123 +372,24 @@
                                       Grid.Row="1" Grid.Column="1"
                                       Margin="0,-5,0,0"
                                       >
-                            <TabPanel IsItemsHost="True" Margin="0,5" Grid.Column="1" Grid.Row="1"/>
+                            <TabPanel IsItemsHost="True" Margin="2,5" Grid.Column="1" Grid.Row="1"/>
                         </ScrollViewer>
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="3"/>
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
 
-            <TabItem Header="{Binding LayotRackViewModel.Title}"
-                     IsSelected="{Binding LayotRackViewModel.IsSelected}">
-                <pages:LayotRackUserControl DataContext="{Binding LayotRackViewModel}"/>
-            </TabItem>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}"/>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
 
-            <TabItem Header="{Binding TableSignalsViewModel.Title}"
-                     IsSelected="{Binding TableSignalsViewModel.IsSelected}">
-                <pages:TableSignalsUserControl DataContext="{Binding TableSignalsViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UserDIViewModel.Title}"
-                     IsSelected="{Binding UserDIViewModel.IsSelected}">
-                <pages_signal:UserDIUserControl DataContext="{Binding UserDIViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UserAIViewModel.Title}"
-                     IsSelected="{Binding UserAIViewModel.IsSelected}">
-                <pages_signal:UserAIUserControl DataContext="{Binding UserAIViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalsDIViewModel.Title}"
-                     IsSelected="{Binding SignalsDIViewModel.IsSelected}">
-                <pages_signal:SignalsDIUserControl DataContext="{Binding SignalsDIViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalsAIViewModel.Title}"
-                     IsSelected="{Binding SignalsAIViewModel.IsSelected}">
-                <pages_signal:SignalsAIUserControl DataContext="{Binding SignalsAIViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalsDOViewModel.Title}"
-                     IsSelected="{Binding SignalsDOViewModel.IsSelected}">
-                <pages_signal:SignalsDOUserControl DataContext="{Binding SignalsDOViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalsAOViewModel.Title}"
-                     IsSelected="{Binding SignalsAOViewModel.IsSelected}">
-                <pages_signal:SignalsAOUserControl DataContext="{Binding SignalsAOViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding ECViewModel.Title}"
-                     IsSelected="{Binding ECViewModel.IsSelected}">
-                <pages_param:ECUserControl DataContext="{Binding ECViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UserRegUserModel.Title}"
-                     IsSelected="{Binding UserRegUserModel.IsSelected}">
-                <pages_param:UserRegUserControl DataContext="{Binding UserRegUserModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalsGroupViewModel.Title}"
-                     IsSelected="{Binding SignalsGroupViewModel.IsSelected}">
-                <pages_param:SignalsGroupUserControl DataContext="{Binding SignalsGroupViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding GroupsSignalViewModel.Title}"
-                     IsSelected="{Binding GroupsSignalViewModel.IsSelected}">
-                <pages_param:GroupsSignalUserControl DataContext="{Binding GroupsSignalViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UZDViewModel.Title}"
-                     IsSelected="{Binding UZDViewModel.IsSelected}">
-                <pages_param:UZDUserControl DataContext="{Binding UZDViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UVSViewModel.Title}"
-                     IsSelected="{Binding UVSViewModel.IsSelected}">
-                <pages_param:UVSUserControl DataContext="{Binding UVSViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UMPNAViewModel.Title}"
-                     IsSelected="{Binding UMPNAViewModel.IsSelected}">
-                <pages_param:UMPNAUserControl DataContext="{Binding UMPNAViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding KTPRViewModel.Title}"
-                     IsSelected="{Binding KTPRViewModel.IsSelected}">
-                <pages_param:KTPRUserControl DataContext="{Binding KTPRViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding KTPRSViewModel.Title}"
-                     IsSelected="{Binding KTPRSViewModel.IsSelected}">
-                <pages_param:KTPRSUserControl DataContext="{Binding KTPRSViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding SignalingViewModel.Title}"
-                     IsSelected="{Binding SignalingViewModel.IsSelected}">
-                <pages_param:SignalingUserControl DataContext="{Binding SignalingViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UTSViewModel.Title}"
-                     IsSelected="{Binding UTSViewModel.IsSelected}">
-                <pages_param:UTSUserControl DataContext="{Binding UTSViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UstRealViewModel.Title}"
-                     IsSelected="{Binding UstRealViewModel.IsSelected}">
-                <pages_param:UstRealUserControl DataContext="{Binding UstRealViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding UstCommonViewModel.Title}"
-                     IsSelected="{Binding UstCommonViewModel.IsSelected}">
-                <pages_param:UstCommonUserControl DataContext="{Binding UstCommonViewModel}"/>
-            </TabItem>
-
-            <TabItem Header="{Binding HandMapUserModel.Title}"
-                     IsSelected="{Binding HandMapUserModel.IsSelected}">
-                <pages_param:HandMapUserControl DataContext="{Binding HandMapUserModel}"/>
-            </TabItem>
-
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl Content="{Binding UsingUserControl}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
         </TabControl>
 
     </Grid>

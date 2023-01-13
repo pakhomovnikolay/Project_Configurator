@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Models.Settings.Interfaces;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Settings
 {
@@ -23,7 +24,7 @@ namespace Project_Сonfigurator.Models.Settings
         /// <summary>
         /// Список модулей
         /// </summary>
-        public List<VendorModule> Modules { get; set; }
+        public ObservableCollection<VendorModule> Modules { get; set; }
         #endregion
     }
 }

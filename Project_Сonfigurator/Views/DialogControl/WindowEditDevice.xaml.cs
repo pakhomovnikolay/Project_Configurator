@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Setpoints;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Project_Сonfigurator.Views.DialogControl
@@ -24,9 +25,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         #endregion
 
         #region Входные параметры
-        public List<BaseText> InputParam
+        public ObservableCollection<BaseText> InputParam
         {
-            get => (List<BaseText>)GetValue(InputParamProperty);
+            get => (ObservableCollection<BaseText>)GetValue(InputParamProperty);
             set => SetValue(InputParamProperty, value);
         }
         /// <summary>
@@ -34,9 +35,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// </summary>
         public static readonly DependencyProperty InputParamProperty = DependencyProperty.Register(
             nameof(InputParam),
-            typeof(List<BaseText>),
+            typeof(ObservableCollection<BaseText>),
             typeof(WindowEditDevice),
-            new PropertyMetadata(default(List<BaseText>)));
+            new PropertyMetadata(default(ObservableCollection<BaseText>)));
         #endregion
 
         #region Выбранный входной параметр
@@ -56,9 +57,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         #endregion
 
         #region Выходные параметры
-        public List<BaseText> OutputParam
+        public ObservableCollection<BaseText> OutputParam
         {
-            get => (List<BaseText>)GetValue(OutputParamProperty);
+            get => (ObservableCollection<BaseText>)GetValue(OutputParamProperty);
             set => SetValue(OutputParamProperty, value);
         }
         /// <summary>
@@ -66,9 +67,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// </summary>
         public static readonly DependencyProperty OutputParamProperty = DependencyProperty.Register(
             nameof(OutputParam),
-            typeof(List<BaseText>),
+            typeof(ObservableCollection<BaseText>),
             typeof(WindowEditDevice),
-            new PropertyMetadata(default(List<BaseText>)));
+            new PropertyMetadata(default(ObservableCollection<BaseText>)));
         #endregion
 
         #region Выбранный выходной параметр
@@ -88,9 +89,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         #endregion
 
         #region Уставки
-        public List<BaseSetpoints> Setpoints
+        public ObservableCollection<BaseSetpoints> Setpoints
         {
-            get => (List<BaseSetpoints>)GetValue(SetpointsProperty);
+            get => (ObservableCollection<BaseSetpoints>)GetValue(SetpointsProperty);
             set => SetValue(SetpointsProperty, value);
         }
         /// <summary>
@@ -98,9 +99,9 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// </summary>
         public static readonly DependencyProperty SetpointsProperty = DependencyProperty.Register(
             nameof(Setpoints),
-            typeof(List<BaseSetpoints>),
+            typeof(ObservableCollection<BaseSetpoints>),
             typeof(WindowEditDevice),
-            new PropertyMetadata(default(List<BaseSetpoints>)));
+            new PropertyMetadata(default(ObservableCollection<BaseSetpoints>)));
         #endregion
 
         #region Выбранная уставка

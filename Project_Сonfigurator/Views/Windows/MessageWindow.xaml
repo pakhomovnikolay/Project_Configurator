@@ -3,16 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
+        xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
         WindowStartupLocation="CenterScreen"
         WindowStyle="None"
         BorderBrush="Black"
         BorderThickness="0"
         Background="AliceBlue"
        
-        DataContext="{Binding MessageWindowViewModel, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance vm:MessageWindowViewModel, IsDesignTimeCreatable=True}"
         Height="{Binding WindowHeight}"
         Width="{Binding WindowWidth}"
         ResizeMode="{Binding WindowResizeMode}"
@@ -64,8 +65,8 @@
 
         <!--Данные-->
         <TabControl Grid.Row="1"
-                    ItemsSource="{Binding DataView}"
-                    SelectedItem="{Binding SelectedMessages}"
+                    ItemsSource="{Binding CollectionMessages}"
+                    SelectedItem="{Binding SelectedCollectionMessage}"
                     >
 
             <TabControl.Template>
@@ -126,7 +127,7 @@
                                    IsOpen="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=Window}}"
                                    >
 
-                                <ListView ItemsSource="{Binding DataContext.DataView, RelativeSource={RelativeSource AncestorType=Window}}"
+                                <ListView ItemsSource="{Binding DataContext.CollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
                                           SelectedItem="{Binding DataContext.SelectedTabItem, RelativeSource={RelativeSource AncestorType=Window}}"
                                           Height="500"
                                           >
@@ -201,7 +202,7 @@
                                       Grid.Row="1" Grid.Column="1"
                                       Margin="0,-5,0,0"
                                       >
-                            <TabPanel IsItemsHost="True" Margin="0,5,0,5" Grid.Column="1" Grid.Row="1"/>
+                            <TabPanel IsItemsHost="True" Margin="2,5" Grid.Column="1" Grid.Row="1"/>
                         </ScrollViewer>
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="3"/>
                     </Grid>
@@ -393,7 +394,7 @@
                                                              Text="{Binding PathSound, UpdateSourceTrigger=PropertyChanged}"/>
                                                     <Button Grid.Column="1" Content="..." Margin="1"
                                                             Style="{StaticResource CustomButtonStyle}"
-                                                            Command="{Binding MessageWindowViewModel.CmdSelectionPathSound, Source={StaticResource Locator}}"
+                                                            Command="{Binding DataContext.CmdSelectionPathSound, RelativeSource={RelativeSource AncestorType=Window}}"
                                                             CommandParameter="{Binding ElementName=MyDataGrid}"
                                                             />
                                                 </Grid>

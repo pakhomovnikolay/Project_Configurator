@@ -6,7 +6,7 @@
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
-        
+        xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
         WindowStartupLocation="CenterOwner"
         AllowsTransparency="True"
         WindowStyle="None"
@@ -15,7 +15,7 @@
         Background="AliceBlue"
         Icon="../../Resources/Icons/Settings.ico"
         
-        DataContext="{Binding SettingWindowViewModels, Source={StaticResource Locator}}"
+        d:DataContext="{d:DesignInstance vm:SettingWindowViewModels, IsDesignTimeCreatable=True}"
         Title="{Binding Title}"
         Height="{Binding WindowHeight}"
         Width="{Binding WindowWidth}"

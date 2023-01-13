@@ -1,5 +1,5 @@
 ﻿using Project_Сonfigurator.Models.LayotRack.Interfaces;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.LayotRack
 {
@@ -23,7 +23,7 @@ namespace Project_Сonfigurator.Models.LayotRack
         /// <summary>
         /// Корзины УСО
         /// </summary>
-        public List<Rack> Racks { get; set; }
+        public ObservableCollection<Rack> Racks { get; set; }
         #endregion
     }
 }

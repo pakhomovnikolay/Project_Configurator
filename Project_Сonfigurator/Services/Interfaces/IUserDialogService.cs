@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Project_Сonfigurator.Views.Windows;
+using System.Windows;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -86,6 +87,27 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <param name="SelectedFile"></param>
         /// <returns></returns>
         bool DeleteFile(string SelectedFile);
+        #endregion
+
+        #region Открыть главное окно приложения
+        /// <summary>
+        /// Открыть главное окно приложения
+        /// </summary>
+        void OpenMainWindow();
+        #endregion
+
+        #region Открыть окно настроек приложения
+        /// <summary>
+        /// Открыть окно настроек приложения
+        /// </summary>
+        void OpenSettingsWindow();
+        #endregion
+
+        #region Открыть окно сообщений
+        /// <summary>
+        /// Открыть окно сообщений
+        /// </summary>
+        void OpenMessageWindow();
         #endregion
     }
 }

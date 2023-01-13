@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Settings.Interfaces
 {
@@ -29,7 +29,7 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// <summary>
         /// Список модулей
         /// </summary>
-        List<VendorModuleType> ModuleTypes { get; set; }
+        ObservableCollection<VendorModuleType> ModuleTypes { get; set; }
         #endregion
     }
 }

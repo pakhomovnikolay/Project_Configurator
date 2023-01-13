@@ -4,13 +4,11 @@ using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels
@@ -18,30 +16,23 @@ namespace Project_Сonfigurator.ViewModels
     public class MessageWindowViewModel : ViewModel
     {
         #region Конструктор
+        public MessageWindowViewModel()
+        {
+            Title = "Сообщения";
+        }
+
         private readonly IUserDialogService UserDialog;
-        private readonly IDBService _DBService;
-        public MessageWindowViewModel(IUserDialogService userDialog, IDBService dBService)
+        private readonly IDBService DBServices;
+        public MessageWindowViewModel(IUserDialogService userDialog, IDBService _IDBService) : this()
         {
             UserDialog = userDialog;
-            _DBService = dBService;
+            DBServices = _IDBService;
 
-            _DBService.RefreshDataViewModel(this, false);
+            DBServices.RefreshDataViewModel(this, false);
         }
         #endregion
 
         #region Параметры
-
-        #region Заголовок окна
-        private string _Title = "Сообщения";
-        /// <summary>
-        /// Заголовок окна
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
 
         #region Высота окна
         private int _WindowHeight = 800;
@@ -110,43 +101,35 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Список сообщений
-        private List<CollectionMessage> _CollectionMessages = new();
+        private ObservableCollection<CollectionMessage> _CollectionMessages = new();
         /// <summary>
         /// Список сообщений
         /// </summary>
-        public List<CollectionMessage> CollectionMessages
+        public ObservableCollection<CollectionMessage> CollectionMessages
         {
             get => _CollectionMessages;
             set => Set(ref _CollectionMessages, value);
         }
         #endregion
 
-        #region Коллекция сообщений
-        /// <summary>
-        /// Коллекция сообщений
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
-        #endregion
-
         #region Выбранная коллекция сообщений
-        private CollectionMessage _SelectedMessages = new();
+        private CollectionMessage _SelectedCollectionMessage;
         /// <summary>
         /// Выбранная коллекция сообщений
         /// </summary>
-        public CollectionMessage SelectedMessages
+        public CollectionMessage SelectedCollectionMessage
         {
-            get => _SelectedMessages;
+            get => _SelectedCollectionMessage;
             set
             {
-                if (Set(ref _SelectedMessages, value))
-                    SelectedMessage = _SelectedMessages?.Messages[0];
+                if (Set(ref _SelectedCollectionMessage, value))
+                    SelectedMessage = _SelectedCollectionMessage?.Messages[0];
             }
         }
         #endregion
 
         #region Выбранное сообщение
-        private BaseMessage _SelectedMessage = new();
+        private BaseMessage _SelectedMessage;
         /// <summary>
         /// Выбранное сообщение
         /// </summary>
@@ -230,24 +213,38 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdCreateCollectionMessagesExecuted(object p)
         {
             if (p is not ScrollViewer MyScrollViewer) return;
-            if (CollectionMessages.Count > 0)
+
+            var msg = Enumerable.Range(1, 4095).Select(
+                i => new BaseMessage()
+                {
+                    Index = i.ToString(),
+                    Color = "",
+                    Description = "",
+                    Hide = "",
+                    LevelAccess = "",
+                    NeedAck = "",
+                    NeedPlay = "",
+                    PathSound = "",
+                    TypeSound = ""
+                });
+
+            var messages = new ObservableCollection<BaseMessage>(msg);
+
+            CollectionMessages.Add(new CollectionMessage
             {
-                SelectedMessages = CollectionMessages[^2];
-                SelectedTabItem = SelectedMessages;
-                SelectedMessage = SelectedMessages.Messages[0];
-            }
+                IndexSystem = "",
+                Description = $"Сообщение {CollectionMessages.Count}",
+                Messages = messages
+            });
 
-            var msg = Enumerable.Range(1, 4095).Select(i => new BaseMessage() { Index = i.ToString() });
-            CollectionMessages.Add(new CollectionMessage { IndexSystem = "", Description = $"Сообщение {CollectionMessages.Count}", Messages = new List<BaseMessage>(msg) });
+            SelectedCollectionMessage = CollectionMessages[^1];
 
-            SelectedMessages = CollectionMessages[^1];
-            SelectedTabItem = SelectedMessages;
-            SelectedMessage = SelectedMessages.Messages[0];
 
-            OnCmdSelectedTabPanelItemExecuted(MyScrollViewer);
-            _DataView.Source = CollectionMessages;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            //SelectedMessages = CollectionMessages[^1];
+            //SelectedTabItem = SelectedMessages;
+            //SelectedMessage = SelectedMessages.Messages[0];
+
+            //OnCmdSelectedTabPanelItemExecuted(MyScrollViewer);
         }
         #endregion
 
@@ -256,25 +253,16 @@ namespace Project_Сonfigurator.ViewModels
         /// <summary>
         /// Команда - Удалить коллекция сообщений
         /// </summary>
-        public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted);
+        public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted, CanCmdDeleteCollectionMessagesExecute);
+        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedCollectionMessage is not null;
         private void OnCmdDeleteCollectionMessagesExecuted()
         {
-            var index = CollectionMessages.IndexOf(SelectedMessages);
+            var index = CollectionMessages.IndexOf(SelectedCollectionMessage);
             index = index == 0 ? index : index - 1;
 
-            CollectionMessages.Remove(SelectedMessages);
+            CollectionMessages.Remove(SelectedCollectionMessage);
             if (CollectionMessages.Count > 0)
-            {
-                SelectedMessages = CollectionMessages[index];
-                _DataView.Source = CollectionMessages;
-                _DataView.View?.Refresh();
-            }
-            else
-            {
-                _DataView.Source = CollectionMessages;
-                _DataView.View?.Refresh();
-                SelectedMessages = null;
-            }
+                SelectedCollectionMessage = CollectionMessages[index];
         }
         #endregion
 
@@ -496,17 +484,13 @@ namespace Project_Сonfigurator.ViewModels
                         }
                     }
                 }
-                
+
             }
             catch (Exception e)
             {
                 var desc = $"Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу,\nконфигурацию проекта и настройки импорта\n{e}";
                 UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
             }
-
-            _DataView.Source = CollectionMessages;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
         }
 
 
@@ -519,14 +503,10 @@ namespace Project_Сonfigurator.ViewModels
         #region Генерируем данные
         public void GeneratedData()
         {
-            _DataView.Source = CollectionMessages;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-
             if (CollectionMessages is null || CollectionMessages.Count <= 0)
                 SelectedMessage = null;
             else if (SelectedMessage is null)
-                SelectedMessages = CollectionMessages[0];
+                SelectedCollectionMessage = CollectionMessages[0];
         }
         #endregion
 

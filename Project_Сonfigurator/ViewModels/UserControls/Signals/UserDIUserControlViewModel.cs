@@ -2,9 +2,12 @@
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics.Metrics;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,12 +15,19 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class UserDIUserControlViewModel : ViewModel
+    public class UserDIUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public UserDIUserControlViewModel()
+        {
+            Title = "DI формируемые";
+            Description = "DI формируемые от ПЛК";
+            UsingUserControl = new UserDIUserControl();
+        }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public UserDIUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public UserDIUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -28,54 +38,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "DI формируемые";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "DI формируемые от ПЛК";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -99,11 +61,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Список сигналов DI формируемых
-        private List<BaseSignal> _BaseSignals = new();
+        private ObservableCollection<BaseSignal> _BaseSignals = new();
         /// <summary>
         /// Список сигналов DI формируемых
         /// </summary>
-        public List<BaseSignal> BaseSignals
+        public ObservableCollection<BaseSignal> BaseSignals
         {
             get => _BaseSignals;
             set => Set(ref _BaseSignals, value);
@@ -190,7 +152,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (App.FucusedTabControl == null) return;
             if (!_SignalService.DoSelection) return;
 
-            var data_list = new List<BaseSignal>();
+            var data_list = new ObservableCollection<BaseSignal>();
             foreach (BaseSignal Signal in DataView)
             {
                 data_list.Add(Signal);

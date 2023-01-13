@@ -1,10 +1,9 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
-using Project_Сonfigurator.ViewModels.UserControls;
-using Project_Сonfigurator.ViewModels.UserControls.Params;
-using Project_Сonfigurator.ViewModels.UserControls.Signals;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.Windows;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,152 +18,50 @@ namespace Project_Сonfigurator.ViewModels
     {
         #region Конструктор
 
+        public MainWindowViewModel()
+        {
+            Title = "Конфигуратор проекта";
+        }
+
         #region Сервисы
+        public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
         private readonly IUserDialogService UserDialog;
-        private readonly ILogSerivece Log;
-        private readonly IDBService _DBService;
-        public readonly ISettingService _SettingService;
-        private readonly ISUExportRedefineService _SUExportRedefineService;
+        private readonly ILogSerivece LogSeriveces;
+        private readonly IDBService DBServices;
+        public readonly ISettingService SettingServices;
+        private readonly ISUExportRedefineService SUExportRedefineServices;
         #endregion
 
-        #region ViewModels
-        public LayotRackUserControlViewModel LayotRackViewModel { get; }
-        public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-        public SignalsDIUserControlViewModel SignalsDIViewModel { get; }
-        public SignalsAIUserControlViewModel SignalsAIViewModel { get; }
-        public SignalsDOUserControlViewModel SignalsDOViewModel { get; }
-        public SignalsAOUserControlViewModel SignalsAOViewModel { get; }
-        public ECUserControlViewModel ECViewModel { get; }
-        public UserDIUserControlViewModel UserDIViewModel { get; }
-        public UserAIUserControlViewModel UserAIViewModel { get; }
-        public UserRegUserControlViewModel UserRegUserModel { get; }
-        public SignalsGroupUserControlViewModel SignalsGroupViewModel { get; }
-        public GroupsSignalUserControlViewModel GroupsSignalViewModel { get; }
-        public UZDUserControlViewModel UZDViewModel { get; }
-        public UVSUserControlViewModel UVSViewModel { get; }
-        public UMPNAUserControlViewModel UMPNAViewModel { get; }
-        public KTPRUserControlViewModel KTPRViewModel { get; }
-        public KTPRSUserControlViewModel KTPRSViewModel { get; }
-        public SignalingUserControlViewModel SignalingViewModel { get; }
-        public UTSUserControlViewModel UTSViewModel { get; }
-        public UstRealUserControlViewModel UstRealViewModel { get; }
-        public UstCommonUserControlViewModel UstCommonViewModel { get; }
-        public HandMapUserControlViewModel HandMapUserModel { get; }
-        public MessageWindowViewModel MessageViewModel { get; }
-        #endregion
-
-        public MainWindowViewModel(
-
-        #region Сервисы
-            IUserDialogService userDialog,
-            ILogSerivece logSerivece,
-            IDBService dDBService,
-            ISettingService settingService,
-            ISUExportRedefineService sUExportRedefineService,
-        #endregion
-
-        #region ViewModels
-        LayotRackUserControlViewModel layotRackViewModel,
-            TableSignalsUserControlViewModel tableSignalsViewModel,
-            SignalsDIUserControlViewModel signalsDIViewModel,
-            SignalsAIUserControlViewModel signalsAIViewModel,
-            SignalsDOUserControlViewModel signalsDOViewModel,
-            SignalsAOUserControlViewModel signalsAOViewModel,
-            ECUserControlViewModel eCViewModel,
-            UserDIUserControlViewModel userDIViewModel,
-            UserAIUserControlViewModel userAIViewModel,
-            UserRegUserControlViewModel userRegUserModel,
-            SignalsGroupUserControlViewModel signalsGroupViewModel,
-            GroupsSignalUserControlViewModel groupsSignalViewModel,
-            UZDUserControlViewModel uZDViewModel,
-            UVSUserControlViewModel uVSViewModel,
-            UMPNAUserControlViewModel uMPNAViewModel,
-            KTPRUserControlViewModel kTPRViewModel,
-            KTPRSUserControlViewModel kTPRSViewModel,
-            SignalingUserControlViewModel signalingViewModel,
-            UTSUserControlViewModel uTSViewModel,
-            UstRealUserControlViewModel ustRealViewModel,
-            UstCommonUserControlViewModel ustCommonViewModel,
-            HandMapUserControlViewModel handMapUserModel,
-            MessageWindowViewModel messageViewModel
-        #endregion
-
-            )
+        public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
+            ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
         {
             #region Сервисы
-            UserDialog = userDialog;
-            Log = logSerivece;
-            _DBService = dDBService;
-            _SettingService = settingService;
-            _SUExportRedefineService = sUExportRedefineService;
-            #endregion
-
-            #region ViewModels
-            LayotRackViewModel = layotRackViewModel;
-            TableSignalsViewModel = tableSignalsViewModel;
-            SignalsDIViewModel = signalsDIViewModel;
-            SignalsAIViewModel = signalsAIViewModel;
-            SignalsDOViewModel = signalsDOViewModel;
-            SignalsAOViewModel = signalsAOViewModel;
-            ECViewModel = eCViewModel;
-            UserDIViewModel = userDIViewModel;
-            UserAIViewModel = userAIViewModel;
-            UserRegUserModel = userRegUserModel;
-            SignalsGroupViewModel = signalsGroupViewModel;
-            GroupsSignalViewModel = groupsSignalViewModel;
-            UZDViewModel = uZDViewModel;
-            UVSViewModel = uVSViewModel;
-            UMPNAViewModel = uMPNAViewModel;
-            KTPRViewModel = kTPRViewModel;
-            KTPRSViewModel = kTPRSViewModel;
-            SignalingViewModel = signalingViewModel;
-            UTSViewModel = uTSViewModel;
-            UstRealViewModel = ustRealViewModel;
-            UstCommonViewModel = ustCommonViewModel;
-            HandMapUserModel = handMapUserModel;
-            MessageViewModel = messageViewModel;
+            ViewModelUserControls = viewModelUserControls;
+            UserDialog = _UserDialog;
+            LogSeriveces = _ILogSerivece;
+            DBServices = _IDBService;
+            SettingServices = _ISettingService;
+            SUExportRedefineServices = _ISUExportRedefineService;
             #endregion
 
             #region Задаем имя проекта
             SetNameProject();
             #endregion
 
-            #region Скрываем TabControl, при отсутствии данных
-            if (Program._DBService is null)
-                VisibilityTabContol = Visibility.Hidden;
-            #endregion
-
             #region Формируем состояния выбранных узлов для импорта данных в БД
-            if (Program.Settings is not null && Program.Settings.Config is not null && Program.Settings.Config.ServerDB is not null)
+            if (App.Settings is not null && App.Settings.Config is not null && App.Settings.Config.ServerDB is not null)
             {
                 IsCheckedAll = true;
-                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                foreach (var _ServerDB in App.Settings.Config.ServerDB)
                 {
                     IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
                 }
             }
             #endregion
-
-            #region Создаем список ViewModels
-            CreateViewModels();
-            #endregion
-
         }
         #endregion
 
         #region Параметры
-
-        #region Заголовок окна
-        private string _Title = "Конфигуратор проекта";
-        /// <summary>
-        /// Заголовок окна
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
 
         #region Наименование открытого проекта
         private string _NameProject;
@@ -244,20 +141,8 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Видимость панели элементов
-        private Visibility _VisibilityTabContol = Visibility.Visible;
-        /// <summary>
-        /// Видимость панели элементов
-        /// </summary>
-        public Visibility VisibilityTabContol
-        {
-            get => _VisibilityTabContol;
-            set => Set(ref _VisibilityTabContol, value);
-        }
-        #endregion
-
         #region Настройки приложения
-        private SettingApp _Config = Program.Settings.Config ?? new();
+        private SettingApp _Config = App.Settings.Config ?? new();
         /// <summary>
         /// Настройки приложения
         /// </summary>
@@ -280,42 +165,6 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Коллекция ViewModels
-        private List<object> _ViewModels = new();
-        /// <summary>
-        /// Коллекция ViewModels
-        /// </summary>
-        public List<object> ViewModels
-        {
-            get => _ViewModels;
-            set => Set(ref _ViewModels, value);
-        }
-        #endregion
-
-        #region Список имен вкладок, для быстрого перехода
-        private List<string> _ViewModelsHeader = new();
-        /// <summary>
-        /// Список имен вкладок, для быстрого перехода
-        /// </summary>
-        public List<string> ViewModelsHeader
-        {
-            get => _ViewModelsHeader;
-            set => Set(ref _ViewModelsHeader, value);
-        }
-        #endregion
-
-        #region Выбранная вкладка, из списка вкладок
-        private string _SelectedViewModelsHeader;
-        /// <summary>
-        /// Выбранная вкладка, из списка вкладок
-        /// </summary>
-        public string SelectedViewModelsHeader
-        {
-            get => _SelectedViewModelsHeader;
-            set => Set(ref _SelectedViewModelsHeader, value);
-        }
-        #endregion
-
         #region Состояние ToggleButton
         private bool _ToggleButtonIsChecked;
         /// <summary>
@@ -328,15 +177,27 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Выбранная вкладка
+        #region Текущий индекс вкладки
         private int _SelectedTabIndex;
         /// <summary>
-        /// Выбранная вкладка
+        /// Текущий индекс вкладки
         /// </summary>
         public int SelectedTabIndex
         {
             get => _SelectedTabIndex;
             set => Set(ref _SelectedTabIndex, value);
+        }
+        #endregion
+
+        #region Выбранная вкладка из списка вкладок
+        private IViewModelUserControls _SelectedViewModel;
+        /// <summary>
+        /// Выбранная вкладка из списка вкладок
+        /// </summary>
+        public IViewModelUserControls SelectedViewModel
+        {
+            get => _SelectedViewModel;
+            set => Set(ref _SelectedViewModel, value);
         }
         #endregion
 
@@ -352,11 +213,7 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenSettingWindow => _CmdOpenSettingWindow ??= new RelayCommand(OnCmdOpenSettingWindowExecuted);
         private void OnCmdOpenSettingWindowExecuted()
         {
-            var window = new SettingWindow()
-            {
-                Owner = Application.Current.MainWindow
-            };
-            window.Show();
+            App.Services.GetRequiredService<IUserDialogService>().OpenSettingsWindow();
         }
         #endregion
 
@@ -368,19 +225,17 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            Program._DBService.ClearDataBase();
-            _DBService.ClearDataBase();
-            Program.Settings.Config.PathProject = "";
-            _SettingService.Config = Program.Settings.Config;
-            _SettingService.Save();
+            App.DBServices.ClearDataBase();
+            DBServices.ClearDataBase();
+            App.Settings.Config.PathProject = "";
+            SettingServices.Config = App.Settings.Config;
+            SettingServices.Save();
             SetNameProject();
 
-            foreach (var _ViewModel in ViewModels)
+            foreach (var _ViewModel in ViewModelUserControls)
             {
-                _DBService.RefreshDataViewModel(_ViewModel, true);
+                DBServices.RefreshDataViewModel(_ViewModel, true);
             }
-
-            VisibilityTabContol = Visibility.Visible;
         }
         #endregion
 
@@ -392,25 +247,24 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
         private void OnCmdOpenProjectExecuted()
         {
-            if (!UserDialog.OpenFile(Title, out string path, Program.Settings.Config.PathProject)) return;
+            if (!UserDialog.OpenFile(Title, out string path, App.Settings.Config.PathProject)) return;
 
-            Program.Settings.Config.PathProject = path;
-            Program._DBService.AppData = Program._DBService.LoadData(path);
-            _DBService.LoadData(path);
-            _DBService.AppData = Program._DBService.AppData;
-            _SettingService.Config = Program.Settings.Config;
-            _SettingService.Save();
+            App.Settings.Config.PathProject = path;
+            App.DBServices.AppData = App.DBServices.LoadData(path);
+            DBServices.LoadData(path);
+            DBServices.AppData = App.DBServices.AppData;
+            SettingServices.Config = App.Settings.Config;
+            SettingServices.Save();
 
-            if (Program._DBService.AppData is not null)
+            if (App.DBServices.AppData is not null)
             {
-                foreach (var _ViewModel in ViewModels)
+                foreach (var _ViewModel in ViewModelUserControls)
                 {
-                    _DBService.RefreshDataViewModel(_ViewModel, false);
+                    DBServices.RefreshDataViewModel(_ViewModel, false);
                 }
             }
 
             SetNameProject();
-            VisibilityTabContol = Visibility.Visible;
         }
         #endregion
 
@@ -423,8 +277,8 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdSaveDataExecuted()
         {
             if (!UserDialog.SaveProject(Title)) return;
-            _DBService.FormingAppDataBeforeSaving(ViewModels);
-            _DBService.SaveData();
+            //DBServices.FormingAppDataBeforeSaving(ViewModelUserControls);
+            DBServices.SaveData();
         }
         #endregion
 
@@ -436,12 +290,12 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdSaveAsData => _CmdSaveAsData ??= new RelayCommand(OnCmdSaveAsDataExecuted);
         private void OnCmdSaveAsDataExecuted()
         {
-            Program.Settings.Config.PathProject = "";
+            App.Settings.Config.PathProject = "";
             if (!UserDialog.SaveProject(Title)) return;
 
-            _DBService.AppData = new();
-            _DBService.FormingAppDataBeforeSaving(ViewModels);
-            _DBService.SaveData();
+            DBServices.AppData = new();
+            //DBServices.FormingAppDataBeforeSaving(ViewModels);
+            DBServices.SaveData();
         }
         #endregion
 
@@ -451,11 +305,11 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Открыть папку с проектом
         /// </summary>
         public ICommand CmdOpenProjectFolder => _CmdOpenProjectFolder ??= new RelayCommand(OnCmdOpenProjectFolderExecuted, CanCmdOpenProjectFolderExecute);
-        private bool CanCmdOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
+        private bool CanCmdOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject);
         private void OnCmdOpenProjectFolderExecuted()
         {
-            var name_project = Program.Settings.Config.PathProject.Split('\\');
-            var name_folder = Program.Settings.Config.PathProject.Replace(name_project[^1], "").TrimEnd('\\');
+            var name_project = App.Settings.Config.PathProject.Split('\\');
+            var name_folder = App.Settings.Config.PathProject.Replace(name_project[^1], "").TrimEnd('\\');
             Process.Start("explorer.exe", name_folder);
         }
         #endregion
@@ -466,12 +320,12 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Открыть папку с настройками проекта
         /// </summary>
         public ICommand CmdOpenSettingsProjectFolder => _CmdOpenSettingsProjectFolder ??= new RelayCommand(OnCmdOpenSettingsProjectFolderExecuted, CanCmdOpenSettingsProjectFolderExecute);
-        private bool CanCmdOpenSettingsProjectFolderExecute() => !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject);
+        private bool CanCmdOpenSettingsProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject);
         private void OnCmdOpenSettingsProjectFolderExecuted()
         {
 
-            var name_project = Program.Settings.Config.PathConfig.Split('\\');
-            var name_folder = Program.Settings.Config.PathConfig.Replace(name_project[^1], "").TrimEnd('\\');
+            var name_project = App.Settings.Config.PathConfig.Split('\\');
+            var name_folder = App.Settings.Config.PathConfig.Replace(name_project[^1], "").TrimEnd('\\');
             Process.Start("explorer.exe", name_folder);
         }
         #endregion
@@ -484,7 +338,7 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            _DBService.RequestSetData(ViewModels);
+            //DBServices.RequestSetData(ViewModels);
         }
         #endregion
 
@@ -498,7 +352,7 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdExportSUExecuted(object p)
         {
             var TypeExport = (string)p;
-            _SUExportRedefineService.Export(TypeExport, this);
+            SUExportRedefineServices.Export(TypeExport, this);
         }
         #endregion
 
@@ -513,7 +367,7 @@ namespace Project_Сonfigurator.ViewModels
             if (Config is not null && Config.ServerDB is not null)
             {
                 IsCheckedAll = true;
-                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                foreach (var _ServerDB in App.Settings.Config.ServerDB)
                 {
                     IsCheckedAll = IsCheckedAll && _ServerDB.IsSelection;
                 }
@@ -531,7 +385,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             if (Config is not null && Config.ServerDB is not null)
             {
-                foreach (var _ServerDB in Program.Settings.Config.ServerDB)
+                foreach (var _ServerDB in App.Settings.Config.ServerDB)
                 {
                     _ServerDB.IsSelection = IsCheckedAll;
                 }
@@ -554,8 +408,8 @@ namespace Project_Сonfigurator.ViewModels
             if (p is not ScrollViewer MyScrollViewer) return;
 
             foreach (var _TabItem in from object _Item in _TabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == SelectedViewModelsHeader
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == SelectedViewModel.Title
                                      select _TabItem)
             {
                 var SelectedIndex = _TabControl.SelectedIndex;
@@ -575,8 +429,8 @@ namespace Project_Сonfigurator.ViewModels
                 {
                     for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
                     {
-                        var _Item = _TabControl.Items[i] as TabItem;
-                        Offset += _Item.ActualWidth;
+                        var _Item = _TabControl.Items[i] as IViewModelUserControls;
+                        Offset += _Item.Title.Length * 6;
 
                     }
                     MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
@@ -586,8 +440,8 @@ namespace Project_Сonfigurator.ViewModels
                 {
                     for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
                     {
-                        var _Item = _TabControl.Items[i] as TabItem;
-                        Offset += _Item.ActualWidth;
+                        var _Item = _TabControl.Items[i] as IViewModelUserControls;
+                        Offset += _Item.Title.Length * 6;
                     }
                     MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
                 }
@@ -604,12 +458,7 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdOpenMessageWindowExecute(object p) => true;
         private void OnCmdOpenMessageWindowExecuted(object p)
         {
-            var window = new MessageWindow()
-            {
-                Owner = Application.Current.MainWindow,
-                WindowStartupLocation = WindowStartupLocation.CenterScreen,
-            };
-            window.Show();
+            App.Services.GetRequiredService<IUserDialogService>().OpenMessageWindow();
         }
         #endregion
 
@@ -624,70 +473,12 @@ namespace Project_Сonfigurator.ViewModels
         private void SetNameProject()
         {
             NameProject = "Новый проект";
-            if (Program.Settings is not null && Program.Settings.Config is not null && !string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject))
+            if (App.Settings is not null && App.Settings.Config is not null && !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject))
             {
-                var name_project = Program.Settings.Config.PathProject.Split('\\');
+                var name_project = App.Settings.Config.PathProject.Split('\\');
                 var name = name_project[^1].Split('.');
                 NameProject = name[0];
             }
-        }
-        #endregion
-
-        #region Создаем коллекцию ViewModels
-        private void CreateViewModels()
-        {
-            ViewModels = new()
-            {
-                LayotRackViewModel,
-                TableSignalsViewModel,
-                SignalsDIViewModel,
-                SignalsAIViewModel,
-                SignalsDOViewModel,
-                SignalsAOViewModel,
-                ECViewModel,
-                UserDIViewModel,
-                UserAIViewModel,
-                UserRegUserModel,
-                SignalsGroupViewModel,
-                GroupsSignalViewModel,
-                UZDViewModel,
-                UVSViewModel,
-                UMPNAViewModel,
-                KTPRViewModel,
-                KTPRSViewModel,
-                SignalingViewModel,
-                UTSViewModel,
-                UstRealViewModel,
-                UstCommonViewModel,
-                HandMapUserModel,
-                MessageViewModel
-            };
-
-            ViewModelsHeader = new()
-            {
-                LayotRackViewModel.Title,
-                TableSignalsViewModel.Title,
-                SignalsDIViewModel.Title,
-                SignalsAIViewModel.Title,
-                SignalsDOViewModel.Title,
-                SignalsAOViewModel.Title,
-                ECViewModel.Title,
-                UserDIViewModel.Title,
-                UserAIViewModel.Title,
-                UserRegUserModel.Title,
-                SignalsGroupViewModel.Title,
-                GroupsSignalViewModel.Title,
-                UZDViewModel.Title,
-                UVSViewModel.Title,
-                UMPNAViewModel.Title,
-                KTPRViewModel.Title,
-                KTPRSViewModel.Title,
-                SignalingViewModel.Title,
-                UTSViewModel.Title,
-                UstRealViewModel.Title,
-                UstCommonViewModel.Title,
-                HandMapUserModel.Title
-            };
         }
         #endregion
 

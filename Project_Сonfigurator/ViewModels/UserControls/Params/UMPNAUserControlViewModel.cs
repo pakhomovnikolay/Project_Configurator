@@ -1,92 +1,51 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
-using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UMPNAUserControlViewModel : ViewModel
+    public class UMPNAUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
-        private readonly IUserDialogService UserDialog;
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-        TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-
-        public UMPNAUserControlViewModel(
-            ISignalService signalService,
-            IUserDialogService userDialog,
-            IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel)
+        public UMPNAUserControlViewModel()
         {
-            UserDialog = userDialog;
-            _SignalService = signalService;
-            TableSignalsViewModel = tableSignalsViewModel;
-            _DBService = dBService;
-            _DBService.RefreshDataViewModel(this, false);
+            Title = "Настройки МПНА";
+            Description = "Текущие массивы состояний МПНА. НЕ ЗАБУДЬТЕ ЗАПОЛНИТЬ НАСТРОЙКИ КАРТ";
+            UsingUserControl = new UMPNAUserControl();
+        }
+
+        private readonly IUserDialogService UserDialog;
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+
+        //TableSignalsUserControlViewModel TableSignalsViewModel { get; }
+
+        public UMPNAUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        {
+            UserDialog = _UserDialog;
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
+
+
+
+            //TableSignalsViewModel = tableSignalsViewModel;
+            //_DBService = dBService;
+            //_DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Настройки МПНА";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Текущие массивы состояний МПНА. НЕ ЗАБУДЬТЕ ЗАПОЛНИТЬ НАСТРОЙКИ КАРТ";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -102,37 +61,37 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 {
                     if (_IsSelected)
                     {
-                        DoSelection = _SignalService.DoSelection;
-                        if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
+                        DoSelection = SignalServices.DoSelection;
+                        if (SignalServices.DoSelection && !string.IsNullOrWhiteSpace(SignalServices.Address))
                         {
                             if (DoSelectionInputParam)
                             {
-                                _SignalService.RedefineParam(SelectedInputParam, _IsSelected, Title);
-                                _DataViewInputParam.View?.Refresh();
+                                SignalServices.RedefineParam(SelectedInputParam, _IsSelected, Title);
+                                //_DataViewInputParam.View?.Refresh();
                             }
 
                             if (DoSelectionOutputParam)
                             {
-                                _SignalService.RedefineParam(SelectedOutputParam, _IsSelected, Title);
-                                _DataViewOutputParam.View?.Refresh();
+                                SignalServices.RedefineParam(SelectedOutputParam, _IsSelected, Title);
+                                //_DataViewOutputParam.View?.Refresh();
                             }
 
                             if (DoSelectionKGMPNA)
                             {
-                                _SignalService.RedefineParam(SelectedKGMPNA.Param, _IsSelected, Title);
-                                _DataViewKGMPNA.View?.Refresh();
+                                SignalServices.RedefineParam(SelectedKGMPNA.Param, _IsSelected, Title);
+                                //_DataViewKGMPNA.View?.Refresh();
                             }
 
                             if (DoSelectionKTPRA)
                             {
-                                _SignalService.RedefineParam(SelectedKTPRA.Param, _IsSelected, Title);
-                                _DataViewKTPRA.View?.Refresh();
+                                SignalServices.RedefineParam(SelectedKTPRA.Param, _IsSelected, Title);
+                                //_DataViewKTPRA.View?.Refresh();
                             }
 
                             if (DoSelectionKTPRAS)
                             {
-                                _SignalService.RedefineParam(SelectedKTPRAS.Param, _IsSelected, Title);
-                                _DataViewKTPRAS.View?.Refresh();
+                                SignalServices.RedefineParam(SelectedKTPRAS.Param, _IsSelected, Title);
+                                //_DataViewKTPRAS.View?.Refresh();
                             }
 
                             DoSelectionInputParam = false;
@@ -141,17 +100,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                             DoSelectionKTPRA = false;
                             DoSelectionKTPRAS = false;
                             DoSelection = false;
-                            _SignalService.ResetSignal();
+                            SignalServices.ResetSignal();
                         }
-                        else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
+                        else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
                         {
-                            _SignalService.ResetSignal();
+                            SignalServices.ResetSignal();
                             DoSelection = false;
                         }
                     }
-                    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
+                    else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName != Title)
                     {
-                        _SignalService.ResetSignal();
+                        SignalServices.ResetSignal();
                         DoSelection = false;
                     }
                 }
@@ -160,67 +119,27 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список МПНА
-        private List<BaseUMPNA> _UMPNA = new();
+        private ObservableCollection<BaseUMPNA> _UMPNA = new();
         /// <summary>
         /// Список МПНА
         /// </summary>
-        public List<BaseUMPNA> UMPNA
+        public ObservableCollection<BaseUMPNA> UMPNA
         {
             get => _UMPNA;
             set => Set(ref _UMPNA, value);
         }
         #endregion
 
-        #region Коллекция МПНА
-        /// <summary>
-        /// Коллекция МПНА
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
-        #endregion
-
         #region Выбранный МПНА
-        private BaseUMPNA _SelectedUMPNA = new();
+        private BaseUMPNA _SelectedUMPNA;
         /// <summary>
         /// Выбранный МПНА
         /// </summary>
         public BaseUMPNA SelectedUMPNA
         {
             get => _SelectedUMPNA;
-            set
-            {
-                if (Set(ref _SelectedUMPNA, value))
-                {
-                    _DataViewInputParam.Source = value?.InputParam;
-                    _DataViewInputParam.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewInputParam));
-
-                    _DataViewOutputParam.Source = value?.OutputParam;
-                    _DataViewOutputParam.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewOutputParam));
-
-                    _DataViewKGMPNA.Source = value?.KGMPNA;
-                    _DataViewKGMPNA.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewKGMPNA));
-
-                    _DataViewKTPRA.Source = value?.KTPRA;
-                    _DataViewKTPRA.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewKTPRA));
-
-                    _DataViewKTPRAS.Source = value?.KTPRAS;
-                    _DataViewKTPRAS.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewKTPRAS));
-                }
-            }
+            set => Set(ref _SelectedUMPNA, value);
         }
-        #endregion
-
-        #region Коллекция входных параметров
-        /// <summary>
-        /// Коллекция входных параметров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewInputParam = new();
-        public ICollectionView DataViewInputParam => _DataViewInputParam?.View;
         #endregion
 
         #region Выбранный входной параметр
@@ -235,14 +154,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Коллекция выходных параметров
-        /// <summary>
-        /// Коллекция выходных параметров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewOutputParam = new();
-        public ICollectionView DataViewOutputParam => _DataViewOutputParam?.View;
-        #endregion
-
         #region Выбранный выходной параметр
         private BaseParam _SelectedOutputParam;
         /// <summary>
@@ -253,14 +164,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _SelectedOutputParam;
             set => Set(ref _SelectedOutputParam, value);
         }
-        #endregion
-
-        #region Коллекция агрегатных готовностей
-        /// <summary>
-        /// Коллекция агрегатных готовностей
-        /// </summary>
-        private readonly CollectionViewSource _DataViewKGMPNA = new();
-        public ICollectionView DataViewKGMPNA => _DataViewKGMPNA?.View;
         #endregion
 
         #region Выбранный параметр агрегатных готовностей
@@ -275,14 +178,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Коллекция агрегатных защит
-        /// <summary>
-        /// Коллекция агрегатных защит
-        /// </summary>
-        private readonly CollectionViewSource _DataViewKTPRA = new();
-        public ICollectionView DataViewKTPRA => _DataViewKTPRA?.View;
-        #endregion
-
         #region Выбранный параметр агрегатных защит
         private BaseKTPRA _SelectedKTPRA;
         /// <summary>
@@ -293,14 +188,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _SelectedKTPRA;
             set => Set(ref _SelectedKTPRA, value);
         }
-        #endregion
-
-        #region Коллекция предельных параметров
-        /// <summary>
-        /// Коллекция предельных параметров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewKTPRAS = new();
-        public ICollectionView DataViewKTPRAS => _DataViewKTPRAS?.View;
         #endregion
 
         #region Выбранный параметр предельных параметров
@@ -411,26 +298,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить МПНА
         /// </summary>
         public ICommand CmdDeleteUMPNA => _CmdDeleteUMPNA ??= new RelayCommand(OnCmdDeleteUMPNAExecuted, CanCmdDeleteUMPNAExecute);
-        private bool CanCmdDeleteUMPNAExecute() => SelectedUMPNA is not null && !string.IsNullOrWhiteSpace(SelectedUMPNA.Description);
-
+        private bool CanCmdDeleteUMPNAExecute() => SelectedUMPNA is not null;
         private void OnCmdDeleteUMPNAExecuted()
         {
             var index = UMPNA.IndexOf(SelectedUMPNA);
-            UMPNA.Remove(SelectedUMPNA);
+            index = index == 0 ? index : index - 1;
 
+            UMPNA.Remove(SelectedUMPNA);
             if (UMPNA.Count > 0)
             {
-                if (index > 0)
-                    SelectedUMPNA = UMPNA[index - 1];
-                else
-                    SelectedUMPNA = UMPNA[index];
+                RefreshIndexUMPNA();
+                SelectedUMPNA = UMPNA[index];
             }
-            else
-            {
-                SelectedUMPNA = null;
-            }
-
-            RefreshIndexUMPNA(SelectedUMPNA);
         }
         #endregion
 
@@ -440,18 +319,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать МПНА из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUMPNA => _CmdImportUMPNA ??= new RelayCommand(OnCmdImportUMPNAExecuted, CanCmdImportUMPNAExecute);
-        private bool CanCmdImportUMPNAExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
+        private bool CanCmdImportUMPNAExecute() => App.Services.GetRequiredService<LayotRackUserControlViewModel>().USOList is not null;
 
         private void OnCmdImportUMPNAExecuted()
         {
-            if (TableSignalsViewModel.DataView is null) return;
-            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
-
+            var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().USOList;
+            if (USOList is null) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
             UMPNA = new();
 
             #region Ищем МНА
-            foreach (var DataView in TableSignalsViewModel.USOList)
+            foreach (var DataView in USOList)
             {
                 foreach (var _Rack in DataView.Racks)
                 {
@@ -486,7 +364,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             #endregion
 
             #region Ищем ПНА
-            foreach (var DataView in TableSignalsViewModel.USOList)
+            foreach (var DataView in USOList)
             {
                 foreach (var _Rack in DataView.Racks)
                 {
@@ -521,10 +399,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
-            SelectedUMPNA = UMPNA[^1];
-            _DataView.Source = UMPNA;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            if (UMPNA.Count > 0)
+                SelectedUMPNA = UMPNA[^1];
         }
         #endregion
 
@@ -546,25 +422,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedInputParam = SelectedUMPNA.InputParam[int.Parse(Index) - 1];
 
             DoSelectionInputParam = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.Unknown;
 
             var NameListSelected = "";
             if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
             {
                 NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
             else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
+                SignalServices.Type = TypeModule.AI;
             }
             else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
             {
                 NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
 
             if (App.FucusedTabControl == null) return;
@@ -594,9 +470,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedOutputParam = SelectedUMPNA.OutputParam[int.Parse(Index) - 1];
 
             DoSelectionOutputParam = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.DO;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.DO;
 
             var NameListSelected = "Сигналы DO";
 
@@ -627,25 +503,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKGMPNA = SelectedUMPNA.KGMPNA[int.Parse(Index) - 1];
 
             DoSelectionKGMPNA = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.Unknown;
 
             var NameListSelected = "";
             if (string.IsNullOrWhiteSpace(SelectedKGMPNA.Param.TypeSignal) || int.Parse(SelectedKGMPNA.Param.TypeSignal) == 0)
             {
                 NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
             else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
+                SignalServices.Type = TypeModule.AI;
             }
             else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 0)
             {
                 NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
 
             if (App.FucusedTabControl == null) return;
@@ -675,25 +551,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKTPRA = SelectedUMPNA.KTPRA[int.Parse(Index) - 1];
 
             DoSelectionKTPRA = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.Unknown;
 
             var NameListSelected = "";
             if (string.IsNullOrWhiteSpace(SelectedKTPRA.Param.TypeSignal) || int.Parse(SelectedKTPRA.Param.TypeSignal) == 0)
             {
                 NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
             else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
+                SignalServices.Type = TypeModule.AI;
             }
             else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 0)
             {
                 NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
 
             if (App.FucusedTabControl == null) return;
@@ -723,25 +599,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKTPRAS = SelectedUMPNA.KTPRAS[int.Parse(Index) - 1];
 
             DoSelectionKTPRAS = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.Unknown;
 
             var NameListSelected = "";
             if (string.IsNullOrWhiteSpace(SelectedKTPRAS.Param.TypeSignal) || int.Parse(SelectedKTPRAS.Param.TypeSignal) == 0)
             {
                 NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
             else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 1)
             {
                 NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
+                SignalServices.Type = TypeModule.AI;
             }
             else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 0)
             {
                 NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
+                SignalServices.Type = TypeModule.DI;
             }
 
             if (App.FucusedTabControl == null) return;
@@ -776,25 +652,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void CreateUMPNA()
         {
             var index = UMPNA.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+            var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
 
-            var DefualtMapKGMPNA = Program.Settings.Config.DefualtMapKGMPNA;
-            var DefualtMapKTPRA = Program.Settings.Config.DefualtMapKTPRA;
-            var DefualtMapKTPRAS = Program.Settings.Config.DefualtMapKTPRAS;
+            var DefualtMapKGMPNA = App.Settings.Config.DefualtMapKGMPNA.Count > 0 ? App.Settings.Config.DefualtMapKGMPNA : null;
+            var DefualtMapKTPRA = App.Settings.Config.DefualtMapKTPRA.Count > 0 ? App.Settings.Config.DefualtMapKTPRA : null;
+            var DefualtMapKTPRAS = App.Settings.Config.DefualtMapKTPRAS.Count > 0 ? App.Settings.Config.DefualtMapKTPRAS : null;
 
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
-            var KGMPNA = new List<BaseKGMPNA>();
-            var KTPRA = new List<BaseKTPRA>();
-            var KTPRAS = new List<BaseKTPRAS>();
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
+            var KGMPNA = new ObservableCollection<BaseKGMPNA>();
+            var KTPRA = new ObservableCollection<BaseKTPRA>();
+            var KTPRAS = new ObservableCollection<BaseKTPRAS>();
 
             #region Создаем МПНА
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UMPNA.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -804,14 +680,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UMPNA.InputParams[i].Text
+                    Description = App.Settings.Config.UMPNA.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UMPNA.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -821,24 +697,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UMPNA.OutputParams[i].Text
+                    Description = App.Settings.Config.UMPNA.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UMPNA.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
                     Id = $"H{6000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UMPNA.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UMPNA.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UMPNA.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UMPNA.Setpoints[i].Value,
                     Address = $"%MW{5000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Description
+                    Description = App.Settings.Config.UMPNA.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -855,17 +731,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
+                        Description = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
                         VarName = $"kgmpna_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
+                        Inv = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
+                        TypeSignal = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
-                        Unit = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
+                        Value = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
+                        Unit = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
                         Id = $"H{1000 + j}",
                         Description = "",
                         VarName = $"SP_NA_READY[{j + 1}]",
@@ -891,17 +767,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
+                        Description = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
                         VarName = $"ktpra_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
+                        Inv = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
+                        TypeSignal = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
-                        Unit = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
+                        Value = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
+                        Unit = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
                         Id = $"H{3000 + j}",
                         VarName = $"SP_NA_PROT[{j + 1}]",
                         Address = $"%MW{5200 + j}",
@@ -924,10 +800,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
+                        Description = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
                         VarName = $"ktpras_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
+                        Inv = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
+                        TypeSignal = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
                         Address = ""
                     },
                     TypeWarning = "",
@@ -952,47 +828,44 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 UsedMCP = "",
                 UsedKPD = "",
                 CountButtonStop = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints),
-                KGMPNA = new List<BaseKGMPNA>(KGMPNA),
-                KTPRA = new List<BaseKTPRA>(KTPRA),
-                KTPRAS = new List<BaseKTPRAS>(KTPRAS)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints),
+                KGMPNA = new ObservableCollection<BaseKGMPNA>(KGMPNA),
+                KTPRA = new ObservableCollection<BaseKTPRA>(KTPRA),
+                KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
             };
             UMPNA.Add(signal);
             #endregion
 
             SelectedUMPNA = UMPNA[^1];
-            _DataView.Source = UMPNA;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
             #endregion
         }
         #endregion 
 
         #region Импортируем МПНА
-        private static void ImportUMPNA(string Description, List<BaseUMPNA> data_list)
+        private static void ImportUMPNA(string Description, ObservableCollection<BaseUMPNA> data_list)
         {
             var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+            var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
 
-            var DefualtMapKGMPNA = Program.Settings.Config.DefualtMapKGMPNA;
-            var DefualtMapKTPRA = Program.Settings.Config.DefualtMapKTPRA;
-            var DefualtMapKTPRAS = Program.Settings.Config.DefualtMapKTPRAS;
+            var DefualtMapKGMPNA = App.Settings.Config.DefualtMapKGMPNA;
+            var DefualtMapKTPRA = App.Settings.Config.DefualtMapKTPRA;
+            var DefualtMapKTPRAS = App.Settings.Config.DefualtMapKTPRAS;
 
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
-            var KGMPNA = new List<BaseKGMPNA>();
-            var KTPRA = new List<BaseKTPRA>();
-            var KTPRAS = new List<BaseKTPRAS>();
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
+            var KGMPNA = new ObservableCollection<BaseKGMPNA>();
+            var KTPRA = new ObservableCollection<BaseKTPRA>();
+            var KTPRAS = new ObservableCollection<BaseKTPRAS>();
 
             #region Создаем задвижку
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UMPNA.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -1002,14 +875,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UMPNA.InputParams[i].Text
+                    Description = App.Settings.Config.UMPNA.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UMPNA.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -1019,24 +892,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UMPNA.OutputParams[i].Text
+                    Description = App.Settings.Config.UMPNA.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UMPNA.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UMPNA.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
                     Id = $"H{6000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UMPNA.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UMPNA.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UMPNA.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UMPNA.Setpoints[i].Value,
                     Address = $"%MW{5000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UMPNA.Setpoints[i].Description
+                    Description = App.Settings.Config.UMPNA.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -1053,17 +926,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
+                        Description = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
                         VarName = $"kgmpna_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
+                        Inv = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
+                        TypeSignal = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
-                        Unit = i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
+                        Value = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
+                        Unit = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
                         Id = $"H{1000 + j}",
                         Description = "",
                         VarName = $"SP_NA_READY[{j + 1}]",
@@ -1089,17 +962,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
+                        Description = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
                         VarName = $"ktpra_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
+                        Inv = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
+                        TypeSignal = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
                         Address = ""
                     },
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{i + 1}",
-                        Value = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
-                        Unit = i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
+                        Value = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
+                        Unit = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
                         Id = $"H{3000 + j}",
                         VarName = $"SP_NA_PROT[{j + 1}]",
                         Address = $"%MW{5200 + j}",
@@ -1122,10 +995,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     {
                         Index = $"{i + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
+                        Description = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
                         VarName = $"ktpras_param[{index},{i + 1}]",
-                        Inv = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
-                        TypeSignal = i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
+                        Inv = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
+                        TypeSignal = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
                         Address = ""
                     },
                     TypeWarning = "",
@@ -1150,12 +1023,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 UsedMCP = "",
                 UsedKPD = "",
                 CountButtonStop = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints),
-                KGMPNA = new List<BaseKGMPNA>(KGMPNA),
-                KTPRA = new List<BaseKTPRA>(KTPRA),
-                KTPRAS = new List<BaseKTPRAS>(KTPRAS)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints),
+                KGMPNA = new ObservableCollection<BaseKGMPNA>(KGMPNA),
+                KTPRA = new ObservableCollection<BaseKTPRA>(KTPRA),
+                KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
             };
             data_list.Add(signal);
             #endregion
@@ -1167,9 +1040,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Генерация сигналов
         public void GeneratedData()
         {
-            _DataView.Source = UMPNA;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            //_DataView.Source = UMPNA;
+            //_DataView.View?.Refresh();
+            //OnPropertyChanged(nameof(DataView));
 
             if (UMPNA is null || UMPNA.Count <= 0)
             {
@@ -1187,9 +1060,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 index++;
                 item.VarName = $"umpna_param[{index}]";
-                var index_setpoints = (index - 1) * Program.Settings.Config.UMPNA.Setpoints.Count;
-                var index_input_param = (index - 1) * Program.Settings.Config.UMPNA.InputParams.Count;
-                var index_output_param = (index - 1) * Program.Settings.Config.UMPNA.OutputParams.Count;
+                var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
+                var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
+                var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
 
                 #region Уставки
                 var i = 0;
@@ -1256,11 +1129,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 }
                 #endregion
             }
-
-            SelectedUMPNA = selectedUMPNA ?? UMPNA[0];
-            _DataView.Source = UMPNA;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
         }
         #endregion 
 

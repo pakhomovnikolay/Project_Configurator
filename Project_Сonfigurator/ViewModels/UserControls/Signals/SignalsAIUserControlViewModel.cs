@@ -3,8 +3,11 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
+using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -14,9 +17,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class SignalsAIUserControlViewModel : ViewModel
+    public class SignalsAIUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public SignalsAIUserControlViewModel()
+        {
+            Title = "Сигналы AI";
+            Description = "Аналоговые сигналы (AI)";
+            UsingUserControl = new SignalsAIUserControl();
+        }
+
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
@@ -27,7 +37,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             ISignalService signalService,
             IDBService dBService,
             TableSignalsUserControlViewModel tableSignalsViewModel
-            )
+            ) : this()
         {
             UserDialog = userDialog;
             TableSignalsViewModel = tableSignalsViewModel;
@@ -40,54 +50,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Сигналы AI";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Аналоговые сигналы (AI)";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -113,11 +75,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Список сигналов AI
-        private List<SignalAI> _SignalsAI = new();
+        private ObservableCollection<SignalAI> _SignalsAI = new();
         /// <summary>
         /// Список сигналов 
         /// </summary>
-        public List<SignalAI> SignalsAI
+        public ObservableCollection<SignalAI> SignalsAI
         {
             get => _SignalsAI;
             set => Set(ref _SignalsAI, value);
@@ -220,7 +182,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedSignalAI is null) return;
 
-            var data_list = new List<SignalAI>();
+            var data_list = new ObservableCollection<SignalAI>();
             foreach (SignalAI SignalAI in DataView)
             {
                 data_list.Add(SignalAI);
@@ -264,7 +226,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (App.FucusedTabControl == null) return;
             if (!_SignalService.DoSelection) return;
 
-            var data_list = new List<SignalAI>();
+            var data_list = new ObservableCollection<SignalAI>();
             foreach (SignalAI Signal in DataView)
             {
                 data_list.Add(Signal);

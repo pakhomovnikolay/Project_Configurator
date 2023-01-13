@@ -1,18 +1,27 @@
 ﻿using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UstCommonUserControlViewModel : ViewModel
+    public class UstCommonUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public UstCommonUserControlViewModel()
+        {
+            Title = "Врем. уставки общие";
+            Description = "Временные уставки общие";
+            UsingUserControl = new UstCommonUserControl();
+        }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public UstCommonUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public UstCommonUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -22,54 +31,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Врем. уставки общие";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = " Временные уставки общие";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -91,11 +52,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список уставок
-        private List<BaseSetpoints> _Setpoints = new();
+        private ObservableCollection<BaseSetpoints> _Setpoints = new();
         /// <summary>
         /// Список уставок
         /// </summary>
-        public List<BaseSetpoints> Setpoints
+        public ObservableCollection<BaseSetpoints> Setpoints
         {
             get => _Setpoints;
             set => Set(ref _Setpoints, value);

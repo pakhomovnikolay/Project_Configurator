@@ -70,29 +70,37 @@ namespace Project_Сonfigurator.Services
         #region Синхронная расшифровка
         public bool Decryptor(string sourcePath, string destinationPath, string password, int bufferLegth = 102400)
         {
-            var decryptor = GetDecryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
-
-            using var destination_decrypted = File.Create(destinationPath, bufferLegth);
-            using var destination = new CryptoStream(destination_decrypted, decryptor, CryptoStreamMode.Write);
-            using var source = File.OpenRead(sourcePath);
-
-            int readed;
-            var buffer = new byte[bufferLegth];
-            do
-            {
-                readed = source.Read(buffer, 0, bufferLegth);
-                destination.Write(buffer, 0, readed);
-            } while (readed > 0);
-
             try
             {
-                destination.FlushFinalBlock();
-            }
-            catch (CryptographicException)
-            {
+                var decryptor = GetDecryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
 
+                using var destination_decrypted = File.Create(destinationPath, bufferLegth);
+                using var destination = new CryptoStream(destination_decrypted, decryptor, CryptoStreamMode.Write);
+                using var source = File.OpenRead(sourcePath);
+
+                int readed;
+                var buffer = new byte[bufferLegth];
+                do
+                {
+                    readed = source.Read(buffer, 0, bufferLegth);
+                    destination.Write(buffer, 0, readed);
+                } while (readed > 0);
+
+                try
+                {
+                    destination.FlushFinalBlock();
+                }
+                catch (CryptographicException)
+                {
+
+                    return false;
+                }
+            }
+            catch (Exception)
+            {
                 return false;
             }
+            
             return true;
         }
         #endregion

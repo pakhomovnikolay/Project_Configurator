@@ -1,18 +1,27 @@
 ﻿using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class HandMapUserControlViewModel : ViewModel
+    public class HandMapUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public HandMapUserControlViewModel()
+        {
+            Title = "Карта ручн. ввода";
+            Description = "Карта ручного ввода состояния оборудования";
+            UsingUserControl = new HandMapUserControl();
+        }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public HandMapUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public HandMapUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -22,54 +31,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Карта ручн. ввода";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Карта ручного ввода состояния оборудования";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -91,11 +52,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список параметров карты ручного ввода
-        private List<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _BaseParams = new();
         /// <summary>
         /// Список параметров карты ручного ввода
         /// </summary>
-        public List<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> BaseParams
         {
             get => _BaseParams;
             set => Set(ref _BaseParams, value);

@@ -455,7 +455,6 @@ namespace Project_Сonfigurator.Services
             }
             #endregion
 
-
             return fNum;
         }
         #endregion
@@ -504,26 +503,26 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportReadInputs(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Чтение данных с модулей =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Чтение данных с модулей =========================================== *)\n\r";
 
-            #region Формируем данные
+            //#region Формируем данные
 
-            #endregion
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "read_inputs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "read_inputs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -535,26 +534,26 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportReadOutputs(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Запись данных в модули =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Запись данных в модули =========================================== *)\n\r";
 
-            #region Формируем данные
+            //#region Формируем данные
 
-            #endregion
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "write_outputs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "write_outputs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -566,44 +565,44 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportSignalsAI(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка входных аналоговых параметров =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка входных аналоговых параметров =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.Signal.VarName;
+            //        var VarName = _Param.Signal.VarName;
 
-                    fNum += VarName + $".enable := TRUE;\n";
-                    fNum += VarName + $".num_na := {TextToSint(_Param.IndexNA)};\n";
-                    fNum += VarName + $".its_engine := {TextToSint(_Param.TypeVibration)};\n";
-                    fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
-                    fNum += VarName + $".type_pi := {TextToSint(_Param.TypePI)};\n";
-                    fNum += VarName + $".num_bd := {TextToSint(_Param.IndexBD)};\n";
-                    fNum += VarName + $".its_tanks := {TextToSbool(_Param.LevelRPP)};\n";
-                    fNum += VarName + $".flNeedConvertUnits := {TextToSbool(_Param.ConverterKgs)};\n";
-                }
-            }
-            #endregion
+            //        fNum += VarName + $".enable := TRUE;\n";
+            //        fNum += VarName + $".num_na := {TextToSint(_Param.IndexNA)};\n";
+            //        fNum += VarName + $".its_engine := {TextToSint(_Param.TypeVibration)};\n";
+            //        fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
+            //        fNum += VarName + $".type_pi := {TextToSint(_Param.TypePI)};\n";
+            //        fNum += VarName + $".num_bd := {TextToSint(_Param.IndexBD)};\n";
+            //        fNum += VarName + $".its_tanks := {TextToSbool(_Param.LevelRPP)};\n";
+            //        fNum += VarName + $".flNeedConvertUnits := {TextToSbool(_Param.ConverterKgs)};\n";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ai",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ai",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -615,45 +614,45 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportSignalsDI(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsDIViewModel.SignalsDI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка входных дискретных параметров =========================================== *)\n\r";
-            var fNumReal = "";
-            var fNumImin = "";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsDIViewModel.SignalsDI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка входных дискретных параметров =========================================== *)\n\r";
+            //var fNumReal = "";
+            //var fNumImin = "";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
-                {
-                    flAllowedPrint = true;
-                    var VarName = _Param.Signal.VarName;
-                    var Link = TextToInt(_Param.Signal.Address);
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        var VarName = _Param.Signal.VarName;
+            //        var Link = TextToInt(_Param.Signal.Address);
 
-                    var w = Link / 32;
-                    var b = Link % 32;
+            //        var w = Link / 32;
+            //        var b = Link % 32;
 
-                    var exp = ((int)Math.Pow(2, b)).ToString("X");
+            //        var exp = ((int)Math.Pow(2, b)).ToString("X");
 
-                    fNumReal += $"\t {VarName} := (HW_DI[{w}] & 16#{exp}) > 0;\n";
-                    fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w}] & 16#{exp}) > 0;\n";
-                }
-            }
-            fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
-            #endregion
+            //        fNumReal += $"\t {VarName} := (HW_DI[{w}] & 16#{exp}) > 0;\n";
+            //        fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w}] & 16#{exp}) > 0;\n";
+            //    }
+            //}
+            //fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_di",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_di",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -665,50 +664,50 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportSignalsDO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsDIViewModel.SignalsDI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных дискретных параметров =========================================== *)\n\r";
-            var fNumReal = "";
-            var fNumImin = "";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsDIViewModel.SignalsDI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка выходных дискретных параметров =========================================== *)\n\r";
+            //var fNumReal = "";
+            //var fNumImin = "";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
-                {
-                    flAllowedPrint = true;
-                    var VarName = _Param.Signal.VarName;
-                    var Link = TextToInt(_Param.Signal.Address);
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        var VarName = _Param.Signal.VarName;
+            //        var Link = TextToInt(_Param.Signal.Address);
 
-                    var w = Link / 32;
-                    var b = Link % 32;
+            //        var w = Link / 32;
+            //        var b = Link % 32;
 
-                    var exp = ((int)Math.Pow(2, b)).ToString("X");
+            //        var exp = ((int)Math.Pow(2, b)).ToString("X");
 
-                    fNumReal += $"\t IF {VarName} THEN " +
-                        $"HW_DO[{w}] := HW_DO[{w}] OR 16#{exp}; ELSE " +
-                        $"HW_DO[{w}] := HW_DO[{w}] AND NOT 16#{exp}; END_IF;\n";
+            //        fNumReal += $"\t IF {VarName} THEN " +
+            //            $"HW_DO[{w}] := HW_DO[{w}] OR 16#{exp}; ELSE " +
+            //            $"HW_DO[{w}] := HW_DO[{w}] AND NOT 16#{exp}; END_IF;\n";
 
-                    fNumImin += $"\t IF {VarName} THEN " +
-                        $"HW_DO_IMIT[{w}] := HW_DO_IMIT[{w}] OR 16#{exp}; ELSE " +
-                        $"HW_DO_IMIT[{w}] := HW_DO_IMIT[{w}] AND NOT 16#{exp}; END_IF;\n";
-                }
-            }
-            fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
-            #endregion
+            //        fNumImin += $"\t IF {VarName} THEN " +
+            //            $"HW_DO_IMIT[{w}] := HW_DO_IMIT[{w}] OR 16#{exp}; ELSE " +
+            //            $"HW_DO_IMIT[{w}] := HW_DO_IMIT[{w}] AND NOT 16#{exp}; END_IF;\n";
+            //    }
+            //}
+            //fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "set_out_do",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "set_out_do",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -720,37 +719,37 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportSignalsAO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAOViewModel.SignalsAO;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных аналоговых параметров =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAOViewModel.SignalsAO;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка выходных аналоговых параметров =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.Signal.VarName;
+            //        var VarName = _Param.Signal.VarName;
 
-                    fNum += VarName + $".enable := TRUE;\n";
-                }
-            }
-            #endregion
+            //        fNum += VarName + $".enable := TRUE;\n";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ao",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ao",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -762,26 +761,26 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportDiagnostics(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Получение диагностических данных =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Получение диагностических данных =========================================== *)\n\r";
 
-            #region Формируем данные
+            //#region Формируем данные
 
-            #endregion
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_diagnostics",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_diagnostics",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -793,38 +792,38 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportEC(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.ECViewModel.BaseParams;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка сигналов секций шин =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.ECViewModel.BaseParams;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка сигналов секций шин =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Address))
-                {
-                    flAllowedPrint = true;
-                    var TypeSignal = TextToInt(_Param.TypeSignal);
-                    var Address = TextToInt(_Param.Address);
-                    var Inv = TextToBool(_Param.Inv);
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        var TypeSignal = TextToInt(_Param.TypeSignal);
+            //        var Address = TextToInt(_Param.Address);
+            //        var Inv = TextToBool(_Param.Inv);
 
-                    fNum += GenInSignal(TypeSignal, Address, _Param.VarName, Inv);
-                    fNum += $"\t (* {_Param.Description} *)\n";
-                }
-            }
-            #endregion
+            //        fNum += GenInSignal(TypeSignal, Address, _Param.VarName, Inv);
+            //        fNum += $"\t (* {_Param.Description} *)\n";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ec",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ec",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -836,50 +835,50 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportGroupSignal(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.GroupsSignalViewModel.GroupSignals;
-            var ParParams = ViewModel.SignalsGroupViewModel.BaseParams;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка сигналов групп =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.GroupsSignalViewModel.GroupSignals;
+            //var ParParams = ViewModel.SignalsGroupViewModel.BaseParams;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка сигналов групп =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.AddressStart) && !string.IsNullOrWhiteSpace(_Param.AddressEnd))
-                {
-                    fNum += $"(* ======== {_Param.Param.Description} ======== *)\n";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.AddressStart) && !string.IsNullOrWhiteSpace(_Param.AddressEnd))
+            //    {
+            //        fNum += $"(* ======== {_Param.Param.Description} ======== *)\n";
 
-                    flAllowedPrint = true;
-                    var qty = TextToInt(_Param.QtyInGroup);
-                    var fst = TextToInt(_Param.AddressStart) - 1;
-                    var lst = TextToInt(_Param.AddressEnd);
-                    fNum += "i := 0;\n";
+            //        flAllowedPrint = true;
+            //        var qty = TextToInt(_Param.QtyInGroup);
+            //        var fst = TextToInt(_Param.AddressStart) - 1;
+            //        var lst = TextToInt(_Param.AddressEnd);
+            //        fNum += "i := 0;\n";
 
-                    for (int i = fst; i < lst; i++)
-                    {
-                        var TypeSignal = TextToInt(ParParams[i].TypeSignal);
-                        var Address = TextToInt(ParParams[i].Address);
-                        var Inv = TextToBool(ParParams[i].Inv);
-                        fNum += $"{GenInSignal(TypeSignal, Address, "flTmp[1]", Inv)}\n";
-                        fNum += $"i := i + bool_to_int(flTmp[1]);\n";
-                    }
+            //        for (int i = fst; i < lst; i++)
+            //        {
+            //            var TypeSignal = TextToInt(ParParams[i].TypeSignal);
+            //            var Address = TextToInt(ParParams[i].Address);
+            //            var Inv = TextToBool(ParParams[i].Inv);
+            //            fNum += $"{GenInSignal(TypeSignal, Address, "flTmp[1]", Inv)}\n";
+            //            fNum += $"i := i + bool_to_int(flTmp[1]);\n";
+            //        }
 
-                    fNum += $"{_Param.Param.VarName} := (i >= {qty});\n";
-                }
-            }
-            #endregion
+            //        fNum += $"{_Param.Param.VarName} := (i >= {qty});\n";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_siggrp",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_siggrp",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -891,26 +890,26 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportFrameUSO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка рамок для УСО =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка рамок для УСО =========================================== *)\n\r";
 
-            #region Формируем данные
+            //#region Формируем данные
 
-            #endregion
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_frame_uso",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_frame_uso",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -922,26 +921,26 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportFrame(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.SignalsAIViewModel.SignalsAI;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка рамок для объектов =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка рамок для объектов =========================================== *)\n\r";
 
-            #region Формируем данные
+            //#region Формируем данные
 
-            #endregion
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_frame_object",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_frame_object",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -953,45 +952,45 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportKGMPNA(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка параметров карты готовности насосных агрегатов ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка параметров карты готовности насосных агрегатов ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _UMPNA in UMPNAData)
-            {
-                foreach (var _Param in _UMPNA.KGMPNA)
-                {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                    {
-                        flAllowedPrint = true;
-                        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _UMPNA in UMPNAData)
+            //{
+            //    foreach (var _Param in _UMPNA.KGMPNA)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //        {
+            //            flAllowedPrint = true;
+            //            fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                        var Address = TextToInt(_Param.Param.Address);
-                        var Inv = TextToBool(_Param.Param.Inv);
+            //            var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //            var Address = TextToInt(_Param.Param.Address);
+            //            var Inv = TextToBool(_Param.Param.Inv);
 
-                        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                        fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
+            //            fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //            fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
 
-                        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                    }
-                }
-            }
-            #endregion
+            //            fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_kgmpna",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_kgmpna",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1003,71 +1002,71 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportKTPR(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var _Params = ViewModel.KTPRViewModel.KTPR;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка параметров общестанционных защит ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var _Params = ViewModel.KTPRViewModel.KTPR;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка параметров общестанционных защит ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in _Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _Param in _Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                    var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                    var Address = TextToInt(_Param.Param.Address);
-                    var Inv = TextToBool(_Param.Param.Inv);
+            //        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //        var Address = TextToInt(_Param.Param.Address);
+            //        var Inv = TextToBool(_Param.Param.Inv);
 
-                    fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                    fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
-                    fNum += $"{_Param.Param.VarName}.AutoDeblock := {TextToSbool(_Param.Autodeblok)};\n";
-                    fNum += $"{_Param.Param.VarName}.station_state := {TextToSint(_Param.StateStation)};\n";
-                    fNum += $"{_Param.Param.VarName}.Group := {TextToSint(_Param.Shoulder)};\n";
-                    fNum += $"{_Param.Param.VarName}.SubGroup := {TextToSint(_Param.SubShoulder)};\n";
-                    fNum += $"{_Param.Param.VarName}.type_prot := {TextToSint(_Param.Type)};\n";
+            //        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //        fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
+            //        fNum += $"{_Param.Param.VarName}.AutoDeblock := {TextToSbool(_Param.Autodeblok)};\n";
+            //        fNum += $"{_Param.Param.VarName}.station_state := {TextToSint(_Param.StateStation)};\n";
+            //        fNum += $"{_Param.Param.VarName}.Group := {TextToSint(_Param.Shoulder)};\n";
+            //        fNum += $"{_Param.Param.VarName}.SubGroup := {TextToSint(_Param.SubShoulder)};\n";
+            //        fNum += $"{_Param.Param.VarName}.type_prot := {TextToSint(_Param.Type)};\n";
 
-                    _Param.StopTypeNS ??= "0, 0";
-                    var Qty = _Param.StopTypeNS.Split(',');
-                    for (int i = 0; i < Qty.Length; i++)
-                    {
-                        fNum += i switch
-                        {
-                            0 => $"{_Param.Param.VarName}.NS_StopType := {TextToSint(Qty[i])};\n",
-                            1 => $"{_Param.Param.VarName}.NS_SubStopType := {TextToSint(Qty[i])};\n",
-                            _ => $"\n"
-                        };
-                    }
+            //        _Param.StopTypeNS ??= "0, 0";
+            //        var Qty = _Param.StopTypeNS.Split(',');
+            //        for (int i = 0; i < Qty.Length; i++)
+            //        {
+            //            fNum += i switch
+            //            {
+            //                0 => $"{_Param.Param.VarName}.NS_StopType := {TextToSint(Qty[i])};\n",
+            //                1 => $"{_Param.Param.VarName}.NS_SubStopType := {TextToSint(Qty[i])};\n",
+            //                _ => $"\n"
+            //            };
+            //        }
 
-                    _Param.StopTypeUMPNA ??= "0, 0";
-                    Qty = _Param.StopTypeUMPNA.Split(',');
-                    for (int i = 0; i < Qty.Length; i++)
-                    {
-                        fNum += i switch
-                        {
-                            0 => $"{_Param.Param.VarName}.NA_StopType := {TextToSint(Qty[i])};\n",
-                            1 => $"{_Param.Param.VarName}.NA_SubStopType := {TextToSint(Qty[i])};\n",
-                            _ => $"\n"
-                        };
-                    }
-                    fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                    fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS, _Param.ControlUTS)}\n\r";
-                }
-            }
-            #endregion
+            //        _Param.StopTypeUMPNA ??= "0, 0";
+            //        Qty = _Param.StopTypeUMPNA.Split(',');
+            //        for (int i = 0; i < Qty.Length; i++)
+            //        {
+            //            fNum += i switch
+            //            {
+            //                0 => $"{_Param.Param.VarName}.NA_StopType := {TextToSint(Qty[i])};\n",
+            //                1 => $"{_Param.Param.VarName}.NA_SubStopType := {TextToSint(Qty[i])};\n",
+            //                _ => $"\n"
+            //            };
+            //        }
+            //        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //        fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS, _Param.ControlUTS)}\n\r";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ktpr",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ktpr",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1079,50 +1078,50 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportKTPRA(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка параметров агрегатных защит ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка параметров агрегатных защит ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _UMPNA in UMPNAData)
-            {
-                foreach (var _Param in _UMPNA.KTPRA)
-                {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                    {
-                        flAllowedPrint = true;
-                        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _UMPNA in UMPNAData)
+            //{
+            //    foreach (var _Param in _UMPNA.KTPRA)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //        {
+            //            flAllowedPrint = true;
+            //            fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                        var Address = TextToInt(_Param.Param.Address);
-                        var Inv = TextToBool(_Param.Param.Inv);
+            //            var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //            var Address = TextToInt(_Param.Param.Address);
+            //            var Inv = TextToBool(_Param.Param.Inv);
 
-                        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                        fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
-                        fNum += $"{_Param.Param.VarName}.NoAVR := {(TextToBool(_Param.AVR) ? "FALSE" : "TRUE")};\n";
-                        fNum += $"{_Param.Param.VarName}.VVOffExt := {TextToSbool(_Param.Type)};\n";
-                        fNum += $"{_Param.Param.VarName}.na_state := {TextToSint(_Param.StateUMPNA)};\n";
-                        fNum += $"{_Param.Param.VarName}.NA_StopType := {TextToSint(_Param.StopType)};\n";
+            //            fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //            fNum += $"{_Param.Param.VarName}.NotMasked := {TextToSbool(_Param.NoMasked)};\n";
+            //            fNum += $"{_Param.Param.VarName}.NoAVR := {(TextToBool(_Param.AVR) ? "FALSE" : "TRUE")};\n";
+            //            fNum += $"{_Param.Param.VarName}.VVOffExt := {TextToSbool(_Param.Type)};\n";
+            //            fNum += $"{_Param.Param.VarName}.na_state := {TextToSint(_Param.StateUMPNA)};\n";
+            //            fNum += $"{_Param.Param.VarName}.NA_StopType := {TextToSint(_Param.StopType)};\n";
 
-                        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                        fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS)}\n\r";
-                    }
-                }
-            }
-            #endregion
+            //            fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //            fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS)}\n\r";
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ktpra",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ktpra",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1134,46 +1133,46 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportKTPRAS(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка предельных параметров агрегатных защит ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var UMPNAData = ViewModel.UMPNAViewModel.UMPNA;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка предельных параметров агрегатных защит ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _UMPNA in UMPNAData)
-            {
-                foreach (var _Param in _UMPNA.KTPRAS)
-                {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                    {
-                        flAllowedPrint = true;
-                        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _UMPNA in UMPNAData)
+            //{
+            //    foreach (var _Param in _UMPNA.KTPRAS)
+            //    {
+            //        if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //        {
+            //            flAllowedPrint = true;
+            //            fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                        var Address = TextToInt(_Param.Param.Address);
-                        var Inv = TextToBool(_Param.Param.Inv);
+            //            var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //            var Address = TextToInt(_Param.Param.Address);
+            //            var Inv = TextToBool(_Param.Param.Inv);
 
-                        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                        fNum += $"{_Param.Param.VarName}.VVOffExt := {TextToSbool(_Param.Type)};\n";
-                        fNum += $"{_Param.Param.VarName}.na_state := {TextToSint(_Param.StateUMPNA)};\n";
-                        fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
+            //            fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //            fNum += $"{_Param.Param.VarName}.VVOffExt := {TextToSbool(_Param.Type)};\n";
+            //            fNum += $"{_Param.Param.VarName}.na_state := {TextToSint(_Param.StateUMPNA)};\n";
+            //            fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
 
-                        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                    }
-                }
-            }
-            #endregion
-            if (!flAllowedPrint)
-                return false;
+            //            fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //        }
+            //    }
+            //}
+            //#endregion
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ktpras",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ktpras",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1185,45 +1184,45 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportKTPRS(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var _Params = ViewModel.KTPRSViewModel.KTPRS;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка предельных параметров общестанционныз защит ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var _Params = ViewModel.KTPRSViewModel.KTPRS;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка предельных параметров общестанционныз защит ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in _Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _Param in _Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                    var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                    var Address = TextToInt(_Param.Param.Address);
-                    var Inv = TextToBool(_Param.Param.Inv);
+            //        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //        var Address = TextToInt(_Param.Param.Address);
+            //        var Inv = TextToBool(_Param.Param.Inv);
 
-                    fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                    fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
-                    fNum += $"{_Param.Param.VarName}.type_prot := {TextToSint(_Param.Type)};\n";
+            //        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //        fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
+            //        fNum += $"{_Param.Param.VarName}.type_prot := {TextToSint(_Param.Type)};\n";
 
-                    fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                    fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS, _Param.ControlUTS)}\n\r";
-                }
-            }
-            #endregion
+            //        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //        fNum += $"{Controls(_Param.Param.VarName, _Param.ControlUZD, _Param.ControlUVS, _Param.ControlUTS)}\n\r";
+            //    }
+            //}
+            //#endregion
 
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_ktprs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_ktprs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1235,50 +1234,50 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportLIST5(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var _Params = ViewModel.SignalingViewModel.Signaling;
-            var flAllowedPrint = false;
-            var fNum = "(* ============================= Обработка общих сигналов системы диагностики ============================= *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var _Params = ViewModel.SignalingViewModel.Signaling;
+            //var flAllowedPrint = false;
+            //var fNum = "(* ============================= Обработка общих сигналов системы диагностики ============================= *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in _Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
-                {
-                    fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
+            //#region Формируем данные
+            //foreach (var _Param in _Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //    {
+            //        fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
-                    var TypeSignal = TextToInt(_Param.Param.TypeSignal);
-                    var Address = TextToInt(_Param.Param.Address);
-                    var Inv = TextToBool(_Param.Param.Inv);
+            //        var TypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //        var Address = TextToInt(_Param.Param.Address);
+            //        var Inv = TextToBool(_Param.Param.Inv);
 
-                    fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                    fNum += $"{_Param.Param.VarName}.num_uso := {TextToSint(_Param.IndexUSO)};\n";
-                    fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
+            //        fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
+            //        fNum += $"{_Param.Param.VarName}.num_uso := {TextToSint(_Param.IndexUSO)};\n";
+            //        fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
 
-                    fNum += _Param.Color switch
-                    {
-                        "Краный" => $"{_Param.Param.VarName}.warning_color := 3;\n",
-                        "Желтый" => $"{_Param.Param.VarName}.warning_color := 2;\n",
-                        "Зеленый" => $"{_Param.Param.VarName}.warning_color := 1;\n",
-                        _ => $"{_Param.Param.VarName}.warning_color := 0;\n",
-                    };
+            //        fNum += _Param.Color switch
+            //        {
+            //            "Краный" => $"{_Param.Param.VarName}.warning_color := 3;\n",
+            //            "Желтый" => $"{_Param.Param.VarName}.warning_color := 2;\n",
+            //            "Зеленый" => $"{_Param.Param.VarName}.warning_color := 1;\n",
+            //            _ => $"{_Param.Param.VarName}.warning_color := 0;\n",
+            //        };
 
-                    fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
-                }
-            }
-            #endregion
+            //        fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_list5",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_list5",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1290,58 +1289,58 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUMPNA_DI(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UMPNAViewModel.UMPNA;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка входных сигналов НА =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UMPNAViewModel.UMPNA;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка входных сигналов НА =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.VarName;
+            //        var VarName = _Param.VarName;
 
-                    fNum += VarName + $".using_mcp := {TextToSbool(_Param.UsedMCP)};\n";
-                    fNum += VarName + $".using_kpd := {TextToSbool(_Param.UsedKPD)};\n";
-                    fNum += VarName + $".using_local_oil := {TextToSbool(_Param.IndexGroupMS)};\n";
-                    fNum += VarName + $".IsNM := {TextToSbool(_Param.TypeUMPNA)};\n";
-                    fNum += VarName + $".num_zd_in := {TextToSint(_Param.IndexPZ)};\n";
-                    fNum += VarName + $".num_zd_out := {TextToSint(_Param.IndexVZ)};\n";
-                    fNum += VarName + $".num_grp_oil := {TextToSint(_Param.IndexGroupMS)};\n";
-                    fNum += VarName + $".KKCCount := {TextToSint(_Param.CountButtonStop)};\n\r";
+            //        fNum += VarName + $".using_mcp := {TextToSbool(_Param.UsedMCP)};\n";
+            //        fNum += VarName + $".using_kpd := {TextToSbool(_Param.UsedKPD)};\n";
+            //        fNum += VarName + $".using_local_oil := {TextToSbool(_Param.IndexGroupMS)};\n";
+            //        fNum += VarName + $".IsNM := {TextToSbool(_Param.TypeUMPNA)};\n";
+            //        fNum += VarName + $".num_zd_in := {TextToSint(_Param.IndexPZ)};\n";
+            //        fNum += VarName + $".num_zd_out := {TextToSint(_Param.IndexVZ)};\n";
+            //        fNum += VarName + $".num_grp_oil := {TextToSint(_Param.IndexGroupMS)};\n";
+            //        fNum += VarName + $".KKCCount := {TextToSint(_Param.CountButtonStop)};\n\r";
 
-                    foreach (var _InputParam in _Param.InputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_InputParam.Address))
-                        {
-                            var TypeSignal = TextToInt(_InputParam.TypeSignal);
-                            var Address = TextToInt(_InputParam.Address);
-                            var Inv = TextToBool(_InputParam.Inv);
-                            var ParamName = _InputParam.VarName;
+            //        foreach (var _InputParam in _Param.InputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_InputParam.Address))
+            //            {
+            //                var TypeSignal = TextToInt(_InputParam.TypeSignal);
+            //                var Address = TextToInt(_InputParam.Address);
+            //                var Inv = TextToBool(_InputParam.Inv);
+            //                var ParamName = _InputParam.VarName;
 
 
-                            fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //                fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_umpna",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_umpna",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1353,64 +1352,64 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUZD_DI(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UZDViewModel.UZD;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка входных сигналов задвижек =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UZDViewModel.UZD;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка входных сигналов задвижек =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.VarName;
+            //        var VarName = _Param.VarName;
 
-                    fNum += VarName + $".enable := TRUE;\n";
-                    fNum += VarName + $".num_ec := {TextToSint(_Param.IndexEC)};\n";
-                    fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n";
-                    fNum += VarName + $".zd_type := {TextToSint(_Param.TypeZD)};\n";
-                    fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
-                    fNum += VarName + $".num_bd := {TextToSint(_Param.IndexBD)};\n";
-                    fNum += VarName + $"CFG.slDist := {TextToSbool(_Param.Dist)};\n";
-                    fNum += VarName + $"CFG.sl2Stop := {TextToSbool(_Param.DoubleStop)};\n";
-                    fNum += VarName + $"CFG.slBUR := {TextToSbool(_Param.Bur)};\n";
-                    fNum += VarName + $"CFG.slCO := {TextToSbool(_Param.COz)};\n";
-                    fNum += VarName + $"CFG.slCZ := {TextToSbool(_Param.CZz)};\n";
-                    fNum += VarName + $"CFG.slYesEC := {TextToSbool(_Param.EC)};\n";
-                    fNum += VarName + $"CFG.slCheckState := {TextToSbool(_Param.CheckState)};\n";
-                    fNum += VarName + $"CFG.RS_OFF := {TextToSbool(_Param.RsOff)};\n\r";
+            //        fNum += VarName + $".enable := TRUE;\n";
+            //        fNum += VarName + $".num_ec := {TextToSint(_Param.IndexEC)};\n";
+            //        fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n";
+            //        fNum += VarName + $".zd_type := {TextToSint(_Param.TypeZD)};\n";
+            //        fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
+            //        fNum += VarName + $".num_bd := {TextToSint(_Param.IndexBD)};\n";
+            //        fNum += VarName + $"CFG.slDist := {TextToSbool(_Param.Dist)};\n";
+            //        fNum += VarName + $"CFG.sl2Stop := {TextToSbool(_Param.DoubleStop)};\n";
+            //        fNum += VarName + $"CFG.slBUR := {TextToSbool(_Param.Bur)};\n";
+            //        fNum += VarName + $"CFG.slCO := {TextToSbool(_Param.COz)};\n";
+            //        fNum += VarName + $"CFG.slCZ := {TextToSbool(_Param.CZz)};\n";
+            //        fNum += VarName + $"CFG.slYesEC := {TextToSbool(_Param.EC)};\n";
+            //        fNum += VarName + $"CFG.slCheckState := {TextToSbool(_Param.CheckState)};\n";
+            //        fNum += VarName + $"CFG.RS_OFF := {TextToSbool(_Param.RsOff)};\n\r";
 
-                    foreach (var _InputParam in _Param.InputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_InputParam.Address))
-                        {
-                            var TypeSignal = TextToInt(_InputParam.TypeSignal);
-                            var Address = TextToInt(_InputParam.Address);
-                            var Inv = TextToBool(_InputParam.Inv);
-                            var ParamName = _InputParam.VarName;
+            //        foreach (var _InputParam in _Param.InputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_InputParam.Address))
+            //            {
+            //                var TypeSignal = TextToInt(_InputParam.TypeSignal);
+            //                var Address = TextToInt(_InputParam.Address);
+            //                var Inv = TextToBool(_InputParam.Inv);
+            //                var ParamName = _InputParam.VarName;
 
 
-                            fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //                fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_uzd",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_uzd",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1422,62 +1421,62 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUVS_DI(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UVSViewModel.UVS;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка входных сигналов вспомсистем =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UVSViewModel.UVS;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка входных сигналов вспомсистем =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.VarName;
-                    var VarNameGrp = $"uvsgrp_param[{_Param.DescriptionGroup}]";
+            //        var VarName = _Param.VarName;
+            //        var VarNameGrp = $"uvsgrp_param[{_Param.DescriptionGroup}]";
 
-                    fNum += VarName + $".enable := TRUE;\n";
-                    fNum += VarName + $".pc_use := {TextToSbool(_Param.TypePressure)};\n";
-                    fNum += VarName + $".opc_use := {TextToSbool(_Param.COz)};\n";
-                    fNum += VarName + $".num_ec := {TextToSint(_Param.IndexEC)};\n";
-                    fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n\r";
+            //        fNum += VarName + $".enable := TRUE;\n";
+            //        fNum += VarName + $".pc_use := {TextToSbool(_Param.TypePressure)};\n";
+            //        fNum += VarName + $".opc_use := {TextToSbool(_Param.COz)};\n";
+            //        fNum += VarName + $".num_ec := {TextToSint(_Param.IndexEC)};\n";
+            //        fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n\r";
 
-                    fNum += VarNameGrp + $".enable := TRUE;\n";
-                    fNum += VarNameGrp + $".one_pc_use := {TextToSbool(_Param.OnePressureSensorGroup)};\n";
-                    fNum += VarNameGrp + $".vsgrp_type := {TextToSint(_Param.TypeGroup)};\n";
-                    fNum += VarNameGrp + $".pz_word := {TextToSint(_Param.Index)};\n";
-                    fNum += VarNameGrp + $".AvailReserve := {TextToSbool(_Param.Reservable)};\n\r";
+            //        fNum += VarNameGrp + $".enable := TRUE;\n";
+            //        fNum += VarNameGrp + $".one_pc_use := {TextToSbool(_Param.OnePressureSensorGroup)};\n";
+            //        fNum += VarNameGrp + $".vsgrp_type := {TextToSint(_Param.TypeGroup)};\n";
+            //        fNum += VarNameGrp + $".pz_word := {TextToSint(_Param.Index)};\n";
+            //        fNum += VarNameGrp + $".AvailReserve := {TextToSbool(_Param.Reservable)};\n\r";
 
-                    foreach (var _InputParam in _Param.InputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_InputParam.Address))
-                        {
-                            var TypeSignal = TextToInt(_InputParam.TypeSignal);
-                            var Address = TextToInt(_InputParam.Address);
-                            var Inv = TextToBool(_InputParam.Inv);
-                            var ParamName = _InputParam.VarName;
+            //        foreach (var _InputParam in _Param.InputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_InputParam.Address))
+            //            {
+            //                var TypeSignal = TextToInt(_InputParam.TypeSignal);
+            //                var Address = TextToInt(_InputParam.Address);
+            //                var Inv = TextToBool(_InputParam.Inv);
+            //                var ParamName = _InputParam.VarName;
 
 
-                            fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //                fNum += $"{GenInSignal(TypeSignal, Address, ParamName, Inv)}\t(* {_InputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_uvs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_uvs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1489,58 +1488,58 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportDO_Param(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UTSViewModel.UTS;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка общесистемных выходных параметров =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UTSViewModel.UTS;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка общесистемных выходных параметров =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Param.Description} =========================================== *)\n\r";
 
-                    var VarName = _Param.Param.VarName;
-                    var Inv = TextToBool(_Param.Param.Inv);
+            //        var VarName = _Param.Param.VarName;
+            //        var Inv = TextToBool(_Param.Param.Inv);
 
-                    var KCOAddress = TextToInt(_Param.KCO.Address);
+            //        var KCOAddress = TextToInt(_Param.KCO.Address);
 
-                    var SODAddress = TextToInt(_Param.SignalSOD.Address);
-                    var SODTypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //        var SODAddress = TextToInt(_Param.SignalSOD.Address);
+            //        var SODTypeSignal = TextToInt(_Param.Param.TypeSignal);
 
-                    var SODErrAddress = TextToInt(_Param.SignalErrSOD.Address);
-                    var SODErrTypeSignal = TextToInt(_Param.Param.TypeSignal);
+            //        var SODErrAddress = TextToInt(_Param.SignalErrSOD.Address);
+            //        var SODErrTypeSignal = TextToInt(_Param.Param.TypeSignal);
 
-                    fNum += VarName + $".enable := TRUE;\n";
-                    fNum += VarName + $".EnableCVCheck := {TextToSbool(_Param.TypeCOz)};\n";
-                    fNum += VarName + $".APT_OFF := {TextToSbool(_Param.AptOff)};\n";
-                    fNum += VarName + $".uts_type := {TextToSint(_Param.Type)};\n";
+            //        fNum += VarName + $".enable := TRUE;\n";
+            //        fNum += VarName + $".EnableCVCheck := {TextToSbool(_Param.TypeCOz)};\n";
+            //        fNum += VarName + $".APT_OFF := {TextToSbool(_Param.AptOff)};\n";
+            //        fNum += VarName + $".uts_type := {TextToSint(_Param.Type)};\n";
 
-                    fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n";
-                    fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
-                    fNum += VarName + $".TypeCV := {TextToSint(_Param.TypeCOz)};\n";
-                    fNum += VarName + $".LockEnable := {TextToSint(_Param.IndexGroup)};\n\r";
+            //        fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n";
+            //        fNum += VarName + $".num_pz := {TextToSint(_Param.IndexPZ)};\n";
+            //        fNum += VarName + $".TypeCV := {TextToSint(_Param.TypeCOz)};\n";
+            //        fNum += VarName + $".LockEnable := {TextToSint(_Param.IndexGroup)};\n\r";
 
-                    fNum += $"{GenInSignal(21, KCOAddress, $"{VarName}.InCorrCV", Inv)}\n";
-                    fNum += $"{GenInSignal(SODTypeSignal, SODAddress, $"{VarName}.InTriggerSOD", Inv)}\n";
-                    fNum += $"{GenInSignal(SODErrTypeSignal, SODErrAddress, $"{VarName}.Err_SOD", Inv)}\n";
-                }
-            }
-            #endregion
+            //        fNum += $"{GenInSignal(21, KCOAddress, $"{VarName}.InCorrCV", Inv)}\n";
+            //        fNum += $"{GenInSignal(SODTypeSignal, SODAddress, $"{VarName}.InTriggerSOD", Inv)}\n";
+            //        fNum += $"{GenInSignal(SODErrTypeSignal, SODErrAddress, $"{VarName}.Err_SOD", Inv)}\n";
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "get_in_uts",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "get_in_uts",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1552,43 +1551,43 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUMPNA_DO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UMPNAViewModel.UMPNA;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных сигналов насосных агрегатов =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UMPNAViewModel.UMPNA;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка выходных сигналов насосных агрегатов =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    foreach (var _OutputParam in _Param.OutputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
-                        {
-                            var Address = TextToInt(_OutputParam.Address);
-                            var ParamName = _OutputParam.VarName;
-                            fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //        foreach (var _OutputParam in _Param.OutputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
+            //            {
+            //                var Address = TextToInt(_OutputParam.Address);
+            //                var ParamName = _OutputParam.VarName;
+            //                fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "set_out_umpna",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "set_out_umpna",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1600,43 +1599,43 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUZD_DO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UZDViewModel.UZD;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных сигналов задвижек =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UZDViewModel.UZD;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка выходных сигналов задвижек =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    foreach (var _OutputParam in _Param.OutputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
-                        {
-                            var Address = TextToInt(_OutputParam.Address);
-                            var ParamName = _OutputParam.VarName;
-                            fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //        foreach (var _OutputParam in _Param.OutputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
+            //            {
+            //                var Address = TextToInt(_OutputParam.Address);
+            //                var ParamName = _OutputParam.VarName;
+            //                fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "set_out_uzd",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "set_out_uzd",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1648,43 +1647,43 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportUVS_DO(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UVSViewModel.UVS;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка выходных сигналов вспомсистем =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UVSViewModel.UVS;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка выходных сигналов вспомсистем =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Index))
-                {
-                    flAllowedPrint = true;
-                    fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Index))
+            //    {
+            //        flAllowedPrint = true;
+            //        fNum += $"(* =========================================== {_Param.Description} =========================================== *)\n\r";
 
-                    foreach (var _OutputParam in _Param.OutputParam)
-                    {
-                        if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
-                        {
-                            var Address = TextToInt(_OutputParam.Address);
-                            var ParamName = _OutputParam.VarName;
-                            fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
-                        }
-                    }
-                }
-            }
-            #endregion
+            //        foreach (var _OutputParam in _Param.OutputParam)
+            //        {
+            //            if (!string.IsNullOrWhiteSpace(_OutputParam.Address))
+            //            {
+            //                var Address = TextToInt(_OutputParam.Address);
+            //                var ParamName = _OutputParam.VarName;
+            //                fNum += $"{GenOutSignal(Address, ParamName)}\t(* {_OutputParam.Description} *)\n";
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "set_out_uvs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "set_out_uvs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion
@@ -1696,42 +1695,42 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private static bool ExportDO_Others(object item)
         {
-            var ViewModel = item as MainWindowViewModel;
-            var Params = ViewModel.UTSViewModel.UTS;
-            var flAllowedPrint = false;
-            var fNum = "(* =========================================== Обработка общесистемных выходных сигналов =========================================== *)\n\r";
+            //var ViewModel = item as MainWindowViewModel;
+            //var Params = ViewModel.UTSViewModel.UTS;
+            //var flAllowedPrint = false;
+            //var fNum = "(* =========================================== Обработка общесистемных выходных сигналов =========================================== *)\n\r";
 
-            #region Формируем данные
-            foreach (var _Param in Params)
-            {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
-                {
-                    flAllowedPrint = true;
-                    var Address = TextToInt(_Param.Param.Address);
-                    var Index = TextToInt(_Param.Param.Index);
-                    var VarName = _Param.Param.VarName;
+            //#region Формируем данные
+            //foreach (var _Param in Params)
+            //{
+            //    if (!string.IsNullOrWhiteSpace(_Param.Param.Index) && !string.IsNullOrWhiteSpace(_Param.Param.Address))
+            //    {
+            //        flAllowedPrint = true;
+            //        var Address = TextToInt(_Param.Param.Address);
+            //        var Index = TextToInt(_Param.Param.Index);
+            //        var VarName = _Param.Param.VarName;
 
-                    fNum += Index switch
-                    {
-                        1 => $"NPS_STATE.RING_BRU := {GenOutSignal(Address, $"{VarName}.Uts.NU")}\t(* {_Param.Param.Description} *)\n",
-                        2 => $"NPS_STATE.RING := {VarName}\t(* {_Param.Param.Description} *)\n",
-                        _ => $"{GenOutSignal(Address, VarName)}\t(* {_Param.Param.Description} *)\n",
-                    };
-                }
-            }
-            #endregion
+            //        fNum += Index switch
+            //        {
+            //            1 => $"NPS_STATE.RING_BRU := {GenOutSignal(Address, $"{VarName}.Uts.NU")}\t(* {_Param.Param.Description} *)\n",
+            //            2 => $"NPS_STATE.RING := {VarName}\t(* {_Param.Param.Description} *)\n",
+            //            _ => $"{GenOutSignal(Address, VarName)}\t(* {_Param.Param.Description} *)\n",
+            //        };
+            //    }
+            //}
+            //#endregion
 
-            if (!flAllowedPrint)
-                return false;
+            //if (!flAllowedPrint)
+            //    return false;
 
-            var FileViewer = new WindowTextEditor()
-            {
-                Title = "set_out_uvs",
-                TextView = fNum,
-                WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = Application.Current.MainWindow
-            };
-            FileViewer.Show();
+            //var FileViewer = new WindowTextEditor()
+            //{
+            //    Title = "set_out_uvs",
+            //    TextView = fNum,
+            //    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            //    Owner = Application.Current.MainWindow
+            //};
+            //FileViewer.Show();
             return true;
         }
         #endregion

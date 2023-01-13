@@ -31,13 +31,13 @@ namespace Project_Сonfigurator.Infrastructures.Lists
             };
 
             #region Формируем список модулей
-            if (Program.Settings is not null &&
-                    Program.Settings.Config is not null &&
-                    Program.Settings.Config.Vendors is not null &&
-                    Program.Settings.Config.Vendors.Count > 0)
+            if (App.Settings is not null &&
+                    App.Settings.Config is not null &&
+                    App.Settings.Config.Vendors is not null &&
+                    App.Settings.Config.Vendors.Count > 0)
             {
                 ResultModuleList = new();
-                foreach (var Vendor in Program.Settings.Config.Vendors)
+                foreach (var Vendor in App.Settings.Config.Vendors)
                 {
                     if (Vendor.IsSelected)
                     {
@@ -93,11 +93,11 @@ namespace Project_Сonfigurator.Infrastructures.Lists
             get
             {
                 _UMPNAList = new() { "0 - Не вибрация" };
-                if (Program._DBService is null) return _UMPNAList;
-                if (Program._DBService.AppData is null) return _UMPNAList;
-                if (Program._DBService.AppData.UMPNA is null) return _UMPNAList;
+                if (App.DBServices is null) return _UMPNAList;
+                if (App.DBServices.AppData is null) return _UMPNAList;
+                if (App.DBServices.AppData.UMPNA is null) return _UMPNAList;
 
-                foreach (var _UMPNA in Program._DBService.AppData.UMPNA)
+                foreach (var _UMPNA in App.DBServices.AppData.UMPNA)
                     _UMPNAList.Add($"{_UMPNA.Index} - {_UMPNA.Description}");
 
                 return _UMPNAList;
@@ -116,11 +116,11 @@ namespace Project_Сonfigurator.Infrastructures.Lists
             get
             {
                 _USOList = new() { "0 - Не служебный" };
-                if (Program._DBService is null) return _USOList;
-                if (Program._DBService.AppData is null) return _USOList;
-                if (Program._DBService.AppData.USOList is null) return _USOList;
+                if (App.DBServices is null) return _USOList;
+                if (App.DBServices.AppData is null) return _USOList;
+                if (App.DBServices.AppData.USOList is null) return _USOList;
 
-                foreach (var _USO in Program._DBService.AppData.USOList)
+                foreach (var _USO in App.DBServices.AppData.USOList)
                     _USOList.Add($"{_USO.Index} - {_USO.Name}");
 
                 return _USOList;

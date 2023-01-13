@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Settings;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Project_Сonfigurator.Views.DialogControl
@@ -12,16 +13,16 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <summary>
         /// Карта параметров
         /// </summary>
-        public List<SettingDefualtDefenseMap> DefaultMap
+        public ObservableCollection<SettingDefualtDefenseMap> DefaultMap
         {
-            get => (List<SettingDefualtDefenseMap>)GetValue(DefaultMapProperty);
+            get => (ObservableCollection<SettingDefualtDefenseMap>)GetValue(DefaultMapProperty);
             set => SetValue(DefaultMapProperty, value);
         }
         public static readonly DependencyProperty DefaultMapProperty = DependencyProperty.Register(
             nameof(DefaultMap),
-            typeof(List<SettingDefualtDefenseMap>),
+            typeof(ObservableCollection<SettingDefualtDefenseMap>), 
             typeof(WindowEditDefaultMapDefense),
-            new PropertyMetadata(default(List<SettingDefualtDefenseMap>)));
+            new PropertyMetadata(default(ObservableCollection<SettingDefualtDefenseMap>)));
         #endregion
 
         #region Выбранный параметр
@@ -48,7 +49,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdCreateNewParam(object sender, RoutedEventArgs e)
         {
-            DefaultMap ??= new List<SettingDefualtDefenseMap>();
+            DefaultMap ??= new ObservableCollection<SettingDefualtDefenseMap> ();
             DefaultMap.Add(new SettingDefualtDefenseMap
             {
                 Param = new BaseParam

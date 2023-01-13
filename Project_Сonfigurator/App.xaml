@@ -3,18 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:l="clr-namespace:Project_Сonfigurator"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
-             StartupUri="Views/Windows/MainWindow.xaml">
+             >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Infrastructures\Commands\Resources\DictionaryCommands.xaml"/>
                 <ResourceDictionary Source="Resources\Style\Buttons.xaml"/>
+                <ResourceDictionary Source="Resources\Style\UserControls.xaml"/>
                 <ResourceDictionary Source="Resources\BrushList\DictionaryBrush.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Converters\DictionaryConverters.xaml"/>
                 <ResourceDictionary Source="Infrastructures\ToolTips\ToolTipsDictionary.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Lists\ListsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
-            <vm:ViewModelsLocator x:Key="Locator"/>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

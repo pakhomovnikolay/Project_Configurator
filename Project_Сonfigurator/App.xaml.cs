@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Project_Сonfigurator.Services;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
 using System;
 using System.Data;
@@ -13,10 +14,11 @@ namespace Project_Сonfigurator
 {
     public partial class App
     {
+        public static readonly ISettingService Settings = new SettingService();
+        public static readonly IDBService DBServices = new DBService();
+        public static string PathConfig = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + $"\\{NameApp}";
         public static Window ActiveWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsActive);
-
         public static Window FucusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsFocused);
-
         public static TabControl FucusedTabControl
         {
             get
@@ -33,14 +35,10 @@ namespace Project_Сonfigurator
         }
 
         public static string NameApp => Assembly.GetEntryAssembly().GetName().Name;
-
         public static string VersionApp => Assembly.GetEntryAssembly().GetName().Version.ToString();
-
         private static IHost __Host;
         public static IHost Host => __Host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
-
         public static IServiceProvider Services => Host.Services;
-
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
             .AddServices()
             .AddViewModels();
@@ -50,6 +48,18 @@ namespace Project_Сonfigurator
             var host = Host;
             base.OnStartup(e);
             await host.StartAsync();
+
+            #region Конфигурация приложения
+            bool exists = System.IO.Directory.Exists(PathConfig);
+            if (!exists)
+                System.IO.Directory.CreateDirectory(PathConfig);
+
+            Settings.Load();
+            DBServices.AppData = DBServices.LoadData(Settings.Config.PathProject);
+            #endregion
+
+
+            Services.GetRequiredService<IUserDialogService>().OpenMainWindow();
         }
 
         protected override async void OnExit(ExitEventArgs e)

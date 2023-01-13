@@ -1,5 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.LayotRack.Interfaces
 {
@@ -44,7 +44,7 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         /// <summary>
         /// Каналы модуля
         /// </summary>
-        List<Channel> Channels { get; set; }
+        ObservableCollection<Channel> Channels { get; set; }
         #endregion
     }
 }

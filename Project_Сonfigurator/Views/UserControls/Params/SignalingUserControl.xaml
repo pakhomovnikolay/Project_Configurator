@@ -6,41 +6,25 @@
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:converter="clr-namespace:Project_Сonfigurator.Infrastructures.Converters.UserDIUserControl"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
-            
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
              d:Background="AliceBlue"
-             d:DataContext="{Binding SignalingUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:SignalingUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
     <Grid>
 
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  BorderThickness="1,1,1,1" Background="#FFCCFFCC" BorderBrush="Black">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Button Content="Импорт диагностики" Margin="2" FontWeight="Bold"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdImportServiceSignal}"/>
-                <TextBlock Grid.Column="0" Grid.ColumnSpan="2"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"
-                           FontWeight="Bold" FontSize="16"
-                           Text="{Binding Description}"/>
-            </Grid>
-            
-        </Border>
-
+        
         <!--Данные-->
-        <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black"
+        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black"
                 Margin="0,1,0,0" Background="AntiqueWhite" Width="1715" HorizontalAlignment="Left">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -67,7 +51,7 @@
                 </Button>
             </Grid>
         </Border>
-        <DataGrid Grid.Row="2" Grid.Column="1"
+        <DataGrid Grid.Row="1"
                   Margin="0,1,0,0"
                   BorderThickness="1"
                   BorderBrush="Black"

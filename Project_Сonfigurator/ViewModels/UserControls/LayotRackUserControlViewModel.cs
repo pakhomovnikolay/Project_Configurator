@@ -3,7 +3,9 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,72 +13,31 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
 {
-    public class LayotRackUserControlViewModel : ViewModel
+    public class LayotRackUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
-        private readonly ILayotRackService _LayotRackService;
-        private readonly IDBService _DBService;
-        public LayotRackUserControlViewModel(ILayotRackService iLayotRackService, IDBService dBService)
+        public LayotRackUserControlViewModel()
         {
-            _LayotRackService = iLayotRackService;
-            _DBService = dBService;
+            Title = "Компоновка корзин";
+            Description = "Компоновка корзин НПС-1 \"Сызрань\"";
+            UsingUserControl = new LayotRackUserControl();
+        }
 
-            if (Program._DBService is null || Program._DBService.AppData is null || Program._DBService.AppData.USOList.Count <= 0)
+        private readonly ILayotRackService LayotRackServices;
+        private readonly IDBService DBServices;
+        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, IDBService _IDBService) : this()
+        {
+            LayotRackServices = _ILayotRackService;
+            DBServices = _IDBService;
+
+            if (App.DBServices is null || App.DBServices.AppData is null || App.DBServices.AppData.USOList.Count <= 0)
                 OnCmdCreateNewUSOExecuted();
             else
-                _DBService.RefreshDataViewModel(this, false);
+                DBServices.RefreshDataViewModel(this, false);
         }
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Компоновка корзин";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Компоновка корзин НПС-1 \"Сызрань\"";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -91,11 +52,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #endregion
 
         #region Список УСО
-        private List<USO> _USOList = new();
+        private ObservableCollection<USO> _USOList = new();
         /// <summary>
         /// Список УСО
         /// </summary>
-        public List<USO> USOList
+        public ObservableCollection<USO> USOList
         {
             get => _USOList;
             set => Set(ref _USOList, value);
@@ -106,8 +67,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// <summary>
         /// Коллекция УСО для отображения
         /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
+        //private readonly CollectionViewSource _DataView = new();
+        //public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранное УСО
@@ -118,14 +79,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public USO SelectedUSO
         {
             get => _SelectedUSO;
-            set
-            {
-                if (Set(ref _SelectedUSO, value))
-                {
-                    _DataViewRacks.Source = value?.Racks;
-                    OnPropertyChanged(nameof(DataViewRacks));
-                }
-            }
+            set => Set(ref _SelectedUSO, value);
         }
         #endregion
 
@@ -133,8 +87,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// <summary>
         /// Коллекция корзин для отображения
         /// </summary>
-        private readonly CollectionViewSource _DataViewRacks = new();
-        public ICollectionView DataViewRacks => _DataViewRacks?.View;
+        //private readonly CollectionViewSource _DataViewRacks = new();
+        //public ICollectionView DataViewRacks => _DataViewRacks?.View;
         #endregion
 
         #region Выбранная корзина
@@ -161,8 +115,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdCreateNewUSO => _CmdCreateNewUSO ??= new RelayCommand(OnCmdCreateNewUSOExecuted);
         private void OnCmdCreateNewUSOExecuted()
         {
-            var modules = new List<RackModule>();
-            var racks = new List<Rack>();
+            var modules = new ObservableCollection<RackModule>();
+            var racks = new ObservableCollection<Rack>();
 
             #region Создаем корзины и модули
             // Первое УСО - это КЦ. Для него создаем сразу 6 корзин, для всех остальный, одна корзина по умолчанию
@@ -170,7 +124,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             {
                 for (int i = 0; i < 6; i++)
                 {
-                    modules = new List<RackModule>();
+                    modules = new ObservableCollection<RackModule>();
 
                     #region Создаем модули
                     // Для каждой корзины 26 модулей
@@ -245,8 +199,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             SelectedUSO = USOList[^1];
             SelectedRack = USOList[^1].Racks[0];
-            _DataView.Source = USOList;
-            _DataView.View.Refresh();
+            //_DataView.Source = USOList;
+            //_DataView.View.Refresh();
         }
         #endregion
 
@@ -266,14 +220,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (USOList.Count > 0)
             {
                 SelectedUSO = USOList[index];
-                _DataView.Source = USOList;
-                _DataView.View.Refresh();
-            }
-            else
-            {
-                _DataView.Source = USOList;
-                _DataView.View.Refresh();
-                SelectedUSO = null;
             }
         }
         #endregion
@@ -291,7 +237,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
-            var modules = new List<RackModule>();
+            var modules = new ObservableCollection<RackModule>();
             for (int i = 0; i < 26; i++)
             {
                 var module = new RackModule()
@@ -316,8 +262,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             SelectedUSO.Racks.Add(rack);
 
             SelectedRack = SelectedUSO.Racks[^1];
-            _DataViewRacks.Source = SelectedUSO.Racks;
-            _DataViewRacks.View.Refresh();
         }
         #endregion
 
@@ -337,14 +281,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (SelectedUSO.Racks.Count > 0)
             {
                 SelectedRack = SelectedUSO.Racks[index];
-                _DataViewRacks.Source = SelectedUSO.Racks;
-                _DataViewRacks.View.Refresh();
-            }
-            else
-            {
-                _DataViewRacks.Source = SelectedUSO.Racks;
-                _DataViewRacks.View.Refresh();
-                SelectedRack = null;
             }
         }
         #endregion
@@ -365,9 +301,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 index = 1;
 
             SelectedRack.Name = $"A{index}";
-            _LayotRackService.RefreshIndexModule(SelectedRack.Modules, index);
-            _DataViewRacks.Source = SelectedUSO.Racks;
-            _DataViewRacks.View.Refresh();
+            //_LayotRackService.RefreshIndexModule(SelectedRack.Modules, index);
+            //_DataViewRacks.Source = SelectedUSO.Racks;
+            //_DataViewRacks.View.Refresh();
         }
         #endregion
 
@@ -385,11 +321,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
-            _LayotRackService.RefreshAddressModule(USOList);
-            _DataViewRacks.Source = SelectedUSO.Racks;
-            _DataViewRacks.View?.Refresh();
-            OnPropertyChanged(nameof(_DataView));
-            OnPropertyChanged(nameof(_DataViewRacks));
+            //_LayotRackService.RefreshAddressModule(USOList);
+            //_DataViewRacks.Source = SelectedUSO.Racks;
+            //_DataViewRacks.View?.Refresh();
+            //OnPropertyChanged(nameof(_DataView));
+            //OnPropertyChanged(nameof(_DataViewRacks));
 
         }
         #endregion
@@ -401,9 +337,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            _DataView.Source = USOList;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            //_DataView.Source = USOList;
+            //_DataView.View?.Refresh();
+            //OnPropertyChanged(nameof(DataView));
 
             if (USOList is null || USOList.Count <= 0)
                 SelectedUSO = null;

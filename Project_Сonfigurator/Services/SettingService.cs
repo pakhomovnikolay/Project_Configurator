@@ -30,7 +30,7 @@ namespace Project_Сonfigurator.Services
         {
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
-            Config.PathConfig = Program.PathConfig + "\\Config.xml";
+            Config.PathConfig = App.PathConfig + "\\Config.xml";
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
@@ -41,7 +41,7 @@ namespace Project_Сonfigurator.Services
                 xmlWriter.Close();
 
                 var FileNameEncrypt = Config.PathConfig;
-                var FileNameEncrypted = Config.PathConfig.Replace(".xml", __EncryptedFileSuffix)/* Program.PathConfig + "\\Config" + __EncryptedFileSuffix*/;
+                var FileNameEncrypted = Config.PathConfig.Replace(".xml", __EncryptedFileSuffix)/* App.PathConfig + "\\Config" + __EncryptedFileSuffix*/;
                 try
                 {
                     _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
@@ -74,15 +74,15 @@ namespace Project_Сonfigurator.Services
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
 
-            var FileNameEncrypt = Program.PathConfig + "\\Config.xml";
-            var FileNameEncrypted = Program.PathConfig + "\\Config" + __EncryptedFileSuffix;
+            var FileNameEncrypt = App.PathConfig + "\\Config.xml";
+            var FileNameEncrypted = App.PathConfig + "\\Config" + __EncryptedFileSuffix;
 
 
             _Encryptor.Decryptor(FileNameEncrypted, FileNameEncrypt, "");
             var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
             try
             {
-                using FileStream fs = new(Program.PathConfig + "\\Config.xml", FileMode.OpenOrCreate);
+                using FileStream fs = new(App.PathConfig + "\\Config.xml", FileMode.OpenOrCreate);
                 Config = SettingsAppSerializer.Deserialize(fs) as SettingApp;
                 return Config;
             }

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.LayotRack.Interfaces
 {
@@ -22,7 +22,7 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         /// <summary>
         /// Корзины УСО
         /// </summary>
-        List<Rack> Racks { get; set; }
+        ObservableCollection<Rack> Racks { get; set; }
         #endregion
     }
 }

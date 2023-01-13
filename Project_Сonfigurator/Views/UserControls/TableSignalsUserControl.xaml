@@ -3,13 +3,17 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:converter="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
+             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls"
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls"
              d:Background="AliceBlue"
-             d:DataContext="{Binding TableSignalsUserControlViewModel, Source={StaticResource Locator}}"
-             d:DesignHeight="{Binding WindowHeight}"
-             d:DesignWidth="{Binding WindowWidth}"
+             d:DesignHeight="800"
+             d:DesignWidth="1740"
+             
+             d:DataContext="{d:DesignInstance vm:TableSignalsUserControlViewModel, IsDesignTimeCreatable=True}"
+             Style="{StaticResource UserControlStyle}"
+             Tag="{Binding Description}"
              >
 
     <UserControl.InputBindings>
@@ -20,7 +24,6 @@
         
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="35"/>
             <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="30"/>
@@ -29,24 +32,11 @@
             <ColumnDefinition MinWidth="183" Width="200"/>
             <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Row="2" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
-
-        <!--Верхняя панель-->
-        <Border Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"  BorderThickness="1,1,1,1" Background="#FFCCFFCC" BorderBrush="Black">
-            <DockPanel>
-                <Button Content="Генерировать структуру" Width="200" Margin="2" FontWeight="Bold"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdGenerateTable}"
-                        />
-                <TextBlock Text="{Binding Description}"
-                           VerticalAlignment="Center" HorizontalAlignment="Center"
-                           FontWeight="Bold" FontSize="16"/>
-            </DockPanel>
-        </Border>
+        <GridSplitter Grid.Row="1" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
         
         <!--Список корзин-->
-        <TextBlock Grid.Row="1" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
-        <ListView Grid.Row="2" Margin="5,5,0,0"
+        <TextBlock Grid.Row="0" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
+        <ListView Grid.Row="1" Margin="5,5,0,0"
                   BorderThickness="1"
                   BorderBrush="Black"
                   ItemsSource="{Binding DataView}"
@@ -61,7 +51,7 @@
         </ListView>
 
         <!--Данные-->
-        <Border Grid.Row="1" Grid.Column="1" BorderThickness="1" BorderBrush="Black"
+        <Border Grid.Row="0" Grid.Column="1" BorderThickness="1" BorderBrush="Black"
                 Margin="5,5,0,0" Background="AntiqueWhite" Width="1350" HorizontalAlignment="Left">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -88,7 +78,7 @@
                 </Button>
             </Grid>
         </Border>
-        <DataGrid Grid.Row="2" Grid.Column="1"
+        <DataGrid Grid.Row="1" Grid.Column="1"
                   Margin="5,5,0,0"
                   BorderThickness="0"
                   BorderBrush="Black"
@@ -464,7 +454,7 @@
         </DataGrid>
 
         <!--Нижняя панель-->
-        <Border Grid.Row="3" Grid.ColumnSpan="2" Margin="5,2,0,0" HorizontalAlignment="Left" Width="1551"
+        <Border Grid.Row="2" Grid.ColumnSpan="2" Margin="5,2,0,0" HorizontalAlignment="Left" Width="1551"
                 BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
             <Grid>
                 

@@ -4,8 +4,11 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls;
+using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -15,9 +18,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
 {
-    public class TableSignalsUserControlViewModel : ViewModel
+    public class TableSignalsUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public TableSignalsUserControlViewModel()
+        {
+            Title = "Таблица сигналов";
+            Description = "Таблица сигналов НПС-1 \"Сызрань\"";
+            UsingUserControl = new TableSignalsUserControl();
+        }
+
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
@@ -28,7 +38,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             IUserDialogService userDialog,
             ISignalService signalService,
             IDBService dBService,
-            LayotRackUserControlViewModel layotRackViewModel)
+            LayotRackUserControlViewModel layotRackViewModel) : this()
         {
             UserDialog = userDialog;
             _SignalService = signalService;
@@ -44,54 +54,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Таблица сигналов";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Таблица сигналов НПС-1 \"Сызрань\"";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -117,11 +79,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #endregion
 
         #region Список УСО
-        private List<USO> _USOList = new();
+        private ObservableCollection<USO> _USOList = new();
         /// <summary>
         /// Список УСО
         /// </summary>
-        public List<USO> USOList
+        public ObservableCollection<USO> USOList
         {
             get => _USOList;
             set => Set(ref _USOList, value);
@@ -156,7 +118,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         return;
                     }
 
-                    var modules = new List<RackModule>();
+                    var modules = new ObservableCollection<RackModule>();
                     foreach (var Rack in value?.Racks)
                     {
                         foreach (var Module in Rack.Modules)
@@ -271,7 +233,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
             SelectedUSO = new USO();
-            var uso_list = new List<USO>();
+            var uso_list = new ObservableCollection<USO>();
             foreach (var _USO in LayotRackViewModel.USOList)
             {
                 var need_add_uso = false;
@@ -355,14 +317,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 using var work_book = new XLWorkbook(PathImport);
                 var worksheet = work_book.Worksheets.Worksheet(1);
 
-                var StartIndexRow = int.Parse(Program.Settings.Config.Import.StartIndexRow);
-                var IndexColumnId = int.Parse(Program.Settings.Config.Import.IndexColumnId);
-                var IndexColumnDescription = int.Parse(Program.Settings.Config.Import.IndexColumnDescription);
-                var IndexColumnRack = int.Parse(Program.Settings.Config.Import.IndexColumnRack);
-                var IndexColumnModule = int.Parse(Program.Settings.Config.Import.IndexColumnModule);
+                var StartIndexRow = int.Parse(App.Settings.Config.Import.StartIndexRow);
+                var IndexColumnId = int.Parse(App.Settings.Config.Import.IndexColumnId);
+                var IndexColumnDescription = int.Parse(App.Settings.Config.Import.IndexColumnDescription);
+                var IndexColumnRack = int.Parse(App.Settings.Config.Import.IndexColumnRack);
+                var IndexColumnModule = int.Parse(App.Settings.Config.Import.IndexColumnModule);
 
-                var Id = new List<string>();
-                var Description = new List<string>();
+                var Id = new ObservableCollection<string>();
+                var Description = new ObservableCollection<string>();
 
                 #region Формируем листы Идентификаторов и Наименования параметров
                 while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnRack).Value.ToString()))
@@ -563,7 +525,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (e.Item is not USO _USO || _USO is null) { e.Accepted = false; return; }
             if (string.IsNullOrWhiteSpace(TextFilter))
             {
-                var _USOList = (List<USO>)_DataView.Source;
+                var _USOList = (ObservableCollection<USO>)_DataView.Source;
                 SelectedUSO = _USOList[0];
                 return;
             }

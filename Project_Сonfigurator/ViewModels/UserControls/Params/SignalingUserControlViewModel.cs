@@ -3,8 +3,10 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -14,9 +16,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class SignalingUserControlViewModel : ViewModel
+    public class SignalingUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public SignalingUserControlViewModel()
+        {
+            Title = "Сигнализация";
+            Description = "Сигнализация и общесистемная диагностика";
+            UsingUserControl = new SignalingUserControl();
+        }
+
         public LayotRackUserControlViewModel LayotRackViewModel { get; }
 
         private readonly ISignalService _SignalService;
@@ -27,7 +36,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             IDBService dBService,
             IUserDialogService userDialog,
             LayotRackUserControlViewModel layotRackViewModel
-            )
+            ) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -40,54 +49,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Сигнализация";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Сигнализация и общесистемная диагностика";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -112,11 +73,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список параметров
-        private List<BaseSignaling> _Signaling = new();
+        private ObservableCollection<BaseSignaling> _Signaling = new();
         /// <summary>
         /// Список параметров
         /// </summary>
-        public List<BaseSignaling> Signaling
+        public ObservableCollection<BaseSignaling> Signaling
         {
             get => _Signaling;
             set => Set(ref _Signaling, value);
@@ -201,7 +162,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedParam is null) return;
 
-            var data_list = (List<BaseSignaling>)_DataView.Source ?? new List<BaseSignaling>();
+            var data_list = (ObservableCollection<BaseSignaling>)_DataView.Source ?? new ObservableCollection<BaseSignaling>();
             if (Index != SelectedParam.Param.Index)
                 SelectedParam = data_list[int.Parse(Index) - 1];
 
@@ -313,7 +274,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var USOList = LayotRackViewModel.USOList;
             var index = 0;
             bool flNeedShift;
-            var USONameException = new List<string>();
+            var USONameException = new ObservableCollection<string>();
             foreach (var _USO in USOList)
                 if (_USO.Racks is null || _USO.Racks.Count <= 0)
                     USONameException.Add(_USO.Name);

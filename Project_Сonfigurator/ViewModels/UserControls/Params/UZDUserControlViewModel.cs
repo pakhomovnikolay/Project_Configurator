@@ -5,8 +5,10 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -16,9 +18,17 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UZDUserControlViewModel : ViewModel
+    public class UZDUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public UZDUserControlViewModel()
+        {
+            Title = "Настройки задвижек";
+            Description = "Текущие массивы состояний задвижек";
+            UsingUserControl = new UZDUserControl();
+        }
+
+
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
@@ -28,7 +38,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             ISignalService signalService,
             IUserDialogService userDialog,
             IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel)
+            TableSignalsUserControlViewModel tableSignalsViewModel) : this()
         {
             UserDialog = userDialog;
             _SignalService = signalService;
@@ -39,54 +49,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Настройки задвижек";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Текущие массивы состояний задвижек";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -139,11 +101,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список задвижек
-        private List<BaseUZD> _UZD = new();
+        private ObservableCollection<BaseUZD> _UZD = new();
         /// <summary>
         /// Список задвижек
         /// </summary>
-        public List<BaseUZD> UZD
+        public ObservableCollection<BaseUZD> UZD
         {
             get => _UZD;
             set => Set(ref _UZD, value);
@@ -448,17 +410,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void CreateUZD()
         {
             var index = UZD.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UZD.OutputParams.Count;
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
+            var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
             #region Создаем задвижку
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UZD.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -468,14 +430,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UZD.InputParams[i].Text
+                    Description = App.Settings.Config.UZD.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UZD.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -485,24 +447,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UZD.OutputParams[i].Text
+                    Description = App.Settings.Config.UZD.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UZD.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
                     Id = $"H{8000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UZD.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UZD.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UZD.Setpoints[i].Value,
                     Address = $"%MW{3000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UZD.Setpoints[i].Description
+                    Description = App.Settings.Config.UZD.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -529,9 +491,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 TypeZD = "",
                 IndexPZ = "",
                 IndexBD = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
             };
             UZD.Add(signal);
             #endregion
@@ -545,20 +507,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion 
 
         #region Импортируем задвижки
-        private static void ImportUZD(string Description, List<BaseUZD> data_list)
+        private static void ImportUZD(string Description, ObservableCollection<BaseUZD> data_list)
         {
             var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
-            var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;
-            var index_output_param = (index - 1) * Program.Settings.Config.UZD.OutputParams.Count;
-            var InputParam = new List<BaseParam>();
-            var OutputParam = new List<BaseParam>();
-            var Setpoints = new List<BaseSetpoints>();
+            var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
             #region Создаем задвижку
 
             #region Входные параметры
-            for (int i = 0; i < Program.Settings.Config.UZD.InputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -568,14 +530,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UZD.InputParams[i].Text
+                    Description = App.Settings.Config.UZD.InputParams[i].Text
                 };
                 InputParam.Add(Param);
             }
             #endregion
 
             #region Выходные параметры
-            for (int i = 0; i < Program.Settings.Config.UZD.OutputParams.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
             {
                 var Param = new BaseParam
                 {
@@ -585,24 +547,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Inv = "",
                     TypeSignal = "",
                     Address = "",
-                    Description = Program.Settings.Config.UZD.OutputParams[i].Text
+                    Description = App.Settings.Config.UZD.OutputParams[i].Text
                 };
                 OutputParam.Add(Param);
             }
             #endregion
 
             #region Уставки
-            for (int i = 0; i < Program.Settings.Config.UZD.Setpoints.Count; i++)
+            for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
             {
                 var Param = new BaseSetpoints
                 {
                     Index = $"{i + 1}",
                     VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
                     Id = $"H{8000 + index_setpoints + i}",
-                    Unit = Program.Settings.Config.UZD.Setpoints[i].Unit,
-                    Value = Program.Settings.Config.UZD.Setpoints[i].Value,
+                    Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UZD.Setpoints[i].Value,
                     Address = $"%MW{3000 + index_setpoints + i}",
-                    Description = Program.Settings.Config.UZD.Setpoints[i].Description
+                    Description = App.Settings.Config.UZD.Setpoints[i].Description
                 };
                 Setpoints.Add(Param);
             }
@@ -629,9 +591,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 TypeZD = "",
                 IndexPZ = "",
                 IndexBD = "",
-                InputParam = new List<BaseParam>(InputParam),
-                OutputParam = new List<BaseParam>(OutputParam),
-                Setpoints = new List<BaseSetpoints>(Setpoints)
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
             };
             data_list.Add(signal);
             #endregion
@@ -661,9 +623,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 index++;
                 item.VarName = $"uzd_param[{index}]";
-                var index_setpoints = (index - 1) * Program.Settings.Config.UZD.Setpoints.Count;
-                var index_input_param = (index - 1) * Program.Settings.Config.UZD.InputParams.Count;
-                var index_output_param = (index - 1) * Program.Settings.Config.UZD.OutputParams.Count;
+                var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+                var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+                var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
 
                 #region Уставки
                 var i = 0;

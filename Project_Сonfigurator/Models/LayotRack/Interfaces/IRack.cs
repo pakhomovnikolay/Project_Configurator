@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.LayotRack.Interfaces
 {
@@ -29,7 +29,7 @@ namespace Project_Сonfigurator.Models.LayotRack.Interfaces
         /// <summary>
         /// Модули корзины
         /// </summary>
-        List<RackModule> Modules { get; set; }
+        ObservableCollection<RackModule> Modules { get; set; }
         #endregion
     }
 }

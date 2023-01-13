@@ -4,6 +4,7 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models
 {
@@ -13,154 +14,154 @@ namespace Project_Сonfigurator.Models
         /// <summary>
         /// Данные диагностики
         /// </summary>
-        public List<USO> USOList { get; set; } = new();
+        public ObservableCollection<USO> USOList { get; set; } = new();
         #endregion
 
         #region DI формируемые
         /// <summary>
         /// DI формируемые
         /// </summary>
-        public List<BaseSignal> UserDI { get; set; } = new();
+        public ObservableCollection<BaseSignal> UserDI { get; set; } = new();
         #endregion
 
         #region AI формируемые
         /// <summary>
         /// AI формируемые
         /// </summary>
-        public List<BaseSignal> UserAI { get; set; } = new();
+        public ObservableCollection<BaseSignal> UserAI { get; set; } = new();
         #endregion
 
         #region Сигналы DI
         /// <summary>
         /// Сигналы DI
         /// </summary>
-        public List<SignalDI> SignalDI { get; set; } = new();
+        public ObservableCollection<SignalDI> SignalDI { get; set; } = new();
         #endregion
 
         #region Сигналы AI
         /// <summary>
         /// Сигналы AI
         /// </summary>
-        public List<SignalAI> SignalAI { get; set; } = new();
+        public ObservableCollection<SignalAI> SignalAI { get; set; } = new();
         #endregion
 
         #region Сигналы DO
         /// <summary>
         /// Сигналы DO
         /// </summary>
-        public List<SignalDO> SignalDO { get; set; } = new();
+        public ObservableCollection<SignalDO> SignalDO { get; set; } = new();
         #endregion
 
         #region Сигналы AO
         /// <summary>
         /// Сигналы AO
         /// </summary>
-        public List<SignalAO> SignalAO { get; set; } = new();
+        public ObservableCollection<SignalAO> SignalAO { get; set; } = new();
         #endregion
 
         #region Секции шин
         /// <summary>
         /// Секции шин
         /// </summary>
-        public List<BaseParam> ECParam { get; set; } = new();
+        public ObservableCollection<BaseParam> ECParam { get; set; } = new();
         #endregion
 
         #region Регистры формируемые
         /// <summary>
         /// Регистры формируемые
         /// </summary>
-        public List<BaseParam> UserReg { get; set; } = new();
+        public ObservableCollection<BaseParam> UserReg { get; set; } = new();
         #endregion
 
         #region Сигналы групп
         /// <summary>
         /// Сигналы групп
         /// </summary>
-        public List<BaseParam> SignalGroup { get; set; } = new();
+        public ObservableCollection<BaseParam> SignalGroup { get; set; } = new();
         #endregion
 
         #region Группы сигналов
         /// <summary>
         /// Группы сигналов
         /// </summary>
-        public List<GroupSignal> GroupSignals { get; set; } = new();
+        public ObservableCollection<GroupSignal> GroupSignals { get; set; } = new();
         #endregion
 
         #region Настройки задвижек
         /// <summary>
         /// Настройки задвижек
         /// </summary>
-        public List<BaseUZD> UZD { get; set; } = new();
+        public ObservableCollection<BaseUZD> UZD { get; set; } = new();
         #endregion
 
         #region Настройки вспомсистем
         /// <summary>
         /// Настройки вспомсистем
         /// </summary>
-        public List<BaseUVS> UVS { get; set; } = new();
+        public ObservableCollection<BaseUVS> UVS { get; set; } = new();
         #endregion
 
         #region Настройки МПНА
         /// <summary>
         /// Настройки МПНА
         /// </summary>
-        public List<BaseUMPNA> UMPNA { get; set; } = new();
+        public ObservableCollection<BaseUMPNA> UMPNA { get; set; } = new();
         #endregion
 
         #region Общестанционные защиты
         /// <summary>
         /// Общестанционные защиты
         /// </summary>
-        public List<BaseKTPR> KTPR { get; set; } = new();
+        public ObservableCollection<BaseKTPR> KTPR { get; set; } = new();
         #endregion
 
         #region Предельные параметры общестанционных защит
         /// <summary>
         /// Предельные параметры общестанционных защит
         /// </summary>
-        public List<BaseKTPRS> KTPRS { get; set; } = new();
+        public ObservableCollection<BaseKTPRS> KTPRS { get; set; } = new();
         #endregion
 
         #region Сигнализация и общая диагностики
         /// <summary>
         /// Сигнализация и общая диагностики
         /// </summary>
-        public List<BaseSignaling> Signaling { get; set; } = new();
+        public ObservableCollection<BaseSignaling> Signaling { get; set; } = new();
         #endregion
 
         #region Табло и сирены
         /// <summary>
         /// Табло и сирены
         /// </summary>
-        public List<BaseUTS> UTS { get; set; } = new();
+        public ObservableCollection<BaseUTS> UTS { get; set; } = new();
         #endregion
 
         #region Уставки Real
         /// <summary>
         /// Уставки Real
         /// </summary>
-        public List<BaseSetpointsReal> SetpointsReal { get; set; } = new();
+        public ObservableCollection<BaseSetpointsReal> SetpointsReal { get; set; } = new();
         #endregion
 
         #region Уставки общие
         /// <summary>
         /// Уставки общие
         /// </summary>
-        public List<BaseSetpoints> SetpointsCommon { get; set; } = new();
+        public ObservableCollection<BaseSetpoints> SetpointsCommon { get; set; } = new();
         #endregion
 
         #region Карта ручного ввода
         /// <summary>
         /// Карта ручного ввода
         /// </summary>
-        public List<BaseParam> HandMap { get; set; } = new();
+        public ObservableCollection<BaseParam> HandMap { get; set; } = new();
         #endregion
 
         #region Сообщения
         /// <summary>
         /// Сообщения
         /// </summary>
-        public List<CollectionMessage> Messages { get; set; } = new();
+        public ObservableCollection<CollectionMessage> Messages { get; set; } = new();
         #endregion
     }
 }

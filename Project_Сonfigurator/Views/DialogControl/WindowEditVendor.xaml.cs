@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Models.Settings;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Windows;
 
 namespace Project_Сonfigurator.Views.DialogControl
@@ -71,7 +72,7 @@ namespace Project_Сonfigurator.Views.DialogControl
             {
                 Name = $"Новый тип модуля {VendorData.ModuleTypes.Count + 1}",
                 SelectedModule = new VendorModule(),
-                Modules = new List<VendorModule>()
+                Modules = new ObservableCollection<VendorModule>()
             });
 
             SelectedVendorModuleTypeData = VendorData.ModuleTypes[^1];

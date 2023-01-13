@@ -3,8 +3,10 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
@@ -14,9 +16,16 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class SignalsDOUserControlViewModel : ViewModel
+    public class SignalsDOUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public SignalsDOUserControlViewModel()
+        {
+            Title = "Сигналы DO";
+            Description = "Дискретные сигналы (DO)";
+            UsingUserControl = new SignalsDOUserControl();
+        }
+
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
@@ -27,7 +36,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             ISignalService signalService,
             IDBService dBService,
             TableSignalsUserControlViewModel tableSignalsViewModel
-            )
+            ) : this()
         {
             UserDialog = userDialog;
             TableSignalsViewModel = tableSignalsViewModel;
@@ -40,54 +49,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Сигналы DO";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Дискретные сигналы (DO)";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -112,11 +73,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         #endregion
 
         #region Список сигналов DO
-        private List<SignalDO> _SignalsDO = new();
+        private ObservableCollection<SignalDO> _SignalsDO = new();
         /// <summary>
         /// Список сигналов DO
         /// </summary>
-        public List<SignalDO> SignalsDO
+        public ObservableCollection<SignalDO> SignalsDO
         {
             get => _SignalsDO;
             set => Set(ref _SignalsDO, value);
@@ -219,7 +180,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedSignalDO is null) return;
 
-            var data_list = new List<SignalDO>();
+            var data_list = new ObservableCollection<SignalDO>();
             foreach (SignalDO SignalDO in DataView)
             {
                 data_list.Add(SignalDO);
@@ -259,7 +220,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (App.FucusedTabControl == null) return;
             if (!_SignalService.DoSelection) return;
 
-            var data_list = new List<SignalDO>();
+            var data_list = new ObservableCollection<SignalDO>();
             foreach (SignalDO Signal in DataView)
             {
                 data_list.Add(Signal);

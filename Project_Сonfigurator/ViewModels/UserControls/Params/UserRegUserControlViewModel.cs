@@ -9,15 +9,24 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Linq;
+using Project_Сonfigurator.Views.UserControls.Params;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UserRegUserControlViewModel : ViewModel
+    public class UserRegUserControlViewModel : ViewModelUserControls
     {
         #region Конструктор
+        public UserRegUserControlViewModel()
+        {
+            Title = "Регистры формируемые";
+            Description = "Регистры формируемые для ВУ";
+            UsingUserControl = new UserRegUserControl();
+        }
+
         private readonly ISignalService _SignalService;
         private readonly IDBService _DBService;
-        public UserRegUserControlViewModel(ISignalService signalService, IDBService dBService)
+        public UserRegUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
         {
             _SignalService = signalService;
             _DBService = dBService;
@@ -28,54 +37,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Параметры
-
-        #region Заголовок вкладки
-        private string _Title = "Регистры формируемые";
-        /// <summary>
-        /// Заголовок вкладки
-        /// </summary>
-        public string Title
-        {
-            get => _Title;
-            set => Set(ref _Title, value);
-        }
-        #endregion
-
-        #region Описание вкладки
-        private string _Description = "Регистры формируемые для ВУ";
-        /// <summary>
-        /// Описание вкладки
-        /// </summary>
-        public string Description
-        {
-            get => _Description;
-            set => Set(ref _Description, value);
-        }
-        #endregion
-
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1740;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
 
         #region Состояние активной вкладки
         private bool _IsSelected = false;
@@ -97,11 +58,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список регистров формируемых
-        private List<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _BaseParams = new();
         /// <summary>
         /// Список регистров формируемых
         /// </summary>
-        public List<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> BaseParams
         {
             get => _BaseParams;
             set => Set(ref _BaseParams, value);
@@ -187,7 +148,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedSignal is null) return;
             if (App.FucusedTabControl == null) return;
 
-            var data_list = new List<BaseParam>();
+            var data_list = new ObservableCollection<BaseParam>();
             foreach (BaseParam Signal in DataView)
             {
                 data_list.Add(Signal);

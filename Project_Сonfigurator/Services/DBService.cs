@@ -12,6 +12,7 @@ using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -39,7 +40,7 @@ namespace Project_Сonfigurator.Services
         /// Запрос записи данных
         /// </summary>
         /// <returns></returns>
-        public bool RequestSetData(List<object> _ViewModels)
+        public bool RequestSetData(ObservableCollection<object> _ViewModels)
         {
             #region Формируем данные приложения перед сохранением
             FormingAppDataBeforeSaving(_ViewModels);
@@ -52,7 +53,7 @@ namespace Project_Сonfigurator.Services
 
             var Log = new LogSerivece();
             var DialogService = new UserDialogService();
-            var Config = Program.Settings.Config;
+            var Config = App.Settings.Config;
 
             try
             {
@@ -764,7 +765,7 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Формируем данные приложения перед сохранением
         /// </summary>
-        public void FormingAppDataBeforeSaving(List<object> _ViewModels)
+        public void FormingAppDataBeforeSaving(ObservableCollection<object> _ViewModels)
         {
             var Log = new LogSerivece();
             try
@@ -888,7 +889,7 @@ namespace Project_Сonfigurator.Services
         {
             if (AppData is null && !CreateNewProject)
             {
-                var path = string.IsNullOrWhiteSpace(Program.Settings.Config.PathProject) ? Program.PathConfig + "\\ProjectData.xml" : Program.Settings.Config.PathProject;
+                var path = string.IsNullOrWhiteSpace(App.Settings.Config.PathProject) ? App.PathConfig + "\\ProjectData.xml" : App.Settings.Config.PathProject;
                 AppData = LoadData(path);
             }
 
@@ -1463,7 +1464,7 @@ namespace Project_Сonfigurator.Services
             #endregion
 
             #region Генерируем регистры формируемые
-            var DefualtMapKTPR = Program.Settings.Config.DefualtMapKTPR;
+            var DefualtMapKTPR = App.Settings.Config.DefualtMapKTPR;
 
             for (int i = 0; i < 256; i++)
             {
@@ -1473,10 +1474,10 @@ namespace Project_Сonfigurator.Services
                     {
                         Index = $"{Data.KTPR.Count + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Description}",
+                        Description = DefualtMapKTPR is null || DefualtMapKTPR.Count <= 0 || i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Description}",
                         VarName = $"ktpr_param[{Data.KTPR.Count + 1}]",
-                        Inv = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Inv}",
-                        TypeSignal = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.TypeSignal}",
+                        Inv = DefualtMapKTPR is null || DefualtMapKTPR.Count <= 0 || i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.Inv}",
+                        TypeSignal = DefualtMapKTPR is null || DefualtMapKTPR.Count <= 0 || i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Param.TypeSignal}",
                         Address = ""
                     },
                     StateStation = "",
@@ -1493,8 +1494,8 @@ namespace Project_Сonfigurator.Services
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{Data.KTPR.Count + 1}",
-                        Value = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Value}",
-                        Unit = i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Unit}",
+                        Value = DefualtMapKTPR is null || DefualtMapKTPR.Count <= 0 || i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Value}",
+                        Unit = DefualtMapKTPR is null || DefualtMapKTPR.Count <= 0 || i > DefualtMapKTPR.Count ? "" : $"{DefualtMapKTPR[i].Setpoints.Unit}",
                         Id = $"H{2000 + Data.KTPR.Count}",
                         VarName = $"SP_STAT_PROT[{Data.KTPR.Count + 1}]",
                         Address = $"%MW{4800 + Data.KTPR.Count}",
@@ -1534,7 +1535,7 @@ namespace Project_Сonfigurator.Services
             #endregion
 
             #region Генерируем регистры формируемые
-            var DefualtMapKTPRS = Program.Settings.Config.DefualtMapKTPRS;
+            var DefualtMapKTPRS = App.Settings.Config.DefualtMapKTPRS;
 
             for (int i = 0; i < 256; i++)
             {
@@ -1544,10 +1545,10 @@ namespace Project_Сonfigurator.Services
                     {
                         Index = $"{Data.KTPRS.Count + 1}",
                         Id = "",
-                        Description = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Description}",
+                        Description = DefualtMapKTPRS is null || DefualtMapKTPRS.Count <= 0 || i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Description}",
                         VarName = $"ktprs_param[{Data.KTPRS.Count + 1}]",
-                        Inv = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Inv}",
-                        TypeSignal = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.TypeSignal}",
+                        Inv = DefualtMapKTPRS is null || DefualtMapKTPRS.Count <= 0 || DefualtMapKTPRS.Count <= 0 || i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.Inv}",
+                        TypeSignal = DefualtMapKTPRS is null || DefualtMapKTPRS.Count <= 0 || i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Param.TypeSignal}",
                         Address = ""
                     },
                     TypeWarning = "",
@@ -1558,8 +1559,8 @@ namespace Project_Сonfigurator.Services
                     Setpoints = new BaseSetpoints
                     {
                         Index = $"{Data.KTPRS.Count + 1}",
-                        Value = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Value}",
-                        Unit = i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Unit}",
+                        Value = DefualtMapKTPRS is null || DefualtMapKTPRS.Count <= 0 || i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Value}",
+                        Unit = DefualtMapKTPRS is null || DefualtMapKTPRS.Count <= 0 || i > DefualtMapKTPRS.Count ? "" : $"{DefualtMapKTPRS[i].Setpoints.Unit}",
                         Id = $"H{5000 + Data.KTPRS.Count}",
                         VarName = $"SP_CRIT_PROT[{Data.KTPRS.Count + 1}]",
                         Address = $"%MW{4600 + Data.KTPRS.Count}",
@@ -1862,8 +1863,8 @@ namespace Project_Сonfigurator.Services
                 foreach (var signal in AppData.Messages)
                     Data.CollectionMessages.Add(signal);
 
-                Data.SelectedMessages = Data.CollectionMessages[0];
-                Data.SelectedMessage = Data.SelectedMessages.Messages[0];
+                Data.SelectedCollectionMessage = Data.CollectionMessages[0];
+                Data.SelectedMessage = Data.SelectedCollectionMessage.Messages[0];
                 Data.GeneratedData();
                 return true;
             }
@@ -1882,7 +1883,7 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         public bool SaveData()
         {
-            var path = Program.Settings.Config.PathProject;
+            var path = App.Settings.Config.PathProject;
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
 
@@ -1934,7 +1935,7 @@ namespace Project_Сonfigurator.Services
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
 
-            var path = string.IsNullOrWhiteSpace(SelectedPath) ? Program.PathConfig + "\\ProjectData.xml" : SelectedPath;
+            var path = string.IsNullOrWhiteSpace(SelectedPath) ? App.PathConfig + "\\ProjectData.xml" : SelectedPath;
 
             var FileNameEncrypt = path;
             var FileNameEncrypted = path.Replace(".xml", __EncryptedFileSuffix);
