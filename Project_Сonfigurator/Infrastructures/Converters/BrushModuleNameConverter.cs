@@ -11,82 +11,83 @@ namespace Project_Сonfigurator.Infrastructures.Converters
     {
         public object Convert(object v, Type t, object p, CultureInfo c)
         {
-            if (v is not string brush) return Brushes.White;
+            if (v is not string DescriptionModule) return Brushes.White;
 
             #region Заглушки\Оконечные модуля
-            if (brush.Contains("ST", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("XEM", StringComparison.CurrentCultureIgnoreCase))
+            if (DescriptionModule.Contains("ST", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("XEM", StringComparison.CurrentCultureIgnoreCase))
                 return "#FFD9D9D9";
             #endregion
 
             #region Интерфейсные модуля
-            else if ((brush.Contains("CP", StringComparison.CurrentCultureIgnoreCase) && !brush.Contains("CPS", StringComparison.CurrentCultureIgnoreCase)) ||
-                    brush.Contains("CXM", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NOC", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NOP", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NOR", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NOS", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("EIA", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NGD", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NOM", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("NRP", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("CRA", StringComparison.CurrentCultureIgnoreCase)
+            else if ((DescriptionModule.Contains("CP", StringComparison.CurrentCultureIgnoreCase) && !DescriptionModule.Contains("CPS", StringComparison.CurrentCultureIgnoreCase)) ||
+                    DescriptionModule.Contains("CXM", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NOC", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NOP", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NOR", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NOS", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("EIA", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NGD", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NOM", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("NRP", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("CRA", StringComparison.CurrentCultureIgnoreCase)
                     )
                 return "#FFED7D31";
             #endregion
 
             #region Модули DI
-            else if (brush.Contains("DI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DAI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DDI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DDM", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DRA", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DRC", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("ERT", StringComparison.CurrentCultureIgnoreCase)
+            else if (DescriptionModule.Contains("DI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DAI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DDI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DDM", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DRA", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DRC", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("ERT", StringComparison.CurrentCultureIgnoreCase)
                     )
                 return "#FFFFC000";
             #endregion
 
             #region Модули AI
-            else if (brush.Contains("AI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("AHI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("AMI", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("AMM", StringComparison.CurrentCultureIgnoreCase)
+            else if (DescriptionModule.Contains("AI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("AHI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("AMI", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("AMM", StringComparison.CurrentCultureIgnoreCase)
                     )
                 return "#FF70AD47";
             #endregion
 
             #region Модули DO
-            else if (brush.Contains("DO", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DAO", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("DDO", StringComparison.CurrentCultureIgnoreCase)
+            else if (DescriptionModule.Contains("DO", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DAO", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("DDO", StringComparison.CurrentCultureIgnoreCase)
                     )
                 return "#FF00B0F0";
             #endregion
 
             #region Модули AO
-            else if (brush.Contains("AO", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("AMO", StringComparison.CurrentCultureIgnoreCase) ||
-                    brush.Contains("AHO", StringComparison.CurrentCultureIgnoreCase)
+            else if (DescriptionModule.Contains("AO", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("AMO", StringComparison.CurrentCultureIgnoreCase) ||
+                    DescriptionModule.Contains("AHO", StringComparison.CurrentCultureIgnoreCase)
                     )
                 return "#FF7030A0";
             #endregion
 
             #region Счетные модули
-            else if (brush.Contains("DA", StringComparison.CurrentCultureIgnoreCase) ||
-                brush.Contains("ART", StringComparison.CurrentCultureIgnoreCase))
+            else if (DescriptionModule.Contains("DA", StringComparison.CurrentCultureIgnoreCase) ||
+                DescriptionModule.Contains("ART", StringComparison.CurrentCultureIgnoreCase))
                 return "#FF45F4FD";
             #endregion
 
             #region ПЛК
-            else if (brush.Contains("Safety", StringComparison.CurrentCultureIgnoreCase))
+            else if (DescriptionModule.Contains("Safety", StringComparison.CurrentCultureIgnoreCase))
                 return Brushes.Yellow;
 
             #endregion
 
-            else
+            else if (!string.IsNullOrWhiteSpace(DescriptionModule))
                 return Brushes.White;
-
+            else
+                return Brushes.Transparent;
         }
 
         public object ConvertBack(object v, Type t, object p, CultureInfo c)

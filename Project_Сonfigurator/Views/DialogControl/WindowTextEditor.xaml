@@ -14,7 +14,7 @@
         >
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBox Text="{Binding TextView}"/>
+            <TextBox Text="{Binding TextView, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
     </Grid>
 </Window>

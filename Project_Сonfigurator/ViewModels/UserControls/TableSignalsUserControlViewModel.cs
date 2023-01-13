@@ -5,9 +5,7 @@ using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls;
-using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -24,7 +22,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public TableSignalsUserControlViewModel()
         {
             Title = "Таблица сигналов";
-            Description = "Таблица сигналов НПС-1 \"Сызрань\"";
+            Description = $" Таблица распределения сигналов по модулям и шкафам {App.Settings.Config.NameProject}";
             UsingUserControl = new TableSignalsUserControl();
         }
 
@@ -223,18 +221,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdGenerateTable => _CmdGenerateTable ??= new RelayCommand(OnCmdGenerateTableExecuted, CanCmdGenerateTableExecute);
         private bool CanCmdGenerateTableExecute() =>
             LayotRackViewModel is not null &&
-            LayotRackViewModel.USOList is not null &&
-            LayotRackViewModel.USOList.Count > 0;
+            LayotRackViewModel.Params is not null &&
+            LayotRackViewModel.Params.Count > 0;
         private void OnCmdGenerateTableExecuted()
         {
             if (LayotRackViewModel is null) return;
-            if (LayotRackViewModel.USOList is null) return;
+            if (LayotRackViewModel.Params is null) return;
             if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
             SelectedUSO = new USO();
             var uso_list = new ObservableCollection<USO>();
-            foreach (var _USO in LayotRackViewModel.USOList)
+            foreach (var _USO in LayotRackViewModel.Params)
             {
                 var need_add_uso = false;
                 foreach (var _Rack in _USO.Racks)

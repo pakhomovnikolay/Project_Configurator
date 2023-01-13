@@ -1,5 +1,5 @@
 ﻿using Project_Сonfigurator.Models.LayotRack;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -9,9 +9,8 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <summary>
         /// Обновление индексов модулей
         /// </summary>
-        /// <param name="Modules"></param>
-        /// <param name="IndexRack"></param>
-        void RefreshIndexModule(List<RackModule> Modules, int IndexRack);
+        /// <param name="SelectedUSO"></param>
+        void RefreshIndexModule(USO SelectedUSO);
         #endregion
 
         #region Обновление адресов модулей
@@ -19,8 +18,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Обновление адресов модулей
         /// </summary>
         /// <param name="USOList"></param>
-        /// <param name="IndexRack"></param>
-        void RefreshAddressModule(List<USO> USOList, int IndexRack = 0);
+        void RefreshAddressModule(ObservableCollection<USO> USOList);
         #endregion
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Settings.Interfaces
 {
@@ -54,11 +53,11 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         string PathProject { get; set; }
         #endregion
 
-        #region Путь хранения настроек проекта
+        #region Наименование проекта
         /// <summary>
-        /// Путь хранения настроек проекта
+        /// Наименование проекта
         /// </summary>
-        string PathConfig { get; set; }
+        string NameProject { get; set; }
         #endregion
 
         #region Карта агрегатных готовностей по умолчанию

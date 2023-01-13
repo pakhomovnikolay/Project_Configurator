@@ -774,7 +774,7 @@ namespace Project_Сonfigurator.Services
                 {
                     object _Data = item switch
                     {
-                        LayotRackUserControlViewModel Data => AppData.USOList = Data.USOList is null ? new() : Data.USOList,
+                        LayotRackUserControlViewModel Data => AppData.USOList = Data.Params is null ? new() : Data.Params,
                         SignalsDIUserControlViewModel Data => AppData.SignalDI = Data.SignalsDI is null ? new() : Data.SignalsDI,
                         SignalsAIUserControlViewModel Data => AppData.SignalAI = Data.SignalsAI is null ? new() : Data.SignalsAI,
                         SignalsDOUserControlViewModel Data => AppData.SignalDO = Data.SignalsDO is null ? new() : Data.SignalsDO,
@@ -934,17 +934,17 @@ namespace Project_Сonfigurator.Services
         /// <returns></returns>
         private bool RefreshUSO(LayotRackUserControlViewModel Data)
         {
-            Data.USOList = new();
+            Data.Params = new();
 
             #region При наличии данных генерируем данные
             if (AppData is not null && AppData.USOList.Count > 0)
             {
                 foreach (var _USO in AppData.USOList)
-                    Data.USOList.Add(_USO);
+                    Data.Params.Add(_USO);
 
-                Data.SelectedUSO = Data.USOList[0];
-                if (Data.USOList[0].Racks.Count > 0)
-                    Data.SelectedRack = Data.USOList[0].Racks[0];
+                Data.SelectedParam = Data.Params[0];
+                if (Data.Params[0].Racks.Count > 0)
+                    Data.SelectedSubParam = Data.Params[0].Racks[0];
             }
             #endregion
 

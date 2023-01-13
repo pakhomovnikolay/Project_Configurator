@@ -18,13 +18,6 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         bool IsSelected { get; set; }
         #endregion
 
-        #region Выбранный тип модулей
-        /// <summary>
-        /// Выбранный
-        /// </summary>
-        VendorModuleType SelectedModuleType { get; set; }
-        #endregion
-
         #region Список модулей
         /// <summary>
         /// Список модулей

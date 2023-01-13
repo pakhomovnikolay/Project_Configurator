@@ -17,583 +17,534 @@
     <Grid>
 
         <!--Сетка-->
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition/>
-            <RowDefinition Height="30"/>
-        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition MinWidth="183" Width="200"/>
-            <ColumnDefinition MinWidth="200"/>
+            <ColumnDefinition MinWidth="185" Width="185"/>
+            <ColumnDefinition MinWidth="250"/>
         </Grid.ColumnDefinitions>
-        <GridSplitter Grid.Row="1" Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="1" Background="Black"/>
-        
+        <GridSplitter Width="1" Background="Transparent" Panel.ZIndex="99999"/>
+
         <!--Список УСО-->
-        <TextBlock Grid.Row="0" Margin="10,5,0,0" TextAlignment="Left" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="3,0,0,0">
-            <Button Margin="2" ToolTip="Добавить шкаф" Width="70"
-                    Style="{StaticResource CustomButtonStyle}"
-                    Command="{Binding CmdCreateNewUSO}"
-                    >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome Icon="Solid_DoorOpen" FontSize="16" Foreground="Gray"
-                                        Grid.Column="0"/>
-                        <fa:FontAwesome Icon="Solid_Plus" FontSize="16" Foreground="Green"
-                                        Grid.Column="1" Margin="25,0,0,0"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Margin="2" ToolTip="Удалить выбранный шкаф" Width="70"
-                    Style="{StaticResource CustomButtonStyle}"
-                    Command="{Binding CmdDeleteSelectedUSO}"
-                    >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome Icon="Solid_DoorOpen" FontSize="16" Foreground="Gray"
-                                        Grid.Column="0"/>
-                        <fa:FontAwesome Icon="Solid_Minus" FontSize="16" Foreground="Red"
-                                        Grid.Column="1" Margin="25,0,0,0"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-        </StackPanel>
-        <ListView Grid.Row="1" Margin="5,5,0,0"
-                  BorderBrush="Black"
-                  ItemsSource="{Binding USOList}"
-                  SelectedItem="{Binding SelectedUSO}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                               ToolTip="{Binding Name}"
-                               Text="{Binding Name}"/>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ListView>
-
-        <!--Данные-->
-        <StackPanel Grid.Row="0" Grid.Column="1" Margin="10,5,0,0" Orientation="Horizontal">
-            <TextBlock TextAlignment="Left" VerticalAlignment="Center" Text="Выбранное УСО:" FontWeight="Bold"/>
-            <TextBox Margin="5,0,0,0" Width="500" ToolTip="Укажите новое имя УСО"
-                     TextAlignment="Left" VerticalContentAlignment="Center" 
-                     Text="{Binding SelectedUSO.Name, UpdateSourceTrigger=PropertyChanged}"
-                     />
-        </StackPanel>
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0">
-            <Button Margin="2" ToolTip="Добавить корзину" Width="70"
-                    Style="{StaticResource CustomButtonStyle}"
-                    Command="{Binding CmdCreateNewRack}"
-                    CommandParameter="{Binding ElementName=RackDataGrid}"
-                    >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome Icon="Solid_Server" FontSize="16" Foreground="Green"
-                                        Grid.Column="0"/>
-                        <fa:FontAwesome Icon="Solid_Plus" FontSize="16" Foreground="Green"
-                                        Grid.Column="1" Margin="25,0,0,0"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Margin="2" ToolTip="Удалить выбранную корзину" Width="70"
-                    Style="{StaticResource CustomButtonStyle}"
-                    Command="{Binding CmdDeleteSelectedRack}"
-                    >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="40"/>
-                        </Grid.ColumnDefinitions>
-
-                        <fa:FontAwesome Icon="Solid_Server" FontSize="16" Foreground="Red"
-                                        Grid.Column="0"/>
-                        <fa:FontAwesome Icon="Solid_Minus" FontSize="16" Foreground="Red"
-                                        Grid.Column="1" Margin="25,0,0,0"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-        </StackPanel>
-        <DataGrid Grid.Row="1" Grid.Column="1"
-                  x:Name="RackDataGrid"
-                  Margin="5,5,0,0"
-                  BorderThickness="0"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Gray"
-                  HeadersVisibility="Column"
-                  ScrollViewer.CanContentScroll="False"
-                  ScrollViewer.IsDeferredScrollingEnabled="True"
-                  VirtualizingPanel.IsVirtualizing="True"
-                  VirtualizingPanel.IsContainerVirtualizable="True"
-                  ItemsSource="{Binding SelectedUSO.Racks}"
-                  SelectedItem="{Binding SelectedRack}"
-                  >
-
-            <DataGrid.Resources>
-
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0,0,0,0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="250"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="Background" Value="SeaGreen"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="60"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-
-            </DataGrid.Resources>
-
-            <DataGrid.Columns>
-
-                <DataGridTemplateColumn Width="60">
-
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;корзины"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-
-                    <DataGridTemplateColumn.CellEditingTemplate>
+        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
+            <GroupBox.Header>
+                <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="70"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" ToolTip="Добавить шкаф"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdCreateNewUSO}"
+                            >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome Grid.Column="0" Icon="Solid_DoorOpen" FontSize="12" Foreground="Gray"/>
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Plus" FontSize="12" Foreground="Green"/>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Column="2" ToolTip="Удалить выбранный шкаф"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdDeleteSelectedUSO}"
+                            >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome Grid.Column="0" Icon="Solid_DoorOpen" FontSize="12" Foreground="Gray"/>
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Minus" FontSize="12" Foreground="Red"/>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Column="4" ToolTip="Обновить адреса всех модулей, во всех УСО" 
+                            HorizontalAlignment="Center" Width="70"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdRefreshAddressModules}"
+                            CommandParameter="{Binding ElementName=MyDataGrid}"
+                            >
+                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
+                    </Button>
+                </Grid>
+                <ListView Grid.Row="0" Margin="2,0,2,5"
+                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                          BorderBrush="LightSlateGray"
+                          ItemsSource="{Binding Params}"
+                          SelectedItem="{Binding SelectedParam}">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="2"/>
+                        </Style>
+                    </ListView.Resources>
+                    <ListView.ItemTemplate>
                         <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-                                <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
+                            <TextBlock Background="Transparent"
+                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                       TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
+                                       ToolTip="{Binding Name}"
+                                       Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </GroupBox>
+
+        <!--Данные УСО-->
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
+            <GroupBox.Header>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="64"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Данные - "/>
+                    <TextBox Grid.Column="1"  BorderThickness="0" Margin="0,0,5,0" FontWeight="Bold"
+                             Text="{Binding SelectedParam.Name, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+                
+            </GroupBox.Header>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="50"/>
+                        <ColumnDefinition Width="1"/>
+                        <ColumnDefinition Width="50"/>
+                    </Grid.ColumnDefinitions>
+                    <Button Grid.Column="0" ToolTip="Добавить корзину"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdCreateNewRack}"
+                            CommandParameter="{Binding ElementName=MyDataGrid}"
+                            >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome Grid.Column="0" Icon="Solid_Server" FontSize="12" Foreground="Green"/>
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Plus" FontSize="12" Foreground="Green"/>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Column="2" ToolTip="Удалить выбранную корзину"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdDeleteSelectedRack}"
+                            >
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <fa:FontAwesome Grid.Column="0" Icon="Solid_Server" FontSize="12" Foreground="Red"/>
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Minus" FontSize="12" Foreground="Red"/>
+                        </Grid>
+                    </Button>
+                    <Button Grid.Column="4" ToolTip="Обновить индексы модулей" 
+                            HorizontalAlignment="Center" Width="50"
+                            Style="{StaticResource CustomButtonStyle}"
+                            Command="{Binding CmdRefreshIndexModules}"
+                            CommandParameter="{Binding ElementName=MyDataGrid}"
+                            >
+                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
+                    </Button>
+                    <CheckBox Grid.Column="6" ToolTip="Включить\Отключить из обработки все корзины выбранного УСО"
+                              FontSize="14"
+                              IsChecked="{Binding SelectedParam.IsAllEnable}"
+                              Style="{StaticResource CheckBoxPowerStyle}"
+                              Command="{Binding CmdChangeStateRacks}"
+                              CommandParameter="{Binding ElementName=MyDataGrid}"
+                              >
+
+                        <!---->
+                        <CheckBox.Foreground>
+                            <Binding Path="SelectedParam.IsAllEnable" UpdateSourceTrigger="PropertyChanged"
+                                     Converter="{StaticResource PowerBrushConverter}"/>
+                        </CheckBox.Foreground>
+                    </CheckBox>
+                </Grid>
+                <DataGrid Grid.Row="0"
+                          x:Name="MyDataGrid"
+                          Margin="2,0,2,5"
+                          BorderThickness="1"
+                          BorderBrush="LightSlateGray"
+                          Background="Gray"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          GridLinesVisibility="None"
+                          CanUserResizeColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          HeadersVisibility="Column"
+                          ScrollViewer.CanContentScroll="False"
+                          ItemsSource="{Binding SelectedParam.Racks}"
+                          SelectedItem="{Binding SelectedSubParam}">
+
+                    <DataGrid.Resources>
+
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="BorderThickness" Value="0,0,0,0"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Margin" Value="0,20,0,0"/>
+                            <Setter Property="Height" Value="auto"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="Background" Value="SeaGreen"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="BorderThickness" Value="0,0,1,0"/>
+                            <Setter Property="Background" Value="Gray"/>
+                            <Setter Property="Height" Value="60"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="Background" Value="Gray"/>
+                        </Style>
+
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Width="80">
+
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="2,2,0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;корзины"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
                                     <Grid>
-
                                         <Grid.RowDefinitions>
-                                            <RowDefinition Height="30"/>
-                                            <RowDefinition/>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="150"/>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="25"/>
                                         </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
+                                        <Border Grid.Row="0" Grid.RowSpan="4" BorderThickness="1,2,1,2" BorderBrush="Black" Background="LightGray">
+                                            <TextBlock FontWeight="Bold"
+                                                     TextAlignment="Center" VerticalAlignment="Center"
+                                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                        <CheckBox Grid.Row="0" FontSize="14" Margin="4,4,4,0"
                                                   Style="{StaticResource CheckBoxPowerStyle}"
                                                   IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
+                                                  Command="{Binding DataContext.CmdChangeStateSelectedRack, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                  CommandParameter="{Binding ElementName=MyDataGrid}"
                                                   >
                                             <CheckBox.Foreground>
                                                 <Binding Path="IsEnable" Converter="{StaticResource PowerBrushConverter}"/>
                                             </CheckBox.Foreground>
                                         </CheckBox>
-                                        <Button Grid.Row="0" Grid.Column="1" Margin="2" HorizontalAlignment="Center" Width="25"
-                                                ToolTip="Обновить индексы модулей"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                Command="{Binding DataContext.CmdRefreshIndexModules, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                >
-                                            <Button.Content>
-                                                <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
-                                            </Button.Content>
-                                        </Button>
-                                        <TextBox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="2"
-                                                 TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                                            <TextBlock.Foreground>
-                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                            </TextBlock.Foreground>
-                                        </TextBox>
                                     </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
 
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
+                        <DataGridTemplateColumn Width="150">
 
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-                                <Border Grid.Row="2" Grid.RowSpan="4" BorderThickness="2,2,0,2" BorderBrush="Black" Background="LightGray" VerticalAlignment="Top" Height="210">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="30"/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <CheckBox Grid.Row="0" Grid.Column="0" Margin="2" FontSize="14"
-                                                  Style="{StaticResource CheckBoxPowerStyle}"
-                                                  IsChecked="{Binding IsEnable, UpdateSourceTrigger=PropertyChanged}"
-                                                  >
-                                            <CheckBox.Foreground>
-                                                <Binding Path="IsEnable" Converter="{StaticResource PowerBrushConverter}"/>
-                                            </CheckBox.Foreground>
-                                        </CheckBox>
-                                        <Button Grid.Row="0" Grid.Column="1" Margin="2" HorizontalAlignment="Center" Width="25"
-                                                ToolTip="Обновить индексы модулей"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                Command="{Binding DataContext.CmdRefreshIndexModules, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                >
-                                            <Button.Content>
-                                                <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
-                                            </Button.Content>
-                                        </Button>
-                                        <TextBlock Grid.Row="0" Grid.RowSpan="3" Grid.Column="0" Grid.ColumnSpan="2"
-                                                   TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                   Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                                            <TextBlock.Foreground>
-                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                            </TextBlock.Foreground>
-                                        </TextBlock>
-                                    </Grid>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Width="120">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                        Text="Модули"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-                                <Border Grid.Row="2" BorderThickness="1,2,0,1" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Индекс в корзине">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
                                 </Border>
-                                <Border Grid.Row="3" BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Имя моудля">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
-                                </Border>
-                                <Border Grid.Row="4" BorderThickness="1,0,0,1" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Text="Начальный адрес">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
-                                </Border>
-                                <Border Grid.Row="5" BorderThickness="1,0,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" Text="Конечный адрес">
-                                        <TextBlock.Foreground>
-                                            <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                        </TextBlock.Foreground>
-                                    </TextBlock>
-                                </Border>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                            </DataGridTemplateColumn.Header>
 
-                <DataGridTemplateColumn Width="1430">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="150"/>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="25"/>
+                                        </Grid.RowDefinitions>
+                                        <Border Grid.Row="0" BorderThickness="0,2,1,0" BorderBrush="Black">
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                       FontWeight="Bold" Text="Индекс в корзине">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                        <Border Grid.Row="1" BorderThickness="0,1,1,0" BorderBrush="Black">
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                       FontWeight="Bold" Text="Имя модуля">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                        <Border Grid.Row="2" BorderThickness="0,1,1,0" BorderBrush="Black">
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                       FontWeight="Bold" Text="Начальный адрес">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                        <Border Grid.Row="3" BorderThickness="0,1,1,2" BorderBrush="Black">
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                       FontWeight="Bold" Text="Конечный адрес">
+                                                <TextBlock.Foreground>
+                                                    <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                                </TextBlock.Foreground>
+                                            </TextBlock>
+                                        </Border>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
 
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,2,1,2" BorderBrush="Black"  Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn MinWidth="1450">
+
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2,1,2" BorderBrush="Black"  Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                        Text="Наименование модуля. Выбирайте модуль из списка, чтобы наименование было верным."/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
 
-                    <DataGridTemplateColumn.CellEditingTemplate>
-                        <DataTemplate>
-                            <Grid>
-
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-
-                                <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,2,0,1" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock Background="White" TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border x:Name="border" BorderThickness="1,0,0,1" Width="55" BorderBrush="Black">
-                                                <StackPanel>
-                                                    <ToggleButton x:Name="ListModule"
-                                                                  BorderThickness="0"
-                                                                  VerticalContentAlignment="Center"
-                                                                  HorizontalContentAlignment="Stretch"
-                                                                  Background="#FFE5E5E5"
-                                                                  BorderBrush="#FFACACAC"
-                                                                  Height="{Binding ElementName=border, Path=ActualHeight}">
-                                                        <TextBlock HorizontalAlignment="Center"
-                                                                   TextAlignment="Center"
-                                                                   Text="{Binding Name}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="150"/>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="25"/>
+                                        </Grid.RowDefinitions>
+                                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="Black">
+                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                        <Border.Background>
+                                                            <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
+                                                        </Border.Background>
+                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                   Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
                                                             <TextBlock.LayoutTransform>
                                                                 <RotateTransform Angle="-90"/>
                                                             </TextBlock.LayoutTransform>
                                                         </TextBlock>
-                                                    </ToggleButton>
-                                                    <Popup AllowsTransparency="False"
-                                                           StaysOpen="False"
-                                                           PlacementTarget="{Binding ElementName=ListModule}"
-                                                           IsOpen="{Binding IsChecked, ElementName=ListModule}">
-                                                        <ListBox Height="500"
-                                                                 ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
-                                                                 SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                                    </Popup>
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,1,1,2" Width="56" BorderBrush="Black">
+                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EndAddress}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
 
-                                <ItemsControl Grid.Row="4" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,1" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="150"/>
+                                            <RowDefinition Height="25"/>
+                                            <RowDefinition Height="25"/>
+                                        </Grid.RowDefinitions>
+                                        <ItemsControl Grid.Row="0" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="Black">
+                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border x:Name="border" BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                        <StackPanel>
+                                                            <ToggleButton x:Name="ListModule"
+                                                                          BorderThickness="0"
+                                                                          VerticalContentAlignment="Center"
+                                                                          HorizontalContentAlignment="Stretch"
+                                                                          Background="#FFE5E5E5"
+                                                                          BorderBrush="#FFACACAC"
+                                                                          Height="{Binding ElementName=border, Path=ActualHeight}">
+                                                                <TextBlock HorizontalAlignment="Center"
+                                                                           TextAlignment="Center"
+                                                                           Text="{Binding Name}">
+                                                                    <TextBlock.LayoutTransform>
+                                                                        <RotateTransform Angle="-90"/>
+                                                                    </TextBlock.LayoutTransform>
+                                                                </TextBlock>
+                                                            </ToggleButton>
+                                                            <Popup AllowsTransparency="False"
+                                                                   StaysOpen="False"
+                                                                   PlacementTarget="{Binding ElementName=ListModule}"
+                                                                   IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                                                <ListBox MaxHeight="400" MinWidth="200"
+                                                                         ItemsSource="{Binding ResultModuleList, Source={StaticResource Lists}}"
+                                                                         SelectedItem="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
+                                                                </ListBox>
+                                                            </Popup>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                        <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
+                                            <ItemsControl.Foreground>
+                                                <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
+                                            </ItemsControl.Foreground>
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <StackPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border BorderThickness="0,1,1,2" Width="56" BorderBrush="Black">
+                                                        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EndAddress}"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
 
-                                <ItemsControl Grid.Row="5" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,2" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding EndAddress}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
+                        </DataGridTemplateColumn>
 
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellEditingTemplate>
+                    </DataGrid.Columns>
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-
-                                <ItemsControl Grid.Row="2" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,2,0,1" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <ItemsControl Grid.Row="3" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,1" Width="55" BorderBrush="Black">
-                                                <Border.Background>
-                                                    <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
-                                                </Border.Background>
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
-                                                    <TextBlock.LayoutTransform>
-                                                        <RotateTransform Angle="-90"/>
-                                                    </TextBlock.LayoutTransform>
-                                                </TextBlock>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <ItemsControl Grid.Row="4" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,1" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-
-                                <ItemsControl Grid.Row="5" ItemsSource="{Binding Modules}">
-                                    <ItemsControl.Foreground>
-                                        <Binding Path="IsEnable" Converter="{StaticResource EnabledRackConverter}"/>
-                                    </ItemsControl.Foreground>
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal"/>
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,2" Width="55" BorderBrush="Black" Background="White">
-                                                <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EndAddress}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Width="109">
-
-                    <DataGridTemplateColumn.CellTemplate>
-
-                        <DataTemplate>
-                            <Grid Background="Gray">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="150"/>
-                                    <RowDefinition Height="20"/>
-                                    <RowDefinition Height="20"/>
-                                </Grid.RowDefinitions>
-
-                                <Border Grid.Row="2" Grid.RowSpan="4" Height="210" BorderThickness="2,0,0,0" BorderBrush="Black"/>
-                            </Grid>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
-                </DataGridTemplateColumn>
-
-            </DataGrid.Columns>
-
-        </DataGrid>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
 
     </Grid>
 </UserControl>

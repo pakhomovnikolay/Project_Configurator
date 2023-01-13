@@ -319,11 +319,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать МПНА из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUMPNA => _CmdImportUMPNA ??= new RelayCommand(OnCmdImportUMPNAExecuted, CanCmdImportUMPNAExecute);
-        private bool CanCmdImportUMPNAExecute() => App.Services.GetRequiredService<LayotRackUserControlViewModel>().USOList is not null;
+        private bool CanCmdImportUMPNAExecute() => App.Services.GetRequiredService<LayotRackUserControlViewModel>().Params is not null;
 
         private void OnCmdImportUMPNAExecuted()
         {
-            var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().USOList;
+            var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().Params;
             if (USOList is null) return;
             if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
             UMPNA = new();

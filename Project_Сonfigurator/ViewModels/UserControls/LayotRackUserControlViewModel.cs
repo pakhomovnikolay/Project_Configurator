@@ -4,11 +4,8 @@ using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
@@ -19,7 +16,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public LayotRackUserControlViewModel()
         {
             Title = "Компоновка корзин";
-            Description = "Компоновка корзин НПС-1 \"Сызрань\"";
+            Description = $"Компоновка корзин {App.Settings.Config.NameProject}";
             UsingUserControl = new LayotRackUserControl();
         }
 
@@ -52,54 +49,42 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #endregion
 
         #region Список УСО
-        private ObservableCollection<USO> _USOList = new();
+        private ObservableCollection<USO> _Params = new();
         /// <summary>
         /// Список УСО
         /// </summary>
-        public ObservableCollection<USO> USOList
+        public ObservableCollection<USO> Params
         {
-            get => _USOList;
-            set => Set(ref _USOList, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
-        #endregion
-
-        #region Коллекция УСО для отображения
-        /// <summary>
-        /// Коллекция УСО для отображения
-        /// </summary>
-        //private readonly CollectionViewSource _DataView = new();
-        //public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранное УСО
-        private USO _SelectedUSO = new();
+        private USO _SelectedParam = new();
         /// <summary>
         /// Выбранное УСО
         /// </summary>
-        public USO SelectedUSO
+        public USO SelectedParam
         {
-            get => _SelectedUSO;
-            set => Set(ref _SelectedUSO, value);
+            get => _SelectedParam;
+            set
+            {
+                if (Set(ref _SelectedParam, value))
+                    SelectedSubParam = _SelectedParam?.Racks[0];
+            }
         }
         #endregion
 
-        #region Коллекция корзин для отображения
-        /// <summary>
-        /// Коллекция корзин для отображения
-        /// </summary>
-        //private readonly CollectionViewSource _DataViewRacks = new();
-        //public ICollectionView DataViewRacks => _DataViewRacks?.View;
-        #endregion
-
         #region Выбранная корзина
-        private Rack _SelectedRack = new();
+        private Rack _SelectedSubParam = new();
         /// <summary>
         /// Выбранная корзина
         /// </summary>
-        public Rack SelectedRack
+        public Rack SelectedSubParam
         {
-            get => _SelectedRack;
-            set => Set(ref _SelectedRack, value);
+            get => _SelectedSubParam;
+            set => Set(ref _SelectedSubParam, value);
         }
         #endregion
 
@@ -120,7 +105,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             #region Создаем корзины и модули
             // Первое УСО - это КЦ. Для него создаем сразу 6 корзин, для всех остальный, одна корзина по умолчанию
-            if (USOList.Count == 0)
+            if (Params.Count == 0)
             {
                 for (int i = 0; i < 6; i++)
                 {
@@ -190,17 +175,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             #region Создаем УСО
             var uso = new USO()
             {
-                Index = $"{USOList.Count + 1}",
-                Name = USOList.Count == 0 ? $"КЦ" : $"УСО {USOList.Count}",
+                Index = $"{Params.Count + 1}",
+                Name = Params.Count == 0 ? $"КЦ" : $"УСО {Params.Count}",
                 Racks = racks
             };
-            USOList.Add(uso);
+            Params.Add(uso);
             #endregion
 
-            SelectedUSO = USOList[^1];
-            SelectedRack = USOList[^1].Racks[0];
-            //_DataView.Source = USOList;
-            //_DataView.View.Refresh();
+            SelectedParam = Params[^1];
         }
         #endregion
 
@@ -210,17 +192,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Удалить выбранное УСО
         /// </summary>
         public ICommand CmdDeleteSelectedUSO => _CmdDeleteSelectedUSO ??= new RelayCommand(OnCmdDeleteSelectedUSOExecuted, CanCmdDeleteSelectedUSOExecute);
-        private bool CanCmdDeleteSelectedUSOExecute() => SelectedUSO is not null;
+        private bool CanCmdDeleteSelectedUSOExecute() => SelectedParam is not null;
         private void OnCmdDeleteSelectedUSOExecuted()
         {
-            var index = USOList.IndexOf(SelectedUSO);
+            var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
-            USOList.Remove(SelectedUSO);
-            if (USOList.Count > 0)
-            {
-                SelectedUSO = USOList[index];
-            }
+            Params.Remove(SelectedParam);
+            if (Params.Count > 0)
+                SelectedParam = Params[index];
         }
         #endregion
 
@@ -230,7 +210,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Создать новую корзину в выбранном УСО
         /// </summary>
         public ICommand CmdCreateNewRack => _CmdCreateNewRack ??= new RelayCommand(OnCmdCreateNewRackExecuted, CanCmdCreateNewRackExecute);
-        private bool CanCmdCreateNewRackExecute(object p) => SelectedUSO is not null;
+        private bool CanCmdCreateNewRackExecute(object p) => SelectedParam is not null;
         private void OnCmdCreateNewRackExecuted(object p)
         {
             if (p is null) return;
@@ -243,7 +223,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 var module = new RackModule()
                 {
                     Type = TypeModule.Unknown,
-                    Index = $"A{SelectedUSO.Racks.Count + 1}.{i + 1}",
+                    Index = $"A{SelectedParam.Racks.Count + 1}.{i + 1}",
                     Name = $"",
                     EndAddress = $"",
                     StartAddress = $"",
@@ -254,14 +234,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             var rack = new Rack()
             {
-                Index = $"{SelectedUSO.Racks.Count + 1}",
-                Name = $"A{SelectedUSO.Racks.Count + 1}",
+                Index = $"{SelectedParam.Racks.Count + 1}",
+                Name = $"A{SelectedParam.Racks.Count + 1}",
                 IsEnable = true,
                 Modules = modules
             };
-            SelectedUSO.Racks.Add(rack);
+            SelectedParam.Racks.Add(rack);
 
-            SelectedRack = SelectedUSO.Racks[^1];
+            SelectedSubParam = SelectedParam.Racks[^1];
         }
         #endregion
 
@@ -271,17 +251,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Удалить выбранную корзину в выбранном УСО
         /// </summary>
         public ICommand CmdDeleteSelectedRack => _CmdDeleteSelectedRack ??= new RelayCommand(OnCmdDeleteSelectedRackExecuted, CanCmdDeleteSelectedRackExecute);
-        private bool CanCmdDeleteSelectedRackExecute() => SelectedRack is not null && SelectedUSO is not null && SelectedUSO.Index != "1";
+        private bool CanCmdDeleteSelectedRackExecute() => SelectedSubParam is not null;
         private void OnCmdDeleteSelectedRackExecuted()
         {
-            var index = SelectedUSO.Racks.IndexOf(SelectedRack);
+            var index = SelectedParam.Racks.IndexOf(SelectedSubParam);
             index = index == 0 ? index : index - 1;
 
-            SelectedUSO.Racks.Remove(SelectedRack);
-            if (SelectedUSO.Racks.Count > 0)
-            {
-                SelectedRack = SelectedUSO.Racks[index];
-            }
+            SelectedParam.Racks.Remove(SelectedSubParam);
+            if (SelectedParam.Racks.Count > 0)
+                SelectedSubParam = SelectedParam.Racks[index];
         }
         #endregion
 
@@ -291,29 +269,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Команда - Обновить индексы модулей
         /// </summary>
         public ICommand CmdRefreshIndexModules => _CmdRefreshIndexModules ??= new RelayCommand(OnCmdRefreshIndexModulesExecuted, CanCmdRefreshIndexModulesExecute);
-        private bool CanCmdRefreshIndexModulesExecute(object p) => SelectedRack is not null;
+        private bool CanCmdRefreshIndexModulesExecute(object p) => SelectedParam is not null;
         private void OnCmdRefreshIndexModulesExecuted(object p)
         {
             if (p is null) return;
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
-            if (!int.TryParse(SelectedRack.Name.Replace("A", ""), out int index))
-                index = 1;
 
-            SelectedRack.Name = $"A{index}";
-            //_LayotRackService.RefreshIndexModule(SelectedRack.Modules, index);
-            //_DataViewRacks.Source = SelectedUSO.Racks;
-            //_DataViewRacks.View.Refresh();
+            LayotRackServices.RefreshIndexModule(SelectedParam);
+            MyDataGrid.Items.Refresh();
         }
         #endregion
 
-        #region Команда - Обновить адреса модулей
+        #region Команда - Обновить адресов модулей
         private ICommand _CmdRefreshAddressModules;
         /// <summary>
-        /// Команда - Обновить адреса модулей
+        /// Команда - Обновить адресов модулей
         /// </summary>
         public ICommand CmdRefreshAddressModules => _CmdRefreshAddressModules ??= new RelayCommand(OnCmdRefreshAddressModulesExecuted, CanCmdRefreshAddressModulesExecute);
-        private bool CanCmdRefreshAddressModulesExecute(object p) => USOList is not null && USOList.Count > 0;
+        private bool CanCmdRefreshAddressModulesExecute(object p) => Params is not null && Params.Count > 0;
 
         private void OnCmdRefreshAddressModulesExecuted(object p)
         {
@@ -321,12 +295,59 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
-            //_LayotRackService.RefreshAddressModule(USOList);
-            //_DataViewRacks.Source = SelectedUSO.Racks;
-            //_DataViewRacks.View?.Refresh();
-            //OnPropertyChanged(nameof(_DataView));
-            //OnPropertyChanged(nameof(_DataViewRacks));
+            LayotRackServices.RefreshAddressModule(Params);
+            MyDataGrid.Items.Refresh();
+        }
+        #endregion
 
+        #region Команда - Включить\Исключить из обработки все корзины выбранного УСО
+        private ICommand _CmdChangeStateRacks;
+        /// <summary>
+        /// Команда - Включить\Исключить из обработки все корзины выбранного УСО
+        /// </summary>
+        public ICommand CmdChangeStateRacks => _CmdChangeStateRacks ??= new RelayCommand(OnCmdChangeStateRacksExecuted, CanCmdChangeStateRacksExecute);
+        private bool CanCmdChangeStateRacksExecute(object p) => SelectedParam is not null;
+
+        private void OnCmdChangeStateRacksExecuted(object p)
+        {
+            if (p is null) return;
+            if (p is not DataGrid MyDataGrid) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+
+            var AllIsEnable = true;
+            foreach (var _Rack in SelectedParam.Racks)
+                AllIsEnable = AllIsEnable && _Rack.IsEnable;
+            SelectedParam.IsAllEnable = !AllIsEnable;
+
+            foreach (var _Rack in SelectedParam.Racks)
+                _Rack.IsEnable = SelectedParam.IsAllEnable;
+
+            OnPropertyChanged(nameof(SelectedParam));
+
+            MyDataGrid.Items.Refresh();
+        }
+        #endregion
+
+        #region Команда - Включить\Исключить из обработки выбранную корзину
+        private ICommand _CmdChangeStateSelectedRack;
+        /// <summary>
+        /// Команда - Включить\Исключить из обработки выбранную корзину
+        /// </summary>
+        public ICommand CmdChangeStateSelectedRack => _CmdChangeStateSelectedRack ??= new RelayCommand(OnCmdChangeStateSelectedRackExecuted, CanCmdChangeStateSelectedRackExecute);
+        private bool CanCmdChangeStateSelectedRackExecute(object p) => SelectedParam is not null;
+
+        private void OnCmdChangeStateSelectedRackExecuted(object p)
+        {
+            if (p is null) return;
+            if (p is not DataGrid MyDataGrid) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+
+            SelectedParam.IsAllEnable = true;
+            foreach (var _Rack in SelectedParam.Racks)
+                SelectedParam.IsAllEnable = SelectedParam.IsAllEnable && _Rack.IsEnable;
+
+            OnPropertyChanged(nameof(SelectedParam));
+            MyDataGrid.Items.Refresh();
         }
         #endregion
 
@@ -337,12 +358,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         #region Генерируем данные
         public void GeneratedData()
         {
-            //_DataView.Source = USOList;
+            //_DataView.Source = Params;
             //_DataView.View?.Refresh();
             //OnPropertyChanged(nameof(DataView));
 
-            if (USOList is null || USOList.Count <= 0)
-                SelectedUSO = null;
+            if (Params is null || Params.Count <= 0)
+                SelectedParam = null;
         }
         #endregion
 

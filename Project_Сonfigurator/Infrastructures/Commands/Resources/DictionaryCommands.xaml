@@ -14,4 +14,6 @@
     <l:CmdScrollToLeftEnd x:Key="CmdScrollToLeftEnd"/>
     <l:CmdScrollToRightEnd x:Key="CmdScrollToRightEnd"/>
 
+    <l:CmdOpenWindowEditText x:Key="CmdOpenWindowEditText"/>
+
 </ResourceDictionary>

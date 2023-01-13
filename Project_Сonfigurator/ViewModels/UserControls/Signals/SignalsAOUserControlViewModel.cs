@@ -5,7 +5,6 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -303,7 +302,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
 
             #region Генерируем данные из ТБ
-            var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
+            var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
             foreach (var _USO in uso_list)
             {
                 foreach (var _Rack in _USO.Racks)

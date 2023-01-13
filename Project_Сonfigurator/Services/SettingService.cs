@@ -4,7 +4,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Threading;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -12,7 +11,7 @@ namespace Project_Сonfigurator.Services
 {
     public class SettingService : ISettingService
     {
-        private const string __EncryptedFileSuffix = ".etd";
+        private const string __EncryptedFileSuffix = ".configproject";
 
         #region Параметры настроек
         /// <summary>
@@ -30,29 +29,27 @@ namespace Project_Сonfigurator.Services
         {
             IEncryptorService _Encryptor = new EncryptorService();
             IUserDialogService UserDialog = new UserDialogService();
-            Config.PathConfig = App.PathConfig + "\\Config.xml";
+            var PathConfig = App.PathConfig + "\\Config.xml";
             try
             {
                 var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));
                 var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
-                using XmlWriter xmlWriter = XmlWriter.Create(Config.PathConfig, xmlWriterSettings);
+                using XmlWriter xmlWriter = XmlWriter.Create(PathConfig, xmlWriterSettings);
 
                 SettingsAppSerializer.Serialize(xmlWriter, Config);
                 xmlWriter.Close();
 
-                var FileNameEncrypt = Config.PathConfig;
-                var FileNameEncrypted = Config.PathConfig.Replace(".xml", __EncryptedFileSuffix)/* App.PathConfig + "\\Config" + __EncryptedFileSuffix*/;
+                var FileNameEncrypt = PathConfig;
+                var FileNameEncrypted = PathConfig.Replace(".xml", __EncryptedFileSuffix);
                 try
                 {
                     _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
+                    UserDialog.DeleteFile(FileNameEncrypt);
                 }
                 catch (OperationCanceledException e)
                 {
                     Debug.WriteLine("Error in EncryptorAsync:\r\n{0}", e);
-                }
-                finally
-                {
-                    UserDialog.DeleteFile(FileNameEncrypt);
+                    return false;
                 }
 
                 return true;
@@ -76,7 +73,6 @@ namespace Project_Сonfigurator.Services
 
             var FileNameEncrypt = App.PathConfig + "\\Config.xml";
             var FileNameEncrypted = App.PathConfig + "\\Config" + __EncryptedFileSuffix;
-
 
             _Encryptor.Decryptor(FileNameEncrypted, FileNameEncrypt, "");
             var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));

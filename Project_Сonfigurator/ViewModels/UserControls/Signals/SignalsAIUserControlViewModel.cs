@@ -293,8 +293,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
             #region Генерируем сигналы AI, при отсутсвии данных во владке Таблица сигналов
             if (TableSignalsViewModel.LayotRackViewModel is null ||
-                TableSignalsViewModel.LayotRackViewModel.USOList is null ||
-                TableSignalsViewModel.LayotRackViewModel.USOList.Count < 0)
+                TableSignalsViewModel.LayotRackViewModel.Params is null ||
+                TableSignalsViewModel.LayotRackViewModel.Params.Count < 0) 
             {
                 while (SignalsAI.Count < 500)
                 {
@@ -325,7 +325,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
 
             #region Генерируем данные из ТБ
-            var uso_list = TableSignalsViewModel.LayotRackViewModel.USOList;
+            var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
             foreach (var _USO in uso_list)
             {
                 foreach (var _Rack in _USO.Racks)

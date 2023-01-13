@@ -21,7 +21,8 @@ namespace Project_Сonfigurator.Services
             if (Item is null) throw new ArgumentNullException(nameof(Item));
             return Item switch
             {
-                Vendor vendor => EditVendor(vendor),
+                Vendor Data => EditVendor(Data),
+                SettingServerDB Data => EditServerDB(Data),
                 _ => throw new NotSupportedException($"Редактирование объекта типа {Item.GetType().Name} не поддерживается"),
             };
         }
@@ -32,11 +33,30 @@ namespace Project_Сonfigurator.Services
         /// Открыть окно редактирования данных вендора
         /// </summary>
         /// <returns></returns>
-        private static bool EditVendor(Vendor vendor)
+        private static bool EditVendor(Vendor Data)
         {
             var dlg = new WindowEditVendor
             {
-                VendorData = vendor,
+                VendorData = Data,
+                Owner = App.FucusedWindow ?? App.ActiveWindow,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner
+            };
+            if (!dlg.ShowDialog().Value) return false;
+
+            return true;
+        }
+        #endregion
+
+        #region Открыть окно редактирования данных сервера
+        /// <summary>
+        /// Открыть окно редактирования данных сервера
+        /// </summary>
+        /// <returns></returns>
+        private static bool EditServerDB(SettingServerDB Data)
+        {
+            var dlg = new WindowEditServerDB
+            {
+                SelectedServer = Data,
                 Owner = App.FucusedWindow ?? App.ActiveWindow,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner
             };

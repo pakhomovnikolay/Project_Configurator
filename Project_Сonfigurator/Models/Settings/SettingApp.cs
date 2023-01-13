@@ -54,11 +54,11 @@ namespace Project_Сonfigurator.Models.Settings
         public string PathProject { get; set; }
         #endregion
 
-        #region Путь хранения настроек проекта
+        #region Наименование проекта
         /// <summary>
-        /// Путь хранения настроек проекта
+        /// Наименование проекта
         /// </summary>
-        public string PathConfig { get; set; }
+        public string NameProject { get; set; }
         #endregion
 
         #region Карта агрегатных готовностей по умолчанию

@@ -3,12 +3,9 @@ using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels
@@ -21,32 +18,15 @@ namespace Project_Сonfigurator.ViewModels
             Title = "Настройки";
         }
 
-        private ISettingService _SettingService;
-        private IEditService _EditService;
+        private ISettingService SettingServices;
+        private IEditService EditServices;
         private IUserDialogService UserDialog;
 
-        public SettingWindowViewModels(ISettingService settingService, IEditService editService, IUserDialogService userDialog) : this()
+        public SettingWindowViewModels(ISettingService _ISettingService, IEditService _EditServices, IUserDialogService _UserDialog) : this()
         {
-            _SettingService = settingService;
-            _EditService = editService;
-            UserDialog = userDialog;
-
-            if (Config.Vendors is not null && Config.Vendors.Count > 0)
-            {
-                SelectedVendor = Config.Vendors[^1];
-                _DataViewVendors.Source = Config.Vendors;
-                _DataViewVendors.View.Refresh();
-                OnPropertyChanged(nameof(DataViewVendors));
-            }
-
-            if (Config.ServerDB is not null && Config.ServerDB.Count > 0)
-            {
-                SelectedServerDB = Config.ServerDB[^1];
-                _DataViewServersDB.Source = Config.ServerDB;
-                _DataViewServersDB.View.Refresh();
-                OnPropertyChanged(nameof(DataViewServersDB));
-            }
-
+            SettingServices = _ISettingService;
+            EditServices = _EditServices;
+            UserDialog = _UserDialog;
         }
         #endregion
 
@@ -112,14 +92,6 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Коллекция вендоров
-        /// <summary>
-        /// Коллекция вендоров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewVendors = new();
-        public ICollectionView DataViewVendors => _DataViewVendors?.View;
-        #endregion
-
         #region Выбранный вендор
         private Vendor _SelectedVendor = new();
         /// <summary>
@@ -130,14 +102,6 @@ namespace Project_Сonfigurator.ViewModels
             get => _SelectedVendor;
             set => Set(ref _SelectedVendor, value);
         }
-        #endregion
-
-        #region Коллекция серверов подключения к БД
-        /// <summary>
-        /// Коллекция серверов подключения к БД
-        /// </summary>
-        private readonly CollectionViewSource _DataViewServersDB = new();
-        public ICollectionView DataViewServersDB => _DataViewServersDB?.View;
         #endregion
 
         #region Выбранный сервер подключения к БД
@@ -169,8 +133,8 @@ namespace Project_Сonfigurator.ViewModels
             var msg = "Для применения настроек\nнеобходимо перезапустить приложение.\nПродолжить?";
             if (!UserDialog.SendMessage(Title, msg, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            _SettingService.Config = _Config;
-            if (!_SettingService.Save())
+            SettingServices.Config = _Config;
+            if (!SettingServices.Save())
             {
                 UserDialog.SendMessage(Title, "Ошибка сохранения конфигурации.\nсм. лог", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
@@ -197,14 +161,13 @@ namespace Project_Сonfigurator.ViewModels
                 Name = $"Новый вендор {Config.Vendors.Count + 1}",
                 IsSelected = false,
                 ModuleTypes = new ObservableCollection<VendorModuleType>(),
-                SelectedModuleType = new()
             };
 
             Config.Vendors.Add(vendor);
             SelectedVendor = Config.Vendors[^1];
-            _DataViewVendors.Source = Config.Vendors;
-            _DataViewVendors.View.Refresh();
-            OnPropertyChanged(nameof(DataViewVendors));
+            //_DataViewVendors.Source = Config.Vendors;
+            //_DataViewVendors.View.Refresh();
+            //OnPropertyChanged(nameof(DataViewVendors));
         }
         #endregion
 
@@ -228,11 +191,12 @@ namespace Project_Сonfigurator.ViewModels
                 MessageBoxOptions.None))
                 return;
 
-            Config.Vendors.Remove(SelectedVendor);
-            _DataViewVendors.Source = Config.Vendors;
-            _DataViewVendors.View.Refresh();
+            var index = Config.Vendors.IndexOf(SelectedVendor);
+            index = index == 0 ? index : index - 1;
 
-            OnPropertyChanged(nameof(DataViewVendors));
+            Config.Vendors.Remove(SelectedVendor);
+            if (Config.Vendors.Count > 0)
+                SelectedVendor = Config.Vendors[index];
         }
         #endregion
 
@@ -245,7 +209,7 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdEditSelectedVendorExecute(object p) => SelectedVendor is not null;
         private void OnCmdEditSelectedVendorExecuted(object p)
         {
-            if (!_EditService.Edit(SelectedVendor)) return;
+            if (!EditServices.Edit(SelectedVendor)) return;
         }
         #endregion
 
@@ -370,45 +334,31 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Команда - Изменить настройки подключения к БД
+        #region Команда - Создать новый узел подключения
         /// <summary>
-        /// Команда - Изменить настройки подключения к БД
+        /// Команда - Создать новый узел подключения
         /// </summary>
-        private ICommand _CmdEditServerDB;
-        public ICommand CmdEditServerDB => _CmdEditServerDB ??= new RelayCommand(OnCmdEditServerDBExecuted, CanCmdEditServerDBExecute);
-        private bool CanCmdEditServerDBExecute(object p) => true;
-        private void OnCmdEditServerDBExecuted(object p)
+        private ICommand _CmdCreateNewServerDB;
+        public ICommand CmdCreateNewServerDB => _CmdCreateNewServerDB ??= new RelayCommand(OnCmdCreateNewServerDBExecuted, CanCmdCreateNewServerDBExecute);
+        private bool CanCmdCreateNewServerDBExecute(object p) => true;
+        private void OnCmdCreateNewServerDBExecuted(object p)
         {
             Config.ServerDB.Add(new SettingServerDB());
             SelectedServerDB = Config.ServerDB[^1];
-            _DataViewServersDB.Source = Config.ServerDB;
-            _DataViewServersDB.View?.Refresh();
+            EditServices.Edit(SelectedServerDB);
+        }
+        #endregion
 
-            OnPropertyChanged(nameof(DataViewServersDB));
-
-
-            //DataGrid MyDataGrid = new();
-            //if (p is DataGrid)
-            //{
-            //    MyDataGrid = (DataGrid)p;
-            //}
-            //var server = new SettingServerDB();
-            //if (p is null)
-            //{
-            //    if (!_EditService.Edit(server, Title)) return;
-            //    Config.ServerDB.Add(server);
-            //    SelectedServerDB = Config.ServerDB[^1];
-            //}
-            //else if (MyDataGrid.SelectedItem is SettingServerDB)
-            //{
-            //    if (!_EditService.Edit(SelectedServerDB, Title)) return;
-            //}
-
-            //if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
-            //_DataViewServersDB.Source = Config.ServerDB;
-            //_DataViewServersDB.View?.Refresh();
-
-            //OnPropertyChanged(nameof(DataViewServersDB));
+        #region Команда - Редактировать выбранный узел
+        /// <summary>
+        /// Команда - Редактировать выбранный узел
+        /// </summary>
+        private ICommand _CmdEditSelectedServerDB;
+        public ICommand CmdEditSelectedServerDB => _CmdEditSelectedServerDB ??= new RelayCommand(OnCmdEditSelectedServerDBExecuted, CanCmdEditSelectedServerDBExecute);
+        private bool CanCmdEditSelectedServerDBExecute(object p) => true;
+        private void OnCmdEditSelectedServerDBExecuted(object p)
+        {
+            EditServices.Edit(SelectedServerDB);
         }
         #endregion
 
@@ -425,18 +375,19 @@ namespace Project_Сonfigurator.ViewModels
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
-            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранного вендора?",
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранный узел?",
                 MessageBoxButton.YesNo,
                 MessageBoxImage.Warning,
                 MessageBoxResult.Yes,
                 MessageBoxOptions.None))
                 return;
 
-            Config.ServerDB.Remove(SelectedServerDB);
-            _DataViewServersDB.Source = Config.ServerDB;
-            _DataViewServersDB.View?.Refresh();
+            var index = Config.ServerDB.IndexOf(SelectedServerDB);
+            index = index == 0 ? index : index - 1;
 
-            OnPropertyChanged(nameof(DataViewServersDB));
+            Config.ServerDB.Remove(SelectedServerDB);
+            if (Config.ServerDB.Count > 0)
+                SelectedServerDB = Config.ServerDB[index];
         }
         #endregion
 

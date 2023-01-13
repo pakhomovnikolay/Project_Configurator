@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Models.Settings;
-using System.Collections.Generic;
+using Project_Сonfigurator.Services;
+using Project_Сonfigurator.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;
 
@@ -67,16 +68,14 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdCreateTypeModule(object sender, RoutedEventArgs e)
         {
-            
+
             VendorData.ModuleTypes.Add(new VendorModuleType()
             {
                 Name = $"Новый тип модуля {VendorData.ModuleTypes.Count + 1}",
-                SelectedModule = new VendorModule(),
                 Modules = new ObservableCollection<VendorModule>()
             });
 
             SelectedVendorModuleTypeData = VendorData.ModuleTypes[^1];
-            DataGridTypeModule.Items.Refresh();
         }
         #endregion
 
@@ -88,18 +87,20 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdDeleteTypeModule(object sender, RoutedEventArgs e)
         {
-            var index = VendorData.ModuleTypes.IndexOf(SelectedVendorModuleTypeData);
+            IUserDialogService UserDialog = new UserDialogService();
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранный тип моудля?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Yes,
+                MessageBoxOptions.None))
+                return;
 
+            var index = VendorData.ModuleTypes.IndexOf(SelectedVendorModuleTypeData);
+            index = index == 0 ? index : index - 1;
 
             VendorData.ModuleTypes.Remove(SelectedVendorModuleTypeData);
             if (VendorData.ModuleTypes.Count > 0)
-            {
-                if (index > 0)
-                    SelectedVendorModuleTypeData = VendorData.ModuleTypes[index - 1];
-                else
-                    SelectedVendorModuleTypeData = VendorData.ModuleTypes[index];
-            }
-            DataGridTypeModule.Items.Refresh();
+                SelectedVendorModuleTypeData = VendorData.ModuleTypes[index];
         }
         #endregion
 
@@ -112,9 +113,7 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdCreateModule(object sender, RoutedEventArgs e)
         {
             SelectedVendorModuleTypeData.Modules.Add(new VendorModule() { Name = $"Новый модуль {SelectedVendorModuleTypeData.Modules.Count + 1}" });
-            SelectedVendorModuleTypeData.SelectedModule = SelectedVendorModuleTypeData.Modules[^1];
-            //DataGridModules.Items.Refresh();
-            DataGridTypeModule.Items.Refresh();
+            SelectedVendorModuleData = SelectedVendorModuleTypeData.Modules[^1];
         }
         #endregion
 
@@ -126,18 +125,20 @@ namespace Project_Сonfigurator.Views.DialogControl
         /// <param name="e"></param>
         private void CmdDeleteModule(object sender, RoutedEventArgs e)
         {
-            var index = SelectedVendorModuleTypeData.Modules.IndexOf(SelectedVendorModuleData);
+            IUserDialogService UserDialog = new UserDialogService();
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранный моудль?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Yes,
+                MessageBoxOptions.None))
+                return;
 
+            var index = SelectedVendorModuleTypeData.Modules.IndexOf(SelectedVendorModuleData);
+            index = index == 0 ? index : index - 1;
 
             SelectedVendorModuleTypeData.Modules.Remove(SelectedVendorModuleData);
             if (SelectedVendorModuleTypeData.Modules.Count > 0)
-            {
-                if (index > 0)
-                    SelectedVendorModuleData = SelectedVendorModuleTypeData.Modules[index - 1];
-                else
-                    SelectedVendorModuleData = SelectedVendorModuleTypeData.Modules[index];
-            }
-            DataGridTypeModule.Items.Refresh();
+                SelectedVendorModuleData = SelectedVendorModuleTypeData.Modules[index];
         }
         #endregion
 

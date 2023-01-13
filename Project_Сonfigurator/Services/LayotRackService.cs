@@ -1,7 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services
@@ -12,14 +11,18 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Обновление индексов модулей
         /// </summary>
-        /// <param name="Modules"></param>
-        /// <param name="IndexRack"></param>
-        public void RefreshIndexModule(List<RackModule> Modules, int IndexRack)
+        /// <param name="SelectedUSO"></param>
+        public void RefreshIndexModule(USO SelectedUSO)
         {
             var i = 0;
-            foreach (var _Module in Modules)
+            foreach (var _Rack in SelectedUSO.Racks)
             {
-                _Module.Index = $"A{IndexRack}.{++i}";
+                if (_Rack.IsEnable)
+                    _Rack.Name = $"A{++i}";
+
+                var j = 0;
+                foreach (var _Module in _Rack.Modules)
+                    _Module.Index = $"{_Rack.Name}.{++j}";
             }
         }
         #endregion
@@ -28,9 +31,8 @@ namespace Project_Сonfigurator.Services
         /// <summary>
         /// Обновление адресов модулей
         /// </summary>
-        /// <param name="Modules"></param>
-        /// <param name="IndexRack"></param>
-        public void RefreshAddressModule(List<USO> USOList, int IndexRack = 0)
+        /// <param name="USOList"></param>
+        public void RefreshAddressModule(ObservableCollection<USO> USOList)
         {
             var VUIndexAI = 0;
             var VUIndexDI = 0;

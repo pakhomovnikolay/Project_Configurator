@@ -236,8 +236,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdImportServiceSignalExecuted(object p)
         {
-            if (LayotRackViewModel.USOList is null) return;
-            if (LayotRackViewModel.USOList.Count <= 0) return;
+            if (LayotRackViewModel.Params is null) return;
+            if (LayotRackViewModel.Params.Count <= 0) return;
             if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
@@ -271,7 +271,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             #endregion
 
             #region Переописываем сигналы диагностики
-            var USOList = LayotRackViewModel.USOList;
+            var USOList = LayotRackViewModel.Params;
             var index = 0;
             bool flNeedShift;
             var USONameException = new ObservableCollection<string>();

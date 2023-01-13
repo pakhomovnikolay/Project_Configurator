@@ -19,6 +19,13 @@ namespace Project_Сonfigurator.Models.LayotRack
         public string Name { get; set; }
         #endregion
 
+        #region Состояние включенных всех корзин в УСО
+        /// <summary>
+        /// Состояние включенных всех корзин в УСО
+        /// </summary>
+        public bool IsAllEnable { get; set; } = true;
+        #endregion
+
         #region Корзины УСО
         /// <summary>
         /// Корзины УСО

@@ -4,7 +4,6 @@ using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
-using Project_Сonfigurator.Views.Windows;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -23,14 +22,12 @@ namespace Project_Сonfigurator.ViewModels
             Title = "Конфигуратор проекта";
         }
 
-        #region Сервисы
         public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
         private readonly IUserDialogService UserDialog;
         private readonly ILogSerivece LogSeriveces;
         private readonly IDBService DBServices;
         public readonly ISettingService SettingServices;
         private readonly ISUExportRedefineService SUExportRedefineServices;
-        #endregion
 
         public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
             ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
@@ -308,8 +305,12 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject);
         private void OnCmdOpenProjectFolderExecuted()
         {
+            var name_folder = App.Settings.Config.PathProject;
             var name_project = App.Settings.Config.PathProject.Split('\\');
-            var name_folder = App.Settings.Config.PathProject.Replace(name_project[^1], "").TrimEnd('\\');
+
+            if (name_project.Length <= 3)
+                name_folder = App.Settings.Config.PathProject.Replace(name_project[^1], "").TrimEnd('\\');
+
             Process.Start("explorer.exe", name_folder);
         }
         #endregion
@@ -320,12 +321,15 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Открыть папку с настройками проекта
         /// </summary>
         public ICommand CmdOpenSettingsProjectFolder => _CmdOpenSettingsProjectFolder ??= new RelayCommand(OnCmdOpenSettingsProjectFolderExecuted, CanCmdOpenSettingsProjectFolderExecute);
-        private bool CanCmdOpenSettingsProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject);
+        private bool CanCmdOpenSettingsProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.PathConfig);
         private void OnCmdOpenSettingsProjectFolderExecuted()
         {
+            var name_folder = App.PathConfig;
+            var name_project = App.PathConfig.Split('\\');
 
-            var name_project = App.Settings.Config.PathConfig.Split('\\');
-            var name_folder = App.Settings.Config.PathConfig.Replace(name_project[^1], "").TrimEnd('\\');
+            if (name_project.Length < 2)
+                name_folder = App.PathConfig.Replace(name_project[^1], "").TrimEnd('\\');
+
             Process.Start("explorer.exe", name_folder);
         }
         #endregion
