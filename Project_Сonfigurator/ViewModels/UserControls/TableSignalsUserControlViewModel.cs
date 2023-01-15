@@ -1,11 +1,14 @@
 ﻿using ClosedXML.Excel;
+using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
@@ -47,18 +50,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public bool IsSelected
         {
             get => _IsSelected;
-            set
-            {
-                if (Set(ref _IsSelected, value))
-                {
-                    //DoSelection = _SignalService.DoSelection;
-                    //if (!_IsSelected && string.IsNullOrWhiteSpace(_SignalService.Address))
-                    //{
-                    //    DoSelection = false;
-                    //    _SignalService.ResetSignal();
-                    //}
-                }
-            }
+            set => Set(ref _IsSelected, value);
         }
         #endregion
 
@@ -201,11 +193,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// </summary>
         private ICommand _CmdGenerateTable;
         public ICommand CmdGenerateTable => _CmdGenerateTable ??= new RelayCommand(OnCmdGenerateTableExecuted, CanCmdGenerateTableExecute);
-        private bool CanCmdGenerateTableExecute() =>
-            //LayotRackViewModel is not null &&
-            //LayotRackViewModel.Params is not null &&
-            //LayotRackViewModel.Params.Count > 0;
-            true;
+        private bool CanCmdGenerateTableExecute() => /*LayotRackViewModel is not null && LayotRackViewModel.Params is not null && LayotRackViewModel.Params.Count > 0*/true;
         private void OnCmdGenerateTableExecuted()
         {
             //if (LayotRackViewModel is null) return;
@@ -213,7 +201,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
             //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            //SelectedUSO = new USO();
+            
+            //SelectedParam = new USO();
             //var uso_list = new ObservableCollection<USO>();
             //foreach (var _USO in LayotRackViewModel.Params)
             //{
@@ -240,19 +229,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             //        }
             //    }
             //    if (need_add_uso)
-            //        uso_list.Add(_USO);
+            //        Params.Add(_USO);
             //}
 
-            //if (uso_list.Count <= 0)
-            //    _DataView.Source = uso_list;
-            //else
-            //{
-            //    SelectedUSO = uso_list[0];
-            //    _DataView.Source = uso_list;
-            //    _DataView.View?.Refresh();
-            //}
-            //_DataView.View?.Refresh();
-            //OnPropertyChanged(nameof(DataView));
+            //if (Params.Count <= 0)
+            //    SelectedParam = Params[0];
         }
         #endregion
 
