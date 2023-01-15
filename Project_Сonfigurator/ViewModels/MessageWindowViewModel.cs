@@ -218,15 +218,7 @@ namespace Project_Сonfigurator.ViewModels
                 Description = $"Сообщение {Params.Count}",
                 Messages = messages
             });
-
             SelectedParam = Params[^1];
-
-
-            //SelectedMessages = CollectionMessages[^1];
-            //SelectedTabItem = SelectedMessages;
-            //SelectedMessage = SelectedMessages.Messages[0];
-
-            //OnCmdSelectedTabPanelItemExecuted(MyScrollViewer);
         }
         #endregion
 
@@ -486,7 +478,7 @@ namespace Project_Сonfigurator.ViewModels
         public void GeneratedData()
         {
             if (Params is null || Params.Count <= 0)
-                SelectedParam = Params[0];  
+                SelectedParam = Params[0];
         }
         #endregion
 

@@ -66,7 +66,7 @@
         <!--Данные-->
         <TabControl Grid.Row="1"
                     ItemsSource="{Binding Params}"
-                    SelectedItem="{Binding SelectedParam}"
+                    SelectedIndex="{Binding SelectedTabIndex}"
                     >
 
             <TabControl.Template>
@@ -127,8 +127,8 @@
                                    IsOpen="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=Window}}"
                                    >
 
-                                <ListView ItemsSource="{Binding DataContext.CollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          SelectedItem="{Binding DataContext.SelectedTabItem, RelativeSource={RelativeSource AncestorType=Window}}"
+                                <ListView ItemsSource="{Binding DataContext.Params, RelativeSource={RelativeSource AncestorType=Window}}"
+                                          SelectedItem="{Binding DataContext.SelectedParam, RelativeSource={RelativeSource AncestorType=Window}}"
                                           Height="500"
                                           >
                                     <ListView.ItemContainerStyle>
@@ -254,7 +254,7 @@
                                   Background="Gray"
                                   HeadersVisibility="Column"
                                   ItemsSource="{Binding Messages}"
-                                  SelectedItem="{Binding DataContext.SelectedMessage, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  SelectedItem="{Binding DataContext.SelectedSubParam, RelativeSource={RelativeSource AncestorType=Window}}"
                                   >
 
                             <DataGrid.Resources>
