@@ -1,63 +1,35 @@
 ﻿using Project_Сonfigurator.Models;
-using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
     public interface IDBService
     {
-        #region Данные
+        #region Данные для сохранения
         /// <summary>
-        /// Данные
+        /// Данные для сохранения
         /// </summary>
-        DBData AppData { get; set; }
+        ProjectDataToSave DataToSave { get; set; }
         #endregion
 
-        #region Запрос записи данных
+        #region Запрос на получение данных проекта
         /// <summary>
-        /// Запрос записи данных
+        /// Запрос на получение данных проекта
         /// </summary>
-        /// <returns></returns>
-        bool RequestSetData(ObservableCollection<object> _ViewModels);
+        void ProjectDataRequest();
         #endregion
 
-        #region Формируем данные приложения перед сохранением
+        #region Запрос на запись данных проекта
         /// <summary>
-        /// Формируем данные приложения перед сохранением
+        /// Запрос на запись данных проекта
         /// </summary>
-        /// <param name="_ViewModels"></param>
-        void FormingAppDataBeforeSaving(ObservableCollection<object> _ViewModels);
+        void RequestToWriteProjectData();
         #endregion
 
-        #region Сохранение файла приложения
+        #region Запрос на запись данных в БД
         /// <summary>
-        /// Сохранение файла приложения
+        /// Запрос на запись данных в БД
         /// </summary>
-        /// <returns></returns>
-        bool SaveData();
-        #endregion
-
-        #region Загрузка файла приложения
-        /// <summary>
-        /// Загрузка файла приложения
-        /// </summary>
-        /// <returns></returns>
-        DBData LoadData(string SelectedPath = "");
-        #endregion
-
-        #region Обновление данных во ViewModels
-        /// <summary>
-        /// Обновление данных во ViewModels
-        /// </summary>
-        /// <param name="Item"></param>
-        bool RefreshDataViewModel(object Item, bool CreateNewProject);
-        #endregion
-
-        #region Обнуление данных, при созданиии нового проекта
-        /// <summary>
-        /// Обнуление данных, при созданиии нового проекта
-        /// </summary>
-        /// <returns></returns>
-        bool ClearDataBase();
+        void RequestToWriteDataToTheDataBase();
         #endregion
     }
 }

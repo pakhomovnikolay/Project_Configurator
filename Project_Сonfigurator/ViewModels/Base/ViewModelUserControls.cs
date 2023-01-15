@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.ViewModels.Base.Interfaces;
+﻿using Project_Сonfigurator.Models;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Controls;

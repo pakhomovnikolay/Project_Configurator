@@ -37,8 +37,8 @@
                 </Grid.RowDefinitions>
 
                 <!--Список задвижек-->
-                <ListView ItemsSource="{Binding DataView}"
-                          SelectedItem="{Binding SelectedUZD}">
+                <ListView ItemsSource="{Binding Params}"
+                          SelectedItem="{Binding SelectedParam}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -105,10 +105,10 @@
         <!--Данные выбранной задвижки-->
         <GroupBox Grid.Column="1" BorderBrush="Black">
             <GroupBox.Header>
-                <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedUZD.Description, FallbackValue='Выберите задвижку', TargetNullValue='Добавьте задвижку'}" />
+                <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedParam.Description, FallbackValue='Выберите задвижку', TargetNullValue='Добавьте задвижку'}" />
             </GroupBox.Header>
 
-            <TabControl Grid.Row="1" DataContext="{Binding SelectedUZD}">
+            <TabControl Grid.Row="1" DataContext="{Binding SelectedParam}">
                 <TabControl.Template>
                     <ControlTemplate TargetType="{x:Type TabControl}">
                         <Grid>
@@ -662,7 +662,7 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding DataContext.DataViewInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      ItemsSource="{Binding InputParam}"
                                       SelectedItem="{Binding DataContext.SelectedInputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       >
 
@@ -864,7 +864,7 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding DataContext.DataViewOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                      ItemsSource="{Binding OutputParam}"
                                       SelectedItem="{Binding DataContext.SelectedOutputParam, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                       >
 

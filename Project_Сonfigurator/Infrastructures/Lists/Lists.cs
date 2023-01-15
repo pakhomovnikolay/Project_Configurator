@@ -92,13 +92,13 @@ namespace Project_Сonfigurator.Infrastructures.Lists
         {
             get
             {
-                _UMPNAList = new() { "0 - Не вибрация" };
-                if (App.DBServices is null) return _UMPNAList;
-                if (App.DBServices.AppData is null) return _UMPNAList;
-                if (App.DBServices.AppData.UMPNA is null) return _UMPNAList;
+                //_UMPNAList = new() { "0 - Не вибрация" };
+                //if (App.DBServices is null) return _UMPNAList;
+                //if (App.DBServices.AppData is null) return _UMPNAList;
+                //if (App.DBServices.AppData.UMPNA is null) return _UMPNAList;
 
-                foreach (var _UMPNA in App.DBServices.AppData.UMPNA)
-                    _UMPNAList.Add($"{_UMPNA.Index} - {_UMPNA.Description}");
+                //foreach (var _UMPNA in App.DBServices.AppData.UMPNA)
+                //    _UMPNAList.Add($"{_UMPNA.Index} - {_UMPNA.Description}");
 
                 return _UMPNAList;
             }
@@ -115,13 +115,13 @@ namespace Project_Сonfigurator.Infrastructures.Lists
         {
             get
             {
-                _USOList = new() { "0 - Не служебный" };
-                if (App.DBServices is null) return _USOList;
-                if (App.DBServices.AppData is null) return _USOList;
-                if (App.DBServices.AppData.USOList is null) return _USOList;
+                //_USOList = new() { "0 - Не служебный" };
+                //if (App.DBServices is null) return _USOList;
+                //if (App.DBServices.AppData is null) return _USOList;
+                //if (App.DBServices.AppData.USOList is null) return _USOList;
 
-                foreach (var _USO in App.DBServices.AppData.USOList)
-                    _USOList.Add($"{_USO.Index} - {_USO.Name}");
+                //foreach (var _USO in App.DBServices.AppData.USOList)
+                //    _USOList.Add($"{_USO.Index} - {_USO.Name}");
 
                 return _USOList;
             }

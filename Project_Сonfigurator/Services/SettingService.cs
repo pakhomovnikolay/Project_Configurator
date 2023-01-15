@@ -11,8 +11,6 @@ namespace Project_Сonfigurator.Services
 {
     public class SettingService : ISettingService
     {
-        private const string __EncryptedFileSuffix = ".configproject";
-
         #region Параметры настроек
         /// <summary>
         /// Параметры настроек
@@ -40,7 +38,7 @@ namespace Project_Сonfigurator.Services
                 xmlWriter.Close();
 
                 var FileNameEncrypt = PathConfig;
-                var FileNameEncrypted = PathConfig.Replace(".xml", __EncryptedFileSuffix);
+                var FileNameEncrypted = PathConfig.Replace(".xml", App.__EncryptedConfigFileSuffix);
                 try
                 {
                     _Encryptor.Encryptor(FileNameEncrypt, FileNameEncrypted, "");
@@ -72,7 +70,7 @@ namespace Project_Сonfigurator.Services
             IUserDialogService UserDialog = new UserDialogService();
 
             var FileNameEncrypt = App.PathConfig + "\\Config.xml";
-            var FileNameEncrypted = App.PathConfig + "\\Config" + __EncryptedFileSuffix;
+            var FileNameEncrypted = App.PathConfig + "\\Config" + App.__EncryptedConfigFileSuffix;
 
             _Encryptor.Decryptor(FileNameEncrypted, FileNameEncrypt, "");
             var SettingsAppSerializer = new XmlSerializer(typeof(SettingApp));

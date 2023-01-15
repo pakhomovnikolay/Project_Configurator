@@ -23,12 +23,10 @@ namespace Project_Сonfigurator.ViewModels
 
         private readonly IUserDialogService UserDialog;
         private readonly IDBService DBServices;
-        public MessageWindowViewModel(IUserDialogService userDialog, IDBService _IDBService) : this()
+        public MessageWindowViewModel(IUserDialogService _UserDialog, IDBService _IDBService) : this()
         {
-            UserDialog = userDialog;
+            UserDialog = _UserDialog;
             DBServices = _IDBService;
-
-            DBServices.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -101,54 +99,38 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Список сообщений
-        private ObservableCollection<CollectionMessage> _CollectionMessages = new();
+        private ObservableCollection<CollectionMessage> _Params = new();
         /// <summary>
         /// Список сообщений
         /// </summary>
-        public ObservableCollection<CollectionMessage> CollectionMessages
+        public ObservableCollection<CollectionMessage> Params
         {
-            get => _CollectionMessages;
-            set => Set(ref _CollectionMessages, value);
-        }
-        #endregion
-
-        #region Выбранная коллекция сообщений
-        private CollectionMessage _SelectedCollectionMessage;
-        /// <summary>
-        /// Выбранная коллекция сообщений
-        /// </summary>
-        public CollectionMessage SelectedCollectionMessage
-        {
-            get => _SelectedCollectionMessage;
-            set
-            {
-                if (Set(ref _SelectedCollectionMessage, value))
-                    SelectedMessage = _SelectedCollectionMessage?.Messages[0];
-            }
+            get => _Params;
+            set => Set(ref _Params, value);
         }
         #endregion
 
         #region Выбранное сообщение
-        private BaseMessage _SelectedMessage;
+        private BaseMessage _SelectedSubParam;
         /// <summary>
         /// Выбранное сообщение
         /// </summary>
-        public BaseMessage SelectedMessage
+        public BaseMessage SelectedSubParam
         {
-            get => _SelectedMessage;
-            set => Set(ref _SelectedMessage, value);
+            get => _SelectedSubParam;
+            set => Set(ref _SelectedSubParam, value);
         }
         #endregion
 
         #region Выбранная вкладка, из списка вкладок
-        private CollectionMessage _SelectedTabItem;
+        private CollectionMessage _SelectedParam;
         /// <summary>
         /// Выбранная вкладка, из списка вкладок
         /// </summary>
-        public CollectionMessage SelectedTabItem
+        public CollectionMessage SelectedParam
         {
-            get => _SelectedTabItem;
-            set => Set(ref _SelectedTabItem, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -230,14 +212,14 @@ namespace Project_Сonfigurator.ViewModels
 
             var messages = new ObservableCollection<BaseMessage>(msg);
 
-            CollectionMessages.Add(new CollectionMessage
+            Params.Add(new CollectionMessage
             {
                 IndexSystem = "",
-                Description = $"Сообщение {CollectionMessages.Count}",
+                Description = $"Сообщение {Params.Count}",
                 Messages = messages
             });
 
-            SelectedCollectionMessage = CollectionMessages[^1];
+            SelectedParam = Params[^1];
 
 
             //SelectedMessages = CollectionMessages[^1];
@@ -254,15 +236,15 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Удалить коллекция сообщений
         /// </summary>
         public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted, CanCmdDeleteCollectionMessagesExecute);
-        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedCollectionMessage is not null;
+        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedParam is not null;
         private void OnCmdDeleteCollectionMessagesExecuted()
         {
-            var index = CollectionMessages.IndexOf(SelectedCollectionMessage);
+            var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
-            CollectionMessages.Remove(SelectedCollectionMessage);
-            if (CollectionMessages.Count > 0)
-                SelectedCollectionMessage = CollectionMessages[index];
+            Params.Remove(SelectedParam);
+            if (Params.Count > 0)
+                SelectedParam = Params[index];
         }
         #endregion
 
@@ -279,7 +261,7 @@ namespace Project_Сonfigurator.ViewModels
             if (MyDataGrid is null) return;
 
             if (!UserDialog.SelectFile("Выбрать файл звука", out string select_file)) return;
-            SelectedMessage.PathSound = select_file;
+            SelectedSubParam.PathSound = select_file;
 
             MyDataGrid.Items.Refresh();
         }
@@ -301,7 +283,7 @@ namespace Project_Сonfigurator.ViewModels
 
             foreach (var _TabItem in from object _Item in _TabControl.Items
                                      let _TabItem = _Item as CollectionMessage
-                                     where _TabItem.Description == SelectedTabItem.Description
+                                     where _TabItem.Description == SelectedParam.Description
                                      select _TabItem)
             {
                 var SelectedIndex = _TabControl.SelectedIndex;
@@ -404,7 +386,7 @@ namespace Project_Сonfigurator.ViewModels
                                 continue;
                             }
 
-                            foreach (var _Messages in CollectionMessages)
+                            foreach (var _Messages in Params)
                             {
                                 if (_Messages.Description == Item)
                                 {
@@ -439,7 +421,7 @@ namespace Project_Сonfigurator.ViewModels
                 }
                 else
                 {
-                    foreach (var _Messages in CollectionMessages)
+                    foreach (var _Messages in Params)
                     {
                         try
                         {
@@ -503,10 +485,8 @@ namespace Project_Сonfigurator.ViewModels
         #region Генерируем данные
         public void GeneratedData()
         {
-            if (CollectionMessages is null || CollectionMessages.Count <= 0)
-                SelectedMessage = null;
-            else if (SelectedMessage is null)
-                SelectedCollectionMessage = CollectionMessages[0];
+            if (Params is null || Params.Count <= 0)
+                SelectedParam = Params[0];  
         }
         #endregion
 

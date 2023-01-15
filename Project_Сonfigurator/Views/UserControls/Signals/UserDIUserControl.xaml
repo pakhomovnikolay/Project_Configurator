@@ -66,8 +66,8 @@
                   SelectionUnit="FullRow"
                   Background="Gray"
                   HeadersVisibility="Column"
-                  ItemsSource="{Binding DataView}"
-                  SelectedItem="{Binding SelectedSignal}"
+                  ItemsSource="{Binding Params}"
+                  SelectedItem="{Binding SelectedParam}"
                   >
             <DataGrid.Resources>
 

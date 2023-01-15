@@ -19,14 +19,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new UstRealUserControl();
         }
 
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-        public UstRealUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+        public UstRealUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            _SignalService = signalService;
-            _DBService = dBService;
-
-            _DBService.RefreshDataViewModel(this, false);
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
         }
         #endregion
 
@@ -44,31 +42,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.ResetSignal();
-                    DoSelection = false;
+                    //_SignalService.ResetSignal();
+                    //DoSelection = false;
                 }
             }
         }
         #endregion
 
         #region Список уставок типа Real
-        private ObservableCollection<BaseSetpointsReal> _Setpoints = new();
+        private ObservableCollection<BaseSetpointsReal> _Params = new();
         /// <summary>
         /// Список уставок типа Real
         /// </summary>
-        public ObservableCollection<BaseSetpointsReal> Setpoints
+        public ObservableCollection<BaseSetpointsReal> Params
         {
-            get => _Setpoints;
-            set => Set(ref _Setpoints, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
-        #endregion
-
-        #region Коллекция уставок типа Real
-        /// <summary>
-        /// Коллекция уставок типа Real
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранная уставка
@@ -99,14 +89,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Генерация сигналов
-        public void GeneratedData()
-        {
-            _DataView.Source = Setpoints;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //#region Генерация сигналов
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = Setpoints;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
         #endregion
     }

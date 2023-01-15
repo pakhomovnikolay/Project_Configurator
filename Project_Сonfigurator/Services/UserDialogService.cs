@@ -130,6 +130,9 @@ namespace Project_Сonfigurator.Services
             SelectedPath = "";
             var filename = "Выберите путь";
             var path = string.IsNullOrWhiteSpace(DefaulPath) ? Environment.CurrentDirectory : DefaulPath;
+            if (!File.Exists(path))
+                path = "";
+
             var dialog = new SaveFileDialog()
             {
                 Title = Title,
@@ -138,7 +141,7 @@ namespace Project_Сonfigurator.Services
                 InitialDirectory = path,
                 CheckPathExists = true,
                 ValidateNames = false,
-                CheckFileExists = true,
+                CheckFileExists = false,
                 FileName = filename
             };
 

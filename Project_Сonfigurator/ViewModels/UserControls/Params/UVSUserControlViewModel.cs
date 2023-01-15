@@ -28,22 +28,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new UVSUserControl();
         }
 
+        private readonly ISignalService SignalServices;
         private readonly IUserDialogService UserDialog;
-        private ISignalService _SignalService;
-        private readonly IDBService _DBService;
-
-        TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-        public UVSUserControlViewModel(
-            ISignalService signalService,
-            IUserDialogService userDialog,
-            IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel) : this()
+        private readonly IDBService DBServices;
+        public UVSUserControlViewModel(ISignalService _ISignalService, IUserDialogService _UserDialog, IDBService _IDBService) : this()
         {
-            UserDialog = userDialog;
-            _SignalService = signalService;
-            _DBService = dBService;
-            TableSignalsViewModel = tableSignalsViewModel;
-            _DBService.RefreshDataViewModel(this, false);
+            SignalServices = _ISignalService;
+            UserDialog = _UserDialog;
+            DBServices = _IDBService;
         }
         #endregion
 
@@ -61,94 +53,78 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (_IsSelected)
-                    {
-                        DoSelection = _SignalService.DoSelection;
-                        if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
-                        {
-                            if (DoSelectionInputParam)
-                            {
-                                _SignalService.RedefineParam(SelectedInputParam, _IsSelected, Title);
-                                _DataViewInputParam.View?.Refresh();
-                            }
+                    //if (_IsSelected)
+                    //{
+                    //    DoSelection = _SignalService.DoSelection;
+                    //    if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
+                    //    {
+                    //        if (DoSelectionInputParam)
+                    //        {
+                    //            _SignalService.RedefineParam(SelectedInputParam, _IsSelected, Title);
+                    //            _DataViewInputParam.View?.Refresh();
+                    //        }
 
-                            if (DoSelectionOutputParam)
-                            {
-                                _SignalService.RedefineParam(SelectedOutputParam, _IsSelected, Title);
-                                _DataViewOutputParam.View?.Refresh();
-                            }
+                    //        if (DoSelectionOutputParam)
+                    //        {
+                    //            _SignalService.RedefineParam(SelectedOutputParam, _IsSelected, Title);
+                    //            _DataViewOutputParam.View?.Refresh();
+                    //        }
 
-                            DoSelectionInputParam = false;
-                            DoSelectionOutputParam = false;
-                            DoSelection = false;
-                            _SignalService.ResetSignal();
-                        }
-                        else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
-                        {
-                            _SignalService.ResetSignal();
-                            DoSelection = false;
-                        }
-                    }
-                    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
-                    {
-                        _SignalService.ResetSignal();
-                        DoSelection = false;
-                    }
+                    //        DoSelectionInputParam = false;
+                    //        DoSelectionOutputParam = false;
+                    //        DoSelection = false;
+                    //        _SignalService.ResetSignal();
+                    //    }
+                    //    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
+                    //    {
+                    //        _SignalService.ResetSignal();
+                    //        DoSelection = false;
+                    //    }
+                    //}
+                    //else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
+                    //{
+                    //    _SignalService.ResetSignal();
+                    //    DoSelection = false;
+                    //}
                 }
             }
         }
         #endregion
 
         #region Список вспомсистем
-        private ObservableCollection<BaseUVS> _UVS = new();
+        private ObservableCollection<BaseUVS> _Params = new();
         /// <summary>
         /// Список вспомсистем
         /// </summary>
-        public ObservableCollection<BaseUVS> UVS
+        public ObservableCollection<BaseUVS> Params
         {
-            get => _UVS;
-            set => Set(ref _UVS, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
-        #endregion
-
-        #region Коллекция вспомсистем
-        /// <summary>
-        /// Коллекция вспомсистем
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранная вспомсистема
-        private BaseUVS _SelectedUVS = new();
+        private BaseUVS _SelectedParam = new();
         /// <summary>
         /// Выбранная вспомсистема
         /// </summary>
-        public BaseUVS SelectedUVS
+        public BaseUVS SelectedParam
         {
-            get => _SelectedUVS;
+            get => _SelectedParam;
             set
             {
-                if (Set(ref _SelectedUVS, value))
+                if (Set(ref _SelectedParam, value))
                 {
-                    _DataViewInputParam.Source = value?.InputParam;
-                    _DataViewInputParam.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewInputParam));
+                    //_DataViewInputParam.Source = value?.InputParam;
+                    //_DataViewInputParam.View?.Refresh();
+                    //OnPropertyChanged(nameof(DataViewInputParam));
 
-                    _DataViewOutputParam.Source = value?.OutputParam;
-                    _DataViewOutputParam.View?.Refresh();
-                    OnPropertyChanged(nameof(DataViewOutputParam));
+                    //_DataViewOutputParam.Source = value?.OutputParam;
+                    //_DataViewOutputParam.View?.Refresh();
+                    //OnPropertyChanged(nameof(DataViewOutputParam));
                 }
             }
         }
-        #endregion
-
-        #region Коллекция входных параметров
-        /// <summary>
-        /// Коллекция входных параметров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewInputParam = new();
-        public ICollectionView DataViewInputParam => _DataViewInputParam?.View;
         #endregion
 
         #region Выбранный входной параметр
@@ -161,14 +137,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _SelectedInputParam;
             set => Set(ref _SelectedInputParam, value);
         }
-        #endregion
-
-        #region Коллекция выходных параметров
-        /// <summary>
-        /// Коллекция выходных параметров
-        /// </summary>
-        private readonly CollectionViewSource _DataViewOutputParam = new();
-        public ICollectionView DataViewOutputParam => _DataViewOutputParam?.View;
         #endregion
 
         #region Выбранный выходной параметр
@@ -233,7 +201,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdAddUVSExecuted()
         {
-            CreateUVS();
+            //CreateUVS();
         }
         #endregion
 
@@ -243,25 +211,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить вспомсистему
         /// </summary>
         public ICommand CmdDeleteUVS => _CmdDeleteUVS ??= new RelayCommand(OnCmdDeleteUVSExecuted, CanCmdDeleteUVSExecute);
-        private bool CanCmdDeleteUVSExecute() => SelectedUVS is not null && !string.IsNullOrWhiteSpace(SelectedUVS.Description);
+        private bool CanCmdDeleteUVSExecute() => /*SelectedUVS is not null && !string.IsNullOrWhiteSpace(SelectedUVS.Description)*/true;
 
         private void OnCmdDeleteUVSExecuted()
         {
-            var index = UVS.IndexOf(SelectedUVS);
-            UVS.Remove(SelectedUVS);
+            //var index = UVS.IndexOf(SelectedUVS);
+            //UVS.Remove(SelectedUVS);
 
-            if (UVS.Count > 0)
-            {
-                if (index > 0)
-                    SelectedUVS = UVS[index - 1];
-                else
-                    SelectedUVS = UVS[index];
-            }
-            else
-            {
-                SelectedUVS = null;
-            }
-            RefreshIndexUZD(SelectedUVS);
+            //if (UVS.Count > 0)
+            //{
+            //    if (index > 0)
+            //        SelectedUVS = UVS[index - 1];
+            //    else
+            //        SelectedUVS = UVS[index];
+            //}
+            //else
+            //{
+            //    SelectedUVS = null;
+            //}
+            //RefreshIndexUZD(SelectedUVS);
         }
         #endregion
 
@@ -271,52 +239,52 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать вспомсистемы из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUVS => _CmdImportUVS ??= new RelayCommand(OnCmdImportUVSExecuted, CanCmdImportUVSExecute);
-        private bool CanCmdImportUVSExecute() => TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null;
+        private bool CanCmdImportUVSExecute() => /*TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null*/true;
 
         private void OnCmdImportUVSExecuted()
         {
-            if (TableSignalsViewModel.DataView is null) return;
-            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+            //if (TableSignalsViewModel.DataView is null) return;
+            //if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
+            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            UVS = new();
-            foreach (var DataView in TableSignalsViewModel.USOList)
-            {
-                foreach (var _Rack in DataView.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        foreach (var Channel in _Module.Channels)
-                        {
-                            if ((Channel.Description.Contains("насос", StringComparison.Ordinal) ||
-                                Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase)) &&
-                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase) &&
-                                !Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) &&
-                                !Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                var name = "";
-                                var index_dot = Channel.Description.IndexOf(".");
-                                var qty = Channel.Description.Length;
-                                if (index_dot > 0)
-                                    name = Channel.Description.Remove(index_dot, qty - index_dot);
-                                var fl_tmp = false;
-                                foreach (var item in UVS)
-                                {
-                                    if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-                                        fl_tmp = true;
-                                }
-                                if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
-                                    ImportUVS(name, UVS);
-                            }
-                        }
-                    }
-                }
-            }
+            //UVS = new();
+            //foreach (var DataView in TableSignalsViewModel.USOList)
+            //{
+            //    foreach (var _Rack in DataView.Racks)
+            //    {
+            //        foreach (var _Module in _Rack.Modules)
+            //        {
+            //            foreach (var Channel in _Module.Channels)
+            //            {
+            //                if ((Channel.Description.Contains("насос", StringComparison.Ordinal) ||
+            //                    Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase)) &&
+            //                    !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase) &&
+            //                    !Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) &&
+            //                    !Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase))
+            //                {
+            //                    var name = "";
+            //                    var index_dot = Channel.Description.IndexOf(".");
+            //                    var qty = Channel.Description.Length;
+            //                    if (index_dot > 0)
+            //                        name = Channel.Description.Remove(index_dot, qty - index_dot);
+            //                    var fl_tmp = false;
+            //                    foreach (var item in UVS)
+            //                    {
+            //                        if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
+            //                            fl_tmp = true;
+            //                    }
+            //                    if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
+            //                        ImportUVS(name, UVS);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
-            SelectedUVS = UVS[^1];
-            _DataView.Source = UVS;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
+            //SelectedUVS = UVS[^1];
+            //_DataView.Source = UVS;
+            //_DataView.View.Refresh();
+            //OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
@@ -330,42 +298,42 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdChangeAddressInputParamExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedInputParam is null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedInputParam is null) return;
 
-            if (Index != SelectedInputParam.Index)
-                SelectedInputParam = SelectedUVS.InputParam[int.Parse(Index) - 1];
+            //if (Index != SelectedInputParam.Index)
+            //    SelectedInputParam = SelectedUVS.InputParam[int.Parse(Index) - 1];
 
-            DoSelectionInputParam = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            //DoSelectionInputParam = true;
+            //_SignalService.DoSelection = true;
+            //_SignalService.ListName = Title;
+            //_SignalService.Type = TypeModule.Unknown;
 
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
-            }
+            //var NameListSelected = "";
+            //if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
+            //{
+            //    NameListSelected = "Сигналы DI";
+            //    _SignalService.Type = TypeModule.DI;
+            //}
+            //else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
+            //{
+            //    NameListSelected = "Сигналы AI";
+            //    _SignalService.Type = TypeModule.AI;
+            //}
+            //else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
+            //{
+            //    NameListSelected = "Группы сигналов";
+            //    _SignalService.Type = TypeModule.DI;
+            //}
 
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == NameListSelected
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -379,26 +347,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdChangeAddressOutputParamExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedOutputParam is null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedOutputParam is null) return;
 
-            if (Index != SelectedOutputParam.Index)
-                SelectedOutputParam = SelectedUVS.OutputParam[int.Parse(Index) - 1];
+            //if (Index != SelectedOutputParam.Index)
+            //    SelectedOutputParam = SelectedUVS.OutputParam[int.Parse(Index) - 1];
 
-            DoSelectionOutputParam = true;
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.DO;
+            //DoSelectionOutputParam = true;
+            //_SignalService.DoSelection = true;
+            //_SignalService.ListName = Title;
+            //_SignalService.Type = TypeModule.DO;
 
-            var NameListSelected = "Сигналы DO";
+            //var NameListSelected = "Сигналы DO";
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == NameListSelected
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -406,253 +374,253 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Создаем вспомсистему
-        private void CreateUVS()
-        {
-            var index = UVS.Count + 1;
-            var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
-            var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
-            var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
-            var InputParam = new ObservableCollection<BaseParam>();
-            var OutputParam = new ObservableCollection<BaseParam>();
-            var Setpoints = new ObservableCollection<BaseSetpoints>();
+        //#region Создаем вспомсистему
+        //private void CreateUVS()
+        //{
+        //    var index = UVS.Count + 1;
+        //    var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+        //    var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+        //    var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+        //    var InputParam = new ObservableCollection<BaseParam>();
+        //    var OutputParam = new ObservableCollection<BaseParam>();
+        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
 
-            #region Создаем вспомсистему
+        //    #region Создаем вспомсистему
 
-            #region Входные параметры
-            for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UVS.InputParams[i].Text
-                };
-                InputParam.Add(Param);
-            }
-            #endregion
+        //    #region Входные параметры
+        //    for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"VS_DI_P[{index_input_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UVS.InputParams[i].Text
+        //        };
+        //        InputParam.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Выходные параметры
-            for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UVS.OutputParams[i].Text
-                };
-                OutputParam.Add(Param);
-            }
-            #endregion
+        //    #region Выходные параметры
+        //    for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"VS_DO_P[{index_output_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UVS.OutputParams[i].Text
+        //        };
+        //        OutputParam.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Уставки
-            for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
-            {
-                var Param = new BaseSetpoints
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
-                    Id = $"H{7000 + index_setpoints + i}",
-                    Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
-                    Value = App.Settings.Config.UVS.Setpoints[i].Value,
-                    Address = $"%MW{2000 + index_setpoints + i}",
-                    Description = App.Settings.Config.UVS.Setpoints[i].Description
-                };
-                Setpoints.Add(Param);
-            }
-            #endregion
+        //    #region Уставки
+        //    for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
+        //    {
+        //        var Param = new BaseSetpoints
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
+        //            Id = $"H{7000 + index_setpoints + i}",
+        //            Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
+        //            Value = App.Settings.Config.UVS.Setpoints[i].Value,
+        //            Address = $"%MW{2000 + index_setpoints + i}",
+        //            Description = App.Settings.Config.UVS.Setpoints[i].Description
+        //        };
+        //        Setpoints.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Генерируем вспомсистему
-            var signal = new BaseUVS
-            {
-                Index = $"{index}",
-                Description = $"Вспомсистема №{index}",
-                VarName = $"uvs_param[{index}]",
-                ShortDescription = "",
-                IndexEC = "",
-                IndexGroup = "",
-                DescriptionGroup = "",
-                COz = "",
-                OnePressureSensorGroup = "",
-                Reservable = "",
-                TypeGroup = "",
-                TypePressure = "",
-                InputParam = new ObservableCollection<BaseParam>(InputParam),
-                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
-            };
-            UVS.Add(signal);
-            #endregion
+        //    #region Генерируем вспомсистему
+        //    var signal = new BaseUVS
+        //    {
+        //        Index = $"{index}",
+        //        Description = $"Вспомсистема №{index}",
+        //        VarName = $"uvs_param[{index}]",
+        //        ShortDescription = "",
+        //        IndexEC = "",
+        //        IndexGroup = "",
+        //        DescriptionGroup = "",
+        //        COz = "",
+        //        OnePressureSensorGroup = "",
+        //        Reservable = "",
+        //        TypeGroup = "",
+        //        TypePressure = "",
+        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
+        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
+        //    };
+        //    UVS.Add(signal);
+        //    #endregion
 
-            SelectedUVS = UVS[^1];
-            _DataView.Source = UVS;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-            return;
-            #endregion
-        }
-        #endregion 
+        //    SelectedUVS = UVS[^1];
+        //    _DataView.Source = UVS;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //    return;
+        //    #endregion
+        //}
+        //#endregion 
 
-        #region Импортируем вспомсистемы
-        private static void ImportUVS(string Description, ObservableCollection<BaseUVS> data_list)
-        {
+        //#region Импортируем вспомсистемы
+        //private static void ImportUVS(string Description, ObservableCollection<BaseUVS> data_list)
+        //{
 
-            var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
-            var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
-            var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
-            var InputParam = new ObservableCollection<BaseParam>();
-            var OutputParam = new ObservableCollection<BaseParam>();
-            var Setpoints = new ObservableCollection<BaseSetpoints>();
+        //    var index = data_list.Count + 1;
+        //    var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+        //    var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+        //    var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+        //    var InputParam = new ObservableCollection<BaseParam>();
+        //    var OutputParam = new ObservableCollection<BaseParam>();
+        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
 
-            #region Создаем вспомсистему
+        //    #region Создаем вспомсистему
 
-            #region Входные параметры
-            for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UVS.InputParams[i].Text
-                };
-                InputParam.Add(Param);
-            }
-            #endregion
+        //    #region Входные параметры
+        //    for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"VS_DI_P[{index_input_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UVS.InputParams[i].Text
+        //        };
+        //        InputParam.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Выходные параметры
-            for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UVS.OutputParams[i].Text
-                };
-                OutputParam.Add(Param);
-            }
-            #endregion
+        //    #region Выходные параметры
+        //    for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"VS_DO_P[{index_output_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UVS.OutputParams[i].Text
+        //        };
+        //        OutputParam.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Уставки
-            for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
-            {
-                var Param = new BaseSetpoints
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
-                    Id = $"H{7000 + index_setpoints + i}",
-                    Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
-                    Value = App.Settings.Config.UVS.Setpoints[i].Value,
-                    Address = $"%MW{2000 + index_setpoints + i}",
-                    Description = App.Settings.Config.UVS.Setpoints[i].Description
-                };
-                Setpoints.Add(Param);
-            }
-            #endregion
+        //    #region Уставки
+        //    for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
+        //    {
+        //        var Param = new BaseSetpoints
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
+        //            Id = $"H{7000 + index_setpoints + i}",
+        //            Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
+        //            Value = App.Settings.Config.UVS.Setpoints[i].Value,
+        //            Address = $"%MW{2000 + index_setpoints + i}",
+        //            Description = App.Settings.Config.UVS.Setpoints[i].Description
+        //        };
+        //        Setpoints.Add(Param);
+        //    }
+        //    #endregion
 
-            #region Генерируем вспомсистему
-            var signal = new BaseUVS
-            {
-                Index = $"{index}",
-                Description = Description,
-                VarName = $"uvs_param[{index}]",
-                ShortDescription = "",
-                IndexEC = "",
-                IndexGroup = "",
-                DescriptionGroup = "",
-                COz = "",
-                OnePressureSensorGroup = "",
-                Reservable = "",
-                TypeGroup = "",
-                TypePressure = "",
-                InputParam = new ObservableCollection<BaseParam>(InputParam),
-                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
-            };
-            data_list.Add(signal);
-            #endregion
+        //    #region Генерируем вспомсистему
+        //    var signal = new BaseUVS
+        //    {
+        //        Index = $"{index}",
+        //        Description = Description,
+        //        VarName = $"uvs_param[{index}]",
+        //        ShortDescription = "",
+        //        IndexEC = "",
+        //        IndexGroup = "",
+        //        DescriptionGroup = "",
+        //        COz = "",
+        //        OnePressureSensorGroup = "",
+        //        Reservable = "",
+        //        TypeGroup = "",
+        //        TypePressure = "",
+        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
+        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
+        //    };
+        //    data_list.Add(signal);
+        //    #endregion
 
-            #endregion
-        }
-        #endregion 
+        //    #endregion
+        //}
+        //#endregion 
 
-        #region Генерация сигналов
-        public void GeneratedData()
-        {
-            _DataView.Source = UVS;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
+        //#region Генерация сигналов
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = UVS;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
 
-            if (UVS is null || UVS.Count <= 0)
-                SelectedUVS = null;
-        }
-        #endregion 
+        //    if (UVS is null || UVS.Count <= 0)
+        //        SelectedUVS = null;
+        //}
+        //#endregion 
 
-        #region Обновление индексов
-        public void RefreshIndexUZD(BaseUVS selectedUVS = null)
-        {
-            SelectedUVS = new();
-            var index = 0;
-            foreach (var item in UVS)
-            {
-                index++;
-                item.VarName = $"uvs_param[{index}]";
-                var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
-                var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
-                var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+        //#region Обновление индексов
+        //public void RefreshIndexUZD(BaseUVS selectedUVS = null)
+        //{
+        //    SelectedUVS = new();
+        //    var index = 0;
+        //    foreach (var item in UVS)
+        //    {
+        //        index++;
+        //        item.VarName = $"uvs_param[{index}]";
+        //        var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+        //        var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+        //        var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
 
-                #region Уставки
-                var i = 0;
-                foreach (var _Setpoint in item.Setpoints)
-                {
-                    _Setpoint.VarName = $"SP_TM_VS[{index_setpoints + i + 1}]";
-                    _Setpoint.Id = $"H{7000 + index_setpoints + i}";
-                    _Setpoint.Address = $"%MW{2000 + index_setpoints + i}";
-                    i++;
-                }
-                #endregion
+        //        #region Уставки
+        //        var i = 0;
+        //        foreach (var _Setpoint in item.Setpoints)
+        //        {
+        //            _Setpoint.VarName = $"SP_TM_VS[{index_setpoints + i + 1}]";
+        //            _Setpoint.Id = $"H{7000 + index_setpoints + i}";
+        //            _Setpoint.Address = $"%MW{2000 + index_setpoints + i}";
+        //            i++;
+        //        }
+        //        #endregion
 
-                #region Входные параметры
-                i = 0;
-                foreach (var _InputParam in item.InputParam)
-                {
-                    _InputParam.VarName = $"VS_DI_P[{index_input_param + i + 1}]";
-                    i++;
-                }
-                #endregion
+        //        #region Входные параметры
+        //        i = 0;
+        //        foreach (var _InputParam in item.InputParam)
+        //        {
+        //            _InputParam.VarName = $"VS_DI_P[{index_input_param + i + 1}]";
+        //            i++;
+        //        }
+        //        #endregion
 
-                #region Выходные параметры
-                i = 0;
-                foreach (var _OutputParam in item.OutputParam)
-                {
-                    _OutputParam.VarName = $"VS_DO_P[{index_input_param + i + 1}]";
-                    i++;
-                }
-                #endregion
-            }
+        //        #region Выходные параметры
+        //        i = 0;
+        //        foreach (var _OutputParam in item.OutputParam)
+        //        {
+        //            _OutputParam.VarName = $"VS_DO_P[{index_input_param + i + 1}]";
+        //            i++;
+        //        }
+        //        #endregion
+        //    }
 
-            SelectedUVS = selectedUVS ?? UVS[0];
-            _DataView.Source = UVS;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //    SelectedUVS = selectedUVS ?? UVS[0];
+        //    _DataView.Source = UVS;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
         #endregion
     }

@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using Project_Сonfigurator.Models;
+using System.Windows.Controls;
 
 namespace Project_Сonfigurator.ViewModels.Base.Interfaces
 {

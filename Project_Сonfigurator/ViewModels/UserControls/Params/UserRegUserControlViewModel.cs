@@ -24,15 +24,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new UserRegUserControl();
         }
 
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-        public UserRegUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
+        private readonly ISignalService SignalServiceы;
+        private readonly IDBService DBServiceы;
+        public UserRegUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            _SignalService = signalService;
-            _DBService = dBService;
-
-            _DataView.Filter += OnSignalsFiltered;
-            _DBService.RefreshDataViewModel(this, false);
+            SignalServiceы = _ISignalService;
+            DBServiceы = _IDBService;
         }
         #endregion
 
@@ -50,42 +47,34 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.ResetSignal();
-                    DoSelection = false;
+                    //_SignalService.ResetSignal();
+                    //DoSelection = false;
                 }
             }
         }
         #endregion
 
         #region Список регистров формируемых
-        private ObservableCollection<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _Params = new();
         /// <summary>
         /// Список регистров формируемых
         /// </summary>
-        public ObservableCollection<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> Params
         {
-            get => _BaseParams;
-            set => Set(ref _BaseParams, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
         #endregion
 
-        #region Коллекция регистров формируемых
-        /// <summary>
-        /// Коллекция регистров формируемых
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
-        #endregion
-
         #region Выбранный регистр
-        private BaseParam _SelectedSignal = new();
+        private BaseParam _SelectedParam = new();
         /// <summary>
         /// Выбранный регистр
         /// </summary>
-        public BaseParam SelectedSignal
+        public BaseParam SelectedParam
         {
-            get => _SelectedSignal;
-            set => Set(ref _SelectedSignal, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -127,8 +116,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdRefreshFilterExecuted()
         {
-            if (_DataView.Source is null) return;
-            _DataView.View.Refresh();
+            //if (_DataView.Source is null) return;
+            //_DataView.View.Refresh();
 
         }
         #endregion
@@ -139,34 +128,34 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Выбрать сигнал
         /// </summary>
         public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => SelectedSignal is not null;
+        private bool CanCmdSelectionSignalExecute(object p) => /*SelectedSignal is not null*/true;
 
         private void OnCmdSelectionSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignal is null) return;
-            if (App.FucusedTabControl == null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedSignal is null) return;
+            //if (App.FucusedTabControl == null) return;
 
-            var data_list = new ObservableCollection<BaseParam>();
-            foreach (BaseParam Signal in DataView)
-            {
-                data_list.Add(Signal);
-            }
+            //var data_list = new ObservableCollection<BaseParam>();
+            //foreach (BaseParam Signal in DataView)
+            //{
+            //    data_list.Add(Signal);
+            //}
 
-            if (Index != SelectedSignal.Index)
-                SelectedSignal = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedSignal.Index)
+            //    SelectedSignal = data_list[int.Parse(Index) - 1];
 
-            _SignalService.Address = SelectedSignal.Address;
-            _SignalService.Id = SelectedSignal.Id;
-            _SignalService.Description = SelectedSignal.Description;
+            //_SignalService.Address = SelectedSignal.Address;
+            //_SignalService.Id = SelectedSignal.Id;
+            //_SignalService.Description = SelectedSignal.Description;
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == _SignalService.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == _SignalService.ListName
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -174,33 +163,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Фильтрация модулей
-        /// <summary>
-        /// Фильтрация модулей
-        /// </summary>
-        private void OnSignalsFiltered(object sender, FilterEventArgs e)
-        {
-            #region Проверки до начала фильтрации
-            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
-            if (string.IsNullOrWhiteSpace(TextFilter)) return;
-            #endregion
+        //#region Фильтрация модулей
+        ///// <summary>
+        ///// Фильтрация модулей
+        ///// </summary>
+        //private void OnSignalsFiltered(object sender, FilterEventArgs e)
+        //{
+        //    #region Проверки до начала фильтрации
+        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+        //    if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
+        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
+        //    #endregion
 
-            if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-                    Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+        //    if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        //            Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-            e.Accepted = false;
-        }
-        #endregion
+        //    e.Accepted = false;
+        //}
+        //#endregion
 
-        #region Генерация сигналов
-        public void GeneratedData()
-        {
-            _DataView.Source = BaseParams;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //#region Генерация сигналов
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = BaseParams;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
         #endregion
     }

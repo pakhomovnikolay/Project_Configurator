@@ -16,7 +16,6 @@ namespace Project_Сonfigurator.ViewModels
     public class MainWindowViewModel : ViewModel
     {
         #region Конструктор
-
         public MainWindowViewModel()
         {
             Title = "Конфигуратор проекта";
@@ -222,17 +221,17 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            App.DBServices.ClearDataBase();
-            DBServices.ClearDataBase();
-            App.Settings.Config.PathProject = "";
-            SettingServices.Config = App.Settings.Config;
-            SettingServices.Save();
-            SetNameProject();
+            //App.DBServices.ClearDataBase();
+            //DBServices.ClearDataBase();
+            //App.Settings.Config.PathProject = "";
+            //SettingServices.Config = App.Settings.Config;
+            //SettingServices.Save();
+            //SetNameProject();
 
-            foreach (var _ViewModel in ViewModelUserControls)
-            {
-                DBServices.RefreshDataViewModel(_ViewModel, true);
-            }
+            //foreach (var _ViewModel in ViewModelUserControls)
+            //{
+            //    DBServices.RefreshDataViewModel(_ViewModel, true);
+            //}
         }
         #endregion
 
@@ -244,24 +243,24 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
         private void OnCmdOpenProjectExecuted()
         {
-            if (!UserDialog.OpenFile(Title, out string path, App.Settings.Config.PathProject)) return;
+            //if (!UserDialog.OpenFile(Title, out string path, App.Settings.Config.PathProject)) return;
 
-            App.Settings.Config.PathProject = path;
-            App.DBServices.AppData = App.DBServices.LoadData(path);
-            DBServices.LoadData(path);
-            DBServices.AppData = App.DBServices.AppData;
-            SettingServices.Config = App.Settings.Config;
-            SettingServices.Save();
+            //App.Settings.Config.PathProject = path;
+            //App.DBServices.AppData = App.DBServices.LoadData(path);
+            //DBServices.LoadData(path);
+            //DBServices.AppData = App.DBServices.AppData;
+            //SettingServices.Config = App.Settings.Config;
+            //SettingServices.Save();
 
-            if (App.DBServices.AppData is not null)
-            {
-                foreach (var _ViewModel in ViewModelUserControls)
-                {
-                    DBServices.RefreshDataViewModel(_ViewModel, false);
-                }
-            }
+            //if (App.DBServices.AppData is not null)
+            //{
+            //    foreach (var _ViewModel in ViewModelUserControls)
+            //    {
+            //        DBServices.RefreshDataViewModel(_ViewModel, false);
+            //    }
+            //}
 
-            SetNameProject();
+            //SetNameProject();
         }
         #endregion
 
@@ -273,9 +272,9 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdSaveData => _CmdSaveData ??= new RelayCommand(OnCmdSaveDataExecuted);
         private void OnCmdSaveDataExecuted()
         {
-            if (!UserDialog.SaveProject(Title)) return;
+            //if (!UserDialog.SaveProject(Title)) return;
             //DBServices.FormingAppDataBeforeSaving(ViewModelUserControls);
-            DBServices.SaveData();
+            DBServices.RequestToWriteProjectData();
         }
         #endregion
 
@@ -290,9 +289,9 @@ namespace Project_Сonfigurator.ViewModels
             App.Settings.Config.PathProject = "";
             if (!UserDialog.SaveProject(Title)) return;
 
-            DBServices.AppData = new();
-            //DBServices.FormingAppDataBeforeSaving(ViewModels);
-            DBServices.SaveData();
+            //DBServices.AppData = new();
+            ////DBServices.FormingAppDataBeforeSaving(ViewModels);
+            //DBServices.SaveData();
         }
         #endregion
 
@@ -343,6 +342,7 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdUploadDBExecuted()
         {
             //DBServices.RequestSetData(ViewModels);
+             DBServices.RequestToWriteDataToTheDataBase();
         }
         #endregion
 

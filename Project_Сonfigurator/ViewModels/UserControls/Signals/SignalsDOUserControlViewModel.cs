@@ -27,24 +27,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
 
         private readonly IUserDialogService UserDialog;
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-        public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-
-        public SignalsDOUserControlViewModel(
-            IUserDialogService userDialog,
-            ISignalService signalService,
-            IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel
-            ) : this()
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+        public SignalsDOUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            UserDialog = userDialog;
-            TableSignalsViewModel = tableSignalsViewModel;
-            _SignalService = signalService;
-            _DBService = dBService;
-
-            _DataView.Filter += OnSignalsDOFiltered;
-            _DBService.RefreshDataViewModel(this, false);
+            UserDialog = _UserDialog;
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
         }
         #endregion
 
@@ -62,45 +51,37 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (SelectedSignalDO is not null)
-                        _SignalService.RedefineSignal(SelectedSignalDO.Signal, _IsSelected, Title);
-                    DoSelection = _SignalService.DoSelection;
-                    if (_IsSelected)
-                        _DataView.View?.Refresh();
+                    //if (SelectedSignalDO is not null)
+                    //    _SignalService.RedefineSignal(SelectedSignalDO.Signal, _IsSelected, Title);
+                    //DoSelection = _SignalService.DoSelection;
+                    //if (_IsSelected)
+                    //    _DataView.View?.Refresh();
                 }
             }
         }
         #endregion
 
         #region Список сигналов DO
-        private ObservableCollection<SignalDO> _SignalsDO = new();
+        private ObservableCollection<SignalDO> _Params = new();
         /// <summary>
         /// Список сигналов DO
         /// </summary>
-        public ObservableCollection<SignalDO> SignalsDO
+        public ObservableCollection<SignalDO> Params
         {
-            get => _SignalsDO;
-            set => Set(ref _SignalsDO, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
         #endregion
 
-        #region Коллекция сигналов DO
-        /// <summary>
-        /// Коллекция сигналов DO
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
-        #endregion
-
         #region Выбранный сигнал DO
-        private SignalDO _SelectedSignalDO = new();
+        private SignalDO _SelectedParam = new();
         /// <summary>
         /// Выбранный сигнал DO
         /// </summary>
-        public SignalDO SelectedSignalDO
+        public SignalDO SelectedParam
         {
-            get => _SelectedSignalDO;
-            set => Set(ref _SelectedSignalDO, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -142,10 +123,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdGeneratedTableExecuted()
         {
-            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, MessageBoxOptions.None)) return;
+            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, MessageBoxOptions.None)) return;
 
-            GeneratedSignals();
+            //GeneratedSignals();
 
         }
         #endregion
@@ -160,8 +141,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdRefreshFilterExecuted()
         {
-            if (_DataView.Source is null) return;
-            _DataView.View.Refresh();
+            //if (_DataView.Source is null) return;
+            //_DataView.View.Refresh();
 
         }
         #endregion
@@ -172,35 +153,35 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Сменить адрес сигнала
         /// </summary>
         public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
-        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedSignalDO is not null;
+        private bool CanCmdChangeAddressSignalExecute(object p) => /*SelectedSignalDO is not null*/true;
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignalDO is null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedSignalDO is null) return;
 
-            var data_list = new ObservableCollection<SignalDO>();
-            foreach (SignalDO SignalDO in DataView)
-            {
-                data_list.Add(SignalDO);
-            }
+            //var data_list = new ObservableCollection<SignalDO>();
+            //foreach (SignalDO SignalDO in DataView)
+            //{
+            //    data_list.Add(SignalDO);
+            //}
 
-            if (Index != SelectedSignalDO.Signal.Index)
-                SelectedSignalDO = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedSignalDO.Signal.Index)
+            //    SelectedSignalDO = data_list[int.Parse(Index) - 1];
 
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.DO;
+            //_SignalService.DoSelection = true;
+            //_SignalService.ListName = Title;
+            //_SignalService.Type = TypeModule.DO;
 
-            var NameListSelected = "Таблица сигналов";
+            //var NameListSelected = "Таблица сигналов";
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == NameListSelected
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -210,35 +191,35 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Выбрать сигнал
         /// </summary>
         public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => SelectedSignalDO is not null;
+        private bool CanCmdSelectionSignalExecute(object p) => /*SelectedSignalDO is not null*/true;
 
         private void OnCmdSelectionSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignalDO is null) return;
-            if (App.FucusedTabControl == null) return;
-            if (!_SignalService.DoSelection) return;
+        //    if (p is not string Index) return;
+        //    if (string.IsNullOrWhiteSpace(Index)) return;
+        //    if (SelectedSignalDO is null) return;
+        //    if (App.FucusedTabControl == null) return;
+        //    if (!_SignalService.DoSelection) return;
 
-            var data_list = new ObservableCollection<SignalDO>();
-            foreach (SignalDO Signal in DataView)
-            {
-                data_list.Add(Signal);
-            }
+        //    var data_list = new ObservableCollection<SignalDO>();
+        //    foreach (SignalDO Signal in DataView)
+        //    {
+        //        data_list.Add(Signal);
+        //    }
 
-            if (Index != SelectedSignalDO.Signal.Index)
-                SelectedSignalDO = data_list[int.Parse(Index) - 1];
+        //    if (Index != SelectedSignalDO.Signal.Index)
+        //        SelectedSignalDO = data_list[int.Parse(Index) - 1];
 
-            _SignalService.Address = SelectedSignalDO.Signal.Index;
-            _SignalService.Id = SelectedSignalDO.Signal.Id;
-            _SignalService.Description = SelectedSignalDO.Signal.Description;
+        //    _SignalService.Address = SelectedSignalDO.Signal.Index;
+        //    _SignalService.Id = SelectedSignalDO.Signal.Id;
+        //    _SignalService.Description = SelectedSignalDO.Signal.Description;
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == _SignalService.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+        //    if (App.FucusedTabControl == null) return;
+        //    foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+        //                             let _TabItem = _Item as TabItem
+        //                             where _TabItem.Header.ToString() == _SignalService.ListName
+        //                             select _TabItem)
+        //        App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -246,135 +227,135 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         #region Функции
 
-        #region Фильтрация модулей
-        /// <summary>
-        /// Фильтрация модулей
-        /// </summary>
-        private void OnSignalsDOFiltered(object sender, FilterEventArgs e)
-        {
-            #region Проверки до начала фильтрации
-            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not SignalDO Signal || Signal is null) { e.Accepted = false; return; }
-            if (string.IsNullOrWhiteSpace(TextFilter)) return;
-            #endregion
+        //#region Фильтрация модулей
+        ///// <summary>
+        ///// Фильтрация модулей
+        ///// </summary>
+        //private void OnSignalsDOFiltered(object sender, FilterEventArgs e)
+        //{
+        //    #region Проверки до начала фильтрации
+        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+        //    if (e.Item is not SignalDO Signal || Signal is null) { e.Accepted = false; return; }
+        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
+        //    #endregion
 
-            if (Signal.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-                    Signal.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+        //    if (Signal.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        //            Signal.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-            e.Accepted = false;
-        }
-        #endregion
+        //    e.Accepted = false;
+        //}
+        //#endregion
 
-        #region Генерация сигналов
-        private void GeneratedSignals()
-        {
-            var index = 0;
-            SignalsDO = new();
+        //#region Генерация сигналов
+        //private void GeneratedSignals()
+        //{
+        //    var index = 0;
+        //    SignalsDO = new();
 
-            #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
-            if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
-            {
-                while (SignalsDO.Count < 2500)
-                {
-                    var signal = new SignalDO()
-                    {
-                        Signal = new BaseSignal
-                        {
-                            Index = $"{++index}",
-                            Id = "",
-                            Description = "",
-                            VarName = $"do_shared[{index}]",
-                            Area = "",
-                            Address = "",
-                            LinkValue = ""
-                        }
-                    };
-                    SignalsDO.Add(signal);
-                }
+        //    #region Генерируем сигналы DO, при отсутсвии данных во владке Таблица сигналов
+        //    if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
+        //    {
+        //        while (SignalsDO.Count < 2500)
+        //        {
+        //            var signal = new SignalDO()
+        //            {
+        //                Signal = new BaseSignal
+        //                {
+        //                    Index = $"{++index}",
+        //                    Id = "",
+        //                    Description = "",
+        //                    VarName = $"do_shared[{index}]",
+        //                    Area = "",
+        //                    Address = "",
+        //                    LinkValue = ""
+        //                }
+        //            };
+        //            SignalsDO.Add(signal);
+        //        }
 
-                SelectedSignalDO = SignalsDO[0];
-                _DataView.Source = SignalsDO;
-                _DataView.View.Refresh();
-                OnPropertyChanged(nameof(DataView));
-                return;
-            }
-            #endregion
+        //        SelectedSignalDO = SignalsDO[0];
+        //        _DataView.Source = SignalsDO;
+        //        _DataView.View.Refresh();
+        //        OnPropertyChanged(nameof(DataView));
+        //        return;
+        //    }
+        //    #endregion
 
-            #region Генерируем сигналы DO, созданные во вкладке Таблица сигналов
+        //    #region Генерируем сигналы DO, созданные во вкладке Таблица сигналов
 
-            #region Генерируем данные из ТБ
-            var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
-            foreach (var _USO in uso_list)
-            {
-                foreach (var _Rack in _USO.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        if (_Module.Type == TypeModule.DO)
-                        {
-                            foreach (var _Channel in _Module.Channels)
-                            {
-                                if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
-                                {
-                                    var signal = new SignalDO()
-                                    {
-                                        Signal = new BaseSignal
-                                        {
-                                            Index = $"{++index}",
-                                            Id = _Channel.Id,
-                                            Description = _Channel.Description,
-                                            VarName = $"do_shared[{index}]",
-                                            Area = "",
-                                            Address = $"{int.Parse(_Channel.Address) - 200000}",
-                                        }
-                                    };
-                                    SignalsDO.Add(signal);
-                                }
+        //    #region Генерируем данные из ТБ
+        //    var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
+        //    foreach (var _USO in uso_list)
+        //    {
+        //        foreach (var _Rack in _USO.Racks)
+        //        {
+        //            foreach (var _Module in _Rack.Modules)
+        //            {
+        //                if (_Module.Type == TypeModule.DO)
+        //                {
+        //                    foreach (var _Channel in _Module.Channels)
+        //                    {
+        //                        if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
+        //                        {
+        //                            var signal = new SignalDO()
+        //                            {
+        //                                Signal = new BaseSignal
+        //                                {
+        //                                    Index = $"{++index}",
+        //                                    Id = _Channel.Id,
+        //                                    Description = _Channel.Description,
+        //                                    VarName = $"do_shared[{index}]",
+        //                                    Area = "",
+        //                                    Address = $"{int.Parse(_Channel.Address) - 200000}",
+        //                                }
+        //                            };
+        //                            SignalsDO.Add(signal);
+        //                        }
 
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    #endregion
 
-            #region Дозаполняем таблицу
-            while (SignalsDO.Count < 2500)
-            {
-                var signal = new SignalDO()
-                {
-                    Signal = new BaseSignal
-                    {
-                        Index = $"{++index}",
-                        Id = "",
-                        Description = "",
-                        VarName = $"do_shared[{index}]",
-                        Area = "",
-                        Address = "",
-                        LinkValue = ""
-                    }
-                };
-                SignalsDO.Add(signal);
-            }
-            #endregion
+        //    #region Дозаполняем таблицу
+        //    while (SignalsDO.Count < 2500)
+        //    {
+        //        var signal = new SignalDO()
+        //        {
+        //            Signal = new BaseSignal
+        //            {
+        //                Index = $"{++index}",
+        //                Id = "",
+        //                Description = "",
+        //                VarName = $"do_shared[{index}]",
+        //                Area = "",
+        //                Address = "",
+        //                LinkValue = ""
+        //            }
+        //        };
+        //        SignalsDO.Add(signal);
+        //    }
+        //    #endregion
 
-            #endregion
+        //    #endregion
 
-            SelectedSignalDO = SignalsDO[0];
-            _DataView.Source = SignalsDO;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //    SelectedSignalDO = SignalsDO[0];
+        //    _DataView.Source = SignalsDO;
+        //    _DataView.View.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
-        #region Генерируем данные
-        public void GeneratedData()
-        {
-            _DataView.Source = SignalsDO;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion
+        //#region Генерируем данные
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = SignalsDO;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion
 
         #endregion
     }

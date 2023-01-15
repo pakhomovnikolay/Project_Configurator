@@ -29,7 +29,7 @@
                   SelectionUnit="FullRow"
                   Background="Gray"
                   HeadersVisibility="Column"
-                  ItemsSource="{Binding DataView}"
+                  ItemsSource="{Binding Params}"
                   SelectedItem="{Binding SelectedParam}"
                   >
 

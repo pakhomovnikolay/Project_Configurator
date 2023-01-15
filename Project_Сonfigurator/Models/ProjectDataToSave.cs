@@ -1,158 +1,166 @@
-﻿using Project_Сonfigurator.Models.LayotRack;
+﻿using Project_Сonfigurator.Models.Interfaces;
+using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using System.Collections.ObjectModel;
 
-namespace Project_Сonfigurator.Models.Interfaces
+namespace Project_Сonfigurator.Models
 {
-    public interface IDBData
+    public class ProjectDataToSave : IProjectDataToSave
     {
         #region Данные диагностики
         /// <summary>
         /// Данные диагностики
         /// </summary>
-        ObservableCollection<USO> USOList { get; set; }
+        public ObservableCollection<USO> USOList { get; set; } = new();
         #endregion
 
         #region DI формируемые
         /// <summary>
         /// DI формируемые
         /// </summary>
-        ObservableCollection<BaseSignal> UserDI { get; set; }
+        public ObservableCollection<BaseSignal> UserDI { get; set; } = new();
         #endregion
 
         #region AI формируемые
         /// <summary>
         /// AI формируемые
         /// </summary>
-        ObservableCollection<BaseSignal> UserAI { get; set; }
+        public ObservableCollection<BaseSignal> UserAI { get; set; } = new();
         #endregion
 
         #region Сигналы DI
         /// <summary>
         /// Сигналы DI
         /// </summary>
-        ObservableCollection<SignalDI> SignalDI { get; set; }
+        public ObservableCollection<SignalDI> SignalDI { get; set; } = new();
         #endregion
 
         #region Сигналы AI
         /// <summary>
         /// Сигналы AI
         /// </summary>
-        ObservableCollection<SignalAI> SignalAI { get; set; }
+        public ObservableCollection<SignalAI> SignalAI { get; set; } = new();
         #endregion
 
         #region Сигналы DO
         /// <summary>
         /// Сигналы DO
         /// </summary>
-        ObservableCollection<SignalDO> SignalDO { get; set; }
+        public ObservableCollection<SignalDO> SignalDO { get; set; } = new();
         #endregion
 
         #region Сигналы AO
         /// <summary>
         /// Сигналы AO
         /// </summary>
-        ObservableCollection<SignalAO> SignalAO { get; set; }
+        public ObservableCollection<SignalAO> SignalAO { get; set; } = new();
         #endregion
 
         #region Секции шин
         /// <summary>
         /// Секции шин
         /// </summary>
-        ObservableCollection<BaseParam> ECParam { get; set; }
+        public ObservableCollection<BaseParam> ECParam { get; set; } = new();
         #endregion
 
         #region Регистры формируемые
         /// <summary>
         /// Регистры формируемые
         /// </summary>
-        ObservableCollection<BaseParam> UserReg { get; set; }
+        public ObservableCollection<BaseParam> UserReg { get; set; } = new();
         #endregion
 
         #region Сигналы групп
         /// <summary>
         /// Сигналы групп
         /// </summary>
-        ObservableCollection<BaseParam> SignalGroup { get; set; }
+        public ObservableCollection<BaseParam> SignalGroup { get; set; } = new();
         #endregion
 
         #region Группы сигналов
         /// <summary>
         /// Группы сигналов
         /// </summary>
-        ObservableCollection<GroupSignal> GroupSignals { get; set; }
+        public ObservableCollection<GroupSignal> GroupSignals { get; set; } = new();
         #endregion
 
         #region Настройки задвижек
         /// <summary>
         /// Настройки задвижек
         /// </summary>
-        ObservableCollection<BaseUZD> UZD { get; set; }
+        public ObservableCollection<BaseUZD> UZD { get; set; } = new();
         #endregion
 
         #region Настройки вспомсистем
         /// <summary>
         /// Настройки вспомсистем
         /// </summary>
-        ObservableCollection<BaseUVS> UVS { get; set; }
+        public ObservableCollection<BaseUVS> UVS { get; set; } = new();
         #endregion
 
         #region Настройки МПНА
         /// <summary>
         /// Настройки МПНА
         /// </summary>
-        ObservableCollection<BaseUMPNA> UMPNA { get; set; }
+        public ObservableCollection<BaseUMPNA> UMPNA { get; set; } = new();
         #endregion
 
         #region Общестанционные защиты
         /// <summary>
         /// Общестанционные защиты
         /// </summary>
-        ObservableCollection<BaseKTPR> KTPR { get; set; }
+        public ObservableCollection<BaseKTPR> KTPR { get; set; } = new();
         #endregion
 
         #region Предельные параметры общестанционных защит
         /// <summary>
         /// Предельные параметры общестанционных защит
         /// </summary>
-        ObservableCollection<BaseKTPRS> KTPRS { get; set; }
+        public ObservableCollection<BaseKTPRS> KTPRS { get; set; } = new();
         #endregion
 
         #region Сигнализация и общая диагностики
         /// <summary>
         /// Сигнализация и общая диагностики
         /// </summary>
-        ObservableCollection<BaseSignaling> Signaling { get; set; }
+        public ObservableCollection<BaseSignaling> Signaling { get; set; } = new();
         #endregion
 
         #region Табло и сирены
         /// <summary>
         /// Табло и сирены
         /// </summary>
-        ObservableCollection<BaseUTS> UTS { get; set; }
+        public ObservableCollection<BaseUTS> UTS { get; set; } = new();
         #endregion
 
         #region Уставки Real
         /// <summary>
         /// Уставки Real
         /// </summary>
-        ObservableCollection<BaseSetpointsReal> SetpointsReal { get; set; }
+        public ObservableCollection<BaseSetpointsReal> SetpointsReal { get; set; } = new();
         #endregion
 
         #region Уставки общие
         /// <summary>
         /// Уставки общие
         /// </summary>
-        ObservableCollection<BaseSetpoints> SetpointsCommon { get; set; }
+        public ObservableCollection<BaseSetpoints> SetpointsCommon { get; set; } = new();
         #endregion
 
         #region Карта ручного ввода
         /// <summary>
         /// Карта ручного ввода
         /// </summary>
-        ObservableCollection<BaseParam> HandMap { get; set; }
+        public ObservableCollection<BaseParam> HandMap { get; set; } = new();
+        #endregion
+
+        #region Сообщения
+        /// <summary>
+        /// Сообщения
+        /// </summary>
+        public ObservableCollection<CollectionMessage> Messages { get; set; } = new();
         #endregion
     }
 }

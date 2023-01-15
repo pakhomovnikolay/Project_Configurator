@@ -27,24 +27,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
 
         private readonly IUserDialogService UserDialog;
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-        public TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-
-        public SignalsDIUserControlViewModel(
-            IUserDialogService userDialog,
-            ISignalService signalService,
-            IDBService dBService,
-            TableSignalsUserControlViewModel tableSignalsViewModel
-            ) : this()
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+        public SignalsDIUserControlViewModel( IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            UserDialog = userDialog;
-            TableSignalsViewModel = tableSignalsViewModel;
-            _SignalService = signalService;
-            _DBService = dBService;
-
-            _DataView.Filter += OnSignalsDIFiltered;
-            _DBService.RefreshDataViewModel(this, false);
+            UserDialog = _UserDialog;
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
         }
         #endregion
 
@@ -62,45 +51,37 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (SelectedSignalDI is not null)
-                        _SignalService.RedefineSignal(SelectedSignalDI.Signal, _IsSelected, Title);
-                    DoSelection = _SignalService.DoSelection;
-                    if (_IsSelected)
-                        _DataView.View?.Refresh();
+                    //if (SelectedSignalDI is not null)
+                    //    _SignalService.RedefineSignal(SelectedSignalDI.Signal, _IsSelected, Title);
+                    //DoSelection = _SignalService.DoSelection;
+                    //if (_IsSelected)
+                    //    _DataView.View?.Refresh();
                 }
             }
         }
         #endregion
 
         #region Список сигналов DI
-        private ObservableCollection<SignalDI> _SignalsDI = new();
+        private ObservableCollection<SignalDI> _Params = new();
         /// <summary>   
         /// Список сигналов DI
         /// </summary>
-        public ObservableCollection<SignalDI> SignalsDI
+        public ObservableCollection<SignalDI> Params
         {
-            get => _SignalsDI;
-            set => Set(ref _SignalsDI, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
         #endregion
 
-        #region Коллекция сигналов DI
-        /// <summary>
-        /// Коллекция сигналов DI
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
-        #endregion
-
         #region Выбранный сигнал DI
-        private SignalDI _SelectedSignalDI = new();
+        private SignalDI _SelectedParam = new();
         /// <summary>
         /// Выбранный сигнал DI
         /// </summary>
-        public SignalDI SelectedSignalDI
+        public SignalDI SelectedParam
         {
-            get => _SelectedSignalDI;
-            set => Set(ref _SelectedSignalDI, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -142,10 +123,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdGeneratedTableExecuted()
         {
-            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, MessageBoxOptions.None)) return;
+            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, MessageBoxOptions.None)) return;
 
-            GeneratedSignals();
+            //GeneratedSignals();
 
         }
         #endregion
@@ -160,8 +141,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdRefreshFilterExecuted()
         {
-            if (_DataView.Source is null) return;
-            _DataView.View.Refresh();
+            //if (_DataView.Source is null) return;
+            //_DataView.View.Refresh();
 
         }
         #endregion
@@ -172,39 +153,39 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Сменить адрес сигнала
         /// </summary>
         public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
-        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedSignalDI is not null;
+        private bool CanCmdChangeAddressSignalExecute(object p) => /*SelectedSignalDI is not null*/true;
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignalDI is null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedSignalDI is null) return;
 
-            var data_list = new ObservableCollection<SignalDI>();
-            foreach (SignalDI SignalDI in DataView)
-            {
-                data_list.Add(SignalDI);
-            }
+            //var data_list = new ObservableCollection<SignalDI>();
+            //foreach (SignalDI SignalDI in DataView)
+            //{
+            //    data_list.Add(SignalDI);
+            //}
 
-            if (Index != SelectedSignalDI.Signal.Index)
-                SelectedSignalDI = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedSignalDI.Signal.Index)
+            //    SelectedSignalDI = data_list[int.Parse(Index) - 1];
 
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.DI;
+            //_SignalService.DoSelection = true;
+            //_SignalService.ListName = Title;
+            //_SignalService.Type = TypeModule.DI;
 
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedSignalDI.Signal.Area) || int.Parse(SelectedSignalDI.Signal.Area) == 0)
-                NameListSelected = "Таблица сигналов";
-            else if (int.Parse(SelectedSignalDI.Signal.Area) == 1)
-                NameListSelected = "DI формируемые";
+            //var NameListSelected = "";
+            //if (string.IsNullOrWhiteSpace(SelectedSignalDI.Signal.Area) || int.Parse(SelectedSignalDI.Signal.Area) == 0)
+            //    NameListSelected = "Таблица сигналов";
+            //else if (int.Parse(SelectedSignalDI.Signal.Area) == 1)
+            //    NameListSelected = "DI формируемые";
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == NameListSelected
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -214,35 +195,35 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Выбрать сигнал
         /// </summary>
         public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => SelectedSignalDI is not null;
+        private bool CanCmdSelectionSignalExecute(object p) => /*SelectedSignalDI is not null*/true;
 
         private void OnCmdSelectionSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedSignalDI is null) return;
-            if (App.FucusedTabControl == null) return;
-            if (!_SignalService.DoSelection) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedSignalDI is null) return;
+            //if (App.FucusedTabControl == null) return;
+            //if (!_SignalService.DoSelection) return;
 
-            var data_list = new ObservableCollection<SignalDI>();
-            foreach (SignalDI Signal in DataView)
-            {
-                data_list.Add(Signal);
-            }
+            //var data_list = new ObservableCollection<SignalDI>();
+            //foreach (SignalDI Signal in DataView)
+            //{
+            //    data_list.Add(Signal);
+            //}
 
-            if (Index != SelectedSignalDI.Signal.Index)
-                SelectedSignalDI = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedSignalDI.Signal.Index)
+            //    SelectedSignalDI = data_list[int.Parse(Index) - 1];
 
-            _SignalService.Address = SelectedSignalDI.Signal.Index;
-            _SignalService.Id = SelectedSignalDI.Signal.Id;
-            _SignalService.Description = SelectedSignalDI.Signal.Description;
+            //_SignalService.Address = SelectedSignalDI.Signal.Index;
+            //_SignalService.Id = SelectedSignalDI.Signal.Id;
+            //_SignalService.Description = SelectedSignalDI.Signal.Description;
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == _SignalService.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == _SignalService.ListName
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -250,134 +231,134 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         #region Функции
 
-        #region Фильтрация модулей
-        /// <summary>
-        /// Фильтрация модулей
-        /// </summary>
-        private void OnSignalsDIFiltered(object sender, FilterEventArgs e)
-        {
-            #region Проверки до начала фильтрации
-            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not SignalDI Signal || Signal is null) { e.Accepted = false; return; }
-            if (string.IsNullOrWhiteSpace(TextFilter)) return;
-            #endregion
+        //#region Фильтрация модулей
+        ///// <summary>
+        ///// Фильтрация модулей
+        ///// </summary>
+        //private void OnSignalsDIFiltered(object sender, FilterEventArgs e)
+        //{
+        //    #region Проверки до начала фильтрации
+        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+        //    if (e.Item is not SignalDI Signal || Signal is null) { e.Accepted = false; return; }
+        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
+        //    #endregion
 
-            if (Signal.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-                    Signal.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+        //    if (Signal.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        //            Signal.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-            e.Accepted = false;
-        }
-        #endregion
+        //    e.Accepted = false;
+        //}
+        //#endregion
 
-        #region Генерация сигналов
-        private void GeneratedSignals()
-        {
-            var index = 0;
-            SignalsDI = new();
+        //#region Генерация сигналов
+        //private void GeneratedSignals()
+        //{
+        //    var index = 0;
+        //    SignalsDI = new();
 
-            #region Генерируем сигналы DI, при отсутсвии данных во владке Таблица сигналов
-            if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
-            {
-                while (SignalsDI.Count < 2500)
-                {
-                    var signal = new SignalDI()
-                    {
-                        Signal = new BaseSignal
-                        {
-                            Index = $"{++index}",
-                            Id = "",
-                            Description = "",
-                            VarName = $"di_shared[{index}]",
-                            Area = "",
-                            Address = "",
-                            LinkValue = ""
-                        }
-                    };
-                    SignalsDI.Add(signal);
-                }
+        //    #region Генерируем сигналы DI, при отсутсвии данных во владке Таблица сигналов
+        //    if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
+        //    {
+        //        while (SignalsDI.Count < 2500)
+        //        {
+        //            var signal = new SignalDI()
+        //            {
+        //                Signal = new BaseSignal
+        //                {
+        //                    Index = $"{++index}",
+        //                    Id = "",
+        //                    Description = "",
+        //                    VarName = $"di_shared[{index}]",
+        //                    Area = "",
+        //                    Address = "",
+        //                    LinkValue = ""
+        //                }
+        //            };
+        //            SignalsDI.Add(signal);
+        //        }
 
-                SelectedSignalDI = SignalsDI[0];
-                _DataView.Source = SignalsDI;
-                _DataView.View.Refresh();
-                OnPropertyChanged(nameof(DataView));
-                return;
-            }
-            #endregion
+        //        SelectedSignalDI = SignalsDI[0];
+        //        _DataView.Source = SignalsDI;
+        //        _DataView.View.Refresh();
+        //        OnPropertyChanged(nameof(DataView));
+        //        return;
+        //    }
+        //    #endregion
 
-            #region Генерируем сигналы DI, созданные во вкладке Таблица сигналов
+        //    #region Генерируем сигналы DI, созданные во вкладке Таблица сигналов
 
-            #region Генерируем данные из ТБ
-            var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
-            foreach (var _USO in uso_list)
-            {
-                foreach (var _Rack in _USO.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        if (_Module.Type == TypeModule.DI)
-                        {
-                            foreach (var _Channel in _Module.Channels)
-                            {
-                                if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
-                                {
-                                    var signal = new SignalDI()
-                                    {
-                                        Signal = new BaseSignal
-                                        {
-                                            Index = $"{++index}",
-                                            Id = _Channel.Id,
-                                            Description = _Channel.Description,
-                                            VarName = $"di_shared[{index}]",
-                                            Area = "",
-                                            Address = $"{int.Parse(_Channel.Address) - 100000}",
-                                        }
-                                    };
-                                    SignalsDI.Add(signal);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
+        //    #region Генерируем данные из ТБ
+        //    var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
+        //    foreach (var _USO in uso_list)
+        //    {
+        //        foreach (var _Rack in _USO.Racks)
+        //        {
+        //            foreach (var _Module in _Rack.Modules)
+        //            {
+        //                if (_Module.Type == TypeModule.DI)
+        //                {
+        //                    foreach (var _Channel in _Module.Channels)
+        //                    {
+        //                        if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
+        //                        {
+        //                            var signal = new SignalDI()
+        //                            {
+        //                                Signal = new BaseSignal
+        //                                {
+        //                                    Index = $"{++index}",
+        //                                    Id = _Channel.Id,
+        //                                    Description = _Channel.Description,
+        //                                    VarName = $"di_shared[{index}]",
+        //                                    Area = "",
+        //                                    Address = $"{int.Parse(_Channel.Address) - 100000}",
+        //                                }
+        //                            };
+        //                            SignalsDI.Add(signal);
+        //                        }
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    #endregion
 
-            #region Дозаполняем таблицу
-            while (SignalsDI.Count < 2500)
-            {
-                var signal = new SignalDI()
-                {
-                    Signal = new BaseSignal
-                    {
-                        Index = $"{++index}",
-                        Id = "",
-                        Description = "",
-                        VarName = $"di_shared[{index}]",
-                        Area = "",
-                        Address = "",
-                        LinkValue = ""
-                    }
-                };
-                SignalsDI.Add(signal);
-            }
-            #endregion
+        //    #region Дозаполняем таблицу
+        //    while (SignalsDI.Count < 2500)
+        //    {
+        //        var signal = new SignalDI()
+        //        {
+        //            Signal = new BaseSignal
+        //            {
+        //                Index = $"{++index}",
+        //                Id = "",
+        //                Description = "",
+        //                VarName = $"di_shared[{index}]",
+        //                Area = "",
+        //                Address = "",
+        //                LinkValue = ""
+        //            }
+        //        };
+        //        SignalsDI.Add(signal);
+        //    }
+        //    #endregion
 
-            #endregion
+        //    #endregion
 
-            SelectedSignalDI = SignalsDI[0];
-            _DataView.Source = SignalsDI;
-            _DataView.View.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //    SelectedSignalDI = SignalsDI[0];
+        //    _DataView.Source = SignalsDI;
+        //    _DataView.View.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
-        #region Генерируем данные
-        public void GeneratedData()
-        {
-            _DataView.Source = SignalsDI;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion
+        //#region Генерируем данные
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = SignalsDI;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion
 
         #endregion
     }

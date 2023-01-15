@@ -18,6 +18,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             Title = "Компоновка корзин";
             Description = $"Компоновка корзин {App.Settings.Config.NameProject}";
             UsingUserControl = new LayotRackUserControl();
+
         }
 
         private readonly ILayotRackService LayotRackServices;
@@ -26,11 +27,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             LayotRackServices = _ILayotRackService;
             DBServices = _IDBService;
-
-            if (App.DBServices is null || App.DBServices.AppData is null || App.DBServices.AppData.USOList.Count <= 0)
-                OnCmdCreateNewUSOExecuted();
-            else
-                DBServices.RefreshDataViewModel(this, false);
         }
         #endregion
 

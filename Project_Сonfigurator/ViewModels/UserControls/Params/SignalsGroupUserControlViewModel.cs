@@ -25,16 +25,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new SignalsGroupUserControl();
         }
 
-        private readonly ISignalService _SignalService;
-        private readonly IDBService _DBService;
-
-        public SignalsGroupUserControlViewModel(ISignalService signalService, IDBService dBService) : this()
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+        public SignalsGroupUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            _SignalService = signalService;
-            _DBService = dBService;
-
-            _DataView.Filter += OnParamFiltered;
-            _DBService.RefreshDataViewModel(this, false);
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
         }
         #endregion
 
@@ -52,33 +48,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    _SignalService.RedefineParam(SelectedParam, _IsSelected, Title);
-                    DoSelection = _SignalService.DoSelection;
-                    if (_IsSelected)
-                        _DataView.View.Refresh();
+                    //_SignalService.RedefineParam(SelectedParam, _IsSelected, Title);
+                    //DoSelection = _SignalService.DoSelection;
+                    //if (_IsSelected)
+                    //    _DataView.View.Refresh();
                 }
             }
         }
         #endregion
 
         #region Список параметр
-        private ObservableCollection<BaseParam> _BaseParams = new();
+        private ObservableCollection<BaseParam> _Params = new();
         /// <summary>
         /// Список параметр
         /// </summary>
-        public ObservableCollection<BaseParam> BaseParams
+        public ObservableCollection<BaseParam> Params
         {
-            get => _BaseParams;
-            set => Set(ref _BaseParams, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
-        #endregion
-
-        #region Коллекция парметров
-        /// <summary>
-        /// Коллекция парметров
-        /// </summary>
-        private readonly CollectionViewSource _DataView = new();
-        public ICollectionView DataView => _DataView?.View;
         #endregion
 
         #region Выбранный параметр
@@ -131,8 +119,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdRefreshFilterExecuted()
         {
-            if (_DataView.Source is null) return;
-            _DataView.View.Refresh();
+            //if (_DataView.Source is null) return;
+            //_DataView.View.Refresh();
 
         }
         #endregion
@@ -147,46 +135,46 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedParam is null) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedParam is null) return;
 
-            var data_list = new ObservableCollection<BaseParam>();
-            foreach (BaseParam Param in DataView)
-            {
-                data_list.Add(Param);
-            }
+            //var data_list = new ObservableCollection<BaseParam>();
+            //foreach (BaseParam Param in DataView)
+            //{
+            //    data_list.Add(Param);
+            //}
 
-            if (Index != SelectedParam.Index)
-                SelectedParam = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedParam.Index)
+            //    SelectedParam = data_list[int.Parse(Index) - 1];
 
-            _SignalService.DoSelection = true;
-            _SignalService.ListName = Title;
-            _SignalService.Type = TypeModule.Unknown;
+            //_SignalService.DoSelection = true;
+            //_SignalService.ListName = Title;
+            //_SignalService.Type = TypeModule.Unknown;
 
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedParam.TypeSignal) || int.Parse(SelectedParam.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                _SignalService.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedParam.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                _SignalService.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedParam.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                _SignalService.Type = TypeModule.DI;
-            }
+            //var NameListSelected = "";
+            //if (string.IsNullOrWhiteSpace(SelectedParam.TypeSignal) || int.Parse(SelectedParam.TypeSignal) == 0)
+            //{
+            //    NameListSelected = "Сигналы DI";
+            //    _SignalService.Type = TypeModule.DI;
+            //}
+            //else if (int.Parse(SelectedParam.TypeSignal) > 1)
+            //{
+            //    NameListSelected = "Сигналы AI";
+            //    _SignalService.Type = TypeModule.AI;
+            //}
+            //else if (int.Parse(SelectedParam.TypeSignal) > 0)
+            //{
+            //    NameListSelected = "Группы сигналов";
+            //    _SignalService.Type = TypeModule.DI;
+            //}
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == NameListSelected
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -200,31 +188,31 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdSelectionSignalExecuted(object p)
         {
-            if (p is not string Index) return;
-            if (string.IsNullOrWhiteSpace(Index)) return;
-            if (SelectedParam is null) return;
-            if (App.FucusedTabControl == null) return;
-            if (!_SignalService.DoSelection) return;
+            //if (p is not string Index) return;
+            //if (string.IsNullOrWhiteSpace(Index)) return;
+            //if (SelectedParam is null) return;
+            //if (App.FucusedTabControl == null) return;
+            //if (!_SignalService.DoSelection) return;
 
-            var data_list = new ObservableCollection<BaseParam>();
-            foreach (BaseParam Signal in DataView)
-            {
-                data_list.Add(Signal);
-            }
+            //var data_list = new ObservableCollection<BaseParam>();
+            //foreach (BaseParam Signal in DataView)
+            //{
+            //    data_list.Add(Signal);
+            //}
 
-            if (Index != SelectedParam.Index)
-                SelectedParam = data_list[int.Parse(Index) - 1];
+            //if (Index != SelectedParam.Index)
+            //    SelectedParam = data_list[int.Parse(Index) - 1];
 
-            _SignalService.Address = SelectedParam.Index;
-            _SignalService.Id = SelectedParam.Id;
-            _SignalService.Description = SelectedParam.Description;
+            //_SignalService.Address = SelectedParam.Index;
+            //_SignalService.Id = SelectedParam.Id;
+            //_SignalService.Description = SelectedParam.Description;
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == _SignalService.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            //if (App.FucusedTabControl == null) return;
+            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+            //                         let _TabItem = _Item as TabItem
+            //                         where _TabItem.Header.ToString() == _SignalService.ListName
+            //                         select _TabItem)
+            //    App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -232,33 +220,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Фильтрация модулей
-        /// <summary>
-        /// Фильтрация модулей
-        /// </summary>
-        private void OnParamFiltered(object sender, FilterEventArgs e)
-        {
-            #region Проверки до начала фильтрации
-            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
-            if (string.IsNullOrWhiteSpace(TextFilter)) return;
-            #endregion
+        //#region Фильтрация модулей
+        ///// <summary>
+        ///// Фильтрация модулей
+        ///// </summary>
+        //private void OnParamFiltered(object sender, FilterEventArgs e)
+        //{
+        //    #region Проверки до начала фильтрации
+        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+        //    if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
+        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
+        //    #endregion
 
-            if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-                    Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+        //    if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+        //            Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-            e.Accepted = false;
-        }
-        #endregion
+        //    e.Accepted = false;
+        //}
+        //#endregion
 
-        #region Генерация сигналов
-        public void GeneratedData()
-        {
-            _DataView.Source = BaseParams;
-            _DataView.View?.Refresh();
-            OnPropertyChanged(nameof(DataView));
-        }
-        #endregion 
+        //#region Генерация сигналов
+        //public void GeneratedData()
+        //{
+        //    _DataView.Source = BaseParams;
+        //    _DataView.View?.Refresh();
+        //    OnPropertyChanged(nameof(DataView));
+        //}
+        //#endregion 
 
         #endregion
     }

@@ -28,20 +28,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-
-        //TableSignalsUserControlViewModel TableSignalsViewModel { get; }
-
         public UMPNAUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
-
-
-
-            //TableSignalsViewModel = tableSignalsViewModel;
-            //_DBService = dBService;
-            //_DBService.RefreshDataViewModel(this, false);
         }
         #endregion
 
@@ -119,26 +110,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #endregion
 
         #region Список МПНА
-        private ObservableCollection<BaseUMPNA> _UMPNA = new();
+        private ObservableCollection<BaseUMPNA> _Params = new();
         /// <summary>
         /// Список МПНА
         /// </summary>
-        public ObservableCollection<BaseUMPNA> UMPNA
+        public ObservableCollection<BaseUMPNA> Params
         {
-            get => _UMPNA;
-            set => Set(ref _UMPNA, value);
+            get => _Params;
+            set => Set(ref _Params, value);
         }
         #endregion
 
         #region Выбранный МПНА
-        private BaseUMPNA _SelectedUMPNA;
+        private BaseUMPNA _SelectedParam;
         /// <summary>
         /// Выбранный МПНА
         /// </summary>
-        public BaseUMPNA SelectedUMPNA
+        public BaseUMPNA SelectedParam
         {
-            get => _SelectedUMPNA;
-            set => Set(ref _SelectedUMPNA, value);
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -298,17 +289,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить МПНА
         /// </summary>
         public ICommand CmdDeleteUMPNA => _CmdDeleteUMPNA ??= new RelayCommand(OnCmdDeleteUMPNAExecuted, CanCmdDeleteUMPNAExecute);
-        private bool CanCmdDeleteUMPNAExecute() => SelectedUMPNA is not null;
+        private bool CanCmdDeleteUMPNAExecute() => SelectedParam is not null;
         private void OnCmdDeleteUMPNAExecuted()
         {
-            var index = UMPNA.IndexOf(SelectedUMPNA);
+            var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
-            UMPNA.Remove(SelectedUMPNA);
-            if (UMPNA.Count > 0)
+            Params.Remove(SelectedParam);
+            if (Params.Count > 0)
             {
                 RefreshIndexUMPNA();
-                SelectedUMPNA = UMPNA[index];
+                SelectedParam = Params[index];
             }
         }
         #endregion
@@ -326,7 +317,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().Params;
             if (USOList is null) return;
             if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
-            UMPNA = new();
+            Params = new();
 
             #region Ищем МНА
             foreach (var DataView in USOList)
@@ -347,13 +338,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                     var qty = Channel.Description.Length;
                                     var name = Channel.Description.Remove(index_dot, qty - index_dot);
                                     var fl_tmp = false;
-                                    foreach (var item in UMPNA)
+                                    foreach (var item in Params)
                                     {
                                         if (item.Description == name)
                                             fl_tmp = true;
                                     }
                                     if (!fl_tmp)
-                                        ImportUMPNA(name, UMPNA);
+                                        ImportUMPNA(name, Params);
                                 }
 
                             }
@@ -383,13 +374,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                     var qty = Channel.Description.Length;
                                     var name = Channel.Description.Remove(index_dot, qty - index_dot);
                                     var fl_tmp = false;
-                                    foreach (var item in UMPNA)
+                                    foreach (var item in Params)
                                     {
                                         if (item.Description == name)
                                             fl_tmp = true;
                                     }
                                     if (!fl_tmp)
-                                        ImportUMPNA(name, UMPNA);
+                                        ImportUMPNA(name, Params);
                                 }
 
                             }
@@ -399,8 +390,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             #endregion
 
-            if (UMPNA.Count > 0)
-                SelectedUMPNA = UMPNA[^1];
+            if (Params.Count > 0)
+                SelectedParam = Params[^1];
         }
         #endregion
 
@@ -419,7 +410,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedInputParam is null) return;
 
             if (Index != SelectedInputParam.Index)
-                SelectedInputParam = SelectedUMPNA.InputParam[int.Parse(Index) - 1];
+                SelectedInputParam = SelectedParam.InputParam[int.Parse(Index) - 1];
 
             DoSelectionInputParam = true;
             SignalServices.DoSelection = true;
@@ -467,7 +458,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedOutputParam is null) return;
 
             if (Index != SelectedOutputParam.Index)
-                SelectedOutputParam = SelectedUMPNA.OutputParam[int.Parse(Index) - 1];
+                SelectedOutputParam = SelectedParam.OutputParam[int.Parse(Index) - 1];
 
             DoSelectionOutputParam = true;
             SignalServices.DoSelection = true;
@@ -500,7 +491,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedKGMPNA is null) return;
 
             if (Index != SelectedKGMPNA.Param.Index)
-                SelectedKGMPNA = SelectedUMPNA.KGMPNA[int.Parse(Index) - 1];
+                SelectedKGMPNA = SelectedParam.KGMPNA[int.Parse(Index) - 1];
 
             DoSelectionKGMPNA = true;
             SignalServices.DoSelection = true;
@@ -548,7 +539,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedKTPRA is null) return;
 
             if (Index != SelectedKTPRA.Param.Index)
-                SelectedKTPRA = SelectedUMPNA.KTPRA[int.Parse(Index) - 1];
+                SelectedKTPRA = SelectedParam.KTPRA[int.Parse(Index) - 1];
 
             DoSelectionKTPRA = true;
             SignalServices.DoSelection = true;
@@ -596,7 +587,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (SelectedKTPRAS is null) return;
 
             if (Index != SelectedKTPRAS.Param.Index)
-                SelectedKTPRAS = SelectedUMPNA.KTPRAS[int.Parse(Index) - 1];
+                SelectedKTPRAS = SelectedParam.KTPRAS[int.Parse(Index) - 1];
 
             DoSelectionKTPRAS = true;
             SignalServices.DoSelection = true;
@@ -651,7 +642,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Создаем МПНА
         private void CreateUMPNA()
         {
-            var index = UMPNA.Count + 1;
+            var index = Params.Count + 1;
             var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
             var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
             var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
@@ -835,10 +826,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 KTPRA = new ObservableCollection<BaseKTPRA>(KTPRA),
                 KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
             };
-            UMPNA.Add(signal);
+            Params.Add(signal);
             #endregion
 
-            SelectedUMPNA = UMPNA[^1];
+            SelectedParam = Params[^1];
             #endregion
         }
         #endregion 
@@ -1044,9 +1035,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             //_DataView.View?.Refresh();
             //OnPropertyChanged(nameof(DataView));
 
-            if (UMPNA is null || UMPNA.Count <= 0)
+            if (Params is null || Params.Count <= 0)
             {
-                SelectedUMPNA = null;
+                SelectedParam = null;
             }
         }
         #endregion 
@@ -1054,9 +1045,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Обновление индексов
         public void RefreshIndexUMPNA(BaseUMPNA selectedUMPNA = null)
         {
-            SelectedUMPNA = new();
+            SelectedParam = new();
             var index = 0;
-            foreach (var item in UMPNA)
+            foreach (var item in Params)
             {
                 index++;
                 item.VarName = $"umpna_param[{index}]";

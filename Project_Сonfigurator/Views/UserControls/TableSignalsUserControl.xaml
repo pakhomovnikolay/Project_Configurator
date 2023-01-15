@@ -39,8 +39,8 @@
         <ListView Grid.Row="1" Margin="5,5,0,0"
                   BorderThickness="1"
                   BorderBrush="Black"
-                  ItemsSource="{Binding DataView}"
-                  SelectedItem="{Binding SelectedUSO}">
+                  ItemsSource="{Binding Params}"
+                  SelectedItem="{Binding SelectedParam}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
@@ -93,8 +93,8 @@
                   Background="Gray"
                   HeadersVisibility="Column"
                   ScrollViewer.CanContentScroll="False"
-                  ItemsSource="{Binding DataViewModules}"
-                  SelectedItem="{Binding SelectedModule}"
+                  ItemsSource="{Binding SubParams}"
+                  SelectedItem="{Binding SelectedSubParam}"
                   >
             <DataGrid.Resources>
 

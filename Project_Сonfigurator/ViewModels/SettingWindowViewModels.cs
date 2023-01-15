@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
@@ -388,6 +389,26 @@ namespace Project_Сonfigurator.ViewModels
             Config.ServerDB.Remove(SelectedServerDB);
             if (Config.ServerDB.Count > 0)
                 SelectedServerDB = Config.ServerDB[index];
+        }
+        #endregion
+
+        #region Команда - Выбрать путь хранения проекта
+        /// <summary>
+        /// Команда - Выбрать путь хранения проекта
+        /// </summary>
+        private ICommand _CmdSelectedFolderSavedProject;
+        public ICommand CmdSelectedFolderSavedProject => _CmdSelectedFolderSavedProject ??= new RelayCommand(OnCmdSelectedFolderSavedProjectExecuted, CanCmdSelectedFolderSavedProjectExecute);
+        private bool CanCmdSelectedFolderSavedProjectExecute(object p) => true;
+        private void OnCmdSelectedFolderSavedProjectExecuted(object p)
+        {
+            if (p is not string Path) return;
+            IUserDialogService UserDialog = new UserDialogService();
+
+            string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+            if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathProject, Filter))
+                Config.PathProject = path + file;
+
+            OnPropertyChanged(nameof(Config));
         }
         #endregion
 

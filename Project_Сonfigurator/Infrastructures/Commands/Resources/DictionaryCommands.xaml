@@ -7,7 +7,7 @@
     <l:CmdChangeStateWindow x:Key="CmdChangeStateWindow"/>
     <l:WindowDialogCloseCommand x:Key="WindowDialogCloseCommand"/>
     <l:CmdShutdownApplication x:Key="CmdShutdownApplication"/>
-
+    
     <l:CmdNextItemTabPanel x:Key="CmdNextItemTabPanel"/>
     <l:CmdPrevItemTabPanel x:Key="CmdPrevItemTabPanel"/>
 
@@ -15,5 +15,7 @@
     <l:CmdScrollToRightEnd x:Key="CmdScrollToRightEnd"/>
 
     <l:CmdOpenWindowEditText x:Key="CmdOpenWindowEditText"/>
+
+    
 
 </ResourceDictionary>

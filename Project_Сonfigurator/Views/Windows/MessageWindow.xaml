@@ -65,8 +65,8 @@
 
         <!--Данные-->
         <TabControl Grid.Row="1"
-                    ItemsSource="{Binding CollectionMessages}"
-                    SelectedItem="{Binding SelectedCollectionMessage}"
+                    ItemsSource="{Binding Params}"
+                    SelectedItem="{Binding SelectedParam}"
                     >
 
             <TabControl.Template>

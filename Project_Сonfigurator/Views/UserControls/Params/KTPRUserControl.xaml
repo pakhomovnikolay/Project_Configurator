@@ -49,7 +49,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding DataView}"
+                          ItemsSource="{Binding Params}"
                           SelectedItem="{Binding SelectedParam}"
                           >
 
@@ -515,8 +515,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding DataView}"
-                          SelectedItem="{Binding SelectedParam}"
+                          ItemsSource="{Binding SelectedParam.Setpoints}"
                           >
 
                     <DataGrid.Resources>
@@ -706,8 +705,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding DataView}"
-                          SelectedItem="{Binding SelectedParam}"
+                          ItemsSource="{Binding SelectedParam.ControlUZD}"
                         >
 
                     <DataGrid.Resources>
@@ -953,8 +951,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding DataView}"
-                          SelectedItem="{Binding SelectedParam}"
+                          ItemsSource="{Binding SelectedParam.ControlUVS}"
                         >
 
                     <DataGrid.Resources>
@@ -1336,8 +1333,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding DataView}"
-                          SelectedItem="{Binding SelectedParam}"
+                          ItemsSource="{Binding SelectedParam.ControlUTS}"
                         >
 
                     <DataGrid.Resources>

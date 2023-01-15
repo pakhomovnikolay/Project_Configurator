@@ -14,6 +14,9 @@ namespace Project_Сonfigurator
 {
     public partial class App
     {
+        public const string __EncryptedConfigFileSuffix = ".configproject";
+        public const string __EncryptedProjectFileSuffix = ".myprojectodb";
+
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();
         public static string PathConfig = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + $"\\{NameApp}";
@@ -49,15 +52,17 @@ namespace Project_Сonfigurator
             base.OnStartup(e);
             await host.StartAsync();
 
-            #region Конфигурация приложения
+            #region Получение места хранения файла конфигурации проекта
             bool exists = System.IO.Directory.Exists(PathConfig);
             if (!exists)
                 System.IO.Directory.CreateDirectory(PathConfig);
-
-            Settings.Load();
-            DBServices.AppData = DBServices.LoadData(Settings.Config.PathProject);
             #endregion
 
+            #region Конфигурация приложения
+            Settings.Load();
+            DBServices.ProjectDataRequest();
+            //DBServices.AppData = DBServices.LoadData(Settings.Config.PathProject);
+            #endregion
 
             Services.GetRequiredService<IUserDialogService>().OpenMainWindow();
         }
