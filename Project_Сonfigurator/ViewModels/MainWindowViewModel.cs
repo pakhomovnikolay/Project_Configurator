@@ -220,9 +220,10 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            NameProject = "Новый документ";
-            App.Settings.Config.PathProject = "";
+            //NameProject = "Новый документ";
+            //App.Settings.Config.PathProject = "";
             DBServices.CreateNewProject();
+            SetNameProject();
         }
         #endregion
 

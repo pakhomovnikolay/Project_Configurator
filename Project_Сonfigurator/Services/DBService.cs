@@ -779,6 +779,8 @@ namespace Project_Сonfigurator.Services
                     };
                 }
 
+                App.Settings.Config.PathProject = "";
+
             }
             catch (Exception e)
             {
