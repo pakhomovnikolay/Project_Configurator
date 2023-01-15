@@ -110,15 +110,14 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void RequestToWriteProjectData()
         {
+            var Log = new LogSerivece();
             var path = App.Settings.Config.PathProject.Replace(App.__EncryptedProjectFileSuffix, ".xml");
             IUserDialogService UserDialog = new UserDialogService();
             IEncryptorService _Encryptor = new EncryptorService();
             var SettingsAppSerializer = new XmlSerializer(typeof(ProjectDataToSave));
             var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
-            using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
-
             IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            var Log = new LogSerivece();
+            
             try
             {
                 foreach (var item in _ViewModels)
@@ -159,6 +158,7 @@ namespace Project_Сonfigurator.Services
 
             try
             {
+                using XmlWriter xmlWriter = XmlWriter.Create(path, xmlWriterSettings);
                 SettingsAppSerializer.Serialize(xmlWriter, DataToSave);
                 xmlWriter.Close();
                 var FileNameEncrypt = path;
@@ -735,6 +735,54 @@ namespace Project_Сonfigurator.Services
                 Log.WriteLog($"Не удалось сохранить данные приложения - {e}", App.NameApp);
                 UserDialog.SendMessage("Управление приложением", "Не удалось сохранить данные приложения\nСм. лог.",
                     MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
+            }
+        }
+        #endregion
+
+        #region Создать новый проект
+        /// <summary>
+        /// Создать новый проект
+        /// </summary>
+        public void CreateNewProject()
+        {
+            ILogSerivece Log = new LogSerivece();
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            try
+            {
+                foreach (var item in _ViewModels)
+                {
+                    object _Data = item switch
+                    {
+                        LayotRackUserControlViewModel Data => Data.Params = new(),
+                        SignalsDIUserControlViewModel Data => Data.Params = new(),
+                        SignalsAIUserControlViewModel Data => Data.Params = new(),
+                        SignalsDOUserControlViewModel Data => Data.Params = new(),
+                        SignalsAOUserControlViewModel Data => Data.Params = new(),
+                        ECUserControlViewModel Data => Data.Params = new(),
+                        UserDIUserControlViewModel Data => Data.Params = new(),
+                        UserAIUserControlViewModel Data => Data.Params = new(),
+                        UserRegUserControlViewModel Data => Data.Params = new(),
+                        SignalsGroupUserControlViewModel Data => Data.Params = new(),
+                        GroupsSignalUserControlViewModel Data => Data.Params = new(),
+                        UZDUserControlViewModel Data => Data.Params = new(),
+                        UVSUserControlViewModel Data => Data.Params = new(),
+                        UMPNAUserControlViewModel Data => Data.Params = new(),
+                        KTPRUserControlViewModel Data => Data.Params = new(),
+                        KTPRSUserControlViewModel Data => Data.Params = new(),
+                        SignalingUserControlViewModel Data => Data.Params = new(),
+                        UTSUserControlViewModel Data => Data.Params = new(),
+                        UstRealUserControlViewModel Data => Data.Params = new(),
+                        UstCommonUserControlViewModel Data => Data.Params = new(),
+                        HandMapUserControlViewModel Data => Data.Params = new(),
+                        MessageWindowViewModel Data => Data.Params = new(),
+                        _ => null
+                    };
+                }
+
+            }
+            catch (Exception e)
+            {
+                Log.WriteLog($"Не удалось создать новый проект - {e}", App.NameApp);
             }
         }
         #endregion

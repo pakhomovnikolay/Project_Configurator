@@ -260,7 +260,7 @@ namespace Project_Сonfigurator.Services
 
 
             _SettingWindow = window;
-            window.Show();
+            window.ShowDialog();
         }
         #endregion
 

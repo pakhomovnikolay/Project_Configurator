@@ -31,5 +31,12 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// </summary>
         void RequestToWriteDataToTheDataBase();
         #endregion
+
+        #region Создать новый проект
+        /// <summary>
+        /// Создать новый проект
+        /// </summary>
+        void CreateNewProject();
+        #endregion
     }
 }

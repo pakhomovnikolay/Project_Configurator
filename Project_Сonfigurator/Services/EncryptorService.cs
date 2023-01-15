@@ -100,7 +100,7 @@ namespace Project_Сonfigurator.Services
             {
                 return false;
             }
-            
+
             return true;
         }
         #endregion

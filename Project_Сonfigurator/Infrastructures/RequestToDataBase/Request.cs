@@ -604,7 +604,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldMessages =
-            "`NAME_TAB`, `SYSTEM`, `DESCRIPTION`, `COLOR`, `NEED_ACK`, `PATH_SOUND`, `TYPE_SOUND`, `NEED_PLAY`, `HIDE`, `LEVEL_ACCESS`"; 
+            "`NAME_TAB`, `SYSTEM`, `DESCRIPTION`, `COLOR`, `NEED_ACK`, `PATH_SOUND`, `TYPE_SOUND`, `NEED_PLAY`, `HIDE`, `LEVEL_ACCESS`";
         #endregion
 
         #endregion

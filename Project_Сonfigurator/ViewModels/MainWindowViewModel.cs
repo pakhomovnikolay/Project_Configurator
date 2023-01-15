@@ -27,7 +27,6 @@ namespace Project_Сonfigurator.ViewModels
         private readonly IDBService DBServices;
         public readonly ISettingService SettingServices;
         private readonly ISUExportRedefineService SUExportRedefineServices;
-
         public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
             ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
         {
@@ -221,17 +220,9 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateProject => _CmdCreateProject ??= new RelayCommand(OnCmdCreateProjectExecuted);
         private void OnCmdCreateProjectExecuted()
         {
-            //App.DBServices.ClearDataBase();
-            //DBServices.ClearDataBase();
-            //App.Settings.Config.PathProject = "";
-            //SettingServices.Config = App.Settings.Config;
-            //SettingServices.Save();
-            //SetNameProject();
-
-            //foreach (var _ViewModel in ViewModelUserControls)
-            //{
-            //    DBServices.RefreshDataViewModel(_ViewModel, true);
-            //}
+            NameProject = "Новый документ";
+            App.Settings.Config.PathProject = "";
+            DBServices.CreateNewProject();
         }
         #endregion
 
@@ -243,24 +234,12 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenProject => _CmdOpenProject ??= new RelayCommand(OnCmdOpenProjectExecuted);
         private void OnCmdOpenProjectExecuted()
         {
-            //if (!UserDialog.OpenFile(Title, out string path, App.Settings.Config.PathProject)) return;
+            string Filter = $"Все файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+            if (!UserDialog.OpenFile(Title, out string path, App.Settings.Config.PathProject, Filter)) return;
+            App.Settings.Config.PathProject = path;
 
-            //App.Settings.Config.PathProject = path;
-            //App.DBServices.AppData = App.DBServices.LoadData(path);
-            //DBServices.LoadData(path);
-            //DBServices.AppData = App.DBServices.AppData;
-            //SettingServices.Config = App.Settings.Config;
-            //SettingServices.Save();
-
-            //if (App.DBServices.AppData is not null)
-            //{
-            //    foreach (var _ViewModel in ViewModelUserControls)
-            //    {
-            //        DBServices.RefreshDataViewModel(_ViewModel, false);
-            //    }
-            //}
-
-            //SetNameProject();
+            DBServices.ProjectDataRequest();
+            SetNameProject();
         }
         #endregion
 
@@ -272,9 +251,16 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdSaveData => _CmdSaveData ??= new RelayCommand(OnCmdSaveDataExecuted);
         private void OnCmdSaveDataExecuted()
         {
-            //if (!UserDialog.SaveProject(Title)) return;
-            //DBServices.FormingAppDataBeforeSaving(ViewModelUserControls);
+            if (string.IsNullOrWhiteSpace(App.Settings.Config.PathProject))
+            {
+                string Filter = $"Все файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+                if (!UserDialog.SelectFolder(Title, out string path, out string file_name, App.Settings.Config.PathProject, Filter)) return;
+                App.Settings.Config.PathProject = path + file_name;
+            }
+            SettingServices.Config = App.Settings.Config;
+            SettingServices.Save();
             DBServices.RequestToWriteProjectData();
+            SetNameProject();
         }
         #endregion
 
@@ -286,12 +272,14 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdSaveAsData => _CmdSaveAsData ??= new RelayCommand(OnCmdSaveAsDataExecuted);
         private void OnCmdSaveAsDataExecuted()
         {
-            App.Settings.Config.PathProject = "";
-            if (!UserDialog.SaveProject(Title)) return;
+            string Filter = $"Все файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+            if (!UserDialog.SelectFolder(Title, out string path, out string file_name, App.Settings.Config.PathProject, Filter)) return;
+            App.Settings.Config.PathProject = path + file_name;
 
-            //DBServices.AppData = new();
-            ////DBServices.FormingAppDataBeforeSaving(ViewModels);
-            //DBServices.SaveData();
+            SettingServices.Config = App.Settings.Config;
+            SettingServices.Save();
+            DBServices.RequestToWriteProjectData();
+            SetNameProject();
         }
         #endregion
 
@@ -341,8 +329,7 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdUploadDB => _CmdUploadDB ??= new RelayCommand(OnCmdUploadDBExecuted);
         private void OnCmdUploadDBExecuted()
         {
-            //DBServices.RequestSetData(ViewModels);
-             DBServices.RequestToWriteDataToTheDataBase();
+            DBServices.RequestToWriteDataToTheDataBase();
         }
         #endregion
 
