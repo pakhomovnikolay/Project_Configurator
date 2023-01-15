@@ -19,10 +19,9 @@ namespace Project_Сonfigurator.ViewModels
             Title = "Настройки";
         }
 
-        private ISettingService SettingServices;
-        private IEditService EditServices;
-        private IUserDialogService UserDialog;
-
+        private readonly ISettingService SettingServices;
+        private readonly IEditService EditServices;
+        private readonly IUserDialogService UserDialog;
         public SettingWindowViewModels(ISettingService _ISettingService, IEditService _EditServices, IUserDialogService _UserDialog) : this()
         {
             SettingServices = _ISettingService;
@@ -140,11 +139,7 @@ namespace Project_Сonfigurator.ViewModels
                 UserDialog.SendMessage(Title, "Ошибка сохранения конфигурации.\nсм. лог", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);
                 return;
             }
-
-
-
             Application.Current.Shutdown();
-
         }
         #endregion
 
@@ -166,9 +161,6 @@ namespace Project_Сonfigurator.ViewModels
 
             Config.Vendors.Add(vendor);
             SelectedVendor = Config.Vendors[^1];
-            //_DataViewVendors.Source = Config.Vendors;
-            //_DataViewVendors.View.Refresh();
-            //OnPropertyChanged(nameof(DataViewVendors));
         }
         #endregion
 
@@ -228,7 +220,6 @@ namespace Project_Сonfigurator.ViewModels
             var window = new Window();
             switch (Content)
             {
-
                 case "Настройки агрегатов":
                     window = new WindowEditDevice()
                     {
@@ -259,9 +250,6 @@ namespace Project_Сonfigurator.ViewModels
                 default:
                     break;
             }
-
-
-
             window.ShowDialog();
         }
         #endregion
