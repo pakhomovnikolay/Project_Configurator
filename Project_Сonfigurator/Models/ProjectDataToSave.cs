@@ -9,11 +9,18 @@ namespace Project_Сonfigurator.Models
 {
     public class ProjectDataToSave : IProjectDataToSave
     {
-        #region Данные диагностики
+        #region Компоновка корзин
         /// <summary>
-        /// Данные диагностики
+        /// Компоновка корзин
         /// </summary>
-        public ObservableCollection<USO> USOList { get; set; } = new();
+        public ObservableCollection<USO> LayotRack { get; set; }
+        #endregion
+
+        #region Таблица сигналов
+        /// <summary>
+        /// Таблица сигналов
+        /// </summary>
+        public ObservableCollection<USO> TableSignals { get; set; }
         #endregion
 
         #region DI формируемые

@@ -60,7 +60,8 @@ namespace Project_Сonfigurator.Services
                     {
                         object _Data = item switch
                         {
-                            LayotRackUserControlViewModel Data => Data.Params = DataToSave.USOList is null ? new() : DataToSave.USOList,
+                            LayotRackUserControlViewModel Data => Data.Params = DataToSave.LayotRack is null ? new() : DataToSave.LayotRack,
+                            TableSignalsUserControlViewModel Data => Data.Params = DataToSave.TableSignals is null ? new() : DataToSave.TableSignals,
                             SignalsDIUserControlViewModel Data => Data.Params = DataToSave.SignalDI is null ? new() : DataToSave.SignalDI,
                             SignalsAIUserControlViewModel Data => Data.Params = DataToSave.SignalAI is null ? new() : DataToSave.SignalAI,
                             SignalsDOUserControlViewModel Data => Data.Params = DataToSave.SignalDO is null ? new() : DataToSave.SignalDO,
@@ -124,7 +125,8 @@ namespace Project_Сonfigurator.Services
                 {
                     object _Data = item switch
                     {
-                        LayotRackUserControlViewModel Data => DataToSave.USOList = Data.Params is null ? new() : Data.Params,
+                        LayotRackUserControlViewModel Data => DataToSave.LayotRack = Data.Params is null ? new() : Data.Params,
+                        TableSignalsUserControlViewModel Data => DataToSave.TableSignals = Data.Params is null ? new() : Data.Params,
                         SignalsDIUserControlViewModel Data => DataToSave.SignalDI = Data.Params is null ? new() : Data.Params,
                         SignalsAIUserControlViewModel Data => DataToSave.SignalAI = Data.Params is null ? new() : Data.Params,
                         SignalsDOUserControlViewModel Data => DataToSave.SignalDO = Data.Params is null ? new() : Data.Params,
@@ -227,10 +229,10 @@ namespace Project_Сonfigurator.Services
 
                             #region Формируем данные
 
-                            #region Компоновка корзин
-                            if (_ViewModel is LayotRackUserControlViewModel)
+                            #region Таблица сигналов
+                            if (_ViewModel is TableSignalsUserControlViewModel)
                             {
-                                var Data = _ViewModel as LayotRackUserControlViewModel;
+                                var Data = _ViewModel as TableSignalsUserControlViewModel;
                                 foreach (var _USO in Data.Params)
                                 {
                                     if (string.IsNullOrWhiteSpace(_USO.Name)) continue;
@@ -276,7 +278,7 @@ namespace Project_Сonfigurator.Services
                                 }
 
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("USO", Request.TableFieldTableSignal, Request.FieldTableSignal, FieldValue);
+                                Request.SetData("TableSignals", Request.TableFieldTableSignals, Request.FieldTableSignals, FieldValue);
                             }
                             #endregion
 
@@ -545,7 +547,7 @@ namespace Project_Сonfigurator.Services
                                     }
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPRA", Request.TableFieldTableSignal, Request.FieldTableSignal, FieldValue);
+                                Request.SetData("KTPRA", Request.TableFieldKTPRA, Request.FieldKTPRA, FieldValue);
                                 #endregion
 
                                 #region Предельные параметры агрегатных защит
@@ -562,7 +564,7 @@ namespace Project_Сonfigurator.Services
                                     }
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPRAS", Request.TableFieldTableSignal, Request.FieldTableSignal, FieldValue);
+                                Request.SetData("KTPRAS", Request.TableFieldKTPRAS, Request.FieldKTPRAS, FieldValue);
                                 #endregion
                             }
                             #endregion
@@ -754,6 +756,7 @@ namespace Project_Сonfigurator.Services
                     object _Data = item switch
                     {
                         LayotRackUserControlViewModel Data => Data.Params = new(),
+                        TableSignalsUserControlViewModel Data => Data.Params = new(),
                         SignalsDIUserControlViewModel Data => Data.Params = new(),
                         SignalsAIUserControlViewModel Data => Data.Params = new(),
                         SignalsDOUserControlViewModel Data => Data.Params = new(),

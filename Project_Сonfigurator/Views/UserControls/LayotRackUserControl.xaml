@@ -24,7 +24,7 @@
         <GridSplitter Width="1" Background="Transparent" Panel.ZIndex="99999"/>
 
         <!--Список УСО-->
-        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
+        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray" Margin="0,2,0,0">
             <GroupBox.Header>
                 <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
             </GroupBox.Header>
@@ -102,7 +102,7 @@
         </GroupBox>
 
         <!--Данные УСО-->
-        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray" Margin="0,1,0,0">
             <GroupBox.Header>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -110,7 +110,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Данные - "/>
-                    <TextBox Grid.Column="1"  BorderThickness="0" Margin="0,0,5,0" FontWeight="Bold"
+                    <TextBox Grid.Column="1"  BorderThickness="1" Margin="0,0,5,0" FontWeight="Bold" MinWidth="150"
                              Text="{Binding SelectedParam.Name, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
                 

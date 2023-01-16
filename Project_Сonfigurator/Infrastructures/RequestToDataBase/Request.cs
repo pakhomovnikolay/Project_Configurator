@@ -158,7 +158,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
         #region Поля для создания ТБ
 
         #region Таблица сигналов
-        public const string TableFieldTableSignal =
+        public const string TableFieldTableSignals =
             "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
             "`USO_NAME` TEXT," +
             "`RACK_NAME` TEXT," +
@@ -173,7 +173,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "`VAR_NAME_VU` TEXT," +
             "PRIMARY KEY(`INDEX`));";
 
-        public const string FieldTableSignal =
+        public const string FieldTableSignals =
             "(USO_NAME, RACK_NAME, MODULE_TYPE, MODULE_NAME, CHANNEL_INDEX, CHANNEL_ID," +
             "CHANNEL_DESCRIPTION, VAR_NAME_SU, BIT, ADDRESS, VAR_NAME_VU) VALUES";
         #endregion

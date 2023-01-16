@@ -67,6 +67,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             set
             {
                 if (Set(ref _SelectedParam, value))
+                    if (_SelectedParam?.Racks?.Count <= 0) return;
                     SelectedSubParam = _SelectedParam?.Racks[0];
             }
         }

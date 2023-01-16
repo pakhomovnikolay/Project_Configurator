@@ -8,11 +8,18 @@ namespace Project_Сonfigurator.Models.Interfaces
 {
     public interface IProjectDataToSave
     {
-        #region Данные диагностики
+        #region Компоновка корзин
         /// <summary>
-        /// Данные диагностики
+        /// Компоновка корзин
         /// </summary>
-        ObservableCollection<USO> USOList { get; set; }
+        ObservableCollection<USO> LayotRack { get; set; }
+        #endregion
+
+        #region Таблица сигналов
+        /// <summary>
+        /// Таблица сигналов
+        /// </summary>
+        ObservableCollection<USO> TableSignals { get; set; }
         #endregion
 
         #region DI формируемые
