@@ -180,7 +180,20 @@ namespace Project_Сonfigurator.ViewModels
         public int SelectedTabIndex
         {
             get => _SelectedTabIndex;
-            set => Set(ref _SelectedTabIndex, value);
+            set
+            {
+                if (Set(ref _SelectedTabIndex, value))
+                {
+                    var i = 0;
+                    foreach (var _ViewModel in ViewModelUserControls)
+                    {
+                        _ViewModel.IsSelected = false;
+                        if (_SelectedTabIndex == i)
+                            _ViewModel.IsSelected = true;
+                        i++;
+                    }
+                }
+            }
         }
         #endregion
 

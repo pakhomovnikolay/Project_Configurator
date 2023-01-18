@@ -1,13 +1,18 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -23,10 +28,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new ECUserControl();
         }
 
+        private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-        public ECUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public ECUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
+            UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
         }
@@ -61,7 +68,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public ObservableCollection<BaseParam> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                    if (_Params is null || _Params.Count <= 0)
+                        CreateData();
+            }
         }
         #endregion
 
@@ -169,6 +181,58 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Команда - Генерировать таблицу
+        private ICommand _CmdGeneratedTable;
+        /// <summary>
+        /// Команда - Генерировать таблицу
+        /// </summary>
+        public ICommand CmdGeneratedTable => _CmdGeneratedTable ??= new RelayCommand(OnCmdGeneratedTableExecuted, CanCmdGeneratedTableExecute);
+        private bool CanCmdGeneratedTableExecute() => true;
+
+        private void OnCmdGeneratedTableExecuted()
+        {
+            #region Импорт сигналов из ТБ
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            SignalsDIUserControlViewModel MyViewModel = new();
+
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as SignalsDIUserControlViewModel
+                                     where _TabItem is not null
+                                     select _TabItem)
+                MyViewModel = _TabItem;
+
+
+            if (MyViewModel is null) return;
+            if (MyViewModel.Params is null) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+            var _Params = new ObservableCollection<BaseParam>();
+            foreach (var _Param in MyViewModel.Params)
+            {
+                if (!(_Param.Signal.Description.Contains(" СШ ", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Param.Signal.Description.Contains(" шин ", StringComparison.CurrentCultureIgnoreCase))) continue;
+
+                var param = new BaseParam
+                {
+                    Index = $"{_Params.Count + 1}",
+                    Id = $"{_Param.Signal.Id}",
+                    Description = $"{_Param.Signal.Description}",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = $"{_Param.Signal.Address}",
+                    VarName = $"EC_KTP_P[{_Params.Count + 1}]"
+                };
+                _Params.Add(param);
+            }
+            Params = new ObservableCollection<BaseParam>(_Params);
+            UserDialog.SendMessage("Импорт сигналов \"Секции шин\"", "Сигналы успешно импортированы\nиз таблицы сигналов",
+                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            CreateData();
+            #endregion
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -192,14 +256,27 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Генерация сигналов
-        public void GeneratedData()
+        #region Формирование данных при создании нового проекта
+        private void CreateData()
         {
-            //_DataView.Source = BaseParams;
-            //_DataView.View?.Refresh();
-            //OnPropertyChanged(nameof(DataView));
+            while (Params.Count < 100)
+            {
+                var param = new BaseParam
+                {
+                    Index = $"{Params.Count + 1}",
+                    Id = "",
+                    Description = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    VarName = $"EC_KTP_P[{Params.Count + 1}]"
+                };
+                Params.Add(param);
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
         }
-        #endregion 
+        #endregion
 
         #endregion
     }

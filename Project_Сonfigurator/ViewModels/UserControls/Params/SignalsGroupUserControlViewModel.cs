@@ -65,7 +65,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public ObservableCollection<BaseParam> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                    if (_Params is null || _Params.Count <= 0)
+                        CreateData();
+            }
         }
         #endregion
 
@@ -220,33 +225,27 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        //#region Фильтрация модулей
-        ///// <summary>
-        ///// Фильтрация модулей
-        ///// </summary>
-        //private void OnParamFiltered(object sender, FilterEventArgs e)
-        //{
-        //    #region Проверки до начала фильтрации
-        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-        //    if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
-        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
-        //    #endregion
-
-        //    if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        //            Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
-
-        //    e.Accepted = false;
-        //}
-        //#endregion
-
-        //#region Генерация сигналов
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = BaseParams;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //}
-        //#endregion 
+        #region Формирование данных при создании нового проекта
+        private void CreateData()
+        {
+            while (Params.Count < 256)
+            {
+                var param = new BaseParam
+                {
+                    Index = $"{Params.Count + 1}",
+                    Id = "",
+                    Description = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    VarName = ""
+                };
+                Params.Add(param);
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
+        }
+        #endregion
 
         #endregion
     }

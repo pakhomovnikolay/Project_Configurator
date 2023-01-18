@@ -23,6 +23,10 @@
         </Grid.RowDefinitions>
         
         <!--Данные-->
+        <Button Margin="3,-40,0,20" Width="150" Height="24" HorizontalAlignment="Left"
+                Content="Импорт сигналов" FontWeight="Bold"
+                Style="{StaticResource CustomButtonStyle}"
+                Command="{Binding CmdGeneratedTable}"/>
         <Border Grid.Row="0"
                 BorderThickness="1" BorderBrush="Black"
                 Margin="0,1,0,0" Background="AntiqueWhite"

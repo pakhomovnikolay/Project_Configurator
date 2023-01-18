@@ -1,15 +1,17 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -33,6 +35,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             UserDialog = _UserDialog;
             DBServices = _IDBService;
             SignalServices = _ISignalService;
+            _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -43,18 +46,21 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    //if (SelectedSignalAO is not null)
-                    //    _SignalService.RedefineSignal(SelectedSignalAO.Signal, _IsSelected, Title);
-                    //DoSelection = _SignalService.DoSelection;
-                    //if (_IsSelected)
-                    //    _DataView.View?.Refresh();
+                    if (Set(ref _IsSelected, value))
+                    {
+                        if (SelectedParam is not null)
+                            SignalServices.RedefineSignal(SelectedParam.Signal, _IsSelected, Title);
+                        DoSelection = SignalServices.DoSelection;
+                        if (_IsSelected)
+                            RefreshDataView();
+                    }
                 }
             }
         }
@@ -68,7 +74,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         public ObservableCollection<SignalAO> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                {
+                    if (_Params is null || _Params.Count <= 0)
+                    {
+                        CreateData();
+                        RefreshDataView();
+                    }
+                    else RefreshDataView();
+                }
+            }
         }
         #endregion
 
@@ -108,6 +125,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
+        #region Коллекция сигналов AO для отображения
+        /// <summary>
+        /// Коллекция сигналов AO для отображения
+        /// </summary>
+        private readonly CollectionViewSource _ParamsDataView = new();
+        public ICollectionView ParamsDataView => _ParamsDataView?.View;
+        #endregion
+
         #endregion
 
         #region Команды
@@ -122,11 +147,70 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdGeneratedTableExecuted()
         {
-            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
-            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes, MessageBoxOptions.None)) return;
+            #region Импорт сигналов из ТБ
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            TableSignalsUserControlViewModel MyViewModel = new();
 
-            //GeneratedSignals();
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as TableSignalsUserControlViewModel
+                                     where _TabItem is not null
+                                     select _TabItem)
+                MyViewModel = _TabItem;
 
+
+            if (MyViewModel is null) return;
+            if (MyViewModel.Params is null) return;
+            if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+            var _Params = new ObservableCollection<SignalAO>();
+            foreach (var _USO in MyViewModel.Params)
+            {
+                foreach (var _Rack in _USO.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        if (_Module.Type == TypeModule.AO)
+                        {
+                            if (_Module.Channels is null || _Module.Channels.Count <= 0)
+                                if (UserDialog.SendMessage("Внимание!", "Неверные данные таблицы сигналов. Проверьте вкладку",
+                                    MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
+
+                            foreach (var Channel in _Module.Channels)
+                            {
+                                if ((string.IsNullOrWhiteSpace(Channel.Id) && string.IsNullOrWhiteSpace(Channel.Description)) ||
+                                    Channel.Description == "Резерв") continue;
+
+                                var Address = 0;
+                                if (int.TryParse(Channel.Address, out int address))
+                                    Address = address - 300000;
+
+                                var param = new SignalAO
+                                {
+                                    Signal = new BaseSignal
+                                    {
+                                        Index = $"{_Params.Count + 1}",
+                                        Id = Channel.Id,
+                                        Description = Channel.Description,
+                                        Area = "",
+                                        Address = $"{Address}",
+                                        VarName = $"di_shared[{_Params.Count + 1}]",
+
+                                    }
+                                };
+                                _Params.Add(param);
+                            }
+                        }
+                    }
+                }
+            }
+            Params = new ObservableCollection<SignalAO>(_Params);
+            UserDialog.SendMessage("Импорт сигналов AO", "Сигналы AO успешно импортированы\nиз таблицы сигналов",
+                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            #endregion
+
+            CreateData();
+            RefreshDataView();
         }
         #endregion
 
@@ -140,9 +224,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private void OnCmdRefreshFilterExecuted()
         {
-            //if (_DataView.Source is null) return;
-            //_DataView.View.Refresh();
-
+            RefreshDataView();
         }
         #endregion
 
@@ -152,35 +234,28 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Сменить адрес сигнала
         /// </summary>
         public ICommand CmdChangeAddressSignal => _CmdChangeAddressSignal ??= new RelayCommand(OnCmdChangeAddressSignalExecuted, CanCmdChangeAddressSignalExecute);
-        private bool CanCmdChangeAddressSignalExecute(object p) => /*SelectedSignalAO is not null*/true;
+        private bool CanCmdChangeAddressSignalExecute(object p) => SelectedParam is not null;
 
         private void OnCmdChangeAddressSignalExecuted(object p)
         {
-            //if (p is not string Index) return;
-            //if (string.IsNullOrWhiteSpace(Index)) return;
-            //if (SelectedSignalAO is null) return;
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedParam is null) return;
+            if (App.FucusedTabControl == null) return;
 
-            //var data_list = new ObservableCollection<SignalAO>();
-            //foreach (SignalAO SignalAO in DataView)
-            //{
-            //    data_list.Add(SignalAO);
-            //}
+            if (Index != SelectedParam.Signal.Index)
+                SelectedParam = Params[int.Parse(Index) - 1];
 
-            //if (Index != SelectedSignalAO.Signal.Index)
-            //    SelectedSignalAO = data_list[int.Parse(Index) - 1];
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.AO;
 
-            //_SignalService.DoSelection = true;
-            //_SignalService.ListName = Title;
-            //_SignalService.Type = TypeModule.AO;
-
-            //var NameListSelected = "Таблица сигналов";
-
-            //if (App.FucusedTabControl == null) return;
-            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-            //                         let _TabItem = _Item as TabItem
-            //                         where _TabItem.Header.ToString() == NameListSelected
-            //                         select _TabItem)
-            //    App.FucusedTabControl.SelectedItem = _TabItem;
+            var NameListSelected = "Таблица сигналов";
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == NameListSelected
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -190,35 +265,28 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         /// Команда - Выбрать сигнал
         /// </summary>
         public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => /*SelectedSignalAO is not null*/true;
+        private bool CanCmdSelectionSignalExecute(object p) => SelectedParam is not null;
 
         private void OnCmdSelectionSignalExecuted(object p)
         {
-            //if (p is not string Index) return;
-            //if (string.IsNullOrWhiteSpace(Index)) return;
-            //if (SelectedSignalAO is null) return;
-            //if (App.FucusedTabControl == null) return;
-            //if (!_SignalService.DoSelection) return;
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedParam is null) return;
+            if (App.FucusedTabControl == null) return;
+            if (!SignalServices.DoSelection) return;
 
-            //var data_list = new ObservableCollection<SignalAO>();
-            //foreach (SignalAO Signal in DataView)
-            //{
-            //    data_list.Add(Signal);
-            //}
+            if (Index != SelectedParam.Signal.Index)
+                SelectedParam = Params[int.Parse(Index) - 1];
 
-            //if (Index != SelectedSignalAO.Signal.Index)
-            //    SelectedSignalAO = data_list[int.Parse(Index) - 1];
+            SignalServices.Address = SelectedParam.Signal.Index;
+            SignalServices.Id = SelectedParam.Signal.Id;
+            SignalServices.Description = SelectedParam.Signal.Description;
 
-            //_SignalService.Address = SelectedSignalAO.Signal.Index;
-            //_SignalService.Id = SelectedSignalAO.Signal.Id;
-            //_SignalService.Description = SelectedSignalAO.Signal.Description;
-
-            //if (App.FucusedTabControl == null) return;
-            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-            //                         let _TabItem = _Item as TabItem
-            //                         where _TabItem.Header.ToString() == _SignalService.ListName
-            //                         select _TabItem)
-            //    App.FucusedTabControl.SelectedItem = _TabItem;
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == SignalServices.ListName
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -226,134 +294,63 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         #region Функции
 
-        //#region Фильтрация модулей
-        ///// <summary>
-        ///// Фильтрация модулей
-        ///// </summary>
-        //private void OnSignalsAOFiltered(object sender, FilterEventArgs e)
-        //{
-        //    #region Проверки до начала фильтрации
-        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-        //    if (e.Item is not SignalAO Signal || Signal is null) { e.Accepted = false; return; }
-        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
-        //    #endregion
+        #region Фильтрация сигналов AO
+        /// <summary>
+        /// Фильтрация сигналов AO
+        /// </summary>
+        public void ParamsFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not SignalAO _Param || _Param is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
 
-        //    if (Signal.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        //            Signal.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+            #region Сигналы AO
+            if (_Param.Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                _Param.Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-        //    e.Accepted = false;
-        //}
-        //#endregion
+            e.Accepted = false;
+            #endregion
+        }
+        #endregion
 
-        //#region Генерация сигналов
-        //private void GeneratedSignals()
-        //{
-        //    var index = 0;
-        //    SignalsAO = new();
+        #region Формирование данных при создании нового проекта
+        private void CreateData()
+        {
+            while (Params.Count < 500)
+            {
+                var param = new SignalAO
+                {
+                    Signal = new BaseSignal
+                    {
+                        Index = $"{Params.Count + 1}",
+                        Id = "",
+                        Description = "",
+                        Area = "",
+                        Address = "",
+                        VarName = $"ao_shared[{Params.Count + 1}]",
+                        LinkValue = ""
+                    }
+                };
+                Params.Add(param);
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
+        }
+        #endregion
 
-        //    #region Генерируем сигналы AO, при отсутсвии данных во владке Таблица сигналов
-        //    if (TableSignalsViewModel is null || TableSignalsViewModel.DataViewModules is null)
-        //    {
-        //        while (SignalsAO.Count < 500)
-        //        {
-        //            var signal = new SignalAO()
-        //            {
-        //                Signal = new BaseSignal
-        //                {
-        //                    Index = $"{++index}",
-        //                    Id = "",
-        //                    Description = "",
-        //                    VarName = $"ao_shared[{index}]",
-        //                    Area = "",
-        //                    Address = "",
-        //                    LinkValue = ""
-        //                }
-        //            };
-        //            SignalsAO.Add(signal);
-        //        }
-
-        //        SelectedSignalAO = SignalsAO[0];
-        //        _DataView.Source = SignalsAO;
-        //        _DataView.View.Refresh();
-        //        OnPropertyChanged(nameof(DataView));
-        //        return;
-        //    }
-        //    #endregion
-
-        //    #region Генерируем сигналы AI, созданные во вкладке Таблица сигналов
-
-        //    #region Генерируем данные из ТБ
-        //    var uso_list = TableSignalsViewModel.LayotRackViewModel.Params;
-        //    foreach (var _USO in uso_list)
-        //    {
-        //        foreach (var _Rack in _USO.Racks)
-        //        {
-        //            foreach (var _Module in _Rack.Modules)
-        //            {
-        //                if (_Module.Type == TypeModule.AO)
-        //                {
-        //                    foreach (var _Channel in _Module.Channels)
-        //                    {
-        //                        if (!string.IsNullOrWhiteSpace(_Channel.Id) && (_Channel.Description != "Резерв" || _Channel.Description != "резерв"))
-        //                        {
-        //                            var signal = new SignalAO()
-        //                            {
-        //                                Signal = new BaseSignal
-        //                                {
-        //                                    Index = $"{++index}",
-        //                                    Id = _Channel.Id,
-        //                                    Description = _Channel.Description,
-        //                                    VarName = $"ao_shared[{index}]",
-        //                                    Area = "",
-        //                                    Address = $"{int.Parse(_Channel.Address) - 300000}",
-        //                                }
-        //                            };
-        //                            SignalsAO.Add(signal);
-        //                        }
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    #endregion
-
-        //    #region Дозаполняем таблицу
-        //    while (SignalsAO.Count < 500)
-        //    {
-        //        var signal = new SignalAO()
-        //        {
-        //            Signal = new BaseSignal
-        //            {
-        //                Index = $"{++index}",
-        //                Id = "",
-        //                Description = "",
-        //                VarName = $"ao_shared[{index}]",
-        //                Area = "",
-        //                Address = "",
-        //                LinkValue = ""
-        //            }
-        //        };
-        //        SignalsAO.Add(signal);
-        //    }
-        //    #endregion
-
-        //    #endregion
-
-        //    SelectedSignalAO = SignalsAO[0];
-        //    _DataView.Source = SignalsAO;
-        //    _DataView.View.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //}
-        //#endregion
-
-        //#region Генерируем данные
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = SignalsAO;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //}
-        //#endregion
+        #region Обновляем данные для отображения
+        /// <summary>
+        /// Обновляем данные для отображения
+        /// </summary>
+        private void RefreshDataView()
+        {
+            _ParamsDataView.Source = Params;
+            _ParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(ParamsDataView));
+        }
+        #endregion
 
         #endregion
     }

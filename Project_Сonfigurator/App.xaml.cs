@@ -61,7 +61,6 @@ namespace Project_Сonfigurator
             #region Конфигурация приложения
             Settings.Load();
             DBServices.ProjectDataRequest();
-            //DBServices.AppData = DBServices.LoadData(Settings.Config.PathProject);
             #endregion
 
             Services.GetRequiredService<IUserDialogService>().OpenMainWindow();

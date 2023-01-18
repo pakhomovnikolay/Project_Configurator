@@ -22,10 +22,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         }
 
         private readonly ILayotRackService LayotRackServices;
+        private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, IDBService _IDBService) : this()
+        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
             LayotRackServices = _ILayotRackService;
+            SignalServices = _ISignalService;
             DBServices = _IDBService;
         }
         #endregion
@@ -37,10 +39,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
-            set => Set(ref _IsSelected, value);
+            set
+            {
+                if (Set(ref _IsSelected, value))
+                {
+                    if (string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.DoSelection)
+                        SignalServices.ResetSignal();
+                }
+            }
         }
         #endregion
 
@@ -52,7 +61,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ObservableCollection<USO> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                    if (Params is not null && _Params.Count > 0)
+                        SelectedParam = _Params[0];
+            }
         }
         #endregion
 

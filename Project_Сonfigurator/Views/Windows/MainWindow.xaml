@@ -390,6 +390,7 @@
                     <ContentControl Content="{Binding UsingUserControl}"/>
                 </DataTemplate>
             </TabControl.ContentTemplate>
+            
         </TabControl>
 
     </Grid>

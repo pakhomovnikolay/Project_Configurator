@@ -41,7 +41,7 @@
 
             <ListView BorderThickness="1" BorderBrush="LightGray"
                       Margin="2,0,0,2"
-                      ItemsSource="{Binding Params}"
+                      ItemsSource="{Binding ParamsDataView}"
                       SelectedItem="{Binding SelectedParam}"
                       >
                 <ListView.Resources>
@@ -71,7 +71,7 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
-                <Border Grid.Row="0" Margin="0,2"
+                <Border Grid.Row="0" Margin="0,2" CornerRadius="3"
                         BorderThickness="1" BorderBrush="Black"
                         Background="AntiqueWhite"
                         >
@@ -79,14 +79,21 @@
                         
                         <!--Сетка-->
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="25"/>
+                            <ColumnDefinition Width="30"/>
                             <ColumnDefinition />
                             <ColumnDefinition Width="30"/>
                         </Grid.ColumnDefinitions>
                             
                         <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                         <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
-                                 Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}">
+                                 BorderBrush="Black"
+                                 Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
+                                 >
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                </Style>
+                            </TextBox.Resources>
                             <TextBox.InputBindings>
                                 <KeyBinding Key="Return" Command="{Binding CmdFilteringChannels}"/>
                             </TextBox.InputBindings>
@@ -118,7 +125,7 @@
                           Background="Gray"
                           HeadersVisibility="Column"
                           ScrollViewer.CanContentScroll="False"
-                          ItemsSource="{Binding SubParams}"
+                          ItemsSource="{Binding SubParamsDataView}"
                           SelectedItem="{Binding SelectedSubParam}"
                           >
                     
@@ -260,12 +267,14 @@
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
                                                     <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                                     IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}">
+                                                             Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                                             IsReadOnly="{Binding DataContext.DoSelection,
+                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                             >
                                                         <TextBox.Background>
                                                             <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                                 <Binding Path="Id"/>
-                                                                <Binding Path="Description" />
+                                                                <Binding Path="Description"/>
                                                             </MultiBinding>
                                                         </TextBox.Background>
                                                     </TextBox>

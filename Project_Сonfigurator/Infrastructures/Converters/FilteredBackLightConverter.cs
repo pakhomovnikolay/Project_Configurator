@@ -37,7 +37,7 @@ namespace Project_Сonfigurator.Infrastructures.Converters
             foreach (var text in v)
             {
                 if (text is not string _text) return Brushes.White;
-                if (TextFilter == _text) return Brushes.AliceBlue;
+                if (_text.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return Brushes.AliceBlue;
             }
             return Brushes.White;
         }

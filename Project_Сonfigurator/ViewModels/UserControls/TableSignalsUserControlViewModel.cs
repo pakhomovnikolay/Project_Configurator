@@ -10,9 +10,12 @@ using Project_Сonfigurator.Views.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
@@ -35,6 +38,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
+
+            _ParamsDataView.Filter += ParamsFiltered;
+            _SubParamsDataView.Filter += SubParamsFiltered;
         }
         #endregion
 
@@ -45,10 +51,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
-            set => Set(ref _IsSelected, value);
+            set
+            {
+                if (Set(ref _IsSelected, value))
+                {
+                    if (string.IsNullOrWhiteSpace(SignalServices.Address) && !SignalServices.DoSelection)
+                        SignalServices.ResetSignal();
+                }
+            }
         }
         #endregion
 
@@ -60,7 +73,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ObservableCollection<USO> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                {
+                    if (Params is not null && _Params.Count > 0)
+                    {
+                        SelectedParam = _Params[0];
+                        RefreshDataView();
+                    }
+                    else RefreshDataView();
+                }
+            }
         }
         #endregion
 
@@ -112,6 +136,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         }
                     }
                     SubParams = new ObservableCollection<RackModule>(modules);
+                    RefreshDataView();
                 }
             }
         }
@@ -175,6 +200,22 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             get => _DoSelection;
             set => Set(ref _DoSelection, value);
         }
+        #endregion
+
+        #region Коллекция УСО для отображения
+        /// <summary>
+        /// Коллекция УСО для отображения
+        /// </summary>
+        private readonly CollectionViewSource _ParamsDataView = new();
+        public ICollectionView ParamsDataView => _ParamsDataView?.View;
+        #endregion
+
+        #region Коллекция модулей для отображения
+        /// <summary>
+        /// Коллекция модулей для отображения
+        /// </summary>
+        private readonly CollectionViewSource _SubParamsDataView = new();
+        public ICollectionView SubParamsDataView => _SubParamsDataView?.View;
         #endregion
 
         #endregion
@@ -253,10 +294,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdFilteringChannels => _CmdFilteringChannels ??= new RelayCommand(OnCmdFilteringChannelsExecuted);
         private void OnCmdFilteringChannelsExecuted()
         {
-            //if (_DataView.Source is null) return;
-            //if (_DataViewModules.Source is null) return;
-            //_DataView.View.Refresh();
-            //_DataViewModules.View.Refresh();
+            RefreshDataView();
         }
         #endregion
 
@@ -349,7 +387,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// </summary>
         private ICommand _CmdSelectionSignal;
         public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => /*_SignalService.DoSelection*/true;
+        private bool CanCmdSelectionSignalExecute(object p) => SignalServices.DoSelection;
         private void OnCmdSelectionSignalExecuted(object p)
         {
             var index = int.Parse((string)p);
@@ -452,7 +490,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                                          let _TabItem = _Item as IViewModelUserControls
                                          where _TabItem.Title == SignalServices.ListName
                                          select _TabItem)
+                {
+                    _TabItem.IsSelected = true;
                     App.FucusedTabControl.SelectedItem = _TabItem;
+                }
+
             }
             #endregion
         }
@@ -462,80 +504,75 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         #region Функции
 
-        //#region Фильтрация модулей
-        ///// <summary>
-        ///// Фильтрация модулей
-        ///// </summary>
-        //public void OnModulesFiltered(object sender, FilterEventArgs e)
-        //{
-        //    #region Проверки до начала фильтрации
-        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-        //    if (e.Item is not RackModule _Module || _Module is null) { e.Accepted = false; return; }
-        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
-        //    #endregion
+        #region Фильтрация УСО
+        /// <summary>
+        /// Фильтрация УСО
+        /// </summary>
+        public void ParamsFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not USO _Param || _Param is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
 
-        //    foreach (var Channel in _Module.Channels)
-        //    {
-        //        if (Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        //            Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase))
-        //        {
-        //            return;
-        //        }
-        //    }
-        //    e.Accepted = false;
-        //}
-        //#endregion
+            #region Фильтруем УСО
+            foreach (var Channel in _Param.Racks)
+            {
+                foreach (var _Rack in _Param.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        foreach (var _Channel in _Module.Channels)
+                        {
+                            if (_Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                                _Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+                        }
+                    }
+                }
+            }
+            e.Accepted = false;
+            #endregion
+        }
+        #endregion
 
-        //#region Фильтрация УСО
-        ///// <summary>
-        ///// Фильтрация УСО
-        ///// </summary>
-        //public void OnUSOListFiltered(object sender, FilterEventArgs e)
-        //{
-        //    #region Проверки до начала фильтрации
-        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-        //    if (e.Item is not USO _USO || _USO is null) { e.Accepted = false; return; }
-        //    if (string.IsNullOrWhiteSpace(TextFilter))
-        //    {
-        //        var _USOList = (ObservableCollection<USO>)_DataView.Source;
-        //        SelectedUSO = _USOList[0];
-        //        return;
-        //    }
-        //    #endregion
+        #region Фильтрация модулей
+        /// <summary>
+        /// Фильтрация модулей
+        /// </summary>
+        public void SubParamsFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not RackModule _Param || _Param is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
 
-        //    #region Фильтр УСО
-        //    foreach (var _Rack in _USO.Racks)
-        //    {
-        //        foreach (var _Module in _Rack.Modules)
-        //        {
-        //            foreach (var _Channel in _Module.Channels)
-        //            {
-        //                if (_Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        //                    _Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase))
-        //                {
-        //                    SelectedUSO = _USO;
-        //                    return;
-        //                }
-        //            }
-        //        }
-        //    }
-        //    #endregion
+            #region Фильтруем модулей
+            foreach (var _Channel in _Param.Channels)
+            {
+                if (_Channel.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                        _Channel.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+            }
+            e.Accepted = false;
+            #endregion
+        }
+        #endregion
 
-        //    e.Accepted = false;
-        //}
-        //#endregion
-
-        //#region Генерируем данные
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = USOList;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-
-        //    if (USOList is null || USOList.Count <= 0)
-        //        SelectedUSO = null;
-        //}
-        //#endregion
+        #region Обновляем данные для отображения
+        /// <summary>
+        /// Обновляем данные для отображения
+        /// </summary>
+        private void RefreshDataView()
+        {
+            _ParamsDataView.Source = Params;
+            _SubParamsDataView.Source = SubParams;
+            _ParamsDataView.View?.Refresh();
+            _SubParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(ParamsDataView));
+            OnPropertyChanged(nameof(SubParamsDataView));
+        }
+        #endregion
 
         #endregion
     }

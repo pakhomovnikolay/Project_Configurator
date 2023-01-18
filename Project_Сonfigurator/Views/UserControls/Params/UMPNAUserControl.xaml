@@ -40,8 +40,8 @@
                 <ListView Grid.Row="0" Margin="2,0,2,5"
                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                           BorderBrush="LightSlateGray"
-                          ItemsSource="{Binding UMPNA}"
-                          SelectedItem="{Binding SelectedUMPNA}">
+                          ItemsSource="{Binding Params}"
+                          SelectedItem="{Binding SelectedParam}">
                     <ListView.Resources>
                         <Style TargetType="{x:Type Border}">
                             <Setter Property="CornerRadius" Value="2"/>
@@ -106,7 +106,7 @@
         <!--Данные выбранного МНПА-->
         <GroupBox Grid.Column="1" BorderBrush="Black">
             <GroupBox.Header>
-                <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedUMPNA.Description, FallbackValue='Выберите МНПА', TargetNullValue='Добавьте МНПА'}" />
+                <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedParam.Description, FallbackValue='Выберите МНПА', TargetNullValue='Добавьте МНПА'}" />
             </GroupBox.Header>
 
             <TabControl Grid.Row="1">
@@ -227,42 +227,43 @@
                                 <DockPanel>
                                     <Border BorderThickness="0,0,0,0" BorderBrush="Black" Width="250">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.Description, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray" Width="100">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding SelectedUMPNA.VarName}"/>
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                   Text="{Binding SelectedParam.VarName, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="1,0,1,0" BorderBrush="Black" Width="99">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.ShortDescription, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.ShortDescription, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.IndexPZ, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.IndexPZ, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.IndexVZ, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.IndexVZ, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.TypeUMPNA, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.TypeUMPNA, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="150">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.IndexGroupMS, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.IndexGroupMS, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.UsedMCP, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.UsedMCP, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.UsedKPD, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.UsedKPD, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                     <Border BorderThickness="0,0,1,0" BorderBrush="Black" Width="90">
                                         <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                             Text="{Binding SelectedUMPNA.CountButtonStop, UpdateSourceTrigger=PropertyChanged}"/>
+                                             Text="{Binding SelectedParam.CountButtonStop, UpdateSourceTrigger=PropertyChanged}"/>
                                     </Border>
                                 </DockPanel>
                             </Border>
@@ -284,7 +285,7 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding SelectedUMPNA.Setpoints}"
+                                      ItemsSource="{Binding SelectedParam.Setpoints}"
                                       >
 
                                 <DataGrid.Resources>
@@ -473,7 +474,7 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding SelectedUMPNA.InputParam}"
+                                      ItemsSource="{Binding SelectedParam.InputParam}"
                                       SelectedItem="{Binding SelectedInputParam}"
                                       >
 
@@ -675,7 +676,7 @@
                                       SelectionUnit="FullRow"
                                       Background="Gray"
                                       HeadersVisibility="Column"
-                                      ItemsSource="{Binding SelectedUMPNA.OutputParam}"
+                                      ItemsSource="{Binding SelectedParam.OutputParam}"
                                       SelectedItem="{Binding SelectedOutputParam}"
                                       >
 
@@ -838,7 +839,7 @@
                                   SelectionUnit="FullRow"
                                   Background="Gray"
                                   HeadersVisibility="Column"
-                                  ItemsSource="{Binding SelectedUMPNA.KGMPNA}"
+                                  ItemsSource="{Binding SelectedParam.KGMPNA}"
                                   SelectedItem="{Binding SelectedKGMPNA}"
                                   >
 
@@ -1170,7 +1171,7 @@
                                           SelectionUnit="FullRow"
                                           Background="Gray"
                                           HeadersVisibility="Column"
-                                          ItemsSource="{Binding SelectedUMPNA.KTPRA}"
+                                          ItemsSource="{Binding SelectedParam.KTPRA}"
                                           SelectedItem="{Binding SelectedKTPRA}"
                                           >
 
@@ -1536,7 +1537,7 @@
                                           SelectionUnit="FullRow"
                                           Background="Gray"
                                           HeadersVisibility="Column"
-                                          ItemsSource="{Binding SelectedUMPNA.KTPRA}"
+                                          ItemsSource="{Binding SelectedParam.KTPRA}"
                                           SelectedItem="{Binding SelectedKTPRA}"
                                           >
 
@@ -1729,7 +1730,7 @@
                                           SelectionUnit="FullRow"
                                           Background="Gray"
                                           HeadersVisibility="Column"
-                                          ItemsSource="{Binding SelectedUMPNA.KTPRA}"
+                                          ItemsSource="{Binding SelectedParam.KTPRA}"
                                           SelectedItem="{Binding SelectedKTPRA}"
                                           >
 
@@ -1976,7 +1977,7 @@
                                           SelectionUnit="FullRow"
                                           Background="Gray"
                                           HeadersVisibility="Column"
-                                          ItemsSource="{Binding SelectedUMPNA.KTPRA}"
+                                          ItemsSource="{Binding SelectedParam.KTPRA}"
                                           SelectedItem="{Binding SelectedKTPRA}"
                                           >
 
@@ -2375,7 +2376,7 @@
                                   SelectionUnit="FullRow"
                                   Background="Gray"
                                   HeadersVisibility="Column"
-                                  ItemsSource="{Binding SelectedUMPNA.KTPRAS}"
+                                  ItemsSource="{Binding SelectedParam.KTPRAS}"
                                   SelectedItem="{Binding SelectedKTPRAS}"
                                   >
 

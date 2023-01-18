@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Models;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace Project_Сonfigurator.ViewModels.Base.Interfaces
 {
@@ -24,6 +23,13 @@ namespace Project_Сonfigurator.ViewModels.Base.Interfaces
         /// Пользовательский интерфейс
         /// </summary>
         UserControl UsingUserControl { get; set; }
+        #endregion
+
+        #region Состояние активной вкладки
+        /// <summary>
+        /// Состояние активной вкладки
+        /// </summary>
+        bool IsSelected { get; set; }
         #endregion
     }
 }

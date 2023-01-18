@@ -8,7 +8,7 @@ namespace Project_Сonfigurator.Models.Signals
         /// <summary>
         /// Параметры сигнала
         /// </summary>
-        public BaseSignal Signal { get; set; }
+        public BaseSignal Signal { get; set; } = new();
         #endregion
     }
 }
