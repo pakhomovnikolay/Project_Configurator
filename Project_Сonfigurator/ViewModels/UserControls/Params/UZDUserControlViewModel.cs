@@ -1,19 +1,13 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
-using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
@@ -46,46 +40,58 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    //if (_IsSelected)
-                    //{
-                    //    DoSelection = _SignalService.DoSelection;
-                    //    if (_SignalService.DoSelection && !string.IsNullOrWhiteSpace(_SignalService.Address))
-                    //    {
-                    //        if (DoSelectionInputParam)
-                    //        {
-                    //            _SignalService.RedefineParam(SelectedInputParam, _IsSelected, Title);
-                    //            _DataViewInputParam.View?.Refresh();
-                    //        }
+                    if (_IsSelected)
+                    {
+                        DoSelection = SignalServices.DoSelection;
+                        if (SignalServices.DoSelection && !string.IsNullOrWhiteSpace(SignalServices.Address))
+                        {
+                            #region Сменить входной параметр
+                            if (DoSelectionInputParam)
+                            {
+                                SignalServices.RedefineParam(SelectedInputParam, _IsSelected, Title);
+                            }
+                            #endregion
 
-                    //        if (DoSelectionOutputParam)
-                    //        {
-                    //            _SignalService.RedefineParam(SelectedOutputParam, _IsSelected, Title);
-                    //            _DataViewOutputParam.View?.Refresh();
-                    //        }
+                            #region Сменить выходной параметр
+                            if (DoSelectionInputParam)
+                            {
+                                SignalServices.RedefineParam(SelectedOutputParam, _IsSelected, Title);
+                            }
+                            #endregion
 
-                    //        DoSelectionInputParam = false;
-                    //        DoSelectionOutputParam = false;
-                    //        DoSelection = false;
-                    //        _SignalService.ResetSignal();
-                    //    }
-                    //    else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName == Title)
-                    //    {
-                    //        _SignalService.ResetSignal();
-                    //        DoSelection = false;
-                    //    }
-                    //}
-                    //else if (_SignalService.DoSelection && string.IsNullOrWhiteSpace(_SignalService.Address) && _SignalService.ListName != Title)
-                    //{
-                    //    _SignalService.ResetSignal();
-                    //    DoSelection = false;
-                    //}
+                            #region Обнуляем данные
+                            SignalServices.ResetSignal();
+                            DoSelectionInputParam = SignalServices.DoSelection;
+                            DoSelectionOutputParam = SignalServices.DoSelection;
+                            DoSelection = SignalServices.DoSelection;
+                            #endregion
+                        }
+                        else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
+                        {
+                            #region Обнуляем данные
+                            SignalServices.ResetSignal();
+                            DoSelectionInputParam = SignalServices.DoSelection;
+                            DoSelectionOutputParam = SignalServices.DoSelection;
+                            DoSelection = SignalServices.DoSelection;
+                            #endregion
+                        }
+                    }
+                    else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName != Title)
+                    {
+                        #region Обнуляем данные
+                        SignalServices.ResetSignal();
+                        DoSelectionInputParam = SignalServices.DoSelection;
+                        DoSelectionOutputParam = SignalServices.DoSelection;
+                        DoSelection = SignalServices.DoSelection;
+                        #endregion
+                    }
                 }
             }
         }
@@ -111,19 +117,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUZD SelectedParam
         {
             get => _SelectedParam;
-            set
-            {
-                if (Set(ref _SelectedParam, value))
-                {
-                    //_DataViewInputParam.Source = value?.InputParam;
-                    //_DataViewInputParam.View?.Refresh();
-                    //OnPropertyChanged(nameof(DataViewInputParam));
-
-                    //_DataViewOutputParam.Source = value?.OutputParam;
-                    //_DataViewOutputParam.View?.Refresh();
-                    //OnPropertyChanged(nameof(DataViewOutputParam));
-                }
-            }
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -201,7 +195,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdAddUZDExecuted()
         {
-            //CreateUZD();
+            CreateParam();
         }
         #endregion
 
@@ -211,25 +205,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить задвижку
         /// </summary>
         public ICommand CmdDeleteUZD => _CmdDeleteUZD ??= new RelayCommand(OnCmdDeleteUZDExecuted, CanCmdDeleteUZDExecute);
-        private bool CanCmdDeleteUZDExecute() => /*SelectedUZD is not null && !string.IsNullOrWhiteSpace(SelectedUZD.Description)*/true;
+        private bool CanCmdDeleteUZDExecute() => SelectedParam is not null;
 
         private void OnCmdDeleteUZDExecuted()
         {
-            //var index = UZD.IndexOf(SelectedUZD);
-            //UZD.Remove(SelectedUZD);
+            var index = Params.IndexOf(SelectedParam);
+            index = index == 0 ? index : index - 1;
 
-            //if (UZD.Count > 0)
-            //{
-            //    if (index > 0)
-            //        SelectedUZD = UZD[index - 1];
-            //    else
-            //        SelectedUZD = UZD[index];
-            //}
-            //else
-            //{
-            //    SelectedUZD = null;
-            //}
-            //RefreshIndexUZD(SelectedUZD);
+            Params.Remove(SelectedParam);
+            if (Params.Count > 0)
+                SelectedParam = Params[index];
+
+            RefreshIndex(index);
         }
         #endregion
 
@@ -239,10 +226,79 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать задвижки из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUZD => _CmdImportUZD ??= new RelayCommand(OnCmdImportUZDExecuted, CanCmdImportUZDExecute);
-        private bool CanCmdImportUZDExecute() => /*TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null*/true;
+        private bool CanCmdImportUZDExecute() => true;
 
         private void OnCmdImportUZDExecuted()
         {
+            #region Импорт сигналов из ТБ
+            //IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            //SignalsDIUserControlViewModel MyViewModel = new();
+
+            //foreach (var _TabItem in from object _Item in _ViewModels
+            //                         let _TabItem = _Item as SignalsDIUserControlViewModel
+            //                         where _TabItem is not null
+            //                         select _TabItem)
+            //    MyViewModel = _TabItem;
+
+
+            //if (MyViewModel is null) return;
+            //if (MyViewModel.Params is null) return;
+            //if (MyViewModel.Params.Count <= 0) return;
+            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
+            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+            //var _Params = new ObservableCollection<BaseUZD>();
+            //foreach (var _Param in MyViewModel.Params)
+            //{
+            //    _Param.Signal.id
+            //    foreach (var _Rack in _USO.Racks)
+            //    {
+            //        foreach (var _Module in _Rack.Modules)
+            //        {
+            //            if (_Module.Type == TypeModule.AI)
+            //            {
+            //                if (_Module.Channels is null || _Module.Channels.Count <= 0)
+            //                    if (UserDialog.SendMessage("Внимание!", "Неверные данные таблицы сигналов. Проверьте вкладку",
+            //                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
+
+            //                foreach (var Channel in _Module.Channels)
+            //                {
+            //                    if ((string.IsNullOrWhiteSpace(Channel.Id) && string.IsNullOrWhiteSpace(Channel.Description)) ||
+            //                        Channel.Description == "Резерв") continue;
+
+            //                    var param = new SignalAI
+            //                    {
+            //                        AddresUTS = "",
+            //                        ConverterKgs = "",
+            //                        IndexBD = "",
+            //                        IndexNA = "",
+            //                        IndexPZ = "",
+            //                        LevelRPP = "",
+            //                        TypePI = "",
+            //                        TypeVibration = "",
+            //                        Unit = "",
+            //                        Signal = new BaseSignal
+            //                        {
+            //                            Index = $"{_Params.Count + 1}",
+            //                            Id = Channel.Id,
+            //                            Description = Channel.Description,
+            //                            Area = "",
+            //                            Address = Channel.Address,
+            //                            VarName = $"ai_shared[{_Params.Count + 1}]",
+
+            //                        }
+            //                    };
+            //                    _Params.Add(param);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //Params = new ObservableCollection<SignalAI>(_Params);
+            //UserDialog.SendMessage("Импорт сигналов AI", "Сигналы AI успешно импортированы\nиз таблицы сигналов",
+            //    MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+            #endregion
+
             //if (TableSignalsViewModel.DataView is null) return;
             //if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
             //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
@@ -298,41 +354,41 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdChangeAddressInputParamExecuted(object p)
         {
-            //if (p is not string Index) return;
-            //if (string.IsNullOrWhiteSpace(Index)) return;
-            //if (SelectedInputParam is null) return;
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedInputParam is null) return;
+            if (App.FucusedTabControl == null) return;
 
-            //if (Index != SelectedInputParam.Index)
-            //    SelectedInputParam = SelectedUZD.InputParam[int.Parse(Index) - 1];
+            if (Index != SelectedInputParam.Index)
+                SelectedInputParam = SelectedParam.InputParam[int.Parse(Index) - 1];
 
-            //DoSelectionInputParam = true;
-            //_SignalService.DoSelection = true;
-            //_SignalService.ListName = Title;
-            //_SignalService.Type = TypeModule.Unknown;
+            DoSelectionInputParam = true;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.Unknown;
 
-            //var NameListSelected = "";
-            //if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
-            //{
-            //    NameListSelected = "Сигналы DI";
-            //    _SignalService.Type = TypeModule.DI;
-            //}
-            //else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
-            //{
-            //    NameListSelected = "Группы сигналов";
-            //    _SignalService.Type = TypeModule.DI;
-            //}
-            //else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
-            //{
-            //    NameListSelected = "Сигналы AI";
-            //    _SignalService.Type = TypeModule.AI;
-            //}
+            var NameListSelected = "";
+            if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
+            {
+                NameListSelected = "Сигналы DI";
+                SignalServices.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
+            {
+                NameListSelected = "Группы сигналов";
+                SignalServices.Type = TypeModule.DI;
+            }
+            else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
+            {
+                NameListSelected = "Сигналы AI";
+                SignalServices.Type = TypeModule.AI;
+            }
 
-            //if (App.FucusedTabControl == null) return;
-            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-            //                         let _TabItem = _Item as TabItem
-            //                         where _TabItem.Header.ToString() == NameListSelected
-            //                         select _TabItem)
-            //    App.FucusedTabControl.SelectedItem = _TabItem;
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == NameListSelected
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -346,26 +402,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdChangeAddressOutputParamExecuted(object p)
         {
-            //if (p is not string Index) return;
-            //if (string.IsNullOrWhiteSpace(Index)) return;
-            //if (SelectedOutputParam is null) return;
+            if (p is not string Index) return;
+            if (string.IsNullOrWhiteSpace(Index)) return;
+            if (SelectedOutputParam is null) return;
+            if (App.FucusedTabControl == null) return;
 
-            //if (Index != SelectedOutputParam.Index)
-            //    SelectedOutputParam = SelectedUZD.OutputParam[int.Parse(Index) - 1];
+            if (Index != SelectedOutputParam.Index)
+                SelectedOutputParam = SelectedParam.OutputParam[int.Parse(Index) - 1];
 
-            //DoSelectionOutputParam = true;
-            //_SignalService.DoSelection = true;
-            //_SignalService.ListName = Title;
-            //_SignalService.Type = TypeModule.DO;
+            DoSelectionOutputParam = true;
+            SignalServices.DoSelection = true;
+            SignalServices.ListName = Title;
+            SignalServices.Type = TypeModule.DO;
 
-            //var NameListSelected = "Сигналы DO";
-
-            //if (App.FucusedTabControl == null) return;
-            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-            //                         let _TabItem = _Item as TabItem
-            //                         where _TabItem.Header.ToString() == NameListSelected
-            //                         select _TabItem)
-            //    App.FucusedTabControl.SelectedItem = _TabItem;
+            var NameListSelected = "Сигналы DO";
+            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == NameListSelected
+                                     select _TabItem)
+                App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -373,105 +428,148 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        //#region Создаем задвижку
-        //private void CreateUZD()
-        //{
-        //    var index = UZD.Count + 1;
-        //    var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
-        //    var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
-        //    var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
-        //    var InputParam = new ObservableCollection<BaseParam>();
-        //    var OutputParam = new ObservableCollection<BaseParam>();
-        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
+        #region Создание параметра
+        private void CreateParam()
+        {
+            var index = Params.Count + 1;
+            var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
-        //    #region Создаем задвижку
+            #region Создаем задвижку
 
-        //    #region Входные параметры
-        //    for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"ZD_DI_P[{index_input_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UZD.InputParams[i].Text
-        //        };
-        //        InputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Входные параметры
+            for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"ZD_DI_P[{index_input_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UZD.InputParams[i].Text
+                };
+                InputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Выходные параметры
-        //    for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"ZD_DO_P[{index_output_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UZD.OutputParams[i].Text
-        //        };
-        //        OutputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Выходные параметры
+            for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"ZD_DO_P[{index_output_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UZD.OutputParams[i].Text
+                };
+                OutputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Уставки
-        //    for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
-        //    {
-        //        var Param = new BaseSetpoints
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
-        //            Id = $"H{8000 + index_setpoints + i}",
-        //            Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
-        //            Value = App.Settings.Config.UZD.Setpoints[i].Value,
-        //            Address = $"%MW{3000 + index_setpoints + i}",
-        //            Description = App.Settings.Config.UZD.Setpoints[i].Description
-        //        };
-        //        Setpoints.Add(Param);
-        //    }
-        //    #endregion
+            #region Уставки
+            for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
+            {
+                var Param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
+                    Id = $"H{8000 + index_setpoints + i}",
+                    Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UZD.Setpoints[i].Value,
+                    Address = $"%MW{3000 + index_setpoints + i}",
+                    Description = App.Settings.Config.UZD.Setpoints[i].Description
+                };
+                Setpoints.Add(Param);
+            }
+            #endregion
 
-        //    #region Генерируем задвижки
-        //    var signal = new BaseUZD
-        //    {
-        //        Index = $"{index}",
-        //        Description = $"Задвижка №{index}",
-        //        VarName = $"uzd_param[{index}]",
-        //        ShortDescription = "",
-        //        IndexEC = "",
-        //        IndexGroup = "",
-        //        DescriptionGroup = "",
-        //        Dist = "",
-        //        DoubleStop = "",
-        //        Bur = "",
-        //        COz = "",
-        //        CZz = "",
-        //        EC = "",
-        //        CheckState = "",
-        //        RsOff = "",
-        //        TypeZD = "",
-        //        IndexPZ = "",
-        //        IndexBD = "",
-        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
-        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
-        //    };
-        //    UZD.Add(signal);
-        //    #endregion
+            #region Генерируем задвижки
+            var signal = new BaseUZD
+            {
+                Index = $"{index}",
+                Description = $"Задвижка №{index}",
+                VarName = $"uzd_param[{index}]",
+                ShortDescription = "",
+                IndexEC = "",
+                IndexGroup = "",
+                DescriptionGroup = "",
+                Dist = "",
+                DoubleStop = "",
+                Bur = "",
+                COz = "",
+                CZz = "",
+                EC = "",
+                CheckState = "",
+                RsOff = "",
+                TypeZD = "",
+                IndexPZ = "",
+                IndexBD = "",
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
+            };
+            Params.Add(signal);
+            SelectedParam = Params[^1];
+            #endregion
 
-        //    SelectedUZD = UZD[^1];
-        //    _DataView.Source = UZD;
-        //    _DataView.View.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //    #endregion
-        //}
-        //#endregion 
+            #endregion
+        }
+        #endregion
+
+        #region Обновление индексов
+        public void RefreshIndex(int SelectedParamIndex)
+        {
+            var index = 0;
+            foreach (var item in Params)
+            {
+                index++;
+                item.VarName = $"uzd_param[{index}]";
+                var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+                var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+                var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
+
+                #region Уставки
+                var i = 0;
+                foreach (var _Setpoint in item.Setpoints)
+                {
+                    _Setpoint.VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]";
+                    _Setpoint.Id = $"H{8000 + index_setpoints + i}";
+                    _Setpoint.Address = $"%MW{3000 + index_setpoints + i}";
+                    i++;
+                }
+                #endregion
+
+                #region Входные параметры
+                i = 0;
+                foreach (var _InputParam in item.InputParam)
+                {
+                    _InputParam.VarName = $"ZD_DI_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+
+                #region Выходные параметры
+                i = 0;
+                foreach (var _OutputParam in item.OutputParam)
+                {
+                    _OutputParam.VarName = $"ZD_DO_P[{index_input_param + i + 1}]";
+                    i++;
+                }
+                #endregion
+            }
+            if (Params is not null && Params.Count > 0)
+                SelectedParam = Params[SelectedParamIndex];
+        }
+        #endregion 
 
         //#region Импортируем задвижки
         //private static void ImportUZD(string Description, ObservableCollection<BaseUZD> data_list)
@@ -566,68 +664,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         //    #endregion
 
         //    #endregion
-        //}
-        //#endregion 
-
-        //#region Генерация сигналов
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = UZD;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-
-        //    if (UZD is null || UZD.Count <= 0)
-        //        SelectedUZD = null;
-        //}
-        //#endregion 
-
-        //#region Обновление индексов
-        //public void RefreshIndexUZD(BaseUZD selectedUZD = null)
-        //{
-        //    SelectedUZD = new();
-        //    var index = 0;
-        //    foreach (var item in UZD)
-        //    {
-        //        index++;
-        //        item.VarName = $"uzd_param[{index}]";
-        //        var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
-        //        var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
-        //        var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
-
-        //        #region Уставки
-        //        var i = 0;
-        //        foreach (var _Setpoint in item.Setpoints)
-        //        {
-        //            _Setpoint.VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]";
-        //            _Setpoint.Id = $"H{8000 + index_setpoints + i}";
-        //            _Setpoint.Address = $"%MW{3000 + index_setpoints + i}";
-        //            i++;
-        //        }
-        //        #endregion
-
-        //        #region Входные параметры
-        //        i = 0;
-        //        foreach (var _InputParam in item.InputParam)
-        //        {
-        //            _InputParam.VarName = $"ZD_DI_P[{index_input_param + i + 1}]";
-        //            i++;
-        //        }
-        //        #endregion
-
-        //        #region Выходные параметры
-        //        i = 0;
-        //        foreach (var _OutputParam in item.OutputParam)
-        //        {
-        //            _OutputParam.VarName = $"ZD_DO_P[{index_input_param + i + 1}]";
-        //            i++;
-        //        }
-        //        #endregion
-        //    }
-
-        //    SelectedUZD = selectedUZD ?? UZD[0];
-        //    _DataView.Source = UZD;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
         //}
         //#endregion 
 

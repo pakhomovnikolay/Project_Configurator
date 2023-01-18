@@ -44,7 +44,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set

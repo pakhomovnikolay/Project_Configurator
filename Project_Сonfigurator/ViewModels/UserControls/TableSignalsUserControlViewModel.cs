@@ -231,7 +231,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         private bool CanCmdGenerateTableExecute() => true;
         private void OnCmdGenerateTableExecuted()
         {
-
             IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             LayotRackUserControlViewModel LayotRackViewModel = new();
 
@@ -490,10 +489,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                                          let _TabItem = _Item as IViewModelUserControls
                                          where _TabItem.Title == SignalServices.ListName
                                          select _TabItem)
-                {
-                    _TabItem.IsSelected = true;
                     App.FucusedTabControl.SelectedItem = _TabItem;
-                }
 
             }
             #endregion

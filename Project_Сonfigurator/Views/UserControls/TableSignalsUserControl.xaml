@@ -49,13 +49,13 @@
                         <Setter Property="CornerRadius" Value="3"/>
                     </Style>
                 </ListView.Resources>
-                <ItemsControl.ItemTemplate>
+                <ListView.ItemTemplate>
                     <DataTemplate>
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
                                    ToolTip="{Binding Name}"
                                    Text="{Binding Name}"/>
                     </DataTemplate>
-                </ItemsControl.ItemTemplate>
+                </ListView.ItemTemplate>
             </ListView>
         </GroupBox>
         

@@ -24,7 +24,7 @@
         <GridSplitter Grid.Row="1" Width="2" Background="Transparent" Panel.ZIndex="9999"/>
         
         <!--Список МНПА-->
-        <GroupBox Grid.Column="0" BorderBrush="Black">
+        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="Список МНПА"/>
             </GroupBox.Header>
@@ -49,9 +49,17 @@
                     </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
-                                       ToolTip="{Binding Description}"
-                                       Text="{Binding Description}"/>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="15"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Ellipse Grid.Column="0" Fill="LightGray" Width="5" Height="5"/>
+                                <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center"
+                                           ToolTip="{Binding Description}"
+                                           Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Grid>
+
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
@@ -104,7 +112,7 @@
         </GroupBox>
 
         <!--Данные выбранного МНПА-->
-        <GroupBox Grid.Column="1" BorderBrush="Black">
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedParam.Description, FallbackValue='Выберите МНПА', TargetNullValue='Добавьте МНПА'}" />
             </GroupBox.Header>

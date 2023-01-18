@@ -35,7 +35,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
@@ -87,17 +87,5 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #endregion
 
-        #region Функции
-
-        //#region Генерация сигналов
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = Setpoints;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //}
-        //#endregion 
-
-        #endregion
     }
 }

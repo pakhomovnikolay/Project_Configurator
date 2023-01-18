@@ -6,10 +6,8 @@ using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Params;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -43,7 +41,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
@@ -55,54 +53,45 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                         DoSelection = SignalServices.DoSelection;
                         if (SignalServices.DoSelection && !string.IsNullOrWhiteSpace(SignalServices.Address))
                         {
+                            #region Сменить входной параметр
                             if (DoSelectionInputParam)
                             {
                                 SignalServices.RedefineParam(SelectedInputParam, _IsSelected, Title);
-                                //_DataViewInputParam.View?.Refresh();
                             }
+                            #endregion
 
-                            if (DoSelectionOutputParam)
+                            #region Сменить выходной параметр
+                            if (DoSelectionInputParam)
                             {
                                 SignalServices.RedefineParam(SelectedOutputParam, _IsSelected, Title);
-                                //_DataViewOutputParam.View?.Refresh();
                             }
+                            #endregion
 
-                            if (DoSelectionKGMPNA)
-                            {
-                                SignalServices.RedefineParam(SelectedKGMPNA.Param, _IsSelected, Title);
-                                //_DataViewKGMPNA.View?.Refresh();
-                            }
-
-                            if (DoSelectionKTPRA)
-                            {
-                                SignalServices.RedefineParam(SelectedKTPRA.Param, _IsSelected, Title);
-                                //_DataViewKTPRA.View?.Refresh();
-                            }
-
-                            if (DoSelectionKTPRAS)
-                            {
-                                SignalServices.RedefineParam(SelectedKTPRAS.Param, _IsSelected, Title);
-                                //_DataViewKTPRAS.View?.Refresh();
-                            }
-
-                            DoSelectionInputParam = false;
-                            DoSelectionOutputParam = false;
-                            DoSelectionKGMPNA = false;
-                            DoSelectionKTPRA = false;
-                            DoSelectionKTPRAS = false;
-                            DoSelection = false;
+                            #region Обнуляем данные
                             SignalServices.ResetSignal();
+                            DoSelectionInputParam = SignalServices.DoSelection;
+                            DoSelectionOutputParam = SignalServices.DoSelection;
+                            DoSelection = SignalServices.DoSelection;
+                            #endregion
                         }
                         else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
                         {
+                            #region Обнуляем данные
                             SignalServices.ResetSignal();
-                            DoSelection = false;
+                            DoSelectionInputParam = SignalServices.DoSelection;
+                            DoSelectionOutputParam = SignalServices.DoSelection;
+                            DoSelection = SignalServices.DoSelection;
+                            #endregion
                         }
                     }
                     else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName != Title)
                     {
+                        #region Обнуляем данные
                         SignalServices.ResetSignal();
-                        DoSelection = false;
+                        DoSelectionInputParam = SignalServices.DoSelection;
+                        DoSelectionOutputParam = SignalServices.DoSelection;
+                        DoSelection = SignalServices.DoSelection;
+                        #endregion
                     }
                 }
             }
@@ -279,7 +268,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdAddUMPNAExecuted()
         {
-            CreateUMPNA();
+            CreateParam();
         }
         #endregion
 
@@ -297,10 +286,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
             Params.Remove(SelectedParam);
             if (Params.Count > 0)
-            {
-                RefreshIndexUMPNA();
                 SelectedParam = Params[index];
-            }
+
+            RefreshIndex(index);
         }
         #endregion
 
@@ -314,84 +302,84 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdImportUMPNAExecuted()
         {
-            var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().Params;
-            if (USOList is null) return;
-            if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
-            Params = new();
+            //var USOList = App.Services.GetRequiredService<LayotRackUserControlViewModel>().Params;
+            //if (USOList is null) return;
+            //if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+            //Params = new();
 
-            #region Ищем МНА
-            foreach (var DataView in USOList)
-            {
-                foreach (var _Rack in DataView.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        foreach (var Channel in _Module.Channels)
-                        {
-                            if ((Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase)) &&
-                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                if (!string.IsNullOrWhiteSpace(Channel.Description))
-                                {
-                                    var index_dot = Channel.Description.IndexOf(".");
-                                    var qty = Channel.Description.Length;
-                                    var name = Channel.Description.Remove(index_dot, qty - index_dot);
-                                    var fl_tmp = false;
-                                    foreach (var item in Params)
-                                    {
-                                        if (item.Description == name)
-                                            fl_tmp = true;
-                                    }
-                                    if (!fl_tmp)
-                                        ImportUMPNA(name, Params);
-                                }
+            //#region Ищем МНА
+            //foreach (var DataView in USOList)
+            //{
+            //    foreach (var _Rack in DataView.Racks)
+            //    {
+            //        foreach (var _Module in _Rack.Modules)
+            //        {
+            //            foreach (var Channel in _Module.Channels)
+            //            {
+            //                if ((Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) ||
+            //                    Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase)) &&
+            //                    !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
+            //                {
+            //                    if (!string.IsNullOrWhiteSpace(Channel.Description))
+            //                    {
+            //                        var index_dot = Channel.Description.IndexOf(".");
+            //                        var qty = Channel.Description.Length;
+            //                        var name = Channel.Description.Remove(index_dot, qty - index_dot);
+            //                        var fl_tmp = false;
+            //                        foreach (var item in Params)
+            //                        {
+            //                            if (item.Description == name)
+            //                                fl_tmp = true;
+            //                        }
+            //                        if (!fl_tmp)
+            //                            ImportUMPNA(name, Params);
+            //                    }
 
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            #region Ищем ПНА
-            foreach (var DataView in USOList)
-            {
-                foreach (var _Rack in DataView.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        foreach (var Channel in _Module.Channels)
-                        {
-                            if ((Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase) ||
-                                Channel.Description.Contains("подпор", StringComparison.CurrentCultureIgnoreCase)) &&
-                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
-                            {
-                                if (!string.IsNullOrWhiteSpace(Channel.Description))
-                                {
-                                    var index_dot = Channel.Description.IndexOf(".");
-                                    var qty = Channel.Description.Length;
-                                    var name = Channel.Description.Remove(index_dot, qty - index_dot);
-                                    var fl_tmp = false;
-                                    foreach (var item in Params)
-                                    {
-                                        if (item.Description == name)
-                                            fl_tmp = true;
-                                    }
-                                    if (!fl_tmp)
-                                        ImportUMPNA(name, Params);
-                                }
+            //#region Ищем ПНА
+            //foreach (var DataView in USOList)
+            //{
+            //    foreach (var _Rack in DataView.Racks)
+            //    {
+            //        foreach (var _Module in _Rack.Modules)
+            //        {
+            //            foreach (var Channel in _Module.Channels)
+            //            {
+            //                if ((Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase) ||
+            //                    Channel.Description.Contains("магистраль", StringComparison.CurrentCultureIgnoreCase) ||
+            //                    Channel.Description.Contains("подпор", StringComparison.CurrentCultureIgnoreCase)) &&
+            //                    !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
+            //                {
+            //                    if (!string.IsNullOrWhiteSpace(Channel.Description))
+            //                    {
+            //                        var index_dot = Channel.Description.IndexOf(".");
+            //                        var qty = Channel.Description.Length;
+            //                        var name = Channel.Description.Remove(index_dot, qty - index_dot);
+            //                        var fl_tmp = false;
+            //                        foreach (var item in Params)
+            //                        {
+            //                            if (item.Description == name)
+            //                                fl_tmp = true;
+            //                        }
+            //                        if (!fl_tmp)
+            //                            ImportUMPNA(name, Params);
+            //                    }
 
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
+            //#endregion
 
-            if (Params.Count > 0)
-                SelectedParam = Params[^1];
+            //if (Params.Count > 0)
+            //    SelectedParam = Params[^1];
         }
         #endregion
 
@@ -639,8 +627,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Создаем МПНА
-        private void CreateUMPNA()
+        #region Создание параметра
+        private void CreateParam()
         {
             var index = Params.Count + 1;
             var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
@@ -827,225 +815,16 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
             };
             Params.Add(signal);
-            #endregion
-
             SelectedParam = Params[^1];
             #endregion
-        }
-        #endregion 
-
-        #region Импортируем МПНА
-        private static void ImportUMPNA(string Description, ObservableCollection<BaseUMPNA> data_list)
-        {
-            var index = data_list.Count + 1;
-            var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
-            var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
-            var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
-
-            var DefualtMapKGMPNA = App.Settings.Config.DefualtMapKGMPNA;
-            var DefualtMapKTPRA = App.Settings.Config.DefualtMapKTPRA;
-            var DefualtMapKTPRAS = App.Settings.Config.DefualtMapKTPRAS;
-
-            var InputParam = new ObservableCollection<BaseParam>();
-            var OutputParam = new ObservableCollection<BaseParam>();
-            var Setpoints = new ObservableCollection<BaseSetpoints>();
-            var KGMPNA = new ObservableCollection<BaseKGMPNA>();
-            var KTPRA = new ObservableCollection<BaseKTPRA>();
-            var KTPRAS = new ObservableCollection<BaseKTPRAS>();
-
-            #region Создаем задвижку
-
-            #region Входные параметры
-            for (int i = 0; i < App.Settings.Config.UMPNA.InputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"NA_DI_P[{index_input_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UMPNA.InputParams[i].Text
-                };
-                InputParam.Add(Param);
-            }
-            #endregion
-
-            #region Выходные параметры
-            for (int i = 0; i < App.Settings.Config.UMPNA.OutputParams.Count; i++)
-            {
-                var Param = new BaseParam
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"NA_DO_P[{index_output_param + i + 1}]",
-                    Id = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    Description = App.Settings.Config.UMPNA.OutputParams[i].Text
-                };
-                OutputParam.Add(Param);
-            }
-            #endregion
-
-            #region Уставки
-            for (int i = 0; i < App.Settings.Config.UMPNA.Setpoints.Count; i++)
-            {
-                var Param = new BaseSetpoints
-                {
-                    Index = $"{i + 1}",
-                    VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
-                    Id = $"H{6000 + index_setpoints + i}",
-                    Unit = App.Settings.Config.UMPNA.Setpoints[i].Unit,
-                    Value = App.Settings.Config.UMPNA.Setpoints[i].Value,
-                    Address = $"%MW{5000 + index_setpoints + i}",
-                    Description = App.Settings.Config.UMPNA.Setpoints[i].Description
-                };
-                Setpoints.Add(Param);
-            }
-            #endregion
-
-            #region Параметры готовностей
-            for (int i = 0; i < 48; i++)
-            {
-                var j = (index - 1) * 48 + i;
-                var Param = new BaseKGMPNA
-                {
-                    NoMasked = "",
-                    Param = new BaseParam
-                    {
-                        Index = $"{i + 1}",
-                        Id = "",
-                        Description = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
-                        VarName = $"kgmpna_param[{index},{i + 1}]",
-                        Inv = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
-                        TypeSignal = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
-                        Address = ""
-                    },
-                    Setpoints = new BaseSetpoints
-                    {
-                        Index = $"{i + 1}",
-                        Value = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
-                        Unit = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
-                        Id = $"H{1000 + j}",
-                        Description = "",
-                        VarName = $"SP_NA_READY[{j + 1}]",
-                        Address = $"%MW{6500 + j}"
-                    }
-                };
-                KGMPNA.Add(Param);
-            }
-            #endregion
-
-            #region Параметры защит
-            for (int i = 0; i < 128; i++)
-            {
-                var j = (index - 1) * 128 + i;
-                var Param = new BaseKTPRA
-                {
-                    StateUMPNA = "",
-                    NoMasked = "",
-                    AVR = "",
-                    Type = "",
-                    StopType = "",
-                    Param = new BaseParam
-                    {
-                        Index = $"{i + 1}",
-                        Id = "",
-                        Description = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
-                        VarName = $"ktpra_param[{index},{i + 1}]",
-                        Inv = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
-                        TypeSignal = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
-                        Address = ""
-                    },
-                    Setpoints = new BaseSetpoints
-                    {
-                        Index = $"{i + 1}",
-                        Value = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
-                        Unit = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
-                        Id = $"H{3000 + j}",
-                        VarName = $"SP_NA_PROT[{j + 1}]",
-                        Address = $"%MW{5200 + j}",
-                        Description = ""
-                    },
-                    ControlUVS = new BaseControlUVS(),
-                    ControlUZD = new BaseControlUZD()
-                };
-                KTPRA.Add(Param);
-            }
-            #endregion
-
-            #region Параметры предельных параметров
-            for (int i = 0; i < 128; i++)
-            {
-                var j = (index - 1) * 128 + i;
-                var Param = new BaseKTPRAS
-                {
-                    Param = new BaseParam
-                    {
-                        Index = $"{i + 1}",
-                        Id = "",
-                        Description = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
-                        VarName = $"ktpras_param[{index},{i + 1}]",
-                        Inv = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
-                        TypeSignal = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
-                        Address = ""
-                    },
-                    TypeWarning = "",
-                    StateUMPNA = "",
-                    Type = ""
-                };
-                KTPRAS.Add(Param);
-            }
-            #endregion
-
-            #region Генерируем задвижки
-            var signal = new BaseUMPNA
-            {
-                Index = $"{index}",
-                Description = $"{Description}",
-                VarName = $"umpna_param[{index}]",
-                ShortDescription = "",
-                IndexPZ = "",
-                IndexVZ = "",
-                TypeUMPNA = "",
-                IndexGroupMS = "",
-                UsedMCP = "",
-                UsedKPD = "",
-                CountButtonStop = "",
-                InputParam = new ObservableCollection<BaseParam>(InputParam),
-                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints),
-                KGMPNA = new ObservableCollection<BaseKGMPNA>(KGMPNA),
-                KTPRA = new ObservableCollection<BaseKTPRA>(KTPRA),
-                KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
-            };
-            data_list.Add(signal);
-            #endregion
 
             #endregion
-        }
-        #endregion 
-
-        #region Генерация сигналов
-        public void GeneratedData()
-        {
-            //_DataView.Source = UMPNA;
-            //_DataView.View?.Refresh();
-            //OnPropertyChanged(nameof(DataView));
-
-            if (Params is null || Params.Count <= 0)
-            {
-                SelectedParam = null;
-            }
         }
         #endregion 
 
         #region Обновление индексов
-        public void RefreshIndexUMPNA(BaseUMPNA selectedUMPNA = null)
+        public void RefreshIndex(int SelectedParamIndex)
         {
-            SelectedParam = new();
             var index = 0;
             foreach (var item in Params)
             {
@@ -1119,9 +898,207 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     i++;
                 }
                 #endregion
+
+                if (Params is not null && Params.Count > 0)
+                    SelectedParam = Params[SelectedParamIndex];
             }
         }
-        #endregion 
+        #endregion
+
+
+        //#region Импортируем МПНА
+        //private static void ImportUMPNA(string Description, ObservableCollection<BaseUMPNA> data_list)
+        //{
+        //    var index = data_list.Count + 1;
+        //    var index_setpoints = (index - 1) * App.Settings.Config.UMPNA.Setpoints.Count;
+        //    var index_input_param = (index - 1) * App.Settings.Config.UMPNA.InputParams.Count;
+        //    var index_output_param = (index - 1) * App.Settings.Config.UMPNA.OutputParams.Count;
+
+        //    var DefualtMapKGMPNA = App.Settings.Config.DefualtMapKGMPNA;
+        //    var DefualtMapKTPRA = App.Settings.Config.DefualtMapKTPRA;
+        //    var DefualtMapKTPRAS = App.Settings.Config.DefualtMapKTPRAS;
+
+        //    var InputParam = new ObservableCollection<BaseParam>();
+        //    var OutputParam = new ObservableCollection<BaseParam>();
+        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
+        //    var KGMPNA = new ObservableCollection<BaseKGMPNA>();
+        //    var KTPRA = new ObservableCollection<BaseKTPRA>();
+        //    var KTPRAS = new ObservableCollection<BaseKTPRAS>();
+
+        //    #region Создаем задвижку
+
+        //    #region Входные параметры
+        //    for (int i = 0; i < App.Settings.Config.UMPNA.InputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"NA_DI_P[{index_input_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UMPNA.InputParams[i].Text
+        //        };
+        //        InputParam.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Выходные параметры
+        //    for (int i = 0; i < App.Settings.Config.UMPNA.OutputParams.Count; i++)
+        //    {
+        //        var Param = new BaseParam
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"NA_DO_P[{index_output_param + i + 1}]",
+        //            Id = "",
+        //            Inv = "",
+        //            TypeSignal = "",
+        //            Address = "",
+        //            Description = App.Settings.Config.UMPNA.OutputParams[i].Text
+        //        };
+        //        OutputParam.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Уставки
+        //    for (int i = 0; i < App.Settings.Config.UMPNA.Setpoints.Count; i++)
+        //    {
+        //        var Param = new BaseSetpoints
+        //        {
+        //            Index = $"{i + 1}",
+        //            VarName = $"SP_TM_NA[{index_setpoints + i + 1}]",
+        //            Id = $"H{6000 + index_setpoints + i}",
+        //            Unit = App.Settings.Config.UMPNA.Setpoints[i].Unit,
+        //            Value = App.Settings.Config.UMPNA.Setpoints[i].Value,
+        //            Address = $"%MW{5000 + index_setpoints + i}",
+        //            Description = App.Settings.Config.UMPNA.Setpoints[i].Description
+        //        };
+        //        Setpoints.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Параметры готовностей
+        //    for (int i = 0; i < 48; i++)
+        //    {
+        //        var j = (index - 1) * 48 + i;
+        //        var Param = new BaseKGMPNA
+        //        {
+        //            NoMasked = "",
+        //            Param = new BaseParam
+        //            {
+        //                Index = $"{i + 1}",
+        //                Id = "",
+        //                Description = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Description,
+        //                VarName = $"kgmpna_param[{index},{i + 1}]",
+        //                Inv = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.Inv,
+        //                TypeSignal = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Param.TypeSignal,
+        //                Address = ""
+        //            },
+        //            Setpoints = new BaseSetpoints
+        //            {
+        //                Index = $"{i + 1}",
+        //                Value = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Value,
+        //                Unit = DefualtMapKGMPNA is null || i > DefualtMapKGMPNA.Count ? "" : DefualtMapKGMPNA[i].Setpoints.Unit,
+        //                Id = $"H{1000 + j}",
+        //                Description = "",
+        //                VarName = $"SP_NA_READY[{j + 1}]",
+        //                Address = $"%MW{6500 + j}"
+        //            }
+        //        };
+        //        KGMPNA.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Параметры защит
+        //    for (int i = 0; i < 128; i++)
+        //    {
+        //        var j = (index - 1) * 128 + i;
+        //        var Param = new BaseKTPRA
+        //        {
+        //            StateUMPNA = "",
+        //            NoMasked = "",
+        //            AVR = "",
+        //            Type = "",
+        //            StopType = "",
+        //            Param = new BaseParam
+        //            {
+        //                Index = $"{i + 1}",
+        //                Id = "",
+        //                Description = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Description,
+        //                VarName = $"ktpra_param[{index},{i + 1}]",
+        //                Inv = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.Inv,
+        //                TypeSignal = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Param.TypeSignal,
+        //                Address = ""
+        //            },
+        //            Setpoints = new BaseSetpoints
+        //            {
+        //                Index = $"{i + 1}",
+        //                Value = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Value,
+        //                Unit = DefualtMapKTPRA is null || i > DefualtMapKTPRA.Count ? "" : DefualtMapKTPRA[i].Setpoints.Unit,
+        //                Id = $"H{3000 + j}",
+        //                VarName = $"SP_NA_PROT[{j + 1}]",
+        //                Address = $"%MW{5200 + j}",
+        //                Description = ""
+        //            },
+        //            ControlUVS = new BaseControlUVS(),
+        //            ControlUZD = new BaseControlUZD()
+        //        };
+        //        KTPRA.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Параметры предельных параметров
+        //    for (int i = 0; i < 128; i++)
+        //    {
+        //        var j = (index - 1) * 128 + i;
+        //        var Param = new BaseKTPRAS
+        //        {
+        //            Param = new BaseParam
+        //            {
+        //                Index = $"{i + 1}",
+        //                Id = "",
+        //                Description = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Description,
+        //                VarName = $"ktpras_param[{index},{i + 1}]",
+        //                Inv = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.Inv,
+        //                TypeSignal = DefualtMapKTPRAS is null || i > DefualtMapKTPRAS.Count ? "" : DefualtMapKTPRAS[i].Param.TypeSignal,
+        //                Address = ""
+        //            },
+        //            TypeWarning = "",
+        //            StateUMPNA = "",
+        //            Type = ""
+        //        };
+        //        KTPRAS.Add(Param);
+        //    }
+        //    #endregion
+
+        //    #region Генерируем задвижки
+        //    var signal = new BaseUMPNA
+        //    {
+        //        Index = $"{index}",
+        //        Description = $"{Description}",
+        //        VarName = $"umpna_param[{index}]",
+        //        ShortDescription = "",
+        //        IndexPZ = "",
+        //        IndexVZ = "",
+        //        TypeUMPNA = "",
+        //        IndexGroupMS = "",
+        //        UsedMCP = "",
+        //        UsedKPD = "",
+        //        CountButtonStop = "",
+        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
+        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints),
+        //        KGMPNA = new ObservableCollection<BaseKGMPNA>(KGMPNA),
+        //        KTPRA = new ObservableCollection<BaseKTPRA>(KTPRA),
+        //        KTPRAS = new ObservableCollection<BaseKTPRAS>(KTPRAS)
+        //    };
+        //    data_list.Add(signal);
+        //    #endregion
+
+        //    #endregion
+        //}
+        //#endregion 
 
         #endregion
     }

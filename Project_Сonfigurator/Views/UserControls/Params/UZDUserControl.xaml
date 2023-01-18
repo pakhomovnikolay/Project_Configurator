@@ -24,9 +24,9 @@
         <GridSplitter Grid.Row="1" Width="2" Background="Transparent" Panel.ZIndex="9999"/>
 
         <!--Список задвижек-->
-        <GroupBox Grid.Column="0" BorderBrush="Black">
+        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
             <GroupBox.Header>
-                <TextBlock Margin="5,0" FontWeight="Bold" Text="Список задвижек"/>
+                <TextBlock Margin="5,0" Text="Список задвижек" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
             </GroupBox.Header>
             <Grid>
                 
@@ -39,6 +39,11 @@
                 <!--Список задвижек-->
                 <ListView ItemsSource="{Binding Params}"
                           SelectedItem="{Binding SelectedParam}">
+                    <ListView.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </ListView.Resources>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -103,7 +108,7 @@
         </GroupBox>
 
         <!--Данные выбранной задвижки-->
-        <GroupBox Grid.Column="1" BorderBrush="Black">
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
             <GroupBox.Header>
                 <TextBlock Margin="5,0" FontWeight="Bold" Text="{Binding SelectedParam.Description, FallbackValue='Выберите задвижку', TargetNullValue='Добавьте задвижку'}" />
             </GroupBox.Header>

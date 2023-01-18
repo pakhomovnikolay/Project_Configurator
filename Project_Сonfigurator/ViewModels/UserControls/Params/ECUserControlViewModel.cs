@@ -2,7 +2,6 @@
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
@@ -11,6 +10,7 @@ using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
@@ -36,6 +36,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
+            _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -46,15 +47,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    SignalServices.RedefineParam(SelectedParam, _IsSelected, Title);
+                    if (SelectedParam is not null)
+                        SignalServices.RedefineParam(SelectedParam, _IsSelected, Title);
                     DoSelection = SignalServices.DoSelection;
+                    if (_IsSelected)
+                        RefreshDataView();
                 }
             }
         }
@@ -71,8 +75,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             set
             {
                 if (Set(ref _Params, value))
+                {
                     if (_Params is null || _Params.Count <= 0)
+                    {
                         CreateData();
+                        RefreshDataView();
+                    }
+                    else RefreshDataView();
+                }
             }
         }
         #endregion
@@ -113,6 +123,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Коллекция парметров для отображения
+        /// <summary>
+        /// Коллекция парметров для отображения
+        /// </summary>
+        private readonly CollectionViewSource _ParamsDataView = new();
+        public ICollectionView ParamsDataView => _ParamsDataView?.View;
+        #endregion
+
         #endregion
 
         #region Команды
@@ -127,9 +145,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdRefreshFilterExecuted()
         {
-            //if (_DataView.Source is null) return;
-            //_DataView.View.Refresh();
-
+            RefreshDataView();
         }
         #endregion
 
@@ -146,7 +162,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedParam is null) return;
-
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedParam.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
@@ -172,7 +188,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            if (App.FucusedTabControl == null) return;
             foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
                                      let _TabItem = _Item as IViewModelUserControls
                                      where _TabItem.Title == NameListSelected
@@ -228,8 +243,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Params = new ObservableCollection<BaseParam>(_Params);
             UserDialog.SendMessage("Импорт сигналов \"Секции шин\"", "Сигналы успешно импортированы\nиз таблицы сигналов",
                 MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
-            CreateData();
             #endregion
+
+            CreateData();
+            RefreshDataView();
         }
         #endregion
 
@@ -237,22 +254,24 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        #region Фильтрация модулей
+        #region Фильтрация парметров
         /// <summary>
-        /// Фильтрация модулей
+        /// Фильтрация парметров
         /// </summary>
-        private void OnSignalsFiltered(object sender, FilterEventArgs e)
+        public void ParamsFiltered(object sender, FilterEventArgs e)
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
+            if (e.Item is not BaseParam _Param || _Param is null) { e.Accepted = false; return; }
             if (string.IsNullOrWhiteSpace(TextFilter)) return;
             #endregion
 
-            if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-                    Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+            #region Параметры
+            if (_Param.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                _Param.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
             e.Accepted = false;
+            #endregion
         }
         #endregion
 
@@ -275,6 +294,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             if (Params.Count > 0)
                 SelectedParam = Params[0];
+        }
+        #endregion
+
+        #region Обновляем данные для отображения
+        /// <summary>
+        /// Обновляем данные для отображения
+        /// </summary>
+        private void RefreshDataView()
+        {
+            _ParamsDataView.Source = Params;
+            _ParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(ParamsDataView));
         }
         #endregion
 

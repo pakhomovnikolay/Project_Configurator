@@ -2,15 +2,12 @@
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Linq;
-using Project_Сonfigurator.Views.UserControls.Params;
-using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
@@ -24,12 +21,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new UserRegUserControl();
         }
 
-        private readonly ISignalService SignalServiceы;
+        private readonly ISignalService SignalServices;
         private readonly IDBService DBServiceы;
         public UserRegUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
         {
-            SignalServiceы = _ISignalService;
+            SignalServices = _ISignalService;
             DBServiceы = _IDBService;
+            _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -40,15 +38,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние активной вкладки
         /// </summary>
-        public bool IsSelected
+        public override bool IsSelected
         {
             get => _IsSelected;
             set
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    //_SignalService.ResetSignal();
-                    //DoSelection = false;
+                    if (SelectedParam is not null)
+                        SignalServices.RedefineParam(SelectedParam, _IsSelected, Title);
+                    DoSelection = SignalServices.DoSelection;
+                    if (_IsSelected)
+                        RefreshDataView();
                 }
             }
         }
@@ -65,8 +66,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             set
             {
                 if (Set(ref _Params, value))
+                {
                     if (_Params is null || _Params.Count <= 0)
+                    {
                         CreateData();
+                        RefreshDataView();
+                    }
+                    else RefreshDataView();
+                }
             }
         }
         #endregion
@@ -107,6 +114,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
+        #region Коллекция парметров для отображения
+        /// <summary>
+        /// Коллекция парметров для отображения
+        /// </summary>
+        private readonly CollectionViewSource _ParamsDataView = new();
+        public ICollectionView ParamsDataView => _ParamsDataView?.View;
+        #endregion
+
         #endregion
 
         #region Команды
@@ -121,46 +136,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private void OnCmdRefreshFilterExecuted()
         {
-            //if (_DataView.Source is null) return;
-            //_DataView.View.Refresh();
-
-        }
-        #endregion
-
-        #region Команда - Выбрать сигнал
-        private ICommand _CmdSelectionSignal;
-        /// <summary>
-        /// Команда - Выбрать сигнал
-        /// </summary>
-        public ICommand CmdSelectionSignal => _CmdSelectionSignal ??= new RelayCommand(OnCmdSelectionSignalExecuted, CanCmdSelectionSignalExecute);
-        private bool CanCmdSelectionSignalExecute(object p) => /*SelectedSignal is not null*/true;
-
-        private void OnCmdSelectionSignalExecuted(object p)
-        {
-            //if (p is not string Index) return;
-            //if (string.IsNullOrWhiteSpace(Index)) return;
-            //if (SelectedSignal is null) return;
-            //if (App.FucusedTabControl == null) return;
-
-            //var data_list = new ObservableCollection<BaseParam>();
-            //foreach (BaseParam Signal in DataView)
-            //{
-            //    data_list.Add(Signal);
-            //}
-
-            //if (Index != SelectedSignal.Index)
-            //    SelectedSignal = data_list[int.Parse(Index) - 1];
-
-            //_SignalService.Address = SelectedSignal.Address;
-            //_SignalService.Id = SelectedSignal.Id;
-            //_SignalService.Description = SelectedSignal.Description;
-
-            //if (App.FucusedTabControl == null) return;
-            //foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-            //                         let _TabItem = _Item as TabItem
-            //                         where _TabItem.Header.ToString() == _SignalService.ListName
-            //                         select _TabItem)
-            //    App.FucusedTabControl.SelectedItem = _TabItem;
+            RefreshDataView();
         }
         #endregion
 
@@ -168,33 +144,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
-        //#region Фильтрация модулей
-        ///// <summary>
-        ///// Фильтрация модулей
-        ///// </summary>
-        //private void OnSignalsFiltered(object sender, FilterEventArgs e)
-        //{
-        //    #region Проверки до начала фильтрации
-        //    // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-        //    if (e.Item is not BaseParam Signal || Signal is null) { e.Accepted = false; return; }
-        //    if (string.IsNullOrWhiteSpace(TextFilter)) return;
-        //    #endregion
+        #region Фильтрация парметров
+        /// <summary>
+        /// Фильтрация парметров
+        /// </summary>
+        public void ParamsFiltered(object sender, FilterEventArgs e)
+        {
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not BaseParam _Param || _Param is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(TextFilter)) return;
+            #endregion
 
-        //    if (Signal.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
-        //            Signal.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+            #region Параметры
+            if (_Param.Description.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase) ||
+                _Param.Id.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
 
-        //    e.Accepted = false;
-        //}
-        //#endregion
-
-        //#region Генерация сигналов
-        //public void GeneratedData()
-        //{
-        //    _DataView.Source = BaseParams;
-        //    _DataView.View?.Refresh();
-        //    OnPropertyChanged(nameof(DataView));
-        //}
-        //#endregion 
+            e.Accepted = false;
+            #endregion
+        }
+        #endregion
 
         #region Формирование данных при создании нового проекта
         private void CreateData()
@@ -215,6 +184,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             }
             if (Params.Count > 0)
                 SelectedParam = Params[0];
+        }
+        #endregion
+
+        #region Обновляем данные для отображения
+        /// <summary>
+        /// Обновляем данные для отображения
+        /// </summary>
+        private void RefreshDataView()
+        {
+            _ParamsDataView.Source = Params;
+            _ParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(ParamsDataView));
         }
         #endregion
 
