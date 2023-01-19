@@ -81,11 +81,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                             DoSelectionAddressEnd = SignalServices.DoSelection;
                             DoSelection = SignalServices.DoSelection;
                             #endregion
+
+                            RefreshDataView();
                         }
                         else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
                         {
                             #region Обнуляем данные
-                            RefreshDataView();
                             SignalServices.ResetSignal();
                             DoSelectionAddressStart = SignalServices.DoSelection;
                             DoSelectionAddressEnd = SignalServices.DoSelection;

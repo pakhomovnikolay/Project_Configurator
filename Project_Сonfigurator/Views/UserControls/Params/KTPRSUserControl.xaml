@@ -15,9 +15,50 @@
              Tag="{Binding Description}"
              >
     <Grid>
+
+        <!--Сетка-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
         
         <!--Данные-->
-        <TabControl>
+        <Border Grid.Row="0" Margin="0,2,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
+            <Grid>
+
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="30"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="30"/>
+                </Grid.ColumnDefinitions>
+
+                <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
+                         BorderBrush="Black"
+                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
+                         >
+                    <TextBox.Resources>
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+                    </TextBox.Resources>
+                    <TextBox.InputBindings>
+                        <KeyBinding Key="Return" Command="{Binding CmdRefreshFilter}"/>
+                    </TextBox.InputBindings>
+                </TextBox>
+                <Button Grid.Column="2" Margin="1"
+                        ToolTip="Обновить фльтр"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdRefreshFilter}"
+                        >
+                    <Button.Content>
+                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </Border>
+        <TabControl Grid.Row="1">
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
@@ -49,7 +90,7 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding Params}"
+                          ItemsSource="{Binding ParamsDataView}"
                           SelectedItem="{Binding SelectedParam}"
                           >
 
@@ -313,7 +354,8 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedParam.Setpoints}"
+                          ItemsSource="{Binding ParamsDataView}"
+                          SelectedItem="{Binding SelectedParam}"
                           >
 
                     <DataGrid.Resources>
@@ -503,8 +545,9 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedParam.ControlUZD}"
-                        >
+                          ItemsSource="{Binding ParamsDataView}"
+                          SelectedItem="{Binding SelectedParam}"
+                          >
 
                     <DataGrid.Resources>
 
@@ -749,8 +792,9 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedParam.ControlUVS}"
-                        >
+                          ItemsSource="{Binding ParamsDataView}"
+                          SelectedItem="{Binding SelectedParam}"
+                          >
 
                     <DataGrid.Resources>
 
@@ -1131,8 +1175,9 @@
                           SelectionUnit="FullRow"
                           Background="Gray"
                           HeadersVisibility="Column"
-                          ItemsSource="{Binding SelectedParam.ControlUTS}"
-                        >
+                          ItemsSource="{Binding ParamsDataView}"
+                          SelectedItem="{Binding SelectedParam}"
+                          >
 
                     <DataGrid.Resources>
 
