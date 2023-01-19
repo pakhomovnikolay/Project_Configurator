@@ -25,5 +25,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public ObservableCollection<BaseMessage> Messages { get; set; } = new();
         #endregion
+
+        #region Текст фильтрации
+        /// <summary>
+        /// Текст фильтрации
+        /// </summary>
+        public string TextFilter { get; set; }
+        #endregion
     }
 }

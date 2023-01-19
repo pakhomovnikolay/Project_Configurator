@@ -24,5 +24,12 @@ namespace Project_Сonfigurator.Models.Interfaces
         /// </summary>
         ObservableCollection<BaseMessage> Messages { get; set; }
         #endregion
+
+        #region Текст фильтрации
+        /// <summary>
+        /// Текст фильтрации
+        /// </summary>
+        string TextFilter { get; set; }
+        #endregion
     }
 }

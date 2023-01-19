@@ -5,10 +5,12 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels
@@ -27,6 +29,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             UserDialog = _UserDialog;
             DBServices = _IDBService;
+            _SubParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -106,7 +109,15 @@ namespace Project_Сonfigurator.ViewModels
         public ObservableCollection<CollectionMessage> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                {
+                    SelectedTabIndex = 0;
+                    SelectedParam = _Params[SelectedTabIndex];
+                    RefreshDataView();
+                }
+            }
         }
         #endregion
 
@@ -130,7 +141,11 @@ namespace Project_Сonfigurator.ViewModels
         public CollectionMessage SelectedParam
         {
             get => _SelectedParam;
-            set => Set(ref _SelectedParam, value);
+            set
+            {
+                if (Set(ref _SelectedParam, value))
+                    RefreshDataView();
+            }
         }
         #endregion
 
@@ -154,7 +169,16 @@ namespace Project_Сonfigurator.ViewModels
         public int SelectedTabIndex
         {
             get => _SelectedTabIndex;
-            set => Set(ref _SelectedTabIndex, value);
+            set
+            {
+                if (Set(ref _SelectedTabIndex, value))
+                {
+                    SelectedParam = Params[_SelectedTabIndex];
+                    SelectedSubParam = SelectedParam.Messages[0];
+                    RefreshDataView();
+                }
+
+            }
         }
         #endregion
 
@@ -182,9 +206,31 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
+        #region Коллекция сообщений для отображения
+        /// <summary>
+        /// Коллекция сообщений для отображения
+        /// </summary>
+        private readonly CollectionViewSource _SubParamsDataView = new();
+        public ICollectionView SubParamsDataView => _SubParamsDataView?.View;
+        #endregion
+
         #endregion
 
         #region Команды
+
+        #region Команда - Обновить фильтр
+        private ICommand _CmdRefreshFilter;
+        /// <summary>
+        /// Команда - Обновить фильтр
+        /// </summary>
+        public ICommand CmdRefreshFilter => _CmdRefreshFilter ??= new RelayCommand(OnCmdRefreshFilterExecuted, CanCmdRefreshFilterExecute);
+        private bool CanCmdRefreshFilterExecute() => true;
+
+        private void OnCmdRefreshFilterExecuted()
+        {
+            RefreshDataView();
+        }
+        #endregion
 
         #region Команда - Добавить коллекция сообщений
         private ICommand _CmdCreateCollectionMessages;
@@ -218,7 +264,10 @@ namespace Project_Сonfigurator.ViewModels
                 Description = $"Сообщение {Params.Count}",
                 Messages = messages
             });
+
             SelectedParam = Params[^1];
+            SelectedTabIndex = Params.IndexOf(SelectedParam);
+            RefreshDataView();
         }
         #endregion
 
@@ -237,6 +286,9 @@ namespace Project_Сonfigurator.ViewModels
             Params.Remove(SelectedParam);
             if (Params.Count > 0)
                 SelectedParam = Params[index];
+
+            SelectedTabIndex = Params.IndexOf(SelectedParam);
+            RefreshDataView();
         }
         #endregion
 
@@ -474,11 +526,35 @@ namespace Project_Сonfigurator.ViewModels
 
         #region Функции
 
-        #region Генерируем данные
-        public void GeneratedData()
+        #region Фильтрация сообщений
+        /// <summary>
+        /// Фильтрация сообщений
+        /// </summary>
+        public void ParamsFiltered(object sender, FilterEventArgs e)
         {
-            if (Params is null || Params.Count <= 0)
-                SelectedParam = Params[0];
+            #region Проверки до начала фильтрации
+            // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
+            if (e.Item is not BaseMessage _Param || _Param is null) { e.Accepted = false; return; }
+            if (string.IsNullOrWhiteSpace(SelectedParam.TextFilter)) return;
+            #endregion
+
+            #region Сообщения
+            if (_Param.Description.Contains(SelectedParam.TextFilter, StringComparison.CurrentCultureIgnoreCase)) return;
+
+            e.Accepted = false;
+            #endregion
+        }
+        #endregion
+
+        #region Обновляем данные для отображения
+        /// <summary>
+        /// Обновляем данные для отображения
+        /// </summary>
+        private void RefreshDataView()
+        {
+            _SubParamsDataView.Source = SelectedParam.Messages;
+            _SubParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(SubParamsDataView));
         }
         #endregion
 

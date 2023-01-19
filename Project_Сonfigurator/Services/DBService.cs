@@ -4,6 +4,7 @@ using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
+using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -52,11 +53,15 @@ namespace Project_Сonfigurator.Services
                 var SettingsAppSerializer = new XmlSerializer(typeof(ProjectDataToSave));
                 using FileStream fs = new(FileNameEncrypted, FileMode.OpenOrCreate);
                 DataToSave = SettingsAppSerializer.Deserialize(fs) as ProjectDataToSave;
-                IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+                IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+                App.Services.GetRequiredService<MessageWindowViewModel>().Params = DataToSave.Messages is null ? new() : DataToSave.Messages;
+                //Data.Params = DataToSave.Messages is null ? new() : DataToSave.Messages,
+
+                //DataToSave.Messages = _Params is null ? new() : _Params;
 
                 try
                 {
-                    foreach (var item in _ViewModels)
+                    foreach (var item in _ViewModelsUserControl)
                     {
                         object _Data = item switch
                         {
@@ -82,10 +87,18 @@ namespace Project_Сonfigurator.Services
                             UstRealUserControlViewModel Data => Data.Params = DataToSave.SetpointsReal is null ? new() : DataToSave.SetpointsReal,
                             UstCommonUserControlViewModel Data => Data.Params = DataToSave.SetpointsCommon is null ? new() : DataToSave.SetpointsCommon,
                             HandMapUserControlViewModel Data => Data.Params = DataToSave.HandMap is null ? new() : DataToSave.HandMap,
-                            MessageWindowViewModel Data => Data.Params = DataToSave.Messages is null ? new() : DataToSave.Messages,
                             _ => null
                         };
                     }
+
+                    //foreach (var item in _ViewModel)
+                    //{
+                    //    object _Data = item switch
+                    //    {
+                    //        MessageWindowViewModel Data => Data.Params = DataToSave.Messages is null ? new() : DataToSave.Messages,
+                    //        _ => null
+                    //    };
+                    //}
 
                 }
                 catch (Exception e)
@@ -117,11 +130,13 @@ namespace Project_Сonfigurator.Services
             IEncryptorService _Encryptor = new EncryptorService();
             var SettingsAppSerializer = new XmlSerializer(typeof(ProjectDataToSave));
             var xmlWriterSettings = new XmlWriterSettings() { Indent = true, Encoding = Encoding.UTF8 };
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            
+            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            var _Params = App.Services.GetRequiredService<MessageWindowViewModel>().Params;
+            DataToSave.Messages = _Params is null ? new() : _Params;
+
             try
             {
-                foreach (var item in _ViewModels)
+                foreach (var item in _ViewModelsUserControl)
                 {
                     object _Data = item switch
                     {
@@ -147,11 +162,9 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => DataToSave.SetpointsReal = Data.Params is null ? new() : Data.Params,
                         UstCommonUserControlViewModel Data => DataToSave.SetpointsCommon = Data.Params is null ? new() : Data.Params,
                         HandMapUserControlViewModel Data => DataToSave.HandMap = Data.Params is null ? new() : Data.Params,
-                        MessageWindowViewModel Data => DataToSave.Messages = Data.Params is null ? new() : Data.Params,
                         _ => null
                     };
                 }
-
             }
             catch (Exception e)
             {
