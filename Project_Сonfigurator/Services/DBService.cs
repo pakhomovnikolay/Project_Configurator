@@ -55,9 +55,6 @@ namespace Project_Сonfigurator.Services
                 DataToSave = SettingsAppSerializer.Deserialize(fs) as ProjectDataToSave;
                 IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
                 App.Services.GetRequiredService<MessageWindowViewModel>().Params = DataToSave.Messages is null ? new() : DataToSave.Messages;
-                //Data.Params = DataToSave.Messages is null ? new() : DataToSave.Messages,
-
-                //DataToSave.Messages = _Params is null ? new() : _Params;
 
                 try
                 {
@@ -90,16 +87,6 @@ namespace Project_Сonfigurator.Services
                             _ => null
                         };
                     }
-
-                    //foreach (var item in _ViewModel)
-                    //{
-                    //    object _Data = item switch
-                    //    {
-                    //        MessageWindowViewModel Data => Data.Params = DataToSave.Messages is null ? new() : DataToSave.Messages,
-                    //        _ => null
-                    //    };
-                    //}
-
                 }
                 catch (Exception e)
                 {
@@ -230,12 +217,18 @@ namespace Project_Сonfigurator.Services
                         {
                             if (Request.SetConnection(ConnectSetting, ip))
                             {
+                                ConnectSetting.SuccessUpdate = true;
                                 IPResult = ip;
                                 break;
                             }
                         }
                         if (string.IsNullOrWhiteSpace(IPResult)) continue;
-                        if (!Request.OpenConnection(ConnectSetting, IPResult)) continue;
+                        if (!Request.OpenConnection(ConnectSetting, IPResult))
+                        {
+                            ConnectSetting.SuccessUpdate = false;
+                            continue;
+                        }
+
                         foreach (var _ViewModel in _ViewModels)
                         {
                             List<string> FieldValue = new();
@@ -291,7 +284,8 @@ namespace Project_Сonfigurator.Services
                                 }
 
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("TableSignals", Request.TableFieldTableSignals, Request.FieldTableSignals, FieldValue);
+                                if (!Request.SetData("TableSignals", Request.TableFieldTableSignals, Request.FieldTableSignals, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -310,7 +304,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SIGNAL_DI", Request.TableFieldSignalsDI, Request.FieldSignalsDI, FieldValue);
+                                if (!Request.SetData("SIGNAL_DI", Request.TableFieldSignalsDI, Request.FieldSignalsDI, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -330,7 +325,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SIGNAL_AI", Request.TableFieldSignalsAI, Request.FieldSignalsAI, FieldValue);
+                                if (!Request.SetData("SIGNAL_AI", Request.TableFieldSignalsAI, Request.FieldSignalsAI, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -348,7 +344,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SIGNAL_DO", Request.TableFieldSignalsDO, Request.FieldSignalsDO, FieldValue);
+                                if (!Request.SetData("SIGNAL_DO", Request.TableFieldSignalsDO, Request.FieldSignalsDO, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -366,7 +363,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SIGNAL_AO", Request.TableFieldSignalsAO, Request.FieldSignalsAO, FieldValue);
+                                if (!Request.SetData("SIGNAL_AO", Request.TableFieldSignalsAO, Request.FieldSignalsAO, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -384,7 +382,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("PARAM_EC", Request.TableFieldEC, Request.FieldEC, FieldValue);
+                                if (!Request.SetData("PARAM_EC", Request.TableFieldEC, Request.FieldEC, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -402,7 +401,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("USER_DI", Request.TableFieldUserDI, Request.FieldUserDI, FieldValue);
+                                if (!Request.SetData("USER_DI", Request.TableFieldUserDI, Request.FieldUserDI, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -418,7 +418,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("USER_AI", Request.TableFieldUserAI, Request.FieldUserAI, FieldValue);
+                                if (!Request.SetData("USER_AI", Request.TableFieldUserAI, Request.FieldUserAI, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -434,7 +435,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("USER_REG", Request.TableFieldUserReg, Request.FieldUserReg, FieldValue);
+                                if (!Request.SetData("USER_REG", Request.TableFieldUserReg, Request.FieldUserReg, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -452,7 +454,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SIGNAL_GROUP", Request.TableFieldSignalsGroup, Request.FieldSignalsGroup, FieldValue);
+                                if (!Request.SetData("SIGNAL_GROUP", Request.TableFieldSignalsGroup, Request.FieldSignalsGroup, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -470,7 +473,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("GROUP_SIGNAL", Request.TableFieldGroupsSignal, Request.FieldGroupsSignal, FieldValue);
+                                if (!Request.SetData("GROUP_SIGNAL", Request.TableFieldGroupsSignal, Request.FieldGroupsSignal, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -489,7 +493,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("UZD", Request.TableFieldUZD, Request.FieldUZD, FieldValue);
+                                if (!Request.SetData("UZD", Request.TableFieldUZD, Request.FieldUZD, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -508,7 +513,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("UVS", Request.TableFieldUVS, Request.FieldUVS, FieldValue);
+                                if (!Request.SetData("UVS", Request.TableFieldUVS, Request.FieldUVS, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -528,7 +534,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("UMPNA", Request.TableFieldUMPNA, Request.FieldUMPNA, FieldValue);
+                                if (!Request.SetData("UMPNA", Request.TableFieldUMPNA, Request.FieldUMPNA, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                                 #endregion
 
                                 #region Готовности насосных агрегатов
@@ -544,7 +551,8 @@ namespace Project_Сonfigurator.Services
                                     }
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KGMPNA", Request.TableFieldKGMPNA, Request.FieldKGMPNA, FieldValue);
+                                if (!Request.SetData("KGMPNA", Request.TableFieldKGMPNA, Request.FieldKGMPNA, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                                 #endregion
 
                                 #region Агрегатные защиты
@@ -560,7 +568,8 @@ namespace Project_Сonfigurator.Services
                                     }
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPRA", Request.TableFieldKTPRA, Request.FieldKTPRA, FieldValue);
+                                if (!Request.SetData("KTPRA", Request.TableFieldKTPRA, Request.FieldKTPRA, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                                 #endregion
 
                                 #region Предельные параметры агрегатных защит
@@ -577,7 +586,8 @@ namespace Project_Сonfigurator.Services
                                     }
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPRAS", Request.TableFieldKTPRAS, Request.FieldKTPRAS, FieldValue);
+                                if (!Request.SetData("KTPRAS", Request.TableFieldKTPRAS, Request.FieldKTPRAS, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                                 #endregion
                             }
                             #endregion
@@ -598,7 +608,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPR", Request.TableFieldKTPR, Request.FieldKTPR, FieldValue);
+                                if (!Request.SetData("KTPR", Request.TableFieldKTPR, Request.FieldKTPR, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -617,7 +628,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("KTPRS", Request.TableFieldKTPRS, Request.FieldKTPRS, FieldValue);
+                                if (!Request.SetData("KTPRS", Request.TableFieldKTPRS, Request.FieldKTPRS, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -637,7 +649,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("Signaling", Request.TableFieldSignaling, Request.FieldSignaling, FieldValue);
+                                if (!Request.SetData("Signaling", Request.TableFieldSignaling, Request.FieldSignaling, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -657,7 +670,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("UTS", Request.TableFieldUTS, Request.FieldUTS, FieldValue);
+                                if (!Request.SetData("UTS", Request.TableFieldUTS, Request.FieldUTS, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -675,7 +689,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SETPOINTS_REAL", Request.TableFieldUstReal, Request.FieldUstReal, FieldValue);
+                                if (!Request.SetData("SETPOINTS_REAL", Request.TableFieldUstReal, Request.FieldUstReal, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -693,7 +708,8 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("SETPOINTS_COMMON", Request.TableFieldUstCommon, Request.FieldUstCommon, FieldValue);
+                                if (!Request.SetData("SETPOINTS_COMMON", Request.TableFieldUstCommon, Request.FieldUstCommon, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
@@ -711,37 +727,38 @@ namespace Project_Сonfigurator.Services
                                     FieldValue.Add(_FieldValue);
                                 }
                                 if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("HAND_MAP", Request.TableFieldHandMap, Request.FieldHandMap, FieldValue);
-                            }
-                            #endregion
-
-                            #region Сообщения
-                            if (_ViewModel is MessageWindowViewModel)
-                            {
-                                var Data = _ViewModel as MessageWindowViewModel;
-
-                                foreach (var _Param in Data.Params)
-                                {
-                                    foreach (var _Message in _Param.Messages)
-                                    {
-                                        if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
-
-                                        var _FieldValue =
-                                            $"('{_Param.Description}', '{_Param.IndexSystem}', " +
-                                            $"'{_Message.Description}', '{_Message.Color}', '{_Message.NeedAck}', '{_Message.PathSound}', " +
-                                            $"'{_Message.TypeSound}', '{_Message.NeedPlay}', '{_Message.Hide}', '{_Message.LevelAccess}'),";
-
-                                        FieldValue.Add(_FieldValue);
-                                    }
-                                }
-                                if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                Request.SetData("MESSAGES", Request.TableFieldMessages, Request.FieldMessages, FieldValue);
+                                if (!Request.SetData("HAND_MAP", Request.TableFieldHandMap, Request.FieldHandMap, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
                             }
                             #endregion
 
                             #endregion
                         }
-                        ConnectSetting.SuccessUpdate = true;
+
+                        #region Сообщения
+                        List<string> MessageFieldValue = new();
+                        var MessageViewModel = App.Services.GetRequiredService<MessageWindowViewModel>();
+                        var Params = MessageViewModel.Params;
+
+                        foreach (var _Param in Params)
+                        {
+                            
+                            foreach (var _Message in _Param.Messages)
+                            {
+                                if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
+
+                                var _FieldValue =
+                                    $"('{_Param.Description}', '{_Param.IndexSystem}', " +
+                                    $"'{_Message.Description}', '{_Message.Color}', '{_Message.NeedAck}', '{_Message.PathSound}', " +
+                                    $"'{_Message.TypeSound}', '{_Message.NeedPlay}', '{_Message.Hide}', '{_Message.LevelAccess}'),";
+
+                                MessageFieldValue.Add(_FieldValue);
+                            }
+                        }
+                        if (MessageFieldValue is not null && MessageFieldValue.Count > 0)
+                            if (!Request.SetData("MESSAGES", Request.TableFieldMessages, Request.FieldMessages, MessageFieldValue))
+                                ConnectSetting.SuccessUpdate = false;
+                        #endregion
                     }
                 }
             }

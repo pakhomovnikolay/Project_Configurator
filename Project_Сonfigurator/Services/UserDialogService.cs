@@ -240,6 +240,7 @@ namespace Project_Сonfigurator.Services
 
             window = _Services.GetRequiredService<MainWindow>();
             window.Closed += (_, _) => _MainWindow = null;
+
             _MainWindow = window;
             window.Show();
         }
@@ -251,13 +252,17 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenSettingsWindow()
         {
-            if (_SettingWindow is { } window) { window.Show(); return; }
+            if (_SettingWindow is { } window)
+            {
+                window.Owner = _MainWindow ?? Application.Current.MainWindow;
+                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+                window.ShowDialog(); return;
+            }
 
             window = _Services.GetRequiredService<SettingWindow>();
-            window.Owner = Application.Current.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Owner = _MainWindow ?? Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             window.Closed += (_, _) => _SettingWindow = null;
-
 
             _SettingWindow = window;
             window.ShowDialog();

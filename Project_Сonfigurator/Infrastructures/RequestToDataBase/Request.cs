@@ -178,7 +178,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "CHANNEL_DESCRIPTION, VAR_NAME_SU, BIT, ADDRESS, VAR_NAME_VU) VALUES";
         #endregion
 
-        #region Синалы DI
+        #region Сигналы DI
         public const string TableFieldSignalsDI =
             "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
             "`ID` TEXT," +
@@ -191,7 +191,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignalsDI =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `AREA`, `ADDRESS`, `LINK_VALUE`, `ADDRESS_SIG`";
+            "(ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
         #endregion
 
         #region Сигналы AI
@@ -216,8 +216,8 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignalsAI =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `AREA`, `ADDRESS`, `LINK_VALUE`, `ADDRESS_SIG`, `INDEX_UMPNA`, `UNIT`," +
-            "`TYPE_VIBRATION`, `INDEX_PZ`, `TYPE_PI`, `INDEX_BD`, `LEVEL_RPP`, `ADDRESS_UTS`, `CONVERTER_KGS`";
+            "(ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG," +
+            "INDEX_UMPNA, UNIT, TYPE_VIBRATION, INDEX_PZ, TYPE_PI, INDEX_BD, LEVEL_RPP, ADDRESS_UTS, CONVERTER_KGS) VALUES";
         #endregion
 
         #region Сигналы DO
@@ -233,7 +233,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignalsDO =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `AREA`, `ADDRESS`, `LINK_VALUE`, `ADDRESS_SIG`";
+            "(ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
         #endregion
 
         #region Сигналы AO
@@ -249,7 +249,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignalsAO =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `AREA`, `ADDRESS`, `LINK_VALUE`, `ADDRESS_SIG`";
+            "(ID, DESCRIPTION, VAR_NAME, AREA, ADDRESS, LINK_VALUE, ADDRESS_SIG) VALUES";
         #endregion
 
         #region Секции шин
@@ -264,7 +264,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldEC =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS) VALUES";
         #endregion
 
         #region DI формируемые
@@ -278,7 +278,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUserDI =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `BIT`, `ADDRESS`";
+            "(ID, DESCRIPTION, VAR_NAME, BIT, ADDRESS) VALUES";
         #endregion
 
         #region AI формируемые
@@ -291,7 +291,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUserAI =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `ADDRESS`";
+            "(ID, DESCRIPTION, VAR_NAME, ADDRESS) VALUES";
         #endregion
 
         #region Регистры формируемые
@@ -304,7 +304,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUserReg =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `ADDRESS_VU`";
+            "(ID, DESCRIPTION, VAR_NAME, ADDRESS_VU) VALUES";
         #endregion
 
         #region Сигналы групп
@@ -319,7 +319,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignalsGroup =
-            "`ID`, `DESCRIPTION`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `ADDRESS_SIG`";
+            "(ID, DESCRIPTION, INV, TYPE_SIGNAL, ADDRESS, ADDRESS_SIG) VALUES";
         #endregion
 
         #region Группы сигналов
@@ -335,7 +335,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldGroupsSignal =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `QTY`, `ADDRESS_START`, `ADDRESS_END`, `ADDRESS_SIG`";
+            "(ID, DESCRIPTION, VAR_NAME, QTY, ADDRESS_START, ADDRESS_END, ADDRESS_SIG) VALUES";
         #endregion
 
         #region Задвижки
@@ -361,8 +361,8 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUZD =
-            "`DESCRIPTION`, `VAR_NAME`, `SHORT_NAME`, `INDEX_EC`, `INDEX_GROUP`, `NAME_GROUP`, " +
-            "`DIST`, `DOUBLE_STOP`, `BUR`, `COz`, `CZz`, `EC`, `CHECK_STATE`, `RS_OFF`, `TYPE`, `INDEX_PZ`, `INDEX_BD`";
+            "(DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_EC, INDEX_GROUP, NAME_GROUP, DIST," +
+            "DOUBLE_STOP, BUR, COz, CZz, EC, CHECK_STATE, RS_OFF, TYPE, INDEX_PZ, INDEX_BD) VALUES";
         #endregion
 
         #region Вспомсистемы
@@ -382,8 +382,8 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUVS =
-            "`DESCRIPTION`, `VAR_NAME`, `SHORT_NAME`, `INDEX_EC`, `INDEX_GROUP`, `NAME_GROUP`, `RESERVABLE`, `TYPE_PRESSURE`, " +
-            "`COz`, `ONE_PRESSURE_SENSOR_GROUP` ,`TYPE`";
+            "(DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_EC, INDEX_GROUP, NAME_GROUP, RESERVABLE," +
+            "TYPE_PRESSURE, COz, ONE_PRESSURE_SENSOR_GROUP, TYPE) VALUES";
         #endregion
 
         #region Насосные агрегаты
@@ -402,7 +402,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUMPNA =
-            "`DESCRIPTION`, `VAR_NAME`, `SHORT_NAME`, `INDEX_PZ`, `INDEX_VZ`, `TYPE`, `INDEX_GROUP_MS`, `USED_MCP`, `USED_KPD`, `QTY_BUTTON_STOP`";
+            "(DESCRIPTION, VAR_NAME, SHORT_NAME, INDEX_PZ, INDEX_VZ, TYPE, INDEX_GROUP_MS, USED_MCP, USED_KPD, QTY_BUTTON_STOP) VALUES";
         #endregion
 
         #region Карта агрегатных готовностей
@@ -418,7 +418,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldKGMPNA =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `NO_MASKED`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, NO_MASKED) VALUES";
         #endregion
 
         #region Карты агрегатных защит
@@ -438,7 +438,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldKTPRA =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `STATE`, `NO_MASKED`, `AVR`, `TYPE`, `STOP_TYPE`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, STATE, NO_MASKED, AVR, TYPE, STOP_TYPE) VALUES";
         #endregion
 
         #region Карта предельных параметров агрегатных защит
@@ -456,7 +456,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldKTPRAS =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `STATE`, `TYPE_WARNING`, `TYPE`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, STATE, TYPE_WARNING, TYPE) VALUES";
         #endregion
 
         #region Карта общестанционных защит
@@ -479,8 +479,8 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldKTPR =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `STATE_STATION`, `SHOULDER`, `SUB_SHOULDER`, " +
-            "`AUTODEBLOCK`, `NO_MASKED`, `STOP_TYPE_STATION`, `STOP_TYPE_NA`, `TYPE`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, STATE_STATION, SHOULDER," +
+            "SUB_SHOULDER, AUTODEBLOCK, NO_MASKED, STOP_TYPE_STATION, STOP_TYPE_NA, TYPE) VALUES";
         #endregion
 
         #region Карта предельных параметров общестанционных защит
@@ -497,7 +497,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldKTPRS =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `TYPE_WARNING`, `TYPE`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, TYPE_WARNING, TYPE) VALUES";
         #endregion
 
         #region LIST5
@@ -517,7 +517,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldSignaling =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `INV`, `TYPE_SIGNAL`, `ADDRESS`, `VAR_NAME_VU`, `BIT`, `COLOR` `USO_INDEX`, `TYPE_WARNING`";
+            "(ID, DESCRIPTION, VAR_NAME, INV, TYPE_SIGNAL, ADDRESS, VAR_NAME_VU, BIT, COLOR, USO_INDEX, TYPE_WARNING) VALUES";
         #endregion
 
         #region Табло и сирены
@@ -541,8 +541,8 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUTS =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `TYPE_SIGNAL`, `ADDRESS`, `LOCK_ENABLE`, `INDEX_PZ, `APT_OFF`, `INDEX_GROUP`, `TYPE_KCO`, `ADDRESS_KCO`, " +
-            "`TYPE_SIGNAL_SOD`, `ADDRESS_SOD`, `TYPE_SIGNALERR_SOD`, `ADDRESS_ERR_SOD`";
+            "(ID, DESCRIPTION, VAR_NAME, TYPE_SIGNAL, ADDRESS, LOCK_ENABLE, INDEX_PZ, " +
+            "APT_OFF, INDEX_GROUP, TYPE_KCO, ADDRESS_KCO, TYPE_SIGNAL_SOD, ADDRESS_SOD, TYPE_SIGNALERR_SOD, ADDRESS_ERR_SOD) VALUES";
         #endregion
 
         #region Устаки типа REAL
@@ -558,7 +558,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUstReal =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `ADDRESS`, `VALUE`, `UNIT`, `QTY_SIMBOLS_COMMA`";
+            "(ID, DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT, QTY_SIMBOLS_COMMA) VALUES";
         #endregion
 
         #region Временные уставки общие
@@ -573,7 +573,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldUstCommon =
-            "`ID`, `DESCRIPTION`, `VAR_NAME`, `ADDRESS`, `VALUE`, `UNIT`";
+            "(ID, DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT) VALUES";
         #endregion
 
         #region Карта ручного ввода
@@ -585,7 +585,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldHandMap =
-            "`DESCRIPTION`, `VAR_NAME`, `BIT`";
+            "(ID, DESCRIPTION, VAR_NAME, BIT) VALUES";
         #endregion
 
         #region Сообщения
@@ -604,7 +604,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldMessages =
-            "`NAME_TAB`, `SYSTEM`, `DESCRIPTION`, `COLOR`, `NEED_ACK`, `PATH_SOUND`, `TYPE_SOUND`, `NEED_PLAY`, `HIDE`, `LEVEL_ACCESS`";
+            "(NAME_TAB, SYSTEM, DESCRIPTION, COLOR, NEED_ACK, PATH_SOUND, TYPE_SOUND, NEED_PLAY, HIDE, LEVEL_ACCESS) VALUES";
         #endregion
 
         #endregion

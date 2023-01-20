@@ -391,6 +391,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             var index = int.Parse((string)p);
             var message = "";
+            if (App.FucusedTabControl == null) return;
 
             #region Проверка корректного выбора сигнала
             switch (SignalServices.Type)
@@ -484,7 +485,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         break;
                     }
                 }
-                if (App.FucusedTabControl == null) return;
+
                 foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
                                          let _TabItem = _Item as IViewModelUserControls
                                          where _TabItem.Title == SignalServices.ListName

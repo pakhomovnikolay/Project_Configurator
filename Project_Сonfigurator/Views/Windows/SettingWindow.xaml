@@ -7,7 +7,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
-        WindowStartupLocation="CenterOwner"
+        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         WindowStyle="None"
         BorderBrush="Black"
@@ -86,7 +86,7 @@
                 <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
-            <fa:FontAwesome Grid.Column="0" Icon="Solid_Magic" VerticalAlignment="Center"/>
+            <fa:FontAwesome Grid.Column="0" Icon="Solid_Tools" VerticalAlignment="Center"/>
             <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center"
                            MouseMove="TextBlock_MouseMove">
                 <TextBlock.InputBindings>
