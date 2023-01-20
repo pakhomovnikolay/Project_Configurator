@@ -4,7 +4,6 @@ using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
-using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -539,6 +538,7 @@ namespace Project_Сonfigurator.Services
                                 #endregion
 
                                 #region Готовности насосных агрегатов
+                                FieldValue = new();
                                 foreach (var _UMPNA in Data.Params)
                                 {
                                     foreach (var _Param in _UMPNA.KGMPNA)
@@ -556,6 +556,7 @@ namespace Project_Сonfigurator.Services
                                 #endregion
 
                                 #region Агрегатные защиты
+                                FieldValue = new();
                                 foreach (var _UMPNA in Data.Params)
                                 {
                                     foreach (var _Param in _UMPNA.KTPRA)
@@ -573,6 +574,7 @@ namespace Project_Сonfigurator.Services
                                 #endregion
 
                                 #region Предельные параметры агрегатных защит
+                                FieldValue = new();
                                 foreach (var _UMPNA in Data.Params)
                                 {
                                     foreach (var _Param in _UMPNA.KTPRAS)
@@ -694,25 +696,6 @@ namespace Project_Сonfigurator.Services
                             }
                             #endregion
 
-                            #region Временные уставки общие
-                            if (_ViewModel is UstCommonUserControlViewModel)
-                            {
-                                var Data = _ViewModel as UstCommonUserControlViewModel;
-
-                                foreach (var _Param in Data.Params)
-                                {
-                                    if (string.IsNullOrWhiteSpace(_Param.Id) && string.IsNullOrWhiteSpace(_Param.Description)) continue;
-                                    var _FieldValue =
-                                        $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', " +
-                                        $"'{_Param.Address}', '{_Param.Value}', '{_Param.Unit}'),";
-                                    FieldValue.Add(_FieldValue);
-                                }
-                                if (FieldValue is null || FieldValue.Count <= 0) continue;
-                                if (!Request.SetData("SETPOINTS_COMMON", Request.TableFieldUstCommon, Request.FieldUstCommon, FieldValue))
-                                    ConnectSetting.SuccessUpdate = false;
-                            }
-                            #endregion
-
                             #region Карта ручного ввода
                             if (_ViewModel is HandMapUserControlViewModel)
                             {
@@ -735,6 +718,142 @@ namespace Project_Сonfigurator.Services
                             #endregion
                         }
 
+                        #region Уставки
+                        List<string> UstFieldValue = new();
+                        foreach (var _ViewModel in _ViewModels)
+                        {
+                            #region Временные уставки общие
+                            if (_ViewModel is UstCommonUserControlViewModel)
+                            {
+                                var Data = _ViewModel as UstCommonUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Value)) continue;
+                                    var _FieldValue =
+                                        $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', " +
+                                        $"'{_Param.Address}', '{_Param.Value}', '{_Param.Unit}'),";
+                                    UstFieldValue.Add(_FieldValue);
+                                }
+                            }
+                            #endregion
+
+                            #region Временные уставки UZD
+                            if (_ViewModel is UZDUserControlViewModel)
+                            {
+                                var Data = _ViewModel as UZDUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                    foreach (var _Setpoint in _Param.Setpoints)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
+                                        var _FieldValue =
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            #region Временные уставки UVS
+                            if (_ViewModel is UVSUserControlViewModel)
+                            {
+                                var Data = _ViewModel as UVSUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                                    foreach (var _Setpoint in _Param.Setpoints)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
+                                        var _FieldValue =
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            #region Временные уставки UMPNA
+                            if (_ViewModel is UMPNAUserControlViewModel)
+                            {
+                                var Data = _ViewModel as UMPNAUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+
+                                    #region Уставки МПНА
+                                    foreach (var _Setpoint in _Param.Setpoints)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
+                                        var _FieldValue =
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                    #endregion
+
+                                    #region Уставки агрегатный готовностей
+                                    foreach (var _SubParam in _Param.KGMPNA)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(_SubParam.Setpoints.Value)) continue;
+                                        var _FieldValue =
+                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', '{_SubParam.Setpoints.VarName}', " +
+                                            $"'{_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                    #endregion
+
+                                    #region Уставки агрегатных защит
+                                    foreach (var _SubParam in _Param.KTPRA)
+                                    {
+                                        if (string.IsNullOrWhiteSpace(_SubParam.Setpoints.Value)) continue;
+                                        var _FieldValue =
+                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', '{_SubParam.Setpoints.VarName}', " +
+                                            $"'{_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                    #endregion
+                                }
+                            }
+                            #endregion
+
+                            #region Временные уставки обществнционных защит
+                            if (_ViewModel is KTPRUserControlViewModel)
+                            {
+                                var Data = _ViewModel as KTPRUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Setpoints.Value)) continue;
+                                    var _FieldValue =
+                                        $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', '{_Param.Setpoints.VarName}', " +
+                                        $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}'),";
+                                    UstFieldValue.Add(_FieldValue);
+                                }
+                            }
+                            #endregion
+
+                            #region Временные уставки предельных параметров обществнционных защит
+                            if (_ViewModel is KTPRSUserControlViewModel)
+                            {
+                                var Data = _ViewModel as KTPRSUserControlViewModel;
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Setpoints.Value)) continue;
+                                    var _FieldValue =
+                                        $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', '{_Param.Setpoints.VarName}', " +
+                                        $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}'),";
+                                    UstFieldValue.Add(_FieldValue);
+                                }
+                            }
+                            #endregion
+                        }
+                        if (UstFieldValue is null || UstFieldValue.Count <= 0) continue;
+                        if (!Request.SetData("SETPOINTS", Request.TableFieldUstCommon, Request.FieldUstCommon, UstFieldValue))
+                            ConnectSetting.SuccessUpdate = false;
+                        #endregion
+
                         #region Сообщения
                         List<string> MessageFieldValue = new();
                         var MessageViewModel = App.Services.GetRequiredService<MessageWindowViewModel>();
@@ -742,7 +861,7 @@ namespace Project_Сonfigurator.Services
 
                         foreach (var _Param in Params)
                         {
-                            
+
                             foreach (var _Message in _Param.Messages)
                             {
                                 if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
