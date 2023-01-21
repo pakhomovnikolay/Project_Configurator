@@ -521,6 +521,7 @@ namespace Project_Сonfigurator.ViewModels
                         }
                     }
                 }
+                RefreshDataView();
 
             }
             catch (Exception e)

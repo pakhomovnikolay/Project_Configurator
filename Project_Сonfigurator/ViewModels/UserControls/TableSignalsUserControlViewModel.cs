@@ -82,7 +82,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         SelectedParam = _Params[0];
                         RefreshDataView();
                     }
-                    else RefreshDataView();
+                    else
+                    {
+                        SelectedParam = null;
+                        RefreshDataView();
+                    }
                 }
             }
         }

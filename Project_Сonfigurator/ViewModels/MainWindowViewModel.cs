@@ -4,6 +4,7 @@ using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -267,6 +268,8 @@ namespace Project_Сonfigurator.ViewModels
             {
                 string Filter = $"Все файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
                 if (!UserDialog.SelectFolder(Title, out string path, out string file_name, App.Settings.Config.PathProject, Filter)) return;
+                if (!file_name.Contains(App.__EncryptedProjectFileSuffix, StringComparison.CurrentCultureIgnoreCase))
+                    file_name = $"{file_name}.{App.__EncryptedProjectFileSuffix}";
                 App.Settings.Config.PathProject = path + file_name;
             }
             SettingServices.Config = App.Settings.Config;
@@ -286,6 +289,8 @@ namespace Project_Сonfigurator.ViewModels
         {
             string Filter = $"Все файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
             if (!UserDialog.SelectFolder(Title, out string path, out string file_name, App.Settings.Config.PathProject, Filter)) return;
+            if (!file_name.Contains(App.__EncryptedProjectFileSuffix, StringComparison.CurrentCultureIgnoreCase))
+                file_name = $"{file_name}.{App.__EncryptedProjectFileSuffix}";
             App.Settings.Config.PathProject = path + file_name;
 
             SettingServices.Config = App.Settings.Config;
