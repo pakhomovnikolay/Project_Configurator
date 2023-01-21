@@ -235,6 +235,35 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Формирование данных при создании нового проекта
         private void CreateData()
         {
+            var DefaultParam = App.Settings.Config.DefualtMapKTPR;
+
+            #region Считываем дпнные по умолчанию
+            foreach (var item in DefaultParam)
+            {
+                if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+
+                #region Создаем параметр
+                var _Param = new BaseKTPR
+                {
+                    Type = "",
+                    SubShoulder = "",
+                    StopTypeUMPNA = "",
+                    StopTypeNS = "",
+                    StateStation = "",
+                    Shoulder = "",
+                    NoMasked = "",
+                    Autodeblok = "",
+                    ControlUTS = new BaseControlUTS(),
+                    ControlUVS = new BaseControlUVS(),
+                    ControlUZD = new BaseControlUZD(),
+                    Setpoints = item.Setpoints,
+                    Param = item.Param
+                };
+                Params.Add(_Param);
+                #endregion
+            }
+            #endregion
+
             while (Params.Count < 256)
             {
                 #region Создаем данные параметра

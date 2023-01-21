@@ -105,7 +105,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public ObservableCollection<BaseUVS> Params
         {
             get => _Params;
-            set => Set(ref _Params, value);
+            set
+            {
+                if (Set(ref _Params, value))
+                    if (_Params is null || _Params.Count <= 0)
+                        SelectedParam = null;
+            }
         }
         #endregion
 

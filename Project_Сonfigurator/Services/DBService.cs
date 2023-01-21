@@ -898,6 +898,8 @@ namespace Project_Сonfigurator.Services
         {
             ILogSerivece Log = new LogSerivece();
             IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            App.Services.GetRequiredService<MessageWindowViewModel>().Params = new();
+
             try
             {
                 foreach (var item in _ViewModels)
@@ -926,7 +928,6 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => Data.Params = new(),
                         UstCommonUserControlViewModel Data => Data.Params = new(),
                         HandMapUserControlViewModel Data => Data.Params = new(),
-                        MessageWindowViewModel Data => Data.Params = new(),
                         _ => null
                     };
                 }

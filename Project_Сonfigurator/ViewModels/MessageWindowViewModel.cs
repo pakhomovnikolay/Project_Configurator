@@ -113,6 +113,13 @@ namespace Project_Сonfigurator.ViewModels
             {
                 if (Set(ref _Params, value))
                 {
+                    if (Params is null || Params.Count <= 0)
+                    {
+                        SelectedTabIndex = -1;
+                        SelectedParam = null;
+                        SelectedSubParam = null;
+                        return;
+                    }
                     SelectedTabIndex = 0;
                     SelectedParam = _Params[SelectedTabIndex];
                     RefreshDataView();
@@ -144,7 +151,10 @@ namespace Project_Сonfigurator.ViewModels
             set
             {
                 if (Set(ref _SelectedParam, value))
+                {
+                    if (_SelectedParam is null || _SelectedParam.Messages.Count <= 0) return;
                     RefreshDataView();
+                }
             }
         }
         #endregion
@@ -173,6 +183,7 @@ namespace Project_Сonfigurator.ViewModels
             {
                 if (Set(ref _SelectedTabIndex, value))
                 {
+                    if (_SelectedTabIndex == -1) return;
                     SelectedParam = Params[_SelectedTabIndex];
                     SelectedSubParam = SelectedParam.Messages[0];
                     RefreshDataView();
