@@ -87,42 +87,42 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Входные параметры
         /// </summary>
-        public ObservableCollection<BaseParam> InputParam { get; set; }
+        public ObservableCollection<BaseParam> InputParam { get; set; } = new();
         #endregion
 
         #region Выходные параметры
         /// <summary>
         /// Выходные параметры
         /// </summary>
-        public ObservableCollection<BaseParam> OutputParam { get; set; }
+        public ObservableCollection<BaseParam> OutputParam { get; set; } = new();
         #endregion
 
         #region Временные уставки
         /// <summary>
         /// Временные уставки
         /// </summary>
-        public ObservableCollection<BaseSetpoints> Setpoints { get; set; }
+        public ObservableCollection<BaseSetpoints> Setpoints { get; set; } = new();
         #endregion
 
         #region Параметры готовностей
         /// <summary>
         /// Параметры готовностей
         /// </summary>
-        public ObservableCollection<BaseKGMPNA> KGMPNA { get; set; }
+        public ObservableCollection<BaseKGMPNA> KGMPNA { get; set; } = new();
         #endregion
 
         #region Параметры защит
         /// <summary>
         /// Параметры защит
         /// </summary>
-        public ObservableCollection<BaseKTPRA> KTPRA { get; set; }
+        public ObservableCollection<BaseKTPRA> KTPRA { get; set; } = new();
         #endregion
 
         #region Параметры предельных параметров
         /// <summary>
         /// Параметры предельных параметров
         /// </summary>
-        public ObservableCollection<BaseKTPRAS> KTPRAS { get; set; }
+        public ObservableCollection<BaseKTPRAS> KTPRAS { get; set; } = new();
         #endregion
     }
 }

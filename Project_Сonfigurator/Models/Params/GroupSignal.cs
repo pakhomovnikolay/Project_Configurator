@@ -8,7 +8,7 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Параметры
         /// </summary>
-        public BaseParam Param { get; set; }
+        public BaseParam Param { get; set; } = new();
         #endregion
 
         #region Количество сработок в группе

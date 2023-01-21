@@ -9,14 +9,14 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Параметры готовностей
         /// </summary>
-        public BaseParam Param { get; set; }
+        public BaseParam Param { get; set; } = new();
         #endregion
 
         #region Временные уставки
         /// <summary>
         /// Временные уставки
         /// </summary>
-        public BaseSetpoints Setpoints { get; set; }
+        public BaseSetpoints Setpoints { get; set; } = new();
         #endregion
 
         #region Запрет маскирования

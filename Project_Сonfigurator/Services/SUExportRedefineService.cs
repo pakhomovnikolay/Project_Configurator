@@ -576,7 +576,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsAIUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsAIUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -586,7 +586,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
                 {
                     flAllowedPrint = true;
                     fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
@@ -631,7 +631,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsDIUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsDIUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -643,7 +643,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
                 {
                     flAllowedPrint = true;
                     var VarName = _Param.Signal.VarName;
@@ -687,7 +687,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsDOUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsDOUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -699,7 +699,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
                 {
                     flAllowedPrint = true;
                     var VarName = _Param.Signal.VarName;
@@ -748,7 +748,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsAOUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsAOUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -758,7 +758,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Signal.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
                 {
                     flAllowedPrint = true;
                     fNum += $"(* =========================================== {_Param.Signal.Description} =========================================== *)\n\r";
@@ -796,7 +796,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsAOUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsAOUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -833,7 +833,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as ECUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is ECUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -843,7 +843,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Description))
                 {
                     flAllowedPrint = true;
                     var TypeSignal = TextToInt(_Param.TypeSignal);
@@ -883,12 +883,12 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is GroupsSignalUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalsGroupUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalsGroupUserControlViewModel
                                      select _TabItem)
                 ParParams = _TabItem.Params;
 
@@ -898,7 +898,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.AddressStart) && !string.IsNullOrWhiteSpace(_Param.AddressEnd))
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                 {
                     fNum += $"(* ======== {_Param.Param.Description} ======== *)\n";
 
@@ -948,7 +948,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is GroupsSignalUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -985,7 +985,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is GroupsSignalUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1022,7 +1022,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UMPNAUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1034,7 +1034,7 @@ namespace Project_Сonfigurator.Services
             {
                 foreach (var _Param in _UMPNA.KGMPNA)
                 {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                    if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                     {
                         flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
@@ -1078,7 +1078,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as KTPRUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is KTPRUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1088,7 +1088,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                 {
                     flAllowedPrint = true;
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
@@ -1160,7 +1160,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UMPNAUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1172,7 +1172,7 @@ namespace Project_Сonfigurator.Services
             {
                 foreach (var _Param in _UMPNA.KTPRA)
                 {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                    if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                     {
                         flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
@@ -1221,7 +1221,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UMPNAUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1233,7 +1233,7 @@ namespace Project_Сonfigurator.Services
             {
                 foreach (var _Param in _UMPNA.KTPRAS)
                 {
-                    if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                    if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                     {
                         flAllowedPrint = true;
                         fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
@@ -1279,7 +1279,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as KTPRSUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is KTPRSUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1289,7 +1289,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                 {
                     flAllowedPrint = true;
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
@@ -1335,7 +1335,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as SignalingUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is SignalingUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1345,7 +1345,7 @@ namespace Project_Сonfigurator.Services
             #region Формируем данные
             foreach (var _Param in Params)
             {
-                if (!string.IsNullOrWhiteSpace(_Param.Param.Address))
+                if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                 {
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
@@ -1396,7 +1396,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UMPNAUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1465,7 +1465,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UZDUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UZDUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1540,7 +1540,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UVSUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UVSUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1564,11 +1564,14 @@ namespace Project_Сonfigurator.Services
                     fNum += VarName + $".num_ec := {TextToSint(_Param.IndexEC)};\n";
                     fNum += VarName + $".num_grp := {TextToSint(_Param.IndexGroup)};\n\r";
 
-                    fNum += VarNameGrp + $".enable := TRUE;\n";
-                    fNum += VarNameGrp + $".one_pc_use := {TextToSbool(_Param.OnePressureSensorGroup)};\n";
-                    fNum += VarNameGrp + $".vsgrp_type := {TextToSint(_Param.TypeGroup)};\n";
-                    fNum += VarNameGrp + $".pz_word := {TextToSint(_Param.Index)};\n";
-                    fNum += VarNameGrp + $".AvailReserve := {TextToSbool(_Param.Reservable)};\n\r";
+                    if (!string.IsNullOrWhiteSpace(_Param.DescriptionGroup))
+                    {
+                        fNum += VarNameGrp + $".enable := TRUE;\n";
+                        fNum += VarNameGrp + $".one_pc_use := {TextToSbool(_Param.OnePressureSensorGroup)};\n";
+                        fNum += VarNameGrp + $".vsgrp_type := {TextToSint(_Param.TypeGroup)};\n";
+                        fNum += VarNameGrp + $".pz_word := {TextToSint(_Param.Index)};\n";
+                        fNum += VarNameGrp + $".AvailReserve := {TextToSbool(_Param.Reservable)};\n\r";
+                    }
 
                     foreach (var _InputParam in _Param.InputParam)
                     {
@@ -1613,7 +1616,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UTSUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UTSUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1682,7 +1685,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UMPNAUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1736,7 +1739,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UZDUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UZDUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1790,7 +1793,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UVSUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UVSUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 
@@ -1844,7 +1847,7 @@ namespace Project_Сonfigurator.Services
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             foreach (var _TabItem in from object _Item in _ViewModelsUserControl
                                      let _TabItem = _Item as UTSUserControlViewModel
-                                     where _TabItem is not null
+                                     where _TabItem is UTSUserControlViewModel
                                      select _TabItem)
                 Params = _TabItem.Params;
 

@@ -9,28 +9,28 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Параметры защит
         /// </summary>
-        public BaseParam Param { get; set; }
+        public BaseParam Param { get; set; } = new();
         #endregion
 
         #region Временные уставки
         /// <summary>
         /// Временные уставки
         /// </summary>
-        public BaseSetpoints Setpoints { get; set; }
+        public BaseSetpoints Setpoints { get; set; } = new();
         #endregion
 
         #region Управления задвижками
         /// <summary>
         /// Управления задвижками
         /// </summary>
-        public BaseControlUZD ControlUZD { get; set; }
+        public BaseControlUZD ControlUZD { get; set; } = new();
         #endregion
 
         #region Управления вспомсистемами
         /// <summary>
         /// Управления вспомсистемами
         /// </summary>
-        public BaseControlUVS ControlUVS { get; set; }
+        public BaseControlUVS ControlUVS { get; set; } = new();
         #endregion
 
         #region Состояние НА

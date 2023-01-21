@@ -9,35 +9,35 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Параметры
         /// </summary>
-        public BaseParam Param { get; set; }
+        public BaseParam Param { get; set; } = new();
         #endregion
 
         #region Уставки
         /// <summary>
         /// Уставки
         /// </summary>
-        public BaseSetpoints Setpoints { get; set; }
+        public BaseSetpoints Setpoints { get; set; } = new();
         #endregion
 
         #region Управление задвижками
         /// <summary>
         /// Управление задвижками
         /// </summary>
-        public BaseControlUZD ControlUZD { get; set; }
+        public BaseControlUZD ControlUZD { get; set; } = new();
         #endregion
 
         #region Управление вспомсистемами
         /// <summary>
         /// Управление вспомсистемами
         /// </summary>
-        public BaseControlUVS ControlUVS { get; set; }
+        public BaseControlUVS ControlUVS { get; set; } = new();
         #endregion
 
         #region Управление табло и сиренами
         /// <summary>
         /// Управление табло и сиренами
         /// </summary>
-        public BaseControlUTS ControlUTS { get; set; }
+        public BaseControlUTS ControlUTS { get; set; } = new();
         #endregion
 
         #region Тип сигнализации

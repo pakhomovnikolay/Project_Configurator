@@ -50,28 +50,28 @@ namespace Project_Сonfigurator.Models.Params
         /// <summary>
         /// Данные параметра
         /// </summary>
-        public BaseParam Param { get; set; }
+        public BaseParam Param { get; set; } = new();
         #endregion
 
         #region Данные для контроля исправности цепей
         /// <summary>
         /// Данные для контроля исправности цепей
         /// </summary>
-        public BaseParam KCO { get; set; }
+        public BaseParam KCO { get; set; } = new();
         #endregion
 
         #region Данные для датчика прохождения СОД
         /// <summary>
         /// Данные для датчика прохождения СОД
         /// </summary>
-        public BaseParam SignalSOD { get; set; }
+        public BaseParam SignalSOD { get; set; } = new();
         #endregion
 
         #region Данные для датчика прохождения СОД (неисправность)
         /// <summary>
         /// Данные для датчика прохождения СОД (неисправность)
         /// </summary>
-        public BaseParam SignalErrSOD { get; set; }
+        public BaseParam SignalErrSOD { get; set; } = new();
         #endregion
     }
 }
