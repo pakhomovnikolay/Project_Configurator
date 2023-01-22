@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
@@ -6,8 +7,11 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
@@ -243,52 +247,62 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать вспомсистемы из таблицы сигналов
         /// </summary>
         public ICommand CmdImportUVS => _CmdImportUVS ??= new RelayCommand(OnCmdImportUVSExecuted, CanCmdImportUVSExecute);
-        private bool CanCmdImportUVSExecute() => /*TableSignalsViewModel.DataView is not null && TableSignalsViewModel.DataView.CurrentItem is not null*/true;
+        private bool CanCmdImportUVSExecute() => true;
 
         private void OnCmdImportUVSExecuted()
         {
-            //if (TableSignalsViewModel.DataView is null) return;
-            //if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
-            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+            #region Импорт сигналов из ТБ
+            if (!UserDialog.SendMessage("Внимание!", "Перед продолжением убедитесь, что ТБ заполнена.\nВсе данные будут потеряны! Продолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            //UVS = new();
-            //foreach (var DataView in TableSignalsViewModel.USOList)
-            //{
-            //    foreach (var _Rack in DataView.Racks)
-            //    {
-            //        foreach (var _Module in _Rack.Modules)
-            //        {
-            //            foreach (var Channel in _Module.Channels)
-            //            {
-            //                if ((Channel.Description.Contains("насос", StringComparison.Ordinal) ||
-            //                    Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase)) &&
-            //                    !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase) &&
-            //                    !Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) &&
-            //                    !Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase))
-            //                {
-            //                    var name = "";
-            //                    var index_dot = Channel.Description.IndexOf(".");
-            //                    var qty = Channel.Description.Length;
-            //                    if (index_dot > 0)
-            //                        name = Channel.Description.Remove(index_dot, qty - index_dot);
-            //                    var fl_tmp = false;
-            //                    foreach (var item in UVS)
-            //                    {
-            //                        if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-            //                            fl_tmp = true;
-            //                    }
-            //                    if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
-            //                        ImportUVS(name, UVS);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
+            Params = new();
+            TableSignalsUserControlViewModel TableSignalsViewModel = new();
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as TableSignalsUserControlViewModel
+                                     where _TabItem is TableSignalsUserControlViewModel
+                                     select _TabItem)
+                TableSignalsViewModel = _TabItem;
 
-            //SelectedUVS = UVS[^1];
-            //_DataView.Source = UVS;
-            //_DataView.View.Refresh();
-            //OnPropertyChanged(nameof(DataView));
+            if (TableSignalsViewModel.Params is null || TableSignalsViewModel.Params.Count <= 0)
+                if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",
+                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
+
+            foreach (var _Params in TableSignalsViewModel.Params)
+            {
+                foreach (var _Rack in _Params.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        if (_Module.Channels is null || _Module.Channels.Count <= 0) continue;
+                        foreach (var Channel in _Module.Channels)
+                        {
+                            if ((Channel.Description.Contains("насос", StringComparison.Ordinal) ||
+                                Channel.Description.Contains("вентилятор", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase) &&
+                                !Channel.Description.Contains("мна", StringComparison.CurrentCultureIgnoreCase) &&
+                                !Channel.Description.Contains("пна", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                var name = "";
+                                var index_dot = Channel.Description.IndexOf(".");
+                                var qty = Channel.Description.Length;
+                                if (index_dot > 0) name = Channel.Description.Remove(index_dot, qty - index_dot);
+
+                                var fl_tmp = false;
+                                foreach (var _Param in Params)
+                                    if (name.Contains(_Param.Description, StringComparison.CurrentCultureIgnoreCase))
+                                        fl_tmp = true;
+
+                                if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
+                                    ImportUVS(name);
+                            }
+                        }
+                    }
+                }
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
+            #endregion
         }
         #endregion
 
@@ -514,96 +528,95 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion 
 
-        //#region Импортируем вспомсистемы
-        //private static void ImportUVS(string Description, ObservableCollection<BaseUVS> data_list)
-        //{
+        #region Импортируем вспомсистемы
+        private void ImportUVS(string Description)
+        {
+            var index = Params.Count + 1;
+            var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
-        //    var index = data_list.Count + 1;
-        //    var index_setpoints = (index - 1) * App.Settings.Config.UVS.Setpoints.Count;
-        //    var index_input_param = (index - 1) * App.Settings.Config.UVS.InputParams.Count;
-        //    var index_output_param = (index - 1) * App.Settings.Config.UVS.OutputParams.Count;
-        //    var InputParam = new ObservableCollection<BaseParam>();
-        //    var OutputParam = new ObservableCollection<BaseParam>();
-        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
+            #region Создаем вспомсистему
 
-        //    #region Создаем вспомсистему
+            #region Входные параметры
+            for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DI_P[{index_input_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UVS.InputParams[i].Text
+                };
+                InputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Входные параметры
-        //    for (int i = 0; i < App.Settings.Config.UVS.InputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"VS_DI_P[{index_input_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UVS.InputParams[i].Text
-        //        };
-        //        InputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Выходные параметры
+            for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"VS_DO_P[{index_output_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UVS.OutputParams[i].Text
+                };
+                OutputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Выходные параметры
-        //    for (int i = 0; i < App.Settings.Config.UVS.OutputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"VS_DO_P[{index_output_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UVS.OutputParams[i].Text
-        //        };
-        //        OutputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Уставки
+            for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
+            {
+                var Param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
+                    Id = $"H{7000 + index_setpoints + i}",
+                    Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UVS.Setpoints[i].Value,
+                    Address = $"%MW{2000 + index_setpoints + i}",
+                    Description = App.Settings.Config.UVS.Setpoints[i].Description
+                };
+                Setpoints.Add(Param);
+            }
+            #endregion
 
-        //    #region Уставки
-        //    for (int i = 0; i < App.Settings.Config.UVS.Setpoints.Count; i++)
-        //    {
-        //        var Param = new BaseSetpoints
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"SP_TM_VS[{index_setpoints + i + 1}]",
-        //            Id = $"H{7000 + index_setpoints + i}",
-        //            Unit = App.Settings.Config.UVS.Setpoints[i].Unit,
-        //            Value = App.Settings.Config.UVS.Setpoints[i].Value,
-        //            Address = $"%MW{2000 + index_setpoints + i}",
-        //            Description = App.Settings.Config.UVS.Setpoints[i].Description
-        //        };
-        //        Setpoints.Add(Param);
-        //    }
-        //    #endregion
+            #region Генерируем вспомсистему
+            var signal = new BaseUVS
+            {
+                Index = $"{index}",
+                Description = Description,
+                VarName = $"uvs_param[{index}]",
+                ShortDescription = "",
+                IndexEC = "",
+                IndexGroup = "",
+                DescriptionGroup = "",
+                COz = "",
+                OnePressureSensorGroup = "",
+                Reservable = "",
+                TypeGroup = "",
+                TypePressure = "",
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
+            };
+            Params.Add(signal);
+            #endregion
 
-        //    #region Генерируем вспомсистему
-        //    var signal = new BaseUVS
-        //    {
-        //        Index = $"{index}",
-        //        Description = Description,
-        //        VarName = $"uvs_param[{index}]",
-        //        ShortDescription = "",
-        //        IndexEC = "",
-        //        IndexGroup = "",
-        //        DescriptionGroup = "",
-        //        COz = "",
-        //        OnePressureSensorGroup = "",
-        //        Reservable = "",
-        //        TypeGroup = "",
-        //        TypePressure = "",
-        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
-        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
-        //    };
-        //    data_list.Add(signal);
-        //    #endregion
-
-        //    #endregion
-        //}
-        //#endregion 
+            #endregion
+        }
+        #endregion 
 
         #endregion
     }

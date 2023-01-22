@@ -100,7 +100,7 @@
                         </Button.Content>
                     </Button>
                     <Button Grid.Column="2" Margin="0.5" ToolTip="Импортировать МПНА из таблицы сигналов"
-                            Content="Импорт из ТБ"
+                            Content="Импорт из ТБ" FontWeight="Bold"
                             Style="{StaticResource CustomButtonStyle}"
                             Command="{Binding CmdImportUMPNA}"
                             >

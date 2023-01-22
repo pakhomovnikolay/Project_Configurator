@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
@@ -6,9 +7,11 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -229,143 +232,135 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - Импортировать служебные сигналы из ТБ
         /// </summary>
         public ICommand CmdImportServiceSignal => _CmdImportServiceSignal ??= new RelayCommand(OnCmdImportServiceSignalExecuted, CanCmdImportServiceSignalExecute);
-        private bool CanCmdImportServiceSignalExecute(object p) =>/* LayotRackViewModel is not null*/ true;
+        private bool CanCmdImportServiceSignalExecute(object p) => true;
 
         private void OnCmdImportServiceSignalExecuted(object p)
         {
-            //if (LayotRackViewModel.Params is null) return;
-            //if (LayotRackViewModel.Params.Count <= 0) return;
-            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
-            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+            #region Импорт сигналов из ТБ
+            if (!UserDialog.SendMessage("Внимание!", "Перед продолжением убедитесь, что ТБ заполнена.\nВсе данные будут потеряны! Продолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+            Params = new();
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+
+            LayotRackUserControlViewModel LayotRacksViewModel = new();
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as LayotRackUserControlViewModel
+                                     where _TabItem is LayotRackUserControlViewModel
+                                     select _TabItem)
+                LayotRacksViewModel = _TabItem;
+
+            TableSignalsUserControlViewModel TableSignalsViewModel = new();
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as TableSignalsUserControlViewModel
+                                     where _TabItem is TableSignalsUserControlViewModel
+                                     select _TabItem)
+                TableSignalsViewModel = _TabItem;
+
+            if (TableSignalsViewModel.Params is null || TableSignalsViewModel.Params.Count <= 0)
+                if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",
+                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
 
 
-            //#region Генерируем регистры формируемые
-            //Signaling = new();
-            //for (int i = 0; i < 58; i++)
-            //{
-            //    for (int j = 0; j < 16; j++)
-            //    {
-            //        var param = new BaseSignaling
-            //        {
-            //            Param = new BaseParam
-            //            {
-            //                Index = $"{Signaling.Count + 1}",
-            //                Id = "",
-            //                Description = "",
-            //                VarName = $"list5_param[{Signaling.Count + 1}]",
-            //                Inv = "",
-            //                TypeSignal = "",
-            //                Address = ""
-            //            },
-            //            Color = "",
-            //            IndexUSO = "",
-            //            TypeWarning = "1",
-            //            VarNameVU = $"LIST5[{i + 1}]"
-            //        };
-            //        Signaling.Add(param);
-            //    }
-            //}
-            //#endregion
+            CreateData();
 
-            //#region Переописываем сигналы диагностики
-            //var USOList = LayotRackViewModel.Params;
-            //var index = 0;
-            //bool flNeedShift;
-            //var USONameException = new ObservableCollection<string>();
-            //foreach (var _USO in USOList)
-            //    if (_USO.Racks is null || _USO.Racks.Count <= 0)
-            //        USONameException.Add(_USO.Name);
+            #region Создаем имена УСО без сигналов
+            var USONameException = new ObservableCollection<string>();
+            foreach (var _Param in LayotRacksViewModel.Params)
+                if (_Param.Racks is null || _Param.Racks.Count <= 0)
+                    USONameException.Add(_Param.Name);
+            #endregion
 
-            //foreach (var _USO in USOList)
-            //{
-            //    foreach (var _Rack in _USO.Racks)
-            //    {
-            //        flNeedShift = false;
-            //        foreach (var _Module in _Rack.Modules)
-            //        {
-            //            foreach (var _Channel in _Module.Channels)
-            //            {
-            //                if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
-            //                {
-            //                    var flTmp = false;
+            #region Переописываем сигналы диагностики
+            var index = 0;
+            bool flNeedShift;
+            foreach (var _Param in TableSignalsViewModel.Params)
+            {
+                foreach (var _Rack in _Param.Racks)
+                {
+                    flNeedShift = false;
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        if (_Module.Channels is null || _Module.Channels.Count <= 0) continue;
+                        foreach (var _Channel in _Module.Channels)
+                        {
+                            if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                var flTmp = false;
+                                foreach (var item in USONameException)
+                                    if (_Channel.Description.Contains(item, StringComparison.CurrentCultureIgnoreCase))
+                                        flTmp = true;
 
-            //                    foreach (var item in USONameException)
-            //                    {
-            //                        if (_Channel.Description.Contains(item, StringComparison.CurrentCultureIgnoreCase))
-            //                            flTmp = true;
+                                if (!flTmp)
+                                {
+                                    flNeedShift = true;
+                                    Params[index].Param.Id = _Channel.Id;
+                                    Params[index].Param.Description = _Channel.Description;
+                                    Params[index].IndexUSO = _Param.Index;
+
+                                    Params[index].Color = "Красный";
+                                    if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
+                                        Params[index].Color = "Желтый";
+
+                                    index++;
+                                }
+                            }
+                        }
+                    }
+                    if (flNeedShift)
+                        index += 5;
+                }
+            }
+            #endregion
+
+            #region Ищем имена УСО исключенй
+            if (USONameException is not null && USONameException.Count > 0)
+            {
+                foreach (var _Name in USONameException)
+                {
+                    foreach (var _Param in TableSignalsViewModel.Params)
+                    {
+                        foreach (var _Rack in _Param.Racks)
+                        {
+                            flNeedShift = false;
+                            foreach (var _Module in _Rack.Modules)
+                            {
+                                if (_Module.Channels is null || _Module.Channels.Count <= 0) continue;
+                                foreach (var _Channel in _Module.Channels)
+                                {
+                                    if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        if (_Channel.Description.Contains(_Name, StringComparison.CurrentCultureIgnoreCase))
+                                        {
+                                            flNeedShift = true;
+                                            Params[index].Param.Id = _Channel.Id;
+                                            Params[index].Param.Description = _Channel.Description;
 
 
-            //                    }
-            //                    if (!flTmp)
-            //                    {
-            //                        flNeedShift = true;
-            //                        Signaling[index].Param.Id = _Channel.Id;
-            //                        Signaling[index].Param.Description = _Channel.Description;
-            //                        Signaling[index].IndexUSO = _USO.Index;
+                                            Params[index].Color = "Красный";
+                                            if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
+                                                Params[index].Color = "Желтый";
 
-            //                        Signaling[index].Color = "Красный";
-            //                        if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
-            //                            Signaling[index].Color = "Желтый";
+                                            foreach (var _USO in LayotRacksViewModel.Params)
+                                                if (_USO.Name == _Name)
+                                                    Params[index].IndexUSO = _USO.Index;
 
-            //                        index++;
-            //                    }
-            //                }
-            //            }
-            //        }
+                                            index++;
+                                        }
+                                    }
+                                }
+                            }
+                            if (flNeedShift)
+                                index += 5;
+                        }
+                    }
+                }
+            }
+            #endregion
 
-            //        if (flNeedShift)
-            //            index += 5;
-            //    }
-            //}
-            //#endregion
+            RefreshDataView();
 
-            //#region Ищем имена УСО исключенй
-            //if (USONameException is not null && USONameException.Count > 0)
-            //{
-            //    foreach (var item in USONameException)
-            //    {
-            //        foreach (var _USO in USOList)
-            //        {
-            //            foreach (var _Rack in _USO.Racks)
-            //            {
-            //                flNeedShift = false;
-            //                foreach (var _Module in _Rack.Modules)
-            //                {
-            //                    foreach (var _Channel in _Module.Channels)
-            //                    {
-
-            //                        if (_Channel.Id.Contains("CSC", StringComparison.CurrentCultureIgnoreCase))
-            //                        {
-
-            //                            if (_Channel.Description.Contains(item, StringComparison.CurrentCultureIgnoreCase))
-            //                            {
-            //                                flNeedShift = true;
-            //                                Signaling[index].Param.Id = _Channel.Id;
-            //                                Signaling[index].Param.Description = _Channel.Description;
-
-            //                                Signaling[index].Color = "Красный";
-            //                                if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
-            //                                    Signaling[index].Color = "Желтый";
-
-            //                                foreach (var __USO in USOList)
-            //                                    if (__USO.Name == item)
-            //                                        Signaling[index].IndexUSO = __USO.Index;
-            //                                index++;
-            //                            }
-            //                        }
-            //                    }
-            //                }
-
-            //                if (flNeedShift)
-            //                    index += 5;
-            //            }
-            //        }
-            //    }
-            //}
-            //#endregion
-
-            //GeneratedData();
-
+            #endregion
         }
         #endregion
 
@@ -397,7 +392,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Формирование данных при создании нового проекта
         private void CreateData()
         {
-            while (Params.Count < 256)
+            while (Params.Count < 928)
             {
                 #region Создаем данные параметра
                 var param = new BaseParam
@@ -418,7 +413,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Color = "",
                     IndexUSO = "",
                     TypeWarning = "1",
-                    VarNameVU = $"LIST5[{Params.Count  / 16 + 1}]",
+                    VarNameVU = $"LIST5[{Params.Count / 16 + 1}]",
                     Param = param
                 };
                 #endregion

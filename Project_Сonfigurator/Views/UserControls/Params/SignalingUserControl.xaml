@@ -24,6 +24,10 @@
         </Grid.RowDefinitions>
         
         <!--Данные-->
+        <Button Margin="3,-40,0,20" Width="150" Height="24" HorizontalAlignment="Left"
+                Content="Импорт сигналов" FontWeight="Bold"
+                Style="{StaticResource CustomButtonStyle}"
+                Command="{Binding CmdImportServiceSignal}"/>
         <Border Grid.Row="0" Margin="0,1,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
             <Grid>
 

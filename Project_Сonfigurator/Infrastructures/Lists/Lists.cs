@@ -1,5 +1,9 @@
-﻿using Project_Сonfigurator.Models;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using Project_Сonfigurator.ViewModels.UserControls;
+using Project_Сonfigurator.ViewModels.UserControls.Params;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Lists
@@ -92,13 +96,24 @@ namespace Project_Сonfigurator.Infrastructures.Lists
         {
             get
             {
-                //_UMPNAList = new() { "0 - Не вибрация" };
-                //if (App.DBServices is null) return _UMPNAList;
-                //if (App.DBServices.AppData is null) return _UMPNAList;
-                //if (App.DBServices.AppData.UMPNA is null) return _UMPNAList;
+                _UMPNAList = new();
+                UMPNAUserControlViewModel _ViewModel = new();
+                IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+                foreach (var _TabItem in from object _Item in _ViewModels
+                                         let _TabItem = _Item as UMPNAUserControlViewModel
+                                         where _TabItem is UMPNAUserControlViewModel
+                                         select _TabItem)
+                    _ViewModel = _TabItem;
 
-                //foreach (var _UMPNA in App.DBServices.AppData.UMPNA)
-                //    _UMPNAList.Add($"{_UMPNA.Index} - {_UMPNA.Description}");
+                if (_ViewModel.Params is null || _ViewModel.Params.Count <= 0)
+                {
+                    _UMPNAList.Add($" Сначала заполните список агрегатов ");
+                    return _UMPNAList;
+                }
+
+                _UMPNAList.Add($" 0 - Не вибрация ");
+                foreach (var _Params in _ViewModel.Params)
+                    _UMPNAList.Add($" {_Params.Index} - {_Params.Description} ");
 
                 return _UMPNAList;
             }
@@ -115,13 +130,23 @@ namespace Project_Сonfigurator.Infrastructures.Lists
         {
             get
             {
-                //_USOList = new() { "0 - Не служебный" };
-                //if (App.DBServices is null) return _USOList;
-                //if (App.DBServices.AppData is null) return _USOList;
-                //if (App.DBServices.AppData.USOList is null) return _USOList;
+                _USOList = new();
+                LayotRackUserControlViewModel _ViewModel = new();
+                IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+                foreach (var _TabItem in from object _Item in _ViewModels
+                                         let _TabItem = _Item as LayotRackUserControlViewModel
+                                         where _TabItem is LayotRackUserControlViewModel
+                                         select _TabItem)
+                    _ViewModel = _TabItem;
 
-                //foreach (var _USO in App.DBServices.AppData.USOList)
-                //    _USOList.Add($"{_USO.Index} - {_USO.Name}");
+                if (_ViewModel.Params is null || _ViewModel.Params.Count <= 0)
+                {
+                    _USOList.Add($" Сначала заполните компоновку корзин ");
+                    return _USOList;
+                }
+
+                foreach (var _Params in _ViewModel.Params)
+                    _USOList.Add($" {_Params.Index} - {_Params.Name} ");
 
                 return _USOList;
             }

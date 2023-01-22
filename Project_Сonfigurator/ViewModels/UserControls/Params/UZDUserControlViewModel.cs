@@ -1,13 +1,18 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
@@ -232,120 +237,59 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// </summary>
         public ICommand CmdImportUZD => _CmdImportUZD ??= new RelayCommand(OnCmdImportUZDExecuted, CanCmdImportUZDExecute);
         private bool CanCmdImportUZDExecute() => true;
-
         private void OnCmdImportUZDExecuted()
         {
             #region Импорт сигналов из ТБ
-            //IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            //SignalsDIUserControlViewModel MyViewModel = new();
+            if (!UserDialog.SendMessage("Внимание!", "Перед продолжением убедитесь, что ТБ заполнена.\nВсе данные будут потеряны! Продолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            //foreach (var _TabItem in from object _Item in _ViewModels
-            //                         let _TabItem = _Item as SignalsDIUserControlViewModel
-            //                         where _TabItem is not null
-            //                         select _TabItem)
-            //    MyViewModel = _TabItem;
+            Params = new();
+            TableSignalsUserControlViewModel TableSignalsViewModel = new();
+            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            foreach (var _TabItem in from object _Item in _ViewModels
+                                     let _TabItem = _Item as TableSignalsUserControlViewModel
+                                     where _TabItem is TableSignalsUserControlViewModel
+                                     select _TabItem)
+                TableSignalsViewModel = _TabItem;
 
+            if (TableSignalsViewModel.Params is null || TableSignalsViewModel.Params.Count <= 0)
+                if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",
+                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
 
-            //if (MyViewModel is null) return;
-            //if (MyViewModel.Params is null) return;
-            //if (MyViewModel.Params.Count <= 0) return;
-            //if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
-            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+            foreach (var _Params in TableSignalsViewModel.Params)
+            {
+                foreach (var _Rack in _Params.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        if (_Module.Channels is null || _Module.Channels.Count <= 0) continue;
+                        foreach (var Channel in _Module.Channels)
+                        {
+                            if ((Channel.Description.Contains("задвижк", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("клапан", StringComparison.CurrentCultureIgnoreCase) ||
+                                Channel.Description.Contains("клоп", StringComparison.CurrentCultureIgnoreCase)) &&
+                                !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
+                            {
+                                var name = "";
+                                var index_dot = Channel.Description.IndexOf(".");
+                                var qty = Channel.Description.Length;
+                                if (index_dot > 0) name = Channel.Description.Remove(index_dot, qty - index_dot);
 
-            //var _Params = new ObservableCollection<BaseUZD>();
-            //foreach (var _Param in MyViewModel.Params)
-            //{
-            //    _Param.Signal.id
-            //    foreach (var _Rack in _USO.Racks)
-            //    {
-            //        foreach (var _Module in _Rack.Modules)
-            //        {
-            //            if (_Module.Type == TypeModule.AI)
-            //            {
-            //                if (_Module.Channels is null || _Module.Channels.Count <= 0)
-            //                    if (UserDialog.SendMessage("Внимание!", "Неверные данные таблицы сигналов. Проверьте вкладку",
-            //                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
+                                var fl_tmp = false;
+                                foreach (var _Param in Params)
+                                    if (name.Contains(_Param.Description, StringComparison.CurrentCultureIgnoreCase))
+                                        fl_tmp = true;
 
-            //                foreach (var Channel in _Module.Channels)
-            //                {
-            //                    if ((string.IsNullOrWhiteSpace(Channel.Id) && string.IsNullOrWhiteSpace(Channel.Description)) ||
-            //                        Channel.Description == "Резерв") continue;
-
-            //                    var param = new SignalAI
-            //                    {
-            //                        AddresUTS = "",
-            //                        ConverterKgs = "",
-            //                        IndexBD = "",
-            //                        IndexNA = "",
-            //                        IndexPZ = "",
-            //                        LevelRPP = "",
-            //                        TypePI = "",
-            //                        TypeVibration = "",
-            //                        Unit = "",
-            //                        Signal = new BaseSignal
-            //                        {
-            //                            Index = $"{_Params.Count + 1}",
-            //                            Id = Channel.Id,
-            //                            Description = Channel.Description,
-            //                            Area = "",
-            //                            Address = Channel.Address,
-            //                            VarName = $"ai_shared[{_Params.Count + 1}]",
-
-            //                        }
-            //                    };
-            //                    _Params.Add(param);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-            //Params = new ObservableCollection<SignalAI>(_Params);
-            //UserDialog.SendMessage("Импорт сигналов AI", "Сигналы AI успешно импортированы\nиз таблицы сигналов",
-            //    MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK);
+                                if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
+                                    ImportUZD(name);
+                            }
+                        }
+                    }
+                }
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
             #endregion
-
-            //if (TableSignalsViewModel.DataView is null) return;
-            //if (!UserDialog.SendMessage("Внимание!", "Все данные будут потеряны!\nПродолжить?",
-            //    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
-
-            //UZD = new();
-            //foreach (var DataView in TableSignalsViewModel.DataView)
-            //{
-            //    var uso = DataView as USO;
-            //    foreach (var _Rack in uso.Racks)
-            //    {
-            //        foreach (var _Module in _Rack.Modules)
-            //        {
-            //            foreach (var Channel in _Module.Channels)
-            //            {
-            //                if ((Channel.Description.Contains("задвижк", StringComparison.CurrentCultureIgnoreCase) ||
-            //                    Channel.Description.Contains("клапан", StringComparison.CurrentCultureIgnoreCase) ||
-            //                    Channel.Description.Contains("клоп", StringComparison.CurrentCultureIgnoreCase)) &&
-            //                    !Channel.Description.Contains("резерв", StringComparison.CurrentCultureIgnoreCase))
-            //                {
-            //                    var name = "";
-            //                    var index_dot = Channel.Description.IndexOf(".");
-            //                    var qty = Channel.Description.Length;
-            //                    if (index_dot > 0)
-            //                        name = Channel.Description.Remove(index_dot, qty - index_dot);
-            //                    var fl_tmp = false;
-            //                    foreach (var item in UZD)
-            //                    {
-            //                        if (item.Description.Contains(name, StringComparison.CurrentCultureIgnoreCase))
-            //                            fl_tmp = true;
-            //                    }
-            //                    if (!fl_tmp && !string.IsNullOrWhiteSpace(name))
-            //                        ImportUZD(name, UZD);
-            //                }
-            //            }
-            //        }
-            //    }
-            //}
-
-            //SelectedUZD = UZD[0];
-            //_DataView.Source = UZD;
-            //_DataView.View.Refresh();
-            //OnPropertyChanged(nameof(DataView));
         }
         #endregion
 
@@ -576,101 +520,101 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion 
 
-        //#region Импортируем задвижки
-        //private static void ImportUZD(string Description, ObservableCollection<BaseUZD> data_list)
-        //{
-        //    var index = data_list.Count + 1;
-        //    var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
-        //    var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
-        //    var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
-        //    var InputParam = new ObservableCollection<BaseParam>();
-        //    var OutputParam = new ObservableCollection<BaseParam>();
-        //    var Setpoints = new ObservableCollection<BaseSetpoints>();
+        #region Импортируем задвижки
+        private void ImportUZD(string Description)
+        {
+            var index = Params.Count + 1;
+            var index_setpoints = (index - 1) * App.Settings.Config.UZD.Setpoints.Count;
+            var index_input_param = (index - 1) * App.Settings.Config.UZD.InputParams.Count;
+            var index_output_param = (index - 1) * App.Settings.Config.UZD.OutputParams.Count;
+            var InputParam = new ObservableCollection<BaseParam>();
+            var OutputParam = new ObservableCollection<BaseParam>();
+            var Setpoints = new ObservableCollection<BaseSetpoints>();
 
-        //    #region Создаем задвижку
+            #region Создаем задвижку
 
-        //    #region Входные параметры
-        //    for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"ZD_DI_P[{index_input_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UZD.InputParams[i].Text
-        //        };
-        //        InputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Входные параметры
+            for (int i = 0; i < App.Settings.Config.UZD.InputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"ZD_DI_P[{index_input_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UZD.InputParams[i].Text
+                };
+                InputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Выходные параметры
-        //    for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
-        //    {
-        //        var Param = new BaseParam
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"ZD_DO_P[{index_output_param + i + 1}]",
-        //            Id = "",
-        //            Inv = "",
-        //            TypeSignal = "",
-        //            Address = "",
-        //            Description = App.Settings.Config.UZD.OutputParams[i].Text
-        //        };
-        //        OutputParam.Add(Param);
-        //    }
-        //    #endregion
+            #region Выходные параметры
+            for (int i = 0; i < App.Settings.Config.UZD.OutputParams.Count; i++)
+            {
+                var Param = new BaseParam
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"ZD_DO_P[{index_output_param + i + 1}]",
+                    Id = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    Description = App.Settings.Config.UZD.OutputParams[i].Text
+                };
+                OutputParam.Add(Param);
+            }
+            #endregion
 
-        //    #region Уставки
-        //    for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
-        //    {
-        //        var Param = new BaseSetpoints
-        //        {
-        //            Index = $"{i + 1}",
-        //            VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
-        //            Id = $"H{8000 + index_setpoints + i}",
-        //            Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
-        //            Value = App.Settings.Config.UZD.Setpoints[i].Value,
-        //            Address = $"%MW{3000 + index_setpoints + i}",
-        //            Description = App.Settings.Config.UZD.Setpoints[i].Description
-        //        };
-        //        Setpoints.Add(Param);
-        //    }
-        //    #endregion
+            #region Уставки
+            for (int i = 0; i < App.Settings.Config.UZD.Setpoints.Count; i++)
+            {
+                var Param = new BaseSetpoints
+                {
+                    Index = $"{i + 1}",
+                    VarName = $"SP_TM_ZD[{index_setpoints + i + 1}]",
+                    Id = $"H{8000 + index_setpoints + i}",
+                    Unit = App.Settings.Config.UZD.Setpoints[i].Unit,
+                    Value = App.Settings.Config.UZD.Setpoints[i].Value,
+                    Address = $"%MW{3000 + index_setpoints + i}",
+                    Description = App.Settings.Config.UZD.Setpoints[i].Description
+                };
+                Setpoints.Add(Param);
+            }
+            #endregion
 
-        //    #region Генерируем задвижки
-        //    var signal = new BaseUZD
-        //    {
-        //        Index = $"{index}",
-        //        Description = Description,
-        //        VarName = $"uzd_param[{index}]",
-        //        ShortDescription = "",
-        //        IndexEC = "",
-        //        IndexGroup = "",
-        //        DescriptionGroup = "",
-        //        Dist = "",
-        //        DoubleStop = "",
-        //        Bur = "",
-        //        COz = "",
-        //        CZz = "",
-        //        EC = "",
-        //        CheckState = "",
-        //        RsOff = "",
-        //        TypeZD = "",
-        //        IndexPZ = "",
-        //        IndexBD = "",
-        //        InputParam = new ObservableCollection<BaseParam>(InputParam),
-        //        OutputParam = new ObservableCollection<BaseParam>(OutputParam),
-        //        Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
-        //    };
-        //    data_list.Add(signal);
-        //    #endregion
+            #region Генерируем задвижки
+            var signal = new BaseUZD
+            {
+                Index = $"{index}",
+                Description = Description,
+                VarName = $"uzd_param[{index}]",
+                ShortDescription = "",
+                IndexEC = "",
+                IndexGroup = "",
+                DescriptionGroup = "",
+                Dist = "",
+                DoubleStop = "",
+                Bur = "",
+                COz = "",
+                CZz = "",
+                EC = "",
+                CheckState = "",
+                RsOff = "",
+                TypeZD = "",
+                IndexPZ = "",
+                IndexBD = "",
+                InputParam = new ObservableCollection<BaseParam>(InputParam),
+                OutputParam = new ObservableCollection<BaseParam>(OutputParam),
+                Setpoints = new ObservableCollection<BaseSetpoints>(Setpoints)
+            };
+            Params.Add(signal);
+            #endregion
 
-        //    #endregion
-        //}
-        //#endregion 
+            #endregion
+        }
+        #endregion 
 
         #endregion
     }
