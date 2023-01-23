@@ -287,9 +287,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить МПНА
         /// </summary>
         public ICommand CmdDeleteUMPNA => _CmdDeleteUMPNA ??= new RelayCommand(OnCmdDeleteUMPNAExecuted, CanCmdDeleteUMPNAExecute);
-        private bool CanCmdDeleteUMPNAExecute() => SelectedParam is not null;
-        private void OnCmdDeleteUMPNAExecuted()
+        private bool CanCmdDeleteUMPNAExecute(object p) => SelectedParam is not null;
+        private void OnCmdDeleteUMPNAExecuted(object p)
         {
+            if (p is not DataGrid SettingDataGrid) return;
+
             var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
@@ -298,6 +300,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedParam = Params[index];
 
             RefreshIndex(index);
+            SettingDataGrid.Items.Refresh();
         }
         #endregion
 

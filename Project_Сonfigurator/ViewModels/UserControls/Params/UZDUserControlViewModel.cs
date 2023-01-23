@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
@@ -215,10 +216,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить задвижку
         /// </summary>
         public ICommand CmdDeleteUZD => _CmdDeleteUZD ??= new RelayCommand(OnCmdDeleteUZDExecuted, CanCmdDeleteUZDExecute);
-        private bool CanCmdDeleteUZDExecute() => SelectedParam is not null;
+        private bool CanCmdDeleteUZDExecute(object p) => SelectedParam is not null;
 
-        private void OnCmdDeleteUZDExecuted()
+        private void OnCmdDeleteUZDExecuted(object p)
         {
+            if (p is not DataGrid SettingDataGrid) return;
+
             var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
@@ -227,6 +230,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedParam = Params[index];
 
             RefreshIndex(index);
+            SettingDataGrid.Items.Refresh();
         }
         #endregion
 

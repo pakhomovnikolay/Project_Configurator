@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
@@ -126,19 +127,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUVS SelectedParam
         {
             get => _SelectedParam;
-            set
-            {
-                if (Set(ref _SelectedParam, value))
-                {
-                    //_DataViewInputParam.Source = value?.InputParam;
-                    //_DataViewInputParam.View?.Refresh();
-                    //OnPropertyChanged(nameof(DataViewInputParam));
-
-                    //_DataViewOutputParam.Source = value?.OutputParam;
-                    //_DataViewOutputParam.View?.Refresh();
-                    //OnPropertyChanged(nameof(DataViewOutputParam));
-                }
-            }
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -226,10 +215,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Команда - удалить вспомсистему
         /// </summary>
         public ICommand CmdDeleteUVS => _CmdDeleteUVS ??= new RelayCommand(OnCmdDeleteUVSExecuted, CanCmdDeleteUVSExecute);
-        private bool CanCmdDeleteUVSExecute() => SelectedParam is not null;
+        private bool CanCmdDeleteUVSExecute(object p) => SelectedParam is not null;
 
-        private void OnCmdDeleteUVSExecuted()
+        private void OnCmdDeleteUVSExecuted(object p)
         {
+            if (p is not DataGrid SettingDataGrid) return;
+
             var index = Params.IndexOf(SelectedParam);
             index = index == 0 ? index : index - 1;
 
@@ -238,6 +229,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedParam = Params[index];
 
             RefreshIndex(index);
+            SettingDataGrid.Items.Refresh();
         }
         #endregion
 
