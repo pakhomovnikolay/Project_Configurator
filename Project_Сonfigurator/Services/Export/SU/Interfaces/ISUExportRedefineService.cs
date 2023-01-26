@@ -1,4 +1,4 @@
-﻿namespace Project_Сonfigurator.Services.Interfaces
+﻿namespace Project_Сonfigurator.Services.Export.SU.Interfaces
 {
     public interface ISUExportRedefineService
     {
@@ -7,9 +7,8 @@
         /// Экспорт данных СУ
         /// </summary>
         /// <param name="TypeExport"></param>
-        /// <param name="item"></param>
         /// <returns></returns>
-        bool Export(string TypeExport, object item);
+        bool Export(string TypeExport);
         #endregion
     }
 }

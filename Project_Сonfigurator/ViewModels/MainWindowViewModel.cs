@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services.Export.SU.Interfaces;
+using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
@@ -28,8 +30,10 @@ namespace Project_Сonfigurator.ViewModels
         private readonly IDBService DBServices;
         public readonly ISettingService SettingServices;
         private readonly ISUExportRedefineService SUExportRedefineServices;
+        private readonly IVUSocketsASExportRedefineService VUSocketsASExportRedefineServices;
         public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
-            ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
+            ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
+            IVUSocketsASExportRedefineService _VUSocketsASExportRedefineService) : this()
         {
             #region Сервисы
             ViewModelUserControls = viewModelUserControls;
@@ -38,6 +42,7 @@ namespace Project_Сonfigurator.ViewModels
             DBServices = _IDBService;
             SettingServices = _ISettingService;
             SUExportRedefineServices = _ISUExportRedefineService;
+            VUSocketsASExportRedefineServices = _VUSocketsASExportRedefineService;
             #endregion
 
             #region Задаем имя проекта
@@ -360,7 +365,46 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdExportSUExecuted(object p)
         {
             var TypeExport = (string)p;
-            SUExportRedefineServices.Export(TypeExport, this);
+            SUExportRedefineServices.Export(TypeExport);
+        }
+        #endregion
+
+        #region Команда - Открыть окно экспорта пространство имен
+        private ICommand _CmdOpenExportNamespaceASWindow;
+        /// <summary>
+        /// Команда - Открыть окно экспорта пространство имен
+        /// </summary>
+        public ICommand CmdOpenExportNamespaceASWindow => _CmdOpenExportNamespaceASWindow ??= new RelayCommand(OnCmdOpenExportNamespaceASWindowExecuted, CanCmdOpenExportNamespaceASWindowExecute);
+        private bool CanCmdOpenExportNamespaceASWindowExecute(object p) => p is not null && p is string;
+        private void OnCmdOpenExportNamespaceASWindowExecuted(object p)
+        {
+            App.Services.GetRequiredService<IUserDialogService>().OpenExportNamespaceASWindow();
+        }
+        #endregion
+
+        #region Команда - Открыть окно экспорта приложение IOS
+        private ICommand _CmdOpenIOSExportASWindow;
+        /// <summary>
+        /// Команда - Открыть окно экспорта приложение IOS
+        /// </summary>
+        public ICommand CmdOpenIOSExportASWindow => _CmdOpenIOSExportASWindow ??= new RelayCommand(OnCmdOpenIOSExportASWindowExecuted, CanCmdOpenIOSExportASWindowExecute);
+        private bool CanCmdOpenIOSExportASWindowExecute(object p) => p is not null && p is string;
+        private void OnCmdOpenIOSExportASWindowExecuted(object p)
+        {
+            App.Services.GetRequiredService<IUserDialogService>().OpenIOSExportASWindow();
+        }
+        #endregion
+
+        #region Команда - Открыть окно экспорта приложение PLC
+        private ICommand _CmdOpenPLCExportASWindow;
+        /// <summary>
+        /// Команда - Открыть окно экспорта приложение PLC
+        /// </summary>
+        public ICommand CmdOpenPLCExportASWindow => _CmdOpenPLCExportASWindow ??= new RelayCommand(OnCmdOpenPLCExportASWindowExecuted, CanCmdOpenPLCExportASWindowExecute);
+        private bool CanCmdOpenPLCExportASWindowExecute(object p) => p is not null && p is string;
+        private void OnCmdOpenPLCExportASWindowExecuted(object p)
+        {
+            App.Services.GetRequiredService<IUserDialogService>().OpenPLCExportASWindow();
         }
         #endregion
 

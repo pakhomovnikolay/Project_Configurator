@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
-using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.Services.Export.SU.Interfaces;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
@@ -12,7 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 
-namespace Project_Сonfigurator.Services
+namespace Project_Сonfigurator.Services.Export.SU
 {
     public class SUExportRedefineService : ISUExportRedefineService
     {
@@ -21,46 +21,45 @@ namespace Project_Сonfigurator.Services
         /// Экспорт данных СУ
         /// </summary>
         /// <param name="TypeExport"></param>
-        /// <param name="item"></param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="NotSupportedException"></exception>
-        public bool Export(string TypeExport, object item)
+        public bool Export(string TypeExport)
         {
             if (TypeExport is null) throw new ArgumentNullException(nameof(TypeExport));
             return TypeExport switch
             {
-                "Экспорт всего проекта" => ExportAll(item),
-                "Чтение данных с модулей" => ExportReadInputs(item),
-                "Запись данных для модулей" => ExportReadOutputs(item),
+                "Экспорт всего проекта" => ExportAll(),
+                "Чтение данных с модулей" => ExportReadInputs(),
+                "Запись данных для модулей" => ExportReadOutputs(),
 
-                "Сигналы AI" => ExportSignalsAI(item),
-                "Сигналы DI" => ExportSignalsDI(item),
-                "Сигналы DO" => ExportSignalsDO(item),
-                "Сигналы AO" => ExportSignalsAO(item),
+                "Сигналы AI" => ExportSignalsAI(),
+                "Сигналы DI" => ExportSignalsDI(),
+                "Сигналы DO" => ExportSignalsDO(),
+                "Сигналы AO" => ExportSignalsAO(),
 
-                "Диагностика" => ExportDiagnostics(item),
-                "Секции шин" => ExportEC(item),
-                "Группы сигналов" => ExportGroupSignal(item),
-                "Рамки УСО" => ExportFrameUSO(item),
-                "Рамки" => ExportFrame(item),
+                "Диагностика" => ExportDiagnostics(),
+                "Секции шин" => ExportEC(),
+                "Группы сигналов" => ExportGroupSignal(),
+                "Рамки УСО" => ExportFrameUSO(),
+                "Рамки" => ExportFrame(),
 
-                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(item),
-                "Общестанционные защиты (Лист 2)" => ExportKTPR(item),
-                "Агрегатные защиты (Лист 3)" => ExportKTPRA(item),
-                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(item),
-                "Предельные параметры (Лист 4)" => ExportKTPRS(item),
-                "Лист 5" => ExportLIST5(item),
+                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(),
+                "Общестанционные защиты (Лист 2)" => ExportKTPR(),
+                "Агрегатные защиты (Лист 3)" => ExportKTPRA(),
+                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(),
+                "Предельные параметры (Лист 4)" => ExportKTPRS(),
+                "Лист 5" => ExportLIST5(),
 
-                "DI агрегатов" => ExportUMPNA_DI(item),
-                "DI задвижек" => ExportUZD_DI(item),
-                "DI вспомсистем" => ExportUVS_DI(item),
-                "Параметры DO остальных" => ExportDO_Param(item),
+                "DI агрегатов" => ExportUMPNA_DI(),
+                "DI задвижек" => ExportUZD_DI(),
+                "DI вспомсистем" => ExportUVS_DI(),
+                "Параметры DO остальных" => ExportDO_Param(),
 
-                "DO агрегатов" => ExportUMPNA_DO(item),
-                "DO задвижек" => ExportUZD_DO(item),
-                "DO вспомсистем" => ExportUVS_DO(item),
-                "DO остальные" => ExportDO_Others(item),
+                "DO агрегатов" => ExportUMPNA_DO(),
+                "DO задвижек" => ExportUZD_DO(),
+                "DO вспомсистем" => ExportUVS_DO(),
+                "DO остальные" => ExportDO_Others(),
                 _ => throw new NotSupportedException($"Экспорт данного типа \"{TypeExport}\" не поддерживается"),
             };
         }
@@ -471,33 +470,33 @@ namespace Project_Сonfigurator.Services
         /// Экспорт всего проекта
         /// </summary>
         /// <returns></returns>
-        private static bool ExportAll(object item)
+        private static bool ExportAll()
         {
-            ExportReadInputs(item);
-            ExportReadOutputs(item);
-            ExportSignalsAI(item);
-            ExportSignalsDI(item);
-            ExportSignalsDO(item);
-            ExportSignalsAO(item);
-            ExportDiagnostics(item);
-            ExportEC(item);
-            ExportGroupSignal(item);
-            ExportFrameUSO(item);
-            ExportFrame(item);
-            ExportKGMPNA(item);
-            ExportKTPR(item);
-            ExportKTPRA(item);
-            ExportKTPRAS(item);
-            ExportKTPRS(item);
-            ExportLIST5(item);
-            ExportUMPNA_DI(item);
-            ExportUZD_DI(item);
-            ExportUVS_DI(item);
-            ExportDO_Param(item);
-            ExportUMPNA_DO(item);
-            ExportUZD_DO(item);
-            ExportUVS_DO(item);
-            ExportDO_Others(item);
+            ExportReadInputs();
+            ExportReadOutputs();
+            ExportSignalsAI();
+            ExportSignalsDI();
+            ExportSignalsDO();
+            ExportSignalsAO();
+            ExportDiagnostics();
+            ExportEC();
+            ExportGroupSignal();
+            ExportFrameUSO();
+            ExportFrame();
+            ExportKGMPNA();
+            ExportKTPR();
+            ExportKTPRA();
+            ExportKTPRAS();
+            ExportKTPRS();
+            ExportLIST5();
+            ExportUMPNA_DI();
+            ExportUZD_DI();
+            ExportUVS_DI();
+            ExportDO_Param();
+            ExportUMPNA_DO();
+            ExportUZD_DO();
+            ExportUVS_DO();
+            ExportDO_Others();
 
             return true;
         }
@@ -508,7 +507,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт чтения данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadInputs(object item)
+        private static bool ExportReadInputs()
         {
             //var ViewModel = item as MainWindowViewModel;
             //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
@@ -539,7 +538,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт записи данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadOutputs(object item)
+        private static bool ExportReadOutputs()
         {
             //var ViewModel = item as MainWindowViewModel;
             //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
@@ -570,7 +569,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Сигналы AI"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAI(object item)
+        private static bool ExportSignalsAI()
         {
             ObservableCollection<SignalAI> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -625,7 +624,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Сигналы DI"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsDI(object item)
+        private static bool ExportSignalsDI()
         {
             ObservableCollection<SignalDI> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -681,7 +680,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Сигналы DO"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsDO(object item)
+        private static bool ExportSignalsDO()
         {
             ObservableCollection<SignalDO> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -742,7 +741,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Сигналы AO"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAO(object item)
+        private static bool ExportSignalsAO()
         {
             ObservableCollection<SignalAO> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -790,7 +789,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Диагностика"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDiagnostics(object item)
+        private static bool ExportDiagnostics()
         {
             ObservableCollection<SignalAO> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -827,7 +826,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Секции шин"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportEC(object item)
+        private static bool ExportEC()
         {
             ObservableCollection<BaseParam> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -876,7 +875,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Группы сигналов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportGroupSignal(object item)
+        private static bool ExportGroupSignal()
         {
             ObservableCollection<GroupSignal> Params = new();
             ObservableCollection<BaseParam> ParParams = new();
@@ -942,7 +941,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Рамки УСО"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrameUSO(object item)
+        private static bool ExportFrameUSO()
         {
             ObservableCollection<GroupSignal> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -979,7 +978,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Рамки"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrame(object item)
+        private static bool ExportFrame()
         {
             ObservableCollection<GroupSignal> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1016,7 +1015,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Карта готовностей агрегатов (Лист 1)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKGMPNA(object item)
+        private static bool ExportKGMPNA()
         {
             ObservableCollection<BaseUMPNA> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1072,7 +1071,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Общестанционные защиты (Лист 2)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPR(object item)
+        private static bool ExportKTPR()
         {
             ObservableCollection<BaseKTPR> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1154,7 +1153,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Агрегатные защиты (Лист 3)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRA(object item)
+        private static bool ExportKTPRA()
         {
             ObservableCollection<BaseUMPNA> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1215,7 +1214,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Агрегатные предупреждения (Лист 3,5)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRAS(object item)
+        private static bool ExportKTPRAS()
         {
             ObservableCollection<BaseUMPNA> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1273,7 +1272,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Предельные параметры (Лист 4)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRS(object item)
+        private static bool ExportKTPRS()
         {
             ObservableCollection<BaseKTPRS> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1329,7 +1328,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Лист 5"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportLIST5(object item)
+        private static bool ExportLIST5()
         {
             ObservableCollection<BaseSignaling> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1390,7 +1389,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DI(object item)
+        private static bool ExportUMPNA_DI()
         {
             ObservableCollection<BaseUMPNA> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1459,7 +1458,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DI(object item)
+        private static bool ExportUZD_DI()
         {
             ObservableCollection<BaseUZD> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1534,7 +1533,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DI вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DI(object item)
+        private static bool ExportUVS_DI()
         {
             ObservableCollection<BaseUVS> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1610,7 +1609,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "Параметры DO остальных"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Param(object item)
+        private static bool ExportDO_Param()
         {
             ObservableCollection<BaseUTS> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1679,7 +1678,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DO(object item)
+        private static bool ExportUMPNA_DO()
         {
             ObservableCollection<BaseUMPNA> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1733,7 +1732,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DO(object item)
+        private static bool ExportUZD_DO()
         {
             ObservableCollection<BaseUZD> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1787,7 +1786,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DO(object item)
+        private static bool ExportUVS_DO()
         {
             ObservableCollection<BaseUVS> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
@@ -1841,7 +1840,7 @@ namespace Project_Сonfigurator.Services
         /// Экспорт "DO остальные"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Others(object item)
+        private static bool ExportDO_Others()
         {
             ObservableCollection<BaseUTS> Params = new();
             IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();

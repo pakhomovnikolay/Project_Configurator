@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Views.Windows;
-using System.Windows;
+﻿using System.Windows;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -77,7 +76,7 @@ namespace Project_Сonfigurator.Services.Interfaces
             MessageBoxButton ButtonType = MessageBoxButton.OK,
             MessageBoxImage ImageType = MessageBoxImage.Information,
             MessageBoxResult ResultType = MessageBoxResult.OK,
-            MessageBoxOptions Options = MessageBoxOptions.DefaultDesktopOnly);
+            MessageBoxOptions Options = MessageBoxOptions.None);
         #endregion
 
         #region Удалить файл
@@ -108,6 +107,27 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Открыть окно сообщений
         /// </summary>
         void OpenMessageWindow();
+        #endregion
+
+        #region Открыть окно экспорта пространства имен AS
+        /// <summary>
+        /// Открыть окно экспорта пространства имен AS
+        /// </summary>
+        void OpenExportNamespaceASWindow();
+        #endregion
+
+        #region Открыть окно экспорта приложение IOS
+        /// <summary>
+        /// Открыть окно экспорта приложение IOS
+        /// </summary>
+        void OpenIOSExportASWindow();
+        #endregion
+
+        #region Открыть окно экспорта приложение PLS
+        /// <summary>
+        /// Открыть окно экспорта приложение PLS
+        /// </summary>
+        void OpenPLCExportASWindow();
         #endregion
     }
 }

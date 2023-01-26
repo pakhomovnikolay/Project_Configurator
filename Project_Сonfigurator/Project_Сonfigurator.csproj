@@ -11,21 +11,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\Icons\DownloadStorm.ico" />
-    <None Remove="Resources\Icons\Export.ico" />
-    <None Remove="Resources\Icons\Folder.ico" />
-    <None Remove="Resources\Icons\NewFile.ico" />
-    <None Remove="Resources\Icons\OpenFile.ico" />
-    <None Remove="Resources\Icons\OpenFolder.ico" />
-    <None Remove="Resources\Icons\Refresh.ico" />
-    <None Remove="Resources\Icons\SaveFile.ico" />
-    <None Remove="Resources\Icons\Settings.ico" />
+    <None Remove="Resources\Icons\CodeBrackets.ico" />
+    <None Remove="Resources\Icons\ContentTree.ico" />
   </ItemGroup>
-
+	
   <ItemGroup>
     <Content Include="Resources\Icons\MagicIcon.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Icons\Augmented.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,12 +33,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Icons\Aluminum.ico" />
+    <Resource Include="Resources\Icons\CodeBrackets.ico" />
+    <Resource Include="Resources\Icons\ContentTree.ico" />
     <Resource Include="Resources\Icons\DownloadStorm.ico" />
     <Resource Include="Resources\Icons\Export.ico" />
     <Resource Include="Resources\Icons\Folder.ico" />
     <Resource Include="Resources\Icons\NewFile.ico" />
     <Resource Include="Resources\Icons\OpenFile.ico" />
     <Resource Include="Resources\Icons\OpenFolder.ico" />
+    <Resource Include="Resources\Icons\Programming.ico" />
     <Resource Include="Resources\Icons\Refresh.ico" />
     <Resource Include="Resources\Icons\SaveFile.ico" />
     <Resource Include="Resources\Icons\Settings.ico" />

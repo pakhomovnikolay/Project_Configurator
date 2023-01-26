@@ -169,5 +169,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public ObservableCollection<CollectionMessage> Messages { get; set; } = new();
         #endregion
+
+        #region Команды
+        /// <summary>
+        /// Команды
+        /// </summary>
+        public ObservableCollection<BaseParam> Commands { get; set; }
+        #endregion
     }
 }

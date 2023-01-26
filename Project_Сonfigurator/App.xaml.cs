@@ -16,6 +16,7 @@ namespace Project_Сonfigurator
     {
         public const string __EncryptedConfigFileSuffix = ".configproject";
         public const string __EncryptedProjectFileSuffix = ".myprojectodb";
+        public const string __SocketsExportFileSuffix = ".omx-export";
 
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();

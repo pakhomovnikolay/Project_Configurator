@@ -54,6 +54,13 @@ namespace Project_Сonfigurator.Models.Settings
         public string PathProject { get; set; }
         #endregion
 
+        #region Путь экспорта данных для ВУ
+        /// <summary>
+        /// Путь экспорта данных для ВУ
+        /// </summary>
+        public string PathExportVU { get; set; }
+        #endregion
+
         #region Наименование проекта
         /// <summary>
         /// Наименование проекта

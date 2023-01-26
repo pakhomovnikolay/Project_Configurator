@@ -386,15 +386,33 @@ namespace Project_Сonfigurator.ViewModels
         /// </summary>
         private ICommand _CmdSelectedFolderSavedProject;
         public ICommand CmdSelectedFolderSavedProject => _CmdSelectedFolderSavedProject ??= new RelayCommand(OnCmdSelectedFolderSavedProjectExecuted, CanCmdSelectedFolderSavedProjectExecute);
-        private bool CanCmdSelectedFolderSavedProjectExecute(object p) => true;
-        private void OnCmdSelectedFolderSavedProjectExecuted(object p)
+        private bool CanCmdSelectedFolderSavedProjectExecute() => true;
+        private void OnCmdSelectedFolderSavedProjectExecuted()
         {
-            if (p is not string Path) return;
             IUserDialogService UserDialog = new UserDialogService();
 
             string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
             if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathProject, Filter))
                 Config.PathProject = path + file;
+
+            OnPropertyChanged(nameof(Config));
+        }
+        #endregion
+
+        #region Команда - Выбрать путь экспорта данных для ВУ
+        /// <summary>
+        /// Команда - Выбрать путь экспорта данных для ВУ
+        /// </summary>
+        private ICommand _CmdSelectedFolderExportVU;
+        public ICommand CmdSelectedFolderExportVU => _CmdSelectedFolderExportVU ??= new RelayCommand(OnCmdSelectedFolderExportVUExecuted, CanCmdSelectedFolderExportVUExecute);
+        private bool CanCmdSelectedFolderExportVUExecute() => true;
+        private void OnCmdSelectedFolderExportVUExecuted()
+        {
+            IUserDialogService UserDialog = new UserDialogService();
+
+            string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+            if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathExportVU, Filter))
+                Config.PathExportVU = path;
 
             OnPropertyChanged(nameof(Config));
         }

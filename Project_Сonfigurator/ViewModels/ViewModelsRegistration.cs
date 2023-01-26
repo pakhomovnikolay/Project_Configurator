@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -7,6 +8,7 @@ using Project_Сonfigurator.Views.UserControls;
 using Project_Сonfigurator.Views.UserControls.Params;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
+using Project_Сonfigurator.Views.Windows.AS;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -40,12 +42,20 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UstCommonUserControlViewModel>()
             .AddSingleton<HandMapUserControlViewModel>()
             .AddSingleton<MessageWindowViewModel>()
+            .AddSingleton<CommandUserControlViewModel>()
+            .AddSingleton<ExportNamespaceASWindowViewModel>()
+            .AddSingleton<IOSExportASWindowViewModel>()
+            .AddSingleton<PLCExportASWindowViewModel>()
         #endregion
 
         #region IViewModel, IViewModelUserControls
             .AddSingleton<IViewModel, MainWindowViewModel>()
             .AddSingleton<IViewModel, SettingWindowViewModels>()
             .AddSingleton<IViewModel, MessageWindowViewModel>()
+            .AddSingleton<IViewModel, ExportNamespaceASWindowViewModel>()
+            .AddSingleton<IViewModel, IOSExportASWindowViewModel>()
+            .AddSingleton<IViewModel, PLCExportASWindowViewModel>()
+            .AddSingleton<IViewModelUserControls, CommandUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, LayotRackUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, TableSignalsUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, UserDIUserControlViewModel>()
@@ -93,6 +103,42 @@ namespace Project_Сonfigurator.ViewModels
             {
                 var model = s.GetRequiredService<MessageWindowViewModel>();
                 var window = new MessageWindow { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region ExportNamespaceASWindow
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<ExportNamespaceASWindowViewModel>();
+                var window = new ExportNamespaceASWindow { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region IOSExportASWindow
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<IOSExportASWindowViewModel>();
+                var window = new IOSExportASWindow { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region CommandUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<CommandUserControlViewModel>();
+                var window = new CommandUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region PLCExportASWindow
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<PLCExportASWindowViewModel>();
+                var window = new PLCExportASWindow { DataContext = model };
                 return window;
             })
         #endregion

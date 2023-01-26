@@ -1,0 +1,127 @@
+﻿using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.Views.UserControls.Params;
+using System.Collections.ObjectModel;
+
+namespace Project_Сonfigurator.ViewModels.UserControls.Params
+{
+    public class CommandUserControlViewModel : ViewModelUserControls
+    {
+        #region Конструктор
+        public CommandUserControlViewModel()
+        {
+            Title = "Команды";
+            Description = "Команды";
+            UsingUserControl = new CommandUserControl();
+        }
+
+        private readonly IUserDialogService UserDialog;
+        private readonly ISignalService SignalServices;
+        private readonly IDBService DBServices;
+        public CommandUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        {
+            UserDialog = _UserDialog;
+            SignalServices = _ISignalService;
+            DBServices = _IDBService;
+        }
+        #endregion
+
+        #region Параметры
+
+        #region Состояние активной вкладки
+        private bool _IsSelected = false;
+        /// <summary>
+        /// Состояние активной вкладки
+        /// </summary>
+        public override bool IsSelected
+        {
+            get => _IsSelected;
+            set => Set(ref _IsSelected, value);
+        }
+        #endregion
+
+        #region Список регистров формируемых
+        private ObservableCollection<BaseParam> _Params = new();
+        /// <summary>
+        /// Список регистров формируемых
+        /// </summary>
+        public ObservableCollection<BaseParam> Params
+        {
+            get => _Params;
+            set
+            {
+                if (Set(ref _Params, value))
+                {
+                    if (_Params is null || _Params.Count <= 0)
+                        CreateData();
+                }
+            }
+        }
+        #endregion
+
+        #region Выбранный регистр
+        private BaseParam _SelectedParam = new();
+        /// <summary>
+        /// Выбранный регистр
+        /// </summary>
+        public BaseParam SelectedParam
+        {
+            get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
+        }
+        #endregion
+
+        #region Текст фильтрации
+        private string _TextFilter;
+        /// <summary>
+        /// Текст фильтрации
+        /// </summary>
+        public string TextFilter
+        {
+            get => _TextFilter;
+            set => Set(ref _TextFilter, value);
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
+        }
+        #endregion
+
+        #endregion
+
+        #region Функции
+
+        #region Формирование данных при создании нового проекта
+        private void CreateData()
+        {
+            while (Params.Count < 100)
+            {
+                var param = new BaseParam
+                {
+                    Index = $"{Params.Count + 1}",
+                    Id = "",
+                    Description = "",
+                    Inv = "",
+                    TypeSignal = "",
+                    Address = "",
+                    VarName = "",
+                };
+                Params.Add(param);
+            }
+            if (Params.Count > 0)
+                SelectedParam = Params[0];
+        }
+        #endregion
+
+        #endregion
+    }
+}

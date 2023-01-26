@@ -36,6 +36,9 @@ namespace Project_Сonfigurator.Models.LayotRack
                 {
                     Type = TypeModule.AI;
                 }
+                #endregion
+
+                #region DI
                 else if (_Name.Contains("di", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("dai", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("ddi", StringComparison.CurrentCultureIgnoreCase) ||
@@ -43,6 +46,9 @@ namespace Project_Сonfigurator.Models.LayotRack
                 {
                     Type = TypeModule.DI;
                 }
+                #endregion
+
+                #region AO
                 else if (_Name.Contains("ao", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("aho", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("amo", StringComparison.CurrentCultureIgnoreCase) ||
@@ -50,6 +56,9 @@ namespace Project_Сonfigurator.Models.LayotRack
                 {
                     Type = TypeModule.AO;
                 }
+                #endregion
+
+                #region DO
                 else if (_Name.Contains("do", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("dao", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("ddo", StringComparison.CurrentCultureIgnoreCase) ||
@@ -57,11 +66,23 @@ namespace Project_Сonfigurator.Models.LayotRack
                 {
                     Type = TypeModule.DO;
                 }
+                #endregion
+
+                #region DA
                 else if (_Name.Contains("da", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("drc", StringComparison.CurrentCultureIgnoreCase) ||
                     _Name.Contains("dra", StringComparison.CurrentCultureIgnoreCase))
                 {
                     Type = TypeModule.DA;
+                }
+                #endregion
+
+                #region PLC
+                else if (_Name.Contains("cu", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("bmx p34", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Name.Contains("bme h58", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    Type = TypeModule.PLC;
                 }
                 #endregion
 

@@ -33,7 +33,7 @@
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
-            <RowDefinition Height="135"/>
+            <RowDefinition Height="150"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
@@ -49,22 +49,18 @@
             </Grid.ColumnDefinitions>
 
             <fa:FontAwesome Grid.Column="0" Icon="Solid_Magic" VerticalAlignment="Center"/>
-
             <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center"
                            MouseMove="TextBlock_MouseMove">
                 <TextBlock.InputBindings>
                     <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource CmdChangeStateWindow}"/>
                 </TextBlock.InputBindings>
             </TextBlock>
-
             <Button Grid.Column="4"
                         Style="{StaticResource CloseButtonStyle}"
                         Command="{StaticResource CmdShutdownApplication}"/>
-
             <Button Grid.Column="3"
                         Style="{Binding ButtonChangeStateWindowStyle}"
                         Command="{StaticResource CmdChangeStateWindow}"/>
-
             <Button Grid.Column="2"
                         Style="{StaticResource HideButtonStyle}"
                         Command="{StaticResource CmdHideWindow}"/>
@@ -72,7 +68,7 @@
         </Grid>
 
         <!--Меню-->
-        <Ribbon Grid.Row="1" SelectedIndex="0">
+        <Ribbon Grid.Row="1" SelectedIndex="2">
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>
@@ -215,6 +211,23 @@
 
             </RibbonTab>
 
+            <!--Экспорт ВУ-->
+            <RibbonTab Header="Экспорт ВУ">
+                <RibbonGroup>
+                    <RibbonButton LargeImageSource="../../Resources/Icons/CodeBrackets.ico" Label="Экспорт пространства имен"
+                                  Command="{Binding CmdOpenExportNamespaceASWindow}"
+                                  CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                    <RibbonButton LargeImageSource="../../Resources/Icons/ContentTree.ico" Label="Экспорт приложение PLC"
+                                  Command="{Binding CmdOpenIOSExportASWindow}"
+                                  CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                    <RibbonButton LargeImageSource="../../Resources/Icons/Augmented.ico" Label="Экспорт приложение IOS"
+                                  Command="{Binding CmdOpenPLCExportASWindow}"
+                                  CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+                </RibbonGroup>
+            </RibbonTab>
+            
             <!--Экспорт БД-->
             <RibbonTab Header="Экспорт БД">
 
@@ -256,7 +269,6 @@
                                                 Command="{Binding DataContext.CmdSelectionServer, RelativeSource={RelativeSource AncestorType=RibbonWindow}}"
                                                 IsChecked="{Binding IsSelection, UpdateSourceTrigger=PropertyChanged}"
                                                 Label="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
-
                             </Grid>
                         </DataTemplate>
                     </RibbonGroup.ItemTemplate>

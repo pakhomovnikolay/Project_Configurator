@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using Project_Сonfigurator.Views.Windows;
+using Project_Сonfigurator.Views.Windows.AS;
 using System;
 using System.IO;
 using System.Windows;
@@ -15,6 +16,9 @@ namespace Project_Сonfigurator.Services
         private MainWindow? _MainWindow;
         private SettingWindow? _SettingWindow;
         private MessageWindow? _MessageWindow;
+        private ExportNamespaceASWindow? _ExportNamespaceASWindow;
+        private IOSExportASWindow? _IOSExportASWindow;
+        private PLCExportASWindow? _PLCExportASWindow;
         private readonly IServiceProvider _Services;
 
         public UserDialogService() { }
@@ -211,7 +215,7 @@ namespace Project_Сonfigurator.Services
             MessageBoxButton ButtonType = MessageBoxButton.OK,
             MessageBoxImage ImageType = MessageBoxImage.Information,
             MessageBoxResult ResultType = MessageBoxResult.OK,
-            MessageBoxOptions Options = MessageBoxOptions.DefaultDesktopOnly) => MessageBox.Show(Message, Title, ButtonType, ImageType, ResultType, Options) == ResultType;
+            MessageBoxOptions Options = MessageBoxOptions.None) => MessageBox.Show(Message, Title, ButtonType, ImageType, ResultType, Options) == ResultType;
         #endregion
 
         #region Удалить файл
@@ -284,6 +288,63 @@ namespace Project_Сonfigurator.Services
 
 
             _MessageWindow = window;
+            window.Show();
+        }
+        #endregion
+
+        #region Открыть окно экспорта пространства имен AS
+        /// <summary>
+        /// Открыть окно экспорта пространства имен AS
+        /// </summary>
+        public void OpenExportNamespaceASWindow()
+        {
+            if (_ExportNamespaceASWindow is { } window) { window.Activate(); return; }
+
+            window = _Services.GetRequiredService<ExportNamespaceASWindow>();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _MessageWindow = null;
+
+
+            _ExportNamespaceASWindow = window;
+            window.Show();
+        }
+        #endregion
+
+        #region Открыть окно экспорта приложение IOS
+        /// <summary>
+        /// Открыть окно экспорта приложение IOS
+        /// </summary>
+        public void OpenIOSExportASWindow()
+        {
+            if (_IOSExportASWindow is { } window) { window.Show(); return; }
+
+            window = _Services.GetRequiredService<IOSExportASWindow>();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _MessageWindow = null;
+
+
+            _IOSExportASWindow = window;
+            window.Show();
+        }
+        #endregion
+
+        #region Открыть окно экспорта приложение PLS
+        /// <summary>
+        /// Открыть окно экспорта приложение PLS
+        /// </summary>
+        public void OpenPLCExportASWindow()
+        {
+            if (_PLCExportASWindow is { } window) { window.Show(); return; }
+
+            window = _Services.GetRequiredService<PLCExportASWindow>();
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _MessageWindow = null;
+
+
+            _PLCExportASWindow = window;
             window.Show();
         }
         #endregion

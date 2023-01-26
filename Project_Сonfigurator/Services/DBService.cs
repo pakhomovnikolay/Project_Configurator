@@ -83,6 +83,7 @@ namespace Project_Сonfigurator.Services
                             UstRealUserControlViewModel Data => Data.Params = DataToSave.SetpointsReal is null ? new() : DataToSave.SetpointsReal,
                             UstCommonUserControlViewModel Data => Data.Params = DataToSave.SetpointsCommon is null ? new() : DataToSave.SetpointsCommon,
                             HandMapUserControlViewModel Data => Data.Params = DataToSave.HandMap is null ? new() : DataToSave.HandMap,
+                            CommandUserControlViewModel Data => Data.Params = DataToSave.Commands is null ? new() : DataToSave.Commands,
                             _ => null
                         };
                     }
@@ -148,6 +149,7 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => DataToSave.SetpointsReal = Data.Params is null ? new() : Data.Params,
                         UstCommonUserControlViewModel Data => DataToSave.SetpointsCommon = Data.Params is null ? new() : Data.Params,
                         HandMapUserControlViewModel Data => DataToSave.HandMap = Data.Params is null ? new() : Data.Params,
+                        CommandUserControlViewModel Data => DataToSave.Commands = Data.Params is null ? new() : Data.Params,
                         _ => null
                     };
                 }
@@ -715,6 +717,24 @@ namespace Project_Сonfigurator.Services
                             }
                             #endregion
 
+                            #region Команды
+                            if (_ViewModel is CommandUserControlViewModel)
+                            {
+                                var Data = _ViewModel as CommandUserControlViewModel;
+
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.VarName)) continue;
+                                    var _FieldValue =
+                                        $"('{_Param.VarName}', '{_Param.Id}', '{_Param.Description}'),";
+                                    FieldValue.Add(_FieldValue);
+                                }
+                                if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                if (!Request.SetData("COMMANDS", Request.TableFieldCommand, Request.FieldCommand, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
+                            }
+                            #endregion
+
                             #endregion
                         }
 
@@ -928,6 +948,7 @@ namespace Project_Сonfigurator.Services
                         UstRealUserControlViewModel Data => Data.Params = new(),
                         UstCommonUserControlViewModel Data => Data.Params = new(),
                         HandMapUserControlViewModel Data => Data.Params = new(),
+                        CommandUserControlViewModel Data => Data.Params = new(),
                         _ => null
                     };
                 }

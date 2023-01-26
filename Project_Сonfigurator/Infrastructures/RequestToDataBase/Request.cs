@@ -585,7 +585,19 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldHandMap =
-            "(ID, DESCRIPTION, VAR_NAME, BIT) VALUES";
+            "(DESCRIPTION, VAR_NAME, BIT) VALUES";
+        #endregion
+
+        #region Команды
+        public const string TableFieldCommand =
+            "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+            "`VAR_NAME` TEXT," +
+            "`ID` TEXT," +
+            "`DESCRIPTION` TEXT," +
+            "PRIMARY KEY(`INDEX`));";
+
+        public const string FieldCommand =
+            "(VAR_NAME, ID, DESCRIPTION) VALUES";
         #endregion
 
         #region Сообщения

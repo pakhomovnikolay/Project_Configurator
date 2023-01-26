@@ -161,5 +161,12 @@ namespace Project_Сonfigurator.Models.Interfaces
         /// </summary>
         ObservableCollection<BaseParam> HandMap { get; set; }
         #endregion
+
+        #region Команды
+        /// <summary>
+        /// Команды
+        /// </summary>
+        ObservableCollection<BaseParam> Commands { get; set; }
+        #endregion
     }
 }
