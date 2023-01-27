@@ -7,6 +7,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
+        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         WindowStyle="None"
         BorderBrush="Black"
@@ -15,15 +16,14 @@
         Icon="../../Resources/Icons/Settings.ico"
         
         d:DataContext="{d:DesignInstance vm:SettingWindowViewModels, IsDesignTimeCreatable=True}"
-        Title="{Binding Title}"
         Height="{Binding WindowHeight}"
         Width="{Binding WindowWidth}"
-        WindowState="{Binding WindowWindowState}"
         ResizeMode="{Binding WindowResizeMode}"
+        WindowState="{Binding WindowWindowState}"
         >
 
     <Grid>
-        
+
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
@@ -59,10 +59,12 @@
                         Style="{StaticResource CloseButtonStyle}"
                         Command="{StaticResource CmdCloseWindow}"/>
         </Grid>
-        
+
         <!--Настройки наименования проекта\путь к файлу приложения-->
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Margin="1,5,1,0" Background="LightGoldenrodYellow">
             <Grid>
+
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="305"/>
@@ -117,6 +119,8 @@
         <!--Настройки наименования проекта\путь к файлу приложения-->
         <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" Grid.ColumnSpan="4" BorderBrush="Black" CornerRadius="3" Margin="1,5,1,0" Background="LightGoldenrodYellow">
             <Grid>
+
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="150"/>
                     <ColumnDefinition Width="305"/>
@@ -147,17 +151,17 @@
                         </Style>
                     </TextBox.Resources>
                 </TextBox>
-                
+
             </Grid>
         </Border>
 
         <!--Настройки вендора-->
         <GroupBox Grid.Row="3" Grid.Column="0" BorderThickness="1" BorderBrush="Black">
-            
+
             <GroupBox.Header>
                 <TextBlock Text="Настройки вендора" FontWeight="Bold" Margin="5,0,5,0"/>
             </GroupBox.Header>
-            
+
             <Grid>
 
                 <!--Сетка-->
@@ -222,7 +226,7 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        
+
                         <DataGridTemplateColumn Width="80">
 
                             <DataGridTemplateColumn.Header>
@@ -230,7 +234,7 @@
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Выбранный"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
-                            
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,1" BorderBrush="Black">
@@ -295,9 +299,9 @@
                         </DataGridTemplateColumn>
 
                     </DataGrid.Columns>
-                    
+
                 </DataGrid>
-                
+
                 <!--Команды управления-->
                 <Button Grid.Row="1" Margin="0,5,0,0" Width="80"
                         ToolTip="Добавить вендора" HorizontalAlignment="Left"
@@ -307,7 +311,7 @@
                 </Button>
 
             </Grid>
-            
+
         </GroupBox>
 
         <!--Настройки узлов подклюения к БД-->
@@ -381,9 +385,9 @@
                     </DataGrid.Resources>
 
                     <DataGrid.Columns>
-                        
+
                         <DataGridTemplateColumn Width="*">
-                            
+
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,1,1" BorderBrush="Black">
@@ -446,12 +450,13 @@
 
         <!--Настройки импорта-->
         <GroupBox Grid.Row="3" Grid.Column="2" BorderBrush="Black">
+            
             <GroupBox.Header>
                 <TextBlock Text="Настройки импорта ТБ" FontWeight="Bold" Margin="5,0,5,0"/>
             </GroupBox.Header>
 
             <Grid>
-                
+
                 <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -510,19 +515,19 @@
             </GroupBox.Header>
 
             <DockPanel>
-                
+
                 <Button DockPanel.Dock="Top" Content="Настройки агрегатов"
                         Height="30" Margin="1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdOpenWindowEditDevice}"
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-                
+
                 <Button DockPanel.Dock="Top" Content="Настройки задвижек"
                         Height="30" Margin="1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdOpenWindowEditDevice}"
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-                
+
                 <Button DockPanel.Dock="Top" Content="Настройки вспомсистем"
                         Height="30" Margin="1"
                         Style="{StaticResource CustomButtonStyle}"
@@ -566,20 +571,23 @@
                         CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
 
                 <TextBlock Text="" FontWeight="Bold" Margin="5,0,5,0"/>
-            </DockPanel>
-            
-        </GroupBox>
-        
-        <!--Команды управления-->
-        <Border Grid.Row="5" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="Gray" Margin="2">
-            <Grid>
                 
+            </DockPanel>
+
+        </GroupBox>
+
+        <!--Команды управления-->
+        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="Gray" Margin="2">
+            
+            <Grid>
+
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                
+
                 <Button Grid.Column="0" Content="Сохранить настройки" Margin="1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdSaveSettings}"
@@ -589,9 +597,10 @@
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{StaticResource CmdCloseWindow}"
                         />
-                
+
             </Grid>
+            
         </Border>
-        
+
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -9,6 +10,7 @@ using Project_Сonfigurator.Views.UserControls.Params;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
 using Project_Сonfigurator.Views.Windows.AS;
+using System.Windows;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -93,7 +95,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddTransient(s =>
             {
                 var model = s.GetRequiredService<SettingWindowViewModels>();
-                var window = new SettingWindow { DataContext = model };
+                var window = new SettingWindow { DataContext = model, };
                 return window;
             })
         #endregion

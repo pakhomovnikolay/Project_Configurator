@@ -259,9 +259,9 @@ namespace Project_Сonfigurator.Services
             if (_SettingWindow is { } window) { window.Show(); return; }
 
             window = _Services.GetRequiredService<SettingWindow>();
-            window.Owner = Application.Current.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.Closed += (_, _) => _MessageWindow = null;
+            window.Owner = Application.Current.MainWindow;
+
 
             _SettingWindow = window;
             window.ShowDialog();

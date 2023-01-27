@@ -33,7 +33,7 @@ namespace Project_Сonfigurator.ViewModels
         #region Параметры
 
         #region Высота окна
-        private int _WindowHeight = 1000;
+        private int _WindowHeight = 800;
         /// <summary>
         /// Высота окна
         /// </summary>
