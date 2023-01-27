@@ -116,6 +116,15 @@ namespace Project_Сonfigurator.ViewModels
             })
         #endregion
 
+        #region PLCExportASWindow
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<PLCExportASWindowViewModel>();
+                var window = new PLCExportASWindow { DataContext = model };
+                return window;
+            })
+        #endregion
+
         #region IOSExportASWindow
             .AddTransient(s =>
             {
@@ -130,15 +139,6 @@ namespace Project_Сonfigurator.ViewModels
             {
                 var model = s.GetRequiredService<CommandUserControlViewModel>();
                 var window = new CommandUserControl { DataContext = model };
-                return window;
-            })
-        #endregion
-
-        #region PLCExportASWindow
-            .AddTransient(s =>
-            {
-                var model = s.GetRequiredService<PLCExportASWindowViewModel>();
-                var window = new PLCExportASWindow { DataContext = model };
                 return window;
             })
         #endregion

@@ -68,6 +68,13 @@ namespace Project_Сonfigurator.Models.Settings
         public string NameProject { get; set; }
         #endregion
 
+        #region Тип системы
+        /// <summary>
+        /// Тип системы
+        /// </summary>
+        public string TypeSystem { get; set; }
+        #endregion
+
         #region Карта агрегатных готовностей по умолчанию
         /// <summary>
         /// Карта агрегатных готовностей по умолчанию

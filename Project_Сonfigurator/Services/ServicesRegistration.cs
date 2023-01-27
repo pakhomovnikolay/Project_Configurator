@@ -16,7 +16,9 @@ namespace Project_Сonfigurator.Services
             .AddTransient<IEditService, EditService>()
             .AddTransient<ISUExportRedefineService, SUExportRedefineService>()
             .AddTransient<IEncryptorService, EncryptorService>()
-            .AddTransient<IVUSocketsASExportRedefineService, VUSocketsASExportRedefineService>()
+            .AddTransient<IVUNamespaceASExportRedefineService, VUNamespaceASExportRedefineService>()
+            .AddTransient<IVUAppPLCASExportRedefineService, VUAppPLCASExportRedefineService>()
+            .AddTransient<IVUAppIOSASExportRedefineService, VUAppIOSASExportRedefineService>()
 
             .AddSingleton<IDBService, DBService>()
             .AddSingleton<ISignalService, SignalService>()

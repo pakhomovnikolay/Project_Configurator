@@ -30,10 +30,10 @@ namespace Project_Сonfigurator.ViewModels
         private readonly IDBService DBServices;
         public readonly ISettingService SettingServices;
         private readonly ISUExportRedefineService SUExportRedefineServices;
-        private readonly IVUSocketsASExportRedefineService VUSocketsASExportRedefineServices;
+        private readonly IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices;
         public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
             ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
-            IVUSocketsASExportRedefineService _VUSocketsASExportRedefineService) : this()
+            IVUNamespaceASExportRedefineService _VUSocketsASExportRedefineService) : this()
         {
             #region Сервисы
             ViewModelUserControls = viewModelUserControls;

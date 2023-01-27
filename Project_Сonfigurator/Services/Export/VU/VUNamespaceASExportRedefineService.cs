@@ -17,15 +17,15 @@ using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
 {
-    public class VUSocketsASExportRedefineService : IVUSocketsASExportRedefineService
+    public class VUNamespaceASExportRedefineService : IVUNamespaceASExportRedefineService
     {
         private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "system";
         private const string ValueAttributeTypeHistory = "Enable=\"True\"; ServerTime=\"False\";";
         private const string TypeAttributeInitialValue = "unit.System.Attributes.InitialValue";
         private const string TypeAttributeHistory = "unit.Server.Attributes.History";
-        private const string TypeAttributeAlarm = "unit.Server.Attributes.Alarm";
-        private const string TypeAttributeIsReadOnly = "unit.Server.Attributes.IsReadOnly";
+        //private const string TypeAttributeAlarm = "unit.Server.Attributes.Alarm";
+        //private const string TypeAttributeIsReadOnly = "unit.Server.Attributes.IsReadOnly";
 
         private static Dictionary<string, string> Nodes;
         private static Dictionary<string, string> Attributes;
@@ -246,7 +246,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// </summary>
         private static void SaveDoc(string FileName)
         {
-            Doc.Save($"{App.Settings.Config.PathExportVU}{FileName}{App.__SocketsExportFileSuffix}");
+            var Path = string.IsNullOrWhiteSpace(App.Settings.Config.PathExportVU) ? App.Settings.Config.PathProject : App.Settings.Config.PathExportVU;
+            Doc.Save($"{Path}{FileName}{App.__SocketsExportFileSuffix}");
         }
         #endregion
 

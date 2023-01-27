@@ -12,13 +12,18 @@ namespace Project_Сonfigurator.ViewModels.AS
     public class ExportNamespaceASWindowViewModel : ViewModel
     {
         #region Конструктор
-        private readonly IVUSocketsASExportRedefineService VUSocketsASExportRedefineServices;
+        private readonly IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices;
         private readonly IUserDialogService UserDialog;
-        public ExportNamespaceASWindowViewModel(IVUSocketsASExportRedefineService _VUSocketsASExportRedefineService, IUserDialogService _UserDialog)
+
+        public ExportNamespaceASWindowViewModel()
+        {
+            Title = "Экспорт пространства имен";
+        }
+
+        public ExportNamespaceASWindowViewModel(IVUNamespaceASExportRedefineService _VUSocketsASExportRedefineService, IUserDialogService _UserDialog) : this()
         {
             VUSocketsASExportRedefineServices = _VUSocketsASExportRedefineService;
             UserDialog = _UserDialog;
-            Title = "Экспорт пространства имен";
 
             #region Создаем CheckBox'ы
             CheckBoxs = new()
@@ -38,7 +43,6 @@ namespace Project_Сonfigurator.ViewModels.AS
                 new CheckBox{ Command = CmdSelectParam, Content = "Состояние ТС" },
                 new CheckBox{ Command = CmdSelectParam, Content = "Карта ручного ввода" },
                 new CheckBox{ Command = CmdSelectParam, Content = "Команды" }
-
             };
             #endregion
         }
@@ -156,10 +160,8 @@ namespace Project_Сonfigurator.ViewModels.AS
             if (!SuccessfulCompletion)
                 if (UserDialog.SendMessage("Внимание!", $"Экспорт выполнен c ошибками.\nСм. лог", ImageType: MessageBoxImage.Warning)) return;
 
-
-            if (SuccessfulCompletion)
-                if (UserDialog.SendMessage(Title, $"Экпорт выполнен успешно.\nДанные сохранены - {App.Settings.Config.PathExportVU}"))
-                    window.Close();
+            if (UserDialog.SendMessage(Title, $"Экпорт выполнен успешно.\nДанные сохранены - {App.Settings.Config.PathExportVU}"))
+                window.Close();
         }
         #endregion
 

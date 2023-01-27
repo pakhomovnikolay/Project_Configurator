@@ -1,6 +1,6 @@
 ﻿namespace Project_Сonfigurator.Services.Export.VU.Interfaces
 {
-    public interface IVUSocketsASExportRedefineService
+    public interface IVUNamespaceASExportRedefineService
     {
         #region Экспорт данных ВУ
         /// <summary>
