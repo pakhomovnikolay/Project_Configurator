@@ -7,7 +7,6 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
-        WindowStartupLocation="CenterScreen"
         AllowsTransparency="True"
         WindowStyle="None"
         BorderBrush="Black"

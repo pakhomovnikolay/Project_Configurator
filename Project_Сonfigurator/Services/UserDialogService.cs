@@ -256,17 +256,12 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenSettingsWindow()
         {
-            if (_SettingWindow is { } window)
-            {
-                window.Owner = _MainWindow ?? Application.Current.MainWindow;
-                window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-                window.ShowDialog(); return;
-            }
+            if (_SettingWindow is { } window) { window.Show(); return; }
 
             window = _Services.GetRequiredService<SettingWindow>();
-            window.Owner = _MainWindow ?? Application.Current.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            window.Closed += (_, _) => _SettingWindow = null;
+            window.Owner = Application.Current.MainWindow;
+            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+            window.Closed += (_, _) => _MessageWindow = null;
 
             _SettingWindow = window;
             window.ShowDialog();

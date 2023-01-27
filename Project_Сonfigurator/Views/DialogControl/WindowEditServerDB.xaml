@@ -238,9 +238,10 @@
                     </TextBox>
                 </Border>
                 <Border Grid.Column="1" Grid.Row="6" BorderThickness="1,1,1,1" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.Password, UpdateSourceTrigger=PropertyChanged}"
-                             >
+                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center">
+                        <TextBox.Text>
+                            <Binding Path="SelectedServer.Password" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource PasswordViewSecretConverter}"/>
+                        </TextBox.Text>
                         <TextBox.Resources>
                             <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
                                 <VisualBrush.Visual>

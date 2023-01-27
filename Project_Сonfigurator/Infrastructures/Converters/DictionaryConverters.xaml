@@ -13,6 +13,7 @@
     <l:IndexToBitConverter x:Key="IndexToBitConverter"/>
     <l:CheckBoxContentConverter x:Key="CheckBoxContentConverter"/>
     <l:SuccessUpdateConverter x:Key="SuccessUpdateConverter"/>
+    <l:PasswordViewSecretConverter x:Key="PasswordViewSecretConverter"/>
     <UserDI:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter"/>
     <UserDI:IndexToVarNameConverter x:Key="IndexToVarNameConverter"/>
     
