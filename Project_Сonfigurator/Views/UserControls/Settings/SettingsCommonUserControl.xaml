@@ -16,14 +16,19 @@
         
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!--Resources-->
         <Grid.Resources>
+
+            <!--Стиль ряда-->
+            <Style TargetType="{x:Type RowDefinition}">
+                <Setter Property="Height" Value="25"/>
+            </Style>
             
             <!--Стиль рамки-->
             <Style TargetType="{x:Type Border}">
@@ -67,7 +72,7 @@
                 </Grid.ColumnDefinitions>
 
                 <TextBlock Grid.Column="0" Text="Наименование объекта:"/>
-                <TextBox Grid.Column="1" Tag="Укажите наименование объекта"
+                <TextBox Grid.Column="1"
                          Text="{Binding Config.NameProject}"/>
             </Grid>
         </Border>

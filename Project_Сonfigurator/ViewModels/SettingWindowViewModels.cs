@@ -297,7 +297,9 @@ namespace Project_Сonfigurator.ViewModels
                         _Title = Content,
                         InputParam = Config.UMPNA.InputParams,
                         OutputParam = Config.UMPNA.OutputParams,
-                        Setpoints = Config.UMPNA.Setpoints
+                        Setpoints = Config.UMPNA.Setpoints,
+                        Owner = Application.Current.MainWindow,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
                     };
                     break;
                 case "Настройки задвижек":
@@ -306,7 +308,9 @@ namespace Project_Сonfigurator.ViewModels
                         _Title = Content,
                         InputParam = Config.UZD.InputParams,
                         OutputParam = Config.UZD.OutputParams,
-                        Setpoints = Config.UZD.Setpoints
+                        Setpoints = Config.UZD.Setpoints,
+                        Owner = Application.Current.MainWindow,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
                     };
                     break;
                 case "Настройки вспомсистем":
@@ -315,7 +319,9 @@ namespace Project_Сonfigurator.ViewModels
                         _Title = Content,
                         InputParam = Config.UVS.InputParams,
                         OutputParam = Config.UVS.OutputParams,
-                        Setpoints = Config.UVS.Setpoints
+                        Setpoints = Config.UVS.Setpoints,
+                        Owner = Application.Current.MainWindow,
+                        WindowStartupLocation = WindowStartupLocation.CenterOwner
                     };
                     break;
                 default:

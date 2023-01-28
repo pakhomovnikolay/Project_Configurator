@@ -295,20 +295,20 @@
                         </Grid.RowDefinitions>
                         <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
                             <Button Height="20" Width="25" Margin="0,0" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{StaticResource CmdPrevItemTabPanel}"
-                                            CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                            >
+                                    Style="{StaticResource CustomButtonStyle}"
+                                    Command="{StaticResource CmdPrevItemTabPanel}"
+                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
+                                    >
 
                                 <Button.Content>
                                     <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
                                 </Button.Content>
                             </Button>
                             <Button Height="20" Width="25" Margin="1,0" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{StaticResource CmdNextItemTabPanel}"
-                                            CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                            >
+                                    Style="{StaticResource CustomButtonStyle}"
+                                    Command="{StaticResource CmdNextItemTabPanel}"
+                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
+                                    >
 
                                 <Button.Content>
                                     <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
@@ -325,9 +325,6 @@
                                 <ToggleButton.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="5"/>
-                                        <Style.Triggers>
-                                            
-                                        </Style.Triggers>
                                     </Style>
                                 </ToggleButton.Resources>
                                 <fa:FontAwesome FontSize="10" Icon="Solid_EllipsisH" Foreground="LightSlateGray"/>

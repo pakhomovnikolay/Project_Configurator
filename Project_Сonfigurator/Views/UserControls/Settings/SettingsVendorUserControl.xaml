@@ -21,10 +21,9 @@
             <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
 
-        <!--Список вендеров-->
+        <!--Данные-->
         <DataGrid x:Name="VendorDataGrid"
-                  BorderThickness="1"
-                  BorderBrush="Black"
+                  BorderThickness="0"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
                   CanUserReorderColumns="False"
@@ -33,7 +32,7 @@
                   CanUserResizeColumns="False"
                   SelectionMode="Single"
                   SelectionUnit="FullRow"
-                  Background="Gray"
+                  Background="Transparent"
                   HeadersVisibility="Column"
                   ItemsSource="{Binding Config.Vendors}"
                   SelectedItem="{Binding SelectedVendor}"
@@ -43,7 +42,6 @@
 
                 <Style TargetType="{x:Type DataGridCell}">
                     <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
                     <Setter Property="Background" Value="White"/>
                     <Setter Property="Height" Value="25"/>
                     <Style.Triggers>
@@ -62,7 +60,7 @@
                     <Setter Property="VerticalContentAlignment" Value="Stretch"/>
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Background" Value="Transparent"/>
                     <Setter Property="Height" Value="40"/>
                     <Setter Property="FontWeight" Value="Bold"/>
                 </Style>
@@ -70,7 +68,8 @@
                 <Style TargetType="{x:Type DataGridRow}">
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="Margin" Value="0"/>
                 </Style>
 
             </DataGrid.Resources>
@@ -80,14 +79,14 @@
                 <DataGridTemplateColumn Width="80">
 
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,0,2" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="1,1,1,0" BorderBrush="Black" Background="White" Margin="0,1,0,0" CornerRadius="3,0,0,3">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Выбранный"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,0,1" BorderBrush="Black">
+                            <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,0,1" CornerRadius="3,0,0,3">
                                 <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
                                           IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
                             </Border>
@@ -99,24 +98,33 @@
                 <DataGridTemplateColumn Width="*">
 
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,2" BorderBrush="Black" Background="White">
+                        <Border BorderThickness="0,1,1,0" BorderBrush="Black" Background="White" Margin="0,1,1,0" CornerRadius="0,3,3,0">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование вендора"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
 
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="0,1,1,1" BorderBrush="Black" Margin="0,0,1,1" CornerRadius="0,3,3,0">
+                                <TextBlock Background="Transparent" Margin="5,0,0,0"
+                                           TextAlignment="Left" VerticalAlignment="Center"
+                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1,0,1,1" BorderBrush="Black">
+                            <Border BorderThickness="0,1,1,1" BorderBrush="Black" Margin="0,0,1,1" CornerRadius="0,3,3,0">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition/>
                                         <ColumnDefinition Width="30"/>
                                         <ColumnDefinition Width="30"/>
                                     </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Margin="5,0,0,0"
-                                             BorderThickness="0"
+                                    <TextBox Grid.Column="0" Margin="3,0,0,0" BorderThickness="0"
                                              TextAlignment="Left" VerticalAlignment="Center"
-                                             Background="Transparent"
+                                             Background="Transparent" FontWeight="Bold"
                                              Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
                                     <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
                                             Style="{StaticResource CustomButtonStyle}"
@@ -136,22 +144,12 @@
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
 
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                <TextBlock Background="Transparent" Margin="5,0,0,0"
-                                           TextAlignment="Left" VerticalAlignment="Center"
-                                           Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"/>
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-
                 </DataGridTemplateColumn>
 
             </DataGrid.Columns>
 
         </DataGrid>
-
+        
         <!--Команды управления-->
         <Button Grid.Row="1" Margin="1" Width="80"
                 ToolTip="Добавить вендора" HorizontalAlignment="Left"

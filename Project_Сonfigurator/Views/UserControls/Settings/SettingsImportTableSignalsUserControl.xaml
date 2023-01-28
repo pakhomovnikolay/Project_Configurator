@@ -14,52 +14,141 @@
 
     <Grid>
 
+        <!--Resources-->
+        <Grid.Resources>
+
+            <!--Стиль ряда-->
+            <Style TargetType="{x:Type RowDefinition}">
+                <Setter Property="Height" Value="25"/>
+            </Style>
+
+            <!--Стиль рамки-->
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="CornerRadius" Value="3"/>
+                <Setter Property="Margin" Value="0,1,0,0"/>
+                <Setter Property="Background" Value="LightGoldenrodYellow"/>
+            </Style>
+
+            <!--Стиль TextBox-->
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="TextAlignment" Value="Left"/>
+                <Setter Property="BorderThickness" Value="1,0,1,0"/>
+                <Style.Resources>
+
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="3"/>
+                    </Style>
+
+                </Style.Resources>
+            </Style>
+
+            <!--Стиль TextBlock-->
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="TextAlignment" Value="Left"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Margin" Value="5,0,0,0"/>
+            </Style>
+
+        </Grid.Resources>
+        
         <!--Сетка-->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350"/>
-            <ColumnDefinition Width="50"/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
-            <RowDefinition Height="25"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-        <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-        <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-        <Border Grid.Column="0" Grid.Row="3" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-        <Border Grid.Column="0" Grid.Row="4" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White"/>
+        <!--Стартовый индекс строки-->
+        <Grid Grid.Row="0">
+            
+            <Border Grid.Row="0">
+                <Grid>
 
-        <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-        <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-        <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-        <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-        <Border Grid.Column="1" Grid.Row="4" BorderThickness="1" BorderBrush="Black"/>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
 
-        <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Стартовый индекс строки:"/>
-        <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Идентификатор:"/>
-        <TextBlock Grid.Column="0" Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Наименование сигнала:"/>
-        <TextBlock Grid.Column="0" Grid.Row="3" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер корзины:"/>
-        <TextBlock Grid.Column="0" Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер канала в модуле:"/>
+                    <TextBlock Grid.Column="0" Text="Стартовый индекс строки:"/>
+                    <TextBox Grid.Column="1" Text="{Binding Config.Import.StartIndexRow}"/>
+                </Grid>
+            </Border>
+        </Grid>
 
-        <TextBox Grid.Column="1" Grid.Row="0" BorderThickness="0"
-                 TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                 Text="{Binding Config.Import.StartIndexRow, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Column="1" Grid.Row="1" BorderThickness="0"
-                 TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                 Text="{Binding Config.Import.IndexColumnId, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Column="1" Grid.Row="2" BorderThickness="0"
-                 TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                 Text="{Binding Config.Import.IndexColumnDescription, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Column="1" Grid.Row="3" BorderThickness="0"
-                 TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                 Text="{Binding Config.Import.IndexColumnRack, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBox Grid.Column="1" Grid.Row="4" BorderThickness="0"
-                 TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                 Text="{Binding Config.Import.IndexColumnModule, UpdateSourceTrigger=PropertyChanged}"/>
+        <!--Идентификатор-->
+        <Grid Grid.Row="1">
+
+            <Border Grid.Row="0">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Идентификатор:"/>
+                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnId}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--Наименование сигнала-->
+        <Grid Grid.Row="2">
+
+            <Border Grid.Row="0">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Наименование сигнала:"/>
+                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnDescription}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--Номер корзины-->
+        <Grid Grid.Row="3">
+
+            <Border Grid.Row="0">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Номер корзины:"/>
+                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnRack}"/>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <!--Номер канала в модуле-->
+        <Grid Grid.Row="4">
+
+            <Border Grid.Row="0">
+                <Grid>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="170"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Column="0" Text="Номер канала в модуле:"/>
+                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnModule}"/>
+                </Grid>
+            </Border>
+        </Grid>
+        
     </Grid>
 
 </UserControl>
