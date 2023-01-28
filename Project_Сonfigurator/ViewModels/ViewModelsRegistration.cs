@@ -1,4 +1,5 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
+using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
@@ -7,6 +8,7 @@ using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.UserControls;
 using Project_Сonfigurator.Views.UserControls.Params;
+using Project_Сonfigurator.Views.UserControls.Settings;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
 using Project_Сonfigurator.Views.Windows.AS;
@@ -82,6 +84,9 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<IViewModelUserControls, HandMapUserControlViewModel>()
         #endregion
 
+
+        #region Регистрация окон
+
         #region MainWindow
             .AddTransient(s =>
             {
@@ -135,6 +140,10 @@ namespace Project_Сonfigurator.ViewModels
                 return window;
             })
         #endregion
+
+        #endregion
+
+        #region Регисрация пользовательских интерфейсов для главного окна
 
         #region CommandUserControl
             .AddTransient(s =>
@@ -341,6 +350,57 @@ namespace Project_Сonfigurator.ViewModels
                 var window = new HandMapUserControl { DataContext = model };
                 return window;
             })
+        #endregion
+
+        #endregion
+
+        #region Регисрация пользовательских интерфейсов для окна настроек приложения
+
+        #region SettingsCommonUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingsCommonUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region SettingsVendorUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingsVendorUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region SettingsServerConnectUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingsServerConnectUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region SettingsImportTableSignalsUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingsImportTableSignalsUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region SettingsDeviceControlsUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingsDeviceControlsUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
         #endregion
 
             ;

@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
         WindowStartupLocation="CenterScreen"
@@ -27,21 +26,12 @@
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="30"/>
+            <RowDefinition/>
             <RowDefinition Height="30"/>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="250"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="400"/>
-            <ColumnDefinition Width="400"/>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
 
         <!--Верхняя панель-->
-        <Grid Grid.Row="0" Grid.ColumnSpan="5" Background="White">
+        <Grid Grid.Row="0" Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="35"/>
                 <ColumnDefinition Width="*"/>
@@ -59,528 +49,55 @@
                         Style="{StaticResource CloseButtonStyle}"
                         Command="{StaticResource CmdCloseWindow}"/>
         </Grid>
-
-        <!--Настройки наименования проекта\путь к файлу приложения-->
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" BorderThickness="1" BorderBrush="Black" CornerRadius="3" Margin="1,5,1,0" Background="LightGoldenrodYellow">
-            <Grid>
-
-                <!--Сетка-->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="305"/>
-                    <ColumnDefinition Width="1"/>
-                    <ColumnDefinition Width="170"/>
-                    <ColumnDefinition Width="305"/>
-                    <ColumnDefinition Width="30"/>
-
-                    <ColumnDefinition Width="140"/>
-                    <ColumnDefinition Width="304"/>
-                    <ColumnDefinition Width="30"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Margin="5,0,0,0" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="Наименование объекта:"/>
-                <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding Config.NameProject, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="1,3,3,1"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
-
-                <TextBlock Grid.Column="3" Margin="5,0,0,0" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="Путь к файлу приложения:"/>
-                <TextBox Grid.Column="4" VerticalContentAlignment="Center" Text="{Binding Config.PathProject, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="1,3,3,1"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
-                <Button Grid.Column="5" Content="..." FontWeight="Bold" Margin="-5,0,-1,0"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdSelectedFolderSavedProject}"
-                        />
-
-                <TextBlock Grid.Column="6" Margin="5,0,0,0" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="Путь для экспорта ВУ:"/>
-                <TextBox Grid.Column="7" VerticalContentAlignment="Center" Text="{Binding Config.PathExportVU, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="1,3,3,1"/>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
-                <Button Grid.Column="8" Content="..." FontWeight="Bold" Margin="-5,0,-1,0"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdSelectedFolderExportVU}"
-                        />
-
-            </Grid>
-        </Border>
-
-        <!--Настройки наименования проекта\путь к файлу приложения-->
-        <Border Grid.Row="2" Grid.Column="0" BorderThickness="1" Grid.ColumnSpan="4" BorderBrush="Black" CornerRadius="3" Margin="1,5,1,0" Background="LightGoldenrodYellow">
-            <Grid>
-
-                <!--Сетка-->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="150"/>
-                    <ColumnDefinition Width="305"/>
-                    <ColumnDefinition Width="1"/>
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" Margin="5,0,0,0" TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold" Text="Тип системы:"/>
-                <TextBox Grid.Column="1" VerticalContentAlignment="Center" Text="{Binding Config.TypeSystem, UpdateSourceTrigger=PropertyChanged}">
-                    <TextBox.Resources>
-                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                            <VisualBrush.Visual>
-                                <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: MNS"/>
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                        <Style TargetType="{x:Type TextBox}">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Resources>
-                </TextBox>
-
-            </Grid>
-        </Border>
-
-        <!--Настройки вендора-->
-        <GroupBox Grid.Row="3" Grid.Column="0" BorderThickness="1" BorderBrush="Black">
-
-            <GroupBox.Header>
-                <TextBlock Text="Настройки вендора" FontWeight="Bold" Margin="5,0,5,0"/>
-            </GroupBox.Header>
-
-            <Grid>
-
-                <!--Сетка-->
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-
-                <!--Список вендеров-->
-                <DataGrid Grid.Row="0" Grid.Column="0"
-                          x:Name="VendorDataGrid"
-                          BorderThickness="1"
-                          BorderBrush="Black"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
-                          GridLinesVisibility="None"
-                          CanUserResizeColumns="False"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          Background="Gray"
-                          HeadersVisibility="Column"
-                          ItemsSource="{Binding Config.Vendors}"
-                          SelectedItem="{Binding SelectedVendor}"
-                          >
-
-                    <DataGrid.Resources>
-
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="Height" Value="25"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                            <Setter Property="Height" Value="40"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridRow}">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                        </Style>
-
-                    </DataGrid.Resources>
-
-                    <DataGrid.Columns>
-
-                        <DataGridTemplateColumn Width="80">
-
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,1,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Выбранный"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,1" BorderBrush="Black">
-                                        <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
-                                                  IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="*">
-
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,1,1,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование вендора"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="30"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0" Margin="5,0,0,0"
-                                                     BorderThickness="0"
-                                                     TextAlignment="Left" VerticalAlignment="Center"
-                                                     Background="Transparent"
-                                                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                            <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
-                                                    Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding DataContext.CmdEditSelectedVendor, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                    >
-                                                <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
-                                            </Button>
-                                            <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                                    Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding DataContext.CmdRemoveVendor, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
-                                                <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                            </Button>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                        <TextBlock Background="Transparent" Margin="5,0,0,0"
-                                                 TextAlignment="Left" VerticalAlignment="Center"
-                                                 Text="{Binding Name,UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-
-                        </DataGridTemplateColumn>
-
-                    </DataGrid.Columns>
-
-                </DataGrid>
-
-                <!--Команды управления-->
-                <Button Grid.Row="1" Margin="0,5,0,0" Width="80"
-                        ToolTip="Добавить вендора" HorizontalAlignment="Left"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdAddVendor}">
-                    <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-
-            </Grid>
-
-        </GroupBox>
-
-        <!--Настройки узлов подклюения к БД-->
-        <GroupBox Grid.Row="3" Grid.Column="1" BorderThickness="1" BorderBrush="Black">
-
-            <GroupBox.Header>
-                <TextBlock Text="Настройки узлов подклюения к БД" FontWeight="Bold" Margin="5,0,5,0"/>
-            </GroupBox.Header>
-
-            <Grid>
-
-                <!--Сетка-->
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="30"/>
-                </Grid.RowDefinitions>
-
-                <!--Список вендеров-->
-                <DataGrid Grid.Row="0" Grid.Column="0"
-                          x:Name="ServerDBDataGrid"
-                          BorderThickness="1,2,1,1"
-                          BorderBrush="Black"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
-                          GridLinesVisibility="None"
-                          CanUserResizeColumns="False"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          Background="Gray"
-                          HeadersVisibility="None"
-                          ItemsSource="{Binding Config.ServerDB}"
-                          SelectedItem="{Binding SelectedServerDB}"
-                          >
-
-                    <DataGrid.Resources>
-
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="Height" Value="25"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                            <Setter Property="Height" Value="40"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridRow}">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                        </Style>
-
-                    </DataGrid.Resources>
-
-                    <DataGrid.Columns>
-
-                        <DataGridTemplateColumn Width="*">
-
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition/>
-                                                <ColumnDefinition Width="30"/>
-                                                <ColumnDefinition Width="30"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBox Grid.Column="0" Margin="5,0,0,0"
-                                                     BorderThickness="0"
-                                                     TextAlignment="Left" VerticalAlignment="Center"
-                                                     Background="Transparent"
-                                                     Text="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
-                                            <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
-                                                    Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding DataContext.CmdEditSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                                    >
-                                                <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
-                                            </Button>
-                                            <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                                    Style="{StaticResource CustomButtonStyle}"
-                                                    Command="{Binding DataContext.CmdDeleteSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
-                                                <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                            </Button>
-                                        </Grid>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                        <TextBlock Background="Transparent" Margin="5,0,0,0"
-                                                 TextAlignment="Left" VerticalAlignment="Center"
-                                                 Text="{Binding DescriptionConnect,UpdateSourceTrigger=PropertyChanged}"/>
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-
-                        </DataGridTemplateColumn>
-
-                    </DataGrid.Columns>
-
-                </DataGrid>
-
-                <!--Команды управления-->
-                <Button Grid.Row="1" Margin="0,5,0,0" Width="80"
-                        ToolTip="Добавить узел" HorizontalAlignment="Left"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdCreateNewServerDB}">
-                    <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-
-            </Grid>
-
-        </GroupBox>
-
-        <!--Настройки импорта-->
-        <GroupBox Grid.Row="3" Grid.Column="2" BorderBrush="Black">
-            
-            <GroupBox.Header>
-                <TextBlock Text="Настройки импорта ТБ" FontWeight="Bold" Margin="5,0,5,0"/>
-            </GroupBox.Header>
-
-            <Grid>
-
-                <!--Сетка-->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="50"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
-
-                <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="3" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="4" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White"/>
-
-                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="4" BorderThickness="1" BorderBrush="Black"/>
-
-                <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Стартовый индекс строки:"/>
-                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Идентификатор:"/>
-                <TextBlock Grid.Column="0" Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Наименование сигнала:"/>
-                <TextBlock Grid.Column="0" Grid.Row="3" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер корзины:"/>
-                <TextBlock Grid.Column="0" Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Номер канала в модуле:"/>
-
-                <TextBox Grid.Column="1" Grid.Row="0" BorderThickness="0"
-                         TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                         Text="{Binding Config.Import.StartIndexRow, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Column="1" Grid.Row="1" BorderThickness="0"
-                         TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                         Text="{Binding Config.Import.IndexColumnId, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Column="1" Grid.Row="2" BorderThickness="0"
-                         TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                         Text="{Binding Config.Import.IndexColumnDescription, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Column="1" Grid.Row="3" BorderThickness="0"
-                         TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                         Text="{Binding Config.Import.IndexColumnRack, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBox Grid.Column="1" Grid.Row="4" BorderThickness="0"
-                         TextAlignment="Center" VerticalContentAlignment="Center" Margin="1,1"
-                         Text="{Binding Config.Import.IndexColumnModule, UpdateSourceTrigger=PropertyChanged}"/>
-            </Grid>
-
-        </GroupBox>
-
-        <!--Настройки испольнительных механизмов-->
-        <GroupBox Grid.Row="4" Grid.Column="0" BorderBrush="Black">
-
-            <GroupBox.Header>
-                <TextBlock Text="Настройки параметров" FontWeight="Bold" Margin="5,0,5,0"/>
-            </GroupBox.Header>
-
-            <DockPanel>
-
-                <Button DockPanel.Dock="Top" Content="Настройки агрегатов"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDevice}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройки задвижек"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDevice}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройки вспомсистем"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDevice}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты агрегатных готовностей"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты общестанционных защит"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты агрегатных защит"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты предельных параметров агрегатных защит"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты предельных параметров общестанционных защит"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <Button DockPanel.Dock="Top" Content="Настройка карты общесистемной сигнализации"
-                        Height="30" Margin="1"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdOpenWindowEditDefaultMapDefence}"
-                        CommandParameter="{Binding Content, RelativeSource={RelativeSource Mode=Self}}"/>
-
-                <TextBlock Text="" FontWeight="Bold" Margin="5,0,5,0"/>
+        
+        <!--Данные-->
+        <Grid Grid.Row="1" >
+
+            <!--Сетка-->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" MaxWidth="500" MinWidth="130"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Width="5" Background="Transparent" Panel.ZIndex="99999"/>
+
+            <!--Список настроек-->
+            <ListView Grid.Column="0" Background="GhostWhite" ItemsSource="{Binding SettingsList}" SelectedItem="{Binding SettingsSettingType}">
                 
-            </DockPanel>
+                <ListView.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="3"/>
+                        <Setter Property="Margin" Value="1"/>
+                        <Setter Property="BorderBrush" Value="LightSlateGray"/>
+                    </Style>
+                </ListView.Resources>
 
-        </GroupBox>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
 
-        <!--Команды управления-->
-        <Border Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" BorderThickness="0" BorderBrush="Gray" Margin="2">
+                            <Ellipse Grid.Column="0" Fill="Gray" Width="5" Height="5"/>
+                            <TextBlock Grid.Column="2" Text="{Binding Text}"/>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                
+            </ListView>
+
+            <!--Данные выбранного типа настроек-->
+            <UserControl Grid.Column="1" Content="{Binding SelectedUserControl}"/>
             
-            <Grid>
+        </Grid>
+        
+        <!--Команды управления-->
+        <Border Grid.Row="2" CornerRadius="3" BorderThickness="0,1,0,0" BorderBrush="LightSlateGray" Background="White">
 
+            <Grid HorizontalAlignment="Right">
+                
                 <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
@@ -601,6 +118,7 @@
             </Grid>
             
         </Border>
-
+        
     </Grid>
+    
 </Window>

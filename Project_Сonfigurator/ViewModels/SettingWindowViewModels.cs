@@ -1,9 +1,11 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
+using Project_Сonfigurator.Views.UserControls.Settings;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -27,6 +29,16 @@ namespace Project_Сonfigurator.ViewModels
             SettingServices = _ISettingService;
             EditServices = _EditServices;
             UserDialog = _UserDialog;
+
+            SettingsList = new()
+            {
+                new BaseText { Text = "Общие настройки" },
+                new BaseText { Text = "Настройки вендора" },
+                new BaseText { Text = "Настройки узов" },
+                new BaseText { Text = "Настройки импорта" },
+                new BaseText { Text = "Настройки испольнительных механизмов" }
+            };
+            SettingsSettingType = SettingsList[0];
         }
         #endregion
 
@@ -113,6 +125,65 @@ namespace Project_Сonfigurator.ViewModels
         {
             get => _SelectedServerDB;
             set => Set(ref _SelectedServerDB, value);
+        }
+        #endregion
+
+        #region Пользовательский интерфейс для отобрадения выбранных настроек
+        private UserControl _SelectedUserControl = new();
+        /// <summary>
+        /// Пользовательский интерфейс для отобрадения выбранных настроек
+        /// </summary>
+        public UserControl SelectedUserControl
+        {
+            get => _SelectedUserControl;
+            set => Set(ref _SelectedUserControl, value);
+        }
+        #endregion
+
+        #region Список настроек
+        private ObservableCollection<BaseText> _SettingsList = new();
+        /// <summary>
+        /// Список настроек
+        /// </summary>
+        public ObservableCollection<BaseText> SettingsList
+        {
+            get => _SettingsList;
+            set => Set(ref _SettingsList, value);
+        }
+        #endregion
+
+        #region Выбранный тип настроек
+        private BaseText _SettingsSettingType;
+        /// <summary>
+        /// Выбранный тип настроек
+        /// </summary>
+        public BaseText SettingsSettingType
+        {
+            get => _SettingsSettingType;
+            set
+            {
+                if (Set(ref _SettingsSettingType, value))
+                {
+                    switch (_SettingsSettingType.Text)
+                    {
+                        case "Общие настройки":
+                            SelectedUserControl = new SettingsCommonUserControl();
+                            break;
+                        case "Настройки вендора":
+                            SelectedUserControl = new SettingsVendorUserControl();
+                            break;
+                        case "Настройки узов":
+                            SelectedUserControl = new SettingsServerConnectUserControl();
+                            break;
+                        case "Настройки импорта":
+                            SelectedUserControl = new SettingsImportTableSignalsUserControl();
+                            break;
+                        case "Настройки испольнительных механизмов":
+                            SelectedUserControl = new SettingsDeviceControlsUserControl();
+                            break;
+                    }
+                }
+            }
         }
         #endregion
 
