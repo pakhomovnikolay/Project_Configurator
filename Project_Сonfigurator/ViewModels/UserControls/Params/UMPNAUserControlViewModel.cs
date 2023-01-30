@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
@@ -8,16 +7,14 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UMPNAUserControlViewModel : ViewModelUserControls
+    public class UMPNAUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public UMPNAUserControlViewModel()
@@ -319,13 +316,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
             Params = new();
-            TableSignalsUserControlViewModel TableSignalsViewModel = new();
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as TableSignalsUserControlViewModel
-                                     where _TabItem is TableSignalsUserControlViewModel
-                                     select _TabItem)
-                TableSignalsViewModel = _TabItem;
+            if (UserDialog.SearchControlViewModel("Таблица сигналов") is not TableSignalsUserControlViewModel _TabItem) return;
+            TableSignalsUserControlViewModel TableSignalsViewModel = _TabItem;
 
             if (TableSignalsViewModel.Params is null || TableSignalsViewModel.Params.Count <= 0)
                 if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",
@@ -416,6 +408,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedInputParam is null) return;
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedInputParam.Index)
                 SelectedInputParam = SelectedParam.InputParam[int.Parse(Index) - 1];
@@ -442,12 +435,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -464,6 +453,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedOutputParam is null) return;
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedOutputParam.Index)
                 SelectedOutputParam = SelectedParam.OutputParam[int.Parse(Index) - 1];
@@ -474,13 +464,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             SignalServices.Type = TypeModule.DO;
 
             var NameListSelected = "Сигналы DO";
-
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -497,6 +482,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedKGMPNA is null) return;
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedKGMPNA.Param.Index)
                 SelectedKGMPNA = SelectedParam.KGMPNA[int.Parse(Index) - 1];
@@ -523,12 +509,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -545,6 +527,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedKTPRA is null) return;
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedKTPRA.Param.Index)
                 SelectedKTPRA = SelectedParam.KTPRA[int.Parse(Index) - 1];
@@ -571,12 +554,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -593,6 +572,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (p is not string Index) return;
             if (string.IsNullOrWhiteSpace(Index)) return;
             if (SelectedKTPRAS is null) return;
+            if (App.FucusedTabControl == null) return;
 
             if (Index != SelectedKTPRAS.Param.Index)
                 SelectedKTPRAS = SelectedParam.KTPRAS[int.Parse(Index) - 1];
@@ -619,12 +599,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            if (App.FucusedTabControl == null) return;
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as TabItem
-                                     where _TabItem.Header.ToString() == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

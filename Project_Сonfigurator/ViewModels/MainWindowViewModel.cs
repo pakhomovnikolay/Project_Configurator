@@ -9,7 +9,6 @@ using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -444,45 +443,42 @@ namespace Project_Сonfigurator.ViewModels
             var _TabControl = App.FucusedTabControl;
             if (_TabControl == null) return;
             if (p is not ScrollViewer MyScrollViewer) return;
+            if (UserDialog.SearchControlViewModel(SelectedViewModel.Title) is not IViewModelUserControls _TabItem) return;
 
-            foreach (var _TabItem in from object _Item in _TabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == SelectedViewModel.Title
-                                     select _TabItem)
+            var SelectedIndex = _TabControl.SelectedIndex;
+            _TabControl.SelectedItem = _TabItem;
+
+            if (_TabControl.SelectedIndex == (_TabControl.Items.Count - 1))
             {
-                var SelectedIndex = _TabControl.SelectedIndex;
-                _TabControl.SelectedItem = _TabItem;
-                if (_TabControl.SelectedIndex == (_TabControl.Items.Count - 1))
-                {
-                    MyScrollViewer.ScrollToRightEnd();
-                    return;
-                }
-                else if (_TabControl.SelectedIndex == 0)
-                {
-                    MyScrollViewer.ScrollToLeftEnd();
-                    return;
-                }
-                var Offset = 0d;
-                if (_TabControl.SelectedIndex > SelectedIndex)
-                {
-                    for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
-                    {
-                        var _Item = _TabControl.Items[i] as IViewModelUserControls;
-                        Offset += _Item.Title.Length * 6;
+                MyScrollViewer.ScrollToRightEnd();
+                return;
+            }
+            else if (_TabControl.SelectedIndex == 0)
+            {
+                MyScrollViewer.ScrollToLeftEnd();
+                return;
+            }
 
-                    }
-                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
-                }
-
-                else if (_TabControl.SelectedIndex < SelectedIndex)
+            var Offset = 0d;
+            if (_TabControl.SelectedIndex > SelectedIndex)
+            {
+                for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
                 {
-                    for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
-                    {
-                        var _Item = _TabControl.Items[i] as IViewModelUserControls;
-                        Offset += _Item.Title.Length * 6;
-                    }
-                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
+                    var _Item = _TabControl.Items[i] as IViewModelUserControls;
+                    Offset += _Item.Title.Length * 6;
+
                 }
+                MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
+            }
+
+            else if (_TabControl.SelectedIndex < SelectedIndex)
+            {
+                for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
+                {
+                    var _Item = _TabControl.Items[i] as IViewModelUserControls;
+                    Offset += _Item.Title.Length * 6;
+                }
+                MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
             }
         }
         #endregion

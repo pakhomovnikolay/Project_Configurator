@@ -84,6 +84,7 @@ namespace Project_Сonfigurator.Services
                             UstCommonUserControlViewModel Data => Data.Params = DataToSave.SetpointsCommon is null ? new() : DataToSave.SetpointsCommon,
                             HandMapUserControlViewModel Data => Data.Params = DataToSave.HandMap is null ? new() : DataToSave.HandMap,
                             CommandUserControlViewModel Data => Data.Params = DataToSave.Commands is null ? new() : DataToSave.Commands,
+                            MessagesUserControlViewModel Data => Data.Params = DataToSave.SystemMessages is null ? new() : DataToSave.SystemMessages,
                             _ => null
                         };
                     }
@@ -150,6 +151,7 @@ namespace Project_Сonfigurator.Services
                         UstCommonUserControlViewModel Data => DataToSave.SetpointsCommon = Data.Params is null ? new() : Data.Params,
                         HandMapUserControlViewModel Data => DataToSave.HandMap = Data.Params is null ? new() : Data.Params,
                         CommandUserControlViewModel Data => DataToSave.Commands = Data.Params is null ? new() : Data.Params,
+                        MessagesUserControlViewModel Data => DataToSave.SystemMessages = Data.Params is null ? new() : Data.Params,
                         _ => null
                     };
                 }
@@ -735,6 +737,24 @@ namespace Project_Сonfigurator.Services
                             }
                             #endregion
 
+                            #region Системы сообщений
+                            if (_ViewModel is MessagesUserControlViewModel)
+                            {
+                                var Data = _ViewModel as MessagesUserControlViewModel;
+
+                                foreach (var _Param in Data.Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.SystemMessage)) continue;
+                                    var _FieldValue =
+                                        $"('{_Param.SystemMessage}', '{_Param.DescriptionMessage}', '{_Param.DescriptionSystem}', '{_Param.NameTabList}'),";
+                                    FieldValue.Add(_FieldValue);
+                                }
+                                if (FieldValue is null || FieldValue.Count <= 0) continue;
+                                if (!Request.SetData("MESSAGE_SYSTEMS", Request.TableFieldSyatemMessages, Request.FieldSyatemMessages, FieldValue))
+                                    ConnectSetting.SuccessUpdate = false;
+                            }
+                            #endregion
+
                             #endregion
                         }
 
@@ -887,7 +907,7 @@ namespace Project_Сonfigurator.Services
                                 if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
 
                                 var _FieldValue =
-                                    $"('{_Param.Description}', '{_Param.IndexSystem}', " +
+                                    $"('{_Message.Index}', '{_Param.Description}', '{_Param.IndexSystem}', " +
                                     $"'{_Message.Description}', '{_Message.Color}', '{_Message.NeedAck}', '{_Message.PathSound}', " +
                                     $"'{_Message.TypeSound}', '{_Message.NeedPlay}', '{_Message.Hide}', '{_Message.LevelAccess}'),";
 
@@ -949,6 +969,7 @@ namespace Project_Сonfigurator.Services
                         UstCommonUserControlViewModel Data => Data.Params = new(),
                         HandMapUserControlViewModel Data => Data.Params = new(),
                         CommandUserControlViewModel Data => Data.Params = new(),
+                        MessagesUserControlViewModel Data => Data.Params = new(),
                         _ => null
                     };
                 }

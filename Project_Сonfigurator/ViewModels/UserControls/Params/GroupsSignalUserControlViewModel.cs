@@ -8,13 +8,12 @@ using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class GroupsSignalUserControlViewModel : ViewModelUserControls
+    public class GroupsSignalUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public GroupsSignalUserControlViewModel()
@@ -24,10 +23,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new GroupsSignalUserControl();
         }
 
+        private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-        public GroupsSignalUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public GroupsSignalUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
+            UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
@@ -241,11 +242,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             SignalServices.Type = TypeModule.DI;
 
             var NameListSelected = "Сигналы групп";
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -273,11 +271,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             SignalServices.Type = TypeModule.DI;
 
             var NameListSelected = "Сигналы групп";
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -304,11 +299,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             SignalServices.Id = SelectedParam.Param.Id;
             SignalServices.Description = SelectedParam.Param.Description;
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == SignalServices.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

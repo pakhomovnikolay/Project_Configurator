@@ -178,5 +178,26 @@ namespace Project_Сonfigurator.Infrastructures.Lists
 
 
         #endregion
+
+        #region Список листов проекта
+        private List<string> _TabList = new();
+        /// <summary>
+        /// Список листов проекта
+        /// </summary>
+        public List<string> TabList
+        {
+            get
+            {
+                IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+                _TabList = new List<string> { "" };
+                foreach (var _ViewModel in _ViewModels)
+                    _TabList.Add(_ViewModel.Title);
+
+                return _TabList;
+
+                //return App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            }
+        }
+        #endregion
     }
 }

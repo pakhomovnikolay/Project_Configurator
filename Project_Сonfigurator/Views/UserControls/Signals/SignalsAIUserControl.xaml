@@ -14,6 +14,7 @@
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              >
+    
     <Grid>
 
         <!--Сетка-->
@@ -679,4 +680,5 @@
         </TabControl>
         
     </Grid>
+    
 </UserControl>

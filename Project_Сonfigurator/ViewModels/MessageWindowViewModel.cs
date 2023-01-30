@@ -1,8 +1,10 @@
 ﻿using ClosedXML.Excel;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models;
+using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
+using Project_Сonfigurator.ViewModels.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -112,18 +114,7 @@ namespace Project_Сonfigurator.ViewModels
             set
             {
                 if (Set(ref _Params, value))
-                {
-                    if (Params is null || Params.Count <= 0)
-                    {
-                        SelectedTabIndex = -1;
-                        SelectedParam = null;
-                        SelectedSubParam = null;
-                        return;
-                    }
-                    SelectedTabIndex = 0;
-                    SelectedParam = _Params[SelectedTabIndex];
                     RefreshDataView();
-                }
             }
         }
         #endregion
@@ -148,14 +139,7 @@ namespace Project_Сonfigurator.ViewModels
         public CollectionMessage SelectedParam
         {
             get => _SelectedParam;
-            set
-            {
-                if (Set(ref _SelectedParam, value))
-                {
-                    if (_SelectedParam is null || _SelectedParam.Messages.Count <= 0) return;
-                    RefreshDataView();
-                }
-            }
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -172,23 +156,20 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Выбранная вкладка
-        private int _SelectedTabIndex;
+        private CollectionMessage _SelectedTabValue;
         /// <summary>
         /// Выбранная вкладка
         /// </summary>
-        public int SelectedTabIndex
+        public CollectionMessage SelectedTabValue
         {
-            get => _SelectedTabIndex;
+            get => _SelectedTabValue;
             set
             {
-                if (Set(ref _SelectedTabIndex, value))
+                if (Set(ref _SelectedTabValue, value))
                 {
-                    if (_SelectedTabIndex == -1) return;
-                    SelectedParam = Params[_SelectedTabIndex];
-                    SelectedSubParam = SelectedParam.Messages[0];
+                    if (_SelectedTabValue is null) return;
                     RefreshDataView();
                 }
-
             }
         }
         #endregion
@@ -251,34 +232,8 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdCreateCollectionMessages => _CmdCreateCollectionMessages ??= new RelayCommand(OnCmdCreateCollectionMessagesExecuted);
         private void OnCmdCreateCollectionMessagesExecuted(object p)
         {
-            if (p is not ScrollViewer MyScrollViewer) return;
-
-            var msg = Enumerable.Range(1, 4095).Select(
-                i => new BaseMessage()
-                {
-                    Index = i.ToString(),
-                    Color = "",
-                    Description = "",
-                    Hide = "",
-                    LevelAccess = "",
-                    NeedAck = "",
-                    NeedPlay = "",
-                    PathSound = "",
-                    TypeSound = ""
-                });
-
-            var messages = new ObservableCollection<BaseMessage>(msg);
-
-            Params.Add(new CollectionMessage
-            {
-                IndexSystem = "",
-                Description = $"Сообщение {Params.Count}",
-                Messages = messages
-            });
-
-            SelectedParam = Params[^1];
-            SelectedTabIndex = Params.IndexOf(SelectedParam);
-            RefreshDataView();
+            CreateCollectionMessages(Params);
+            SelectedTabValue = Params[^1];
         }
         #endregion
 
@@ -288,18 +243,10 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Удалить коллекция сообщений
         /// </summary>
         public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted, CanCmdDeleteCollectionMessagesExecute);
-        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedParam is not null;
+        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedTabValue is not null;
         private void OnCmdDeleteCollectionMessagesExecuted()
         {
-            var index = Params.IndexOf(SelectedParam);
-            index = index == 0 ? index : index - 1;
-
-            Params.Remove(SelectedParam);
-            if (Params.Count > 0)
-                SelectedParam = Params[index];
-
-            SelectedTabIndex = Params.IndexOf(SelectedParam);
-            RefreshDataView();
+            Params.Remove(SelectedTabValue);
         }
         #endregion
 
@@ -353,6 +300,7 @@ namespace Project_Сonfigurator.ViewModels
                     MyScrollViewer.ScrollToLeftEnd();
                     return;
                 }
+
                 var Offset = 0d;
                 if (_TabControl.SelectedIndex > SelectedIndex)
                 {
@@ -413,9 +361,13 @@ namespace Project_Сonfigurator.ViewModels
         /// <summary>
         /// Команда - Импорт сообщений
         /// </summary>
-        public ICommand CmdImportMessages => _CmdImportMessages ??= new RelayCommand(OnCmdImportMessagesExecuted);
+        public ICommand CmdImportMessages => _CmdImportMessages ??= new RelayCommand(OnCmdImportMessagesExecuted, CanCmdImportMessagesExecute);
+        private bool CanCmdImportMessagesExecute() => !string.IsNullOrWhiteSpace(SelectedPathImport);
         private void OnCmdImportMessagesExecuted()
         {
+            if (!UserDialog.SendMessage("Внимание!", "Все данные по параметрам будут потеряны!\nПродолжить?",
+                MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
             try
             {
                 using var work_book = new XLWorkbook(SelectedPathImport);
@@ -521,6 +473,8 @@ namespace Project_Сonfigurator.ViewModels
                         }
                     }
                 }
+                var desc_msg = $"Импорт успешно завершен";
+                UserDialog.SendMessage(Title, desc_msg);
                 RefreshDataView();
 
             }
@@ -534,6 +488,40 @@ namespace Project_Сonfigurator.ViewModels
 
         #endregion
 
+        #region Команда - Генерировать вкладки сообщений, на основе созданных систем сообщений
+        private ICommand _CmdGeneratedMessageTabList;
+        /// <summary>
+        /// Команда - Генерировать вкладки сообщений, на основе созданных систем сообщений
+        /// </summary>
+        public ICommand CmdGeneratedMessageTabList => _CmdGeneratedMessageTabList ??= new RelayCommand(OnCmdGeneratedMessageTabListExecuted);
+        private void OnCmdGeneratedMessageTabListExecuted()
+        {
+            try
+            {
+                if (UserDialog.SearchControlViewModel("Сообщения") is not MessagesUserControlViewModel _TabItem) throw new NotSupportedException();
+                ObservableCollection<BaseSystemMessage> ParParams = _TabItem.Params;
+
+                if (ParParams is null || ParParams.Count <= 0) throw new NotSupportedException();
+                if (!UserDialog.SendMessage("Внимание!", "Все данные по параметрам будут потеряны!\nПродолжить?",
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
+
+                var _CollectionMessage = new ObservableCollection<CollectionMessage>();
+                foreach (var _Param in ParParams)
+                    CreateCollectionMessages(_CollectionMessage, true, _Param);
+
+                Params = new ObservableCollection<CollectionMessage>(_CollectionMessage);
+                if (Params.Count > 0)
+                    SelectedTabValue = Params[0];
+
+                UserDialog.SendMessage("Генерация вкладок", "Генерация успешно выполнена");
+            }
+            catch (Exception e)
+            {
+                UserDialog.SendMessage("Генерация вкладок", $"Во время генерации произошла ошибка.\n\r{e}", ImageType: MessageBoxImage.Error);
+            }
+        }
+        #endregion
+
         #endregion
 
         #region Функции
@@ -542,7 +530,9 @@ namespace Project_Сonfigurator.ViewModels
         /// <summary>
         /// Фильтрация сообщений
         /// </summary>
-        public void ParamsFiltered(object sender, FilterEventArgs e)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ParamsFiltered(object sender, FilterEventArgs e)
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
@@ -564,9 +554,82 @@ namespace Project_Сonfigurator.ViewModels
         /// </summary>
         private void RefreshDataView()
         {
-            _SubParamsDataView.Source = SelectedParam.Messages;
+            SelectedParam = null;
+            SelectedSubParam = null;
+            _SubParamsDataView.Source = null;
+            if (SelectedTabValue is not null)
+            {
+                SelectedParam = SelectedTabValue;
+                SelectedSubParam = SelectedTabValue.Messages[0];
+                _SubParamsDataView.Source = SelectedTabValue.Messages;
+            }
+
             _SubParamsDataView.View?.Refresh();
             OnPropertyChanged(nameof(SubParamsDataView));
+        }
+        #endregion
+
+        #region Создание новой коллекции сообщений
+        /// <summary>
+        /// Создание новой коллекции сообщений
+        /// </summary>
+        /// <param name="Params"></param>
+        /// <param name="ImportMessage"></param>
+        /// <param name="ImportData"></param>
+        private static void CreateCollectionMessages(ObservableCollection<CollectionMessage> Params, bool ImportMessage = false, BaseSystemMessage ImportData = null)
+        {
+            #region Создаем новую коллекцию сообщений
+            if (!ImportMessage)
+            {
+                var _Messages = Enumerable.Range(1, 4095).Select(
+                i => new BaseMessage()
+                {
+                    Index = i.ToString(),
+                    Color = "",
+                    Description = "",
+                    Hide = "",
+                    LevelAccess = "",
+                    NeedAck = "",
+                    NeedPlay = "",
+                    PathSound = "",
+                    TypeSound = ""
+                });
+                Params.Add(new CollectionMessage
+                {
+                    IndexSystem = "",
+                    Description = $"Сообщение {Params.Count}",
+                    TextFilter = "",
+                    Messages = new ObservableCollection<BaseMessage>(_Messages)
+                });
+            }
+            #endregion
+
+            #region Создаем новую коллекцию сообщений, при импорте данных
+            else if (ImportMessage)
+            {
+                if (string.IsNullOrWhiteSpace(ImportData.DescriptionSystem)) return;
+                var _Messages = Enumerable.Range(1, 4095).Select(
+                i => new BaseMessage()
+                {
+                    Index = i.ToString(),
+                    Color = "",
+                    Description = "",
+                    Hide = "",
+                    LevelAccess = "",
+                    NeedAck = "",
+                    NeedPlay = "",
+                    PathSound = "",
+                    TypeSound = ""
+                });
+                Params.Add(new CollectionMessage
+                {
+                    IndexSystem = ImportData.Index,
+                    Description = ImportData.DescriptionSystem,
+                    TextFilter = "",
+                    Messages = new ObservableCollection<BaseMessage>(_Messages)
+                });
+            }
+            #endregion
         }
         #endregion
 

@@ -1,5 +1,4 @@
 ﻿using ClosedXML.Excel;
-using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
@@ -8,11 +7,8 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Data;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -20,7 +16,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
 {
-    public class TableSignalsUserControlViewModel : ViewModelUserControls
+    public class TableSignalsUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public TableSignalsUserControlViewModel()
@@ -60,6 +56,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                 {
                     if (string.IsNullOrWhiteSpace(SignalServices.Address) && !SignalServices.DoSelection)
                         SignalServices.ResetSignal();
+
+                    DoSelection = SignalServices.DoSelection;
                 }
             }
         }
@@ -140,6 +138,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         }
                     }
                     SubParams = new ObservableCollection<RackModule>(modules);
+                    if (SubParams.Count > 0)
+                        SelectedSubParam = SubParams[0];
                     RefreshDataView();
                 }
             }
@@ -235,16 +235,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         private bool CanCmdGenerateTableExecute() => true;
         private void OnCmdGenerateTableExecuted()
         {
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            LayotRackUserControlViewModel LayotRackViewModel = new();
-
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as LayotRackUserControlViewModel
-                                     where _TabItem is not null
-                                     select _TabItem)
-                LayotRackViewModel = _TabItem;
-
-
+            if (UserDialog.SearchControlViewModel("Компоновка корзин") is not LayotRackUserControlViewModel LayotRackViewModel) return;
             if (LayotRackViewModel is null) return;
             if (LayotRackViewModel.Params is null) return;
             if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
@@ -458,7 +449,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             }
             #endregion
 
-            #region Возврат на вкладку измененногоо сигнала
+            #region Возврат на вкладку измененного сигнала
             else
             {
                 foreach (var _Channel in SelectedSubParam.Channels)
@@ -490,11 +481,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     }
                 }
 
-                foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                         let _TabItem = _Item as IViewModelUserControls
-                                         where _TabItem.Title == SignalServices.ListName
-                                         select _TabItem)
-                    App.FucusedTabControl.SelectedItem = _TabItem;
+                if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+                App.FucusedTabControl.SelectedItem = _TabItem;
 
             }
             #endregion

@@ -10,7 +10,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls
 {
-    public class LayotRackUserControlViewModel : ViewModelUserControls
+    public class LayotRackUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public LayotRackUserControlViewModel()

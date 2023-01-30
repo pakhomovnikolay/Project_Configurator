@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
@@ -7,10 +6,8 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,7 +15,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class SignalingUserControlViewModel : ViewModelUserControls
+    public class SignalingUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public SignalingUserControlViewModel()
@@ -188,11 +185,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -241,21 +235,11 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
             Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            if (UserDialog.SearchControlViewModel("Компоновка корзин") is not LayotRackUserControlViewModel _TabItem) return;
+            LayotRackUserControlViewModel LayotRacksViewModel = _TabItem;
 
-            LayotRackUserControlViewModel LayotRacksViewModel = new();
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as LayotRackUserControlViewModel
-                                     where _TabItem is LayotRackUserControlViewModel
-                                     select _TabItem)
-                LayotRacksViewModel = _TabItem;
-
-            TableSignalsUserControlViewModel TableSignalsViewModel = new();
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as TableSignalsUserControlViewModel
-                                     where _TabItem is TableSignalsUserControlViewModel
-                                     select _TabItem)
-                TableSignalsViewModel = _TabItem;
+            if (UserDialog.SearchControlViewModel("Таблица сигналов") is not TableSignalsUserControlViewModel _ParTabItem) return;
+            TableSignalsUserControlViewModel TableSignalsViewModel = _ParTabItem;
 
             if (TableSignalsViewModel.Params is null || TableSignalsViewModel.Params.Count <= 0)
                 if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",

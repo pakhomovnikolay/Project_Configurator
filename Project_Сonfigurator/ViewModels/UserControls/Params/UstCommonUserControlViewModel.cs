@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class UstCommonUserControlViewModel : ViewModelUserControls
+    public class UstCommonUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public UstCommonUserControlViewModel()

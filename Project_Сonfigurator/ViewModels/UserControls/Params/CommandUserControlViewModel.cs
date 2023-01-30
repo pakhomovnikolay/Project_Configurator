@@ -6,7 +6,7 @@ using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class CommandUserControlViewModel : ViewModelUserControls
+    public class CommandUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public CommandUserControlViewModel()

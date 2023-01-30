@@ -11,7 +11,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class HandMapUserControlViewModel : ViewModelUserControls
+    public class HandMapUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public HandMapUserControlViewModel()

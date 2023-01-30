@@ -7,13 +7,12 @@ using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class UserDIUserControlViewModel : ViewModelUserControls
+    public class UserDIUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public UserDIUserControlViewModel()
@@ -23,10 +22,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             UsingUserControl = new UserDIUserControl();
         }
 
+        private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-        public UserDIUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public UserDIUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
+            UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
@@ -162,11 +163,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             SignalServices.Id = SelectedParam.Id;
             SignalServices.Description = SelectedParam.Description;
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == SignalServices.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

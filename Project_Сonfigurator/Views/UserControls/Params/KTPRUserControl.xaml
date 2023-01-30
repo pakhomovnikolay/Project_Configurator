@@ -275,6 +275,7 @@
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="80">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
                                         ToolTip="{Binding StateStation, Source={StaticResource ToolTipParam}}">
@@ -293,6 +294,7 @@
                                     </Grid>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <Border x:Name="border" BorderThickness="1,0,0,0" BorderBrush="Black">
@@ -322,6 +324,7 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black" >
@@ -339,6 +342,7 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="120">
@@ -1618,4 +1622,5 @@
         </TabControl>
         
     </Grid>
+    
 </UserControl>

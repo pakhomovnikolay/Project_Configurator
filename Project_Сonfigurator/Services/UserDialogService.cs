@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
 using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using Project_Сonfigurator.Views.Windows;
 using Project_Сonfigurator.Views.Windows.AS;
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace Project_Сonfigurator.Services
@@ -341,6 +344,25 @@ namespace Project_Сonfigurator.Services
 
             _PLCExportASWindow = window;
             window.Show();
+        }
+        #endregion
+
+        #region Поиск вкладки
+        /// <summary>
+        /// Поиск вкладки
+        /// </summary>
+        /// <param name="NameList"></param>
+        /// <returns></returns>
+        public IViewModelUserControls SearchControlViewModel(string NameList)
+        {
+            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
+                                     let _TabItem = _Item as IViewModelUserControls
+                                     where _TabItem.Title == NameList
+                                     select _TabItem)
+                return _TabItem;
+
+            return null;
         }
         #endregion
     }

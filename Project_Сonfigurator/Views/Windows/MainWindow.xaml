@@ -67,7 +67,7 @@
         </Grid>
 
         <!--Меню-->
-        <Ribbon Grid.Row="1" SelectedIndex="2">
+        <Ribbon Grid.Row="1" SelectedIndex="0">
             <Ribbon.Title>
                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NameProject}"/>
             </Ribbon.Title>

@@ -25,6 +25,7 @@
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition Height="25"/>
+            <RowDefinition Height="30"/>
             <RowDefinition/>
             <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
@@ -62,16 +63,25 @@
                         Command="{StaticResource CmdHideWindow}"/>
 
         </Grid>
-
+        
+        <!--Генерировать вкладки сообщений-->
+        <Button Grid.Row="1" Content="Генерировать вкладки сообщений, на основе созданных систем сообщений"
+                    Width="500" Margin="4,5,0,0" HorizontalAlignment="Left" FontWeight="Bold"
+                    Style="{StaticResource CustomButtonStyle}"
+                    Command="{Binding CmdGeneratedMessageTabList}"
+                    />
+        
         <!--Данные-->
-        <TabControl Grid.Row="1"
+        <TabControl Grid.Row="2"
                     ItemsSource="{Binding Params}"
-                    SelectedIndex="{Binding SelectedTabIndex}"
+                    SelectedValue="{Binding SelectedTabValue}"
                     >
 
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid>
+
+                        <!--Сетка-->
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="160"/>
                             <ColumnDefinition/>
@@ -81,7 +91,11 @@
                             <RowDefinition/>
                             <RowDefinition Height="25"/>
                         </Grid.RowDefinitions>
+
+                        <!--Управление вкладками-->
                         <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+
+                            <!--Переместить ScrollViewer влево-->
                             <Button Height="20" Width="25" Margin="0,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -89,11 +103,10 @@
                                     Command="{StaticResource CmdPrevItemTabPanel}"
                                     CommandParameter="{Binding ElementName=MyScrollViewer}"
                                     >
-
-                                <Button.Content>
-                                    <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
-                                </Button.Content>
+                                <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
                             </Button>
+
+                            <!--Переместить ScrollViewer вправо-->
                             <Button Height="20" Width="25" Margin="1,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -101,12 +114,10 @@
                                     Command="{StaticResource CmdNextItemTabPanel}"
                                     CommandParameter="{Binding ElementName=MyScrollViewer}"
                                     >
-
-                                <Button.Content>
-                                    <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
-                                </Button.Content>
+                                <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
                             </Button>
 
+                            <!--Список вкладок, для быстрого перехода-->
                             <ToggleButton x:Name="TypeDB" Grid.Row="1" Grid.Column="1" Width="30" Height="21"
                                           BorderThickness="1"
                                           VerticalContentAlignment="Center"
@@ -126,7 +137,6 @@
                                    PlacementTarget="{Binding ElementName=TypeDB}"
                                    IsOpen="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=Window}}"
                                    >
-
                                 <ListView ItemsSource="{Binding DataContext.Params, RelativeSource={RelativeSource AncestorType=Window}}"
                                           SelectedItem="{Binding DataContext.SelectedParam, RelativeSource={RelativeSource AncestorType=Window}}"
                                           Height="500"
@@ -152,6 +162,7 @@
                                 </ListView>
                             </Popup>
 
+                            <!--Добавить вкладку-->
                             <Button Height="21" Width="30" Margin="3,0,0,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -160,10 +171,10 @@
                                     Command="{Binding DataContext.CmdCreateCollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
                                     CommandParameter="{Binding ElementName=MyScrollViewer}"
                                     >
-                                <Button.Content>
-                                    <fa:FontAwesome Icon="Solid_Plus" Foreground="Green"/>
-                                </Button.Content>
+                                <fa:FontAwesome Icon="Solid_Plus" Foreground="Green"/>
                             </Button>
+
+                            <!--Удалить вкладку-->
                             <Button Height="21" Width="30" Margin="1,0,0,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -171,13 +182,15 @@
                                     Style="{StaticResource CustomButtonStyle}"
                                     Command="{Binding DataContext.CmdDeleteCollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
                                     >
-                                <Button.Content>
-                                    <fa:FontAwesome Icon="Solid_Minus" Foreground="Red"/>
-                                </Button.Content>
+                                <fa:FontAwesome Icon="Solid_Minus" Foreground="Red"/>
                             </Button>
 
                         </StackPanel>
+
+                        <!--Команды перемещения ScrollViewer до конца вправо\влево-->
                         <StackPanel Orientation="Horizontal" Margin="0" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top">
+
+                            <!--Переместить ScrollViewer влево-->
                             <Button Height="21" Width="80" Margin="3,0,0,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -186,6 +199,8 @@
                                     Command="{StaticResource CmdScrollToLeftEnd}"
                                     CommandParameter="{Binding ElementName=MyScrollViewer}"
                                     />
+
+                            <!--Переместить ScrollViewer вправо-->
                             <Button Height="21" Width="80" Margin="2,0,0,0"
                                     BorderThickness="1"
                                     BorderBrush="LightGray"
@@ -194,8 +209,10 @@
                                     Command="{StaticResource CmdScrollToRightEnd}"
                                     CommandParameter="{Binding ElementName=MyScrollViewer}"
                                     />
+
                         </StackPanel>
 
+                        <!--Настройки ScrollViewer-->
                         <ScrollViewer HorizontalScrollBarVisibility="Hidden"
                                       VerticalScrollBarVisibility="Disabled"
                                       x:Name="MyScrollViewer"
@@ -204,7 +221,10 @@
                                       >
                             <TabPanel IsItemsHost="True" Margin="2,5" Grid.Column="1" Grid.Row="1"/>
                         </ScrollViewer>
+
+                        <!--Настройки отображения-->
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="3"/>
+
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
@@ -212,13 +232,16 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <Grid>
+
+                        <!--Сетка-->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25"/>
                             <RowDefinition Height="25"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
-                        
+
+                        <!--Имя вкладки-->
                         <Grid Grid.Row="0" Margin="0.5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
@@ -229,6 +252,8 @@
                                      Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
 
                         </Grid>
+
+                        <!--Номер системы-->
                         <Grid Grid.Row="1" Margin="0.5">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
@@ -239,6 +264,8 @@
                                      Text="{Binding IndexSystem, UpdateSourceTrigger=PropertyChanged}"/>
 
                         </Grid>
+
+                        <!--Фильтрация-->
                         <Border Grid.Row="2" Margin="0,2" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
                             <Grid>
 
@@ -249,34 +276,38 @@
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
 
+                                <!--Иконка фильтра-->
                                 <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
+                                <!--Текст фильтра-->
                                 <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
                                          BorderBrush="Black"
                                          Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
                                          >
-                                    <!--Text="{Binding DataContext.TextFilter, RelativeSource={RelativeSource AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"-->
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="3"/>
                                         </Style>
                                     </TextBox.Resources>
                                     <TextBox.InputBindings>
-                                        <KeyBinding Key="Return" Command="{Binding DataContext.CmdRefreshFilter,
-                                            RelativeSource={RelativeSource AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"/>
+                                        <KeyBinding Key="Return"
+                                                    Command="{Binding DataContext.CmdRefreshFilter, RelativeSource={RelativeSource AncestorType=Window}}"/>
                                     </TextBox.InputBindings>
                                 </TextBox>
+
+                                <!--Команда - Обновить фльтр-->
                                 <Button Grid.Column="2" Margin="1"
                                         ToolTip="Обновить фльтр"
                                         Style="{StaticResource CustomButtonStyle}"
-                                        Command="{Binding DataContext.CmdRefreshFilter,
-                                            RelativeSource={RelativeSource AncestorType=Window}, UpdateSourceTrigger=PropertyChanged}"
+                                        Command="{Binding DataContext.CmdRefreshFilter, RelativeSource={RelativeSource AncestorType=Window}}"
                                         >
-                                    <Button.Content>
-                                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
-                                    </Button.Content>
+                                    <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
                                 </Button>
+
                             </Grid>
                         </Border>
+
+                        <!--Данные-->
                         <DataGrid Grid.Row="3"
                                   x:Name="MyDataGrid"
                                   BorderThickness="0"
@@ -508,6 +539,7 @@
                             </DataGrid.Columns>
 
                         </DataGrid>
+
                     </Grid>
 
                 </DataTemplate>
@@ -522,7 +554,7 @@
         </TabControl>
 
         <!--Нижняя панель-->
-        <Border Grid.Row="2" BorderThickness="1" BorderBrush="Black" Margin="5" CornerRadius="5">
+        <Border Grid.Row="3" BorderThickness="1" BorderBrush="Black" Margin="5" CornerRadius="5">
             <Grid Background="AntiqueWhite" Margin="2,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="185"/>
@@ -572,4 +604,5 @@
         </Border>
         
     </Grid>
+    
 </Window>

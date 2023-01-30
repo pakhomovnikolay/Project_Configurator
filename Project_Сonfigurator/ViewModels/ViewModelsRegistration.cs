@@ -1,6 +1,4 @@
-﻿using DocumentFormat.OpenXml.Drawing.Charts;
-using DocumentFormat.OpenXml.Wordprocessing;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -12,7 +10,6 @@ using Project_Сonfigurator.Views.UserControls.Settings;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using Project_Сonfigurator.Views.Windows;
 using Project_Сonfigurator.Views.Windows.AS;
-using System.Windows;
 
 namespace Project_Сonfigurator.ViewModels
 {
@@ -50,6 +47,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<ExportNamespaceASWindowViewModel>()
             .AddSingleton<IOSExportASWindowViewModel>()
             .AddSingleton<PLCExportASWindowViewModel>()
+            .AddSingleton<MessagesUserControlViewModel>()
         #endregion
 
         #region IViewModel, IViewModelUserControls
@@ -59,6 +57,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<IViewModel, ExportNamespaceASWindowViewModel>()
             .AddSingleton<IViewModel, IOSExportASWindowViewModel>()
             .AddSingleton<IViewModel, PLCExportASWindowViewModel>()
+            .AddSingleton<IViewModelUserControls, MessagesUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, CommandUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, LayotRackUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, TableSignalsUserControlViewModel>()
@@ -83,7 +82,6 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<IViewModelUserControls, UstCommonUserControlViewModel>()
             .AddSingleton<IViewModelUserControls, HandMapUserControlViewModel>()
         #endregion
-
 
         #region Регистрация окон
 
@@ -348,6 +346,15 @@ namespace Project_Сonfigurator.ViewModels
             {
                 var model = s.GetRequiredService<HandMapUserControlViewModel>();
                 var window = new HandMapUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
+        #region MessagesUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<MessagesUserControlViewModel>();
+                var window = new MessagesUserControl { DataContext = model };
                 return window;
             })
         #endregion

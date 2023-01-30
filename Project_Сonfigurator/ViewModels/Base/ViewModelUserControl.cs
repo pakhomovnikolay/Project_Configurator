@@ -5,7 +5,7 @@ using System.Windows.Controls;
 
 namespace Project_Сonfigurator.ViewModels.Base
 {
-    public class ViewModelUserControls : INotifyPropertyChanged, IViewModelUserControls
+    public class ViewModelUserControl : INotifyPropertyChanged, IViewModelUserControls
     {
         public event PropertyChangedEventHandler PropertyChanged;
 

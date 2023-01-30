@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
@@ -7,10 +6,8 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Signals;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,7 +15,7 @@ using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 {
-    public class SignalsAIUserControlViewModel : ViewModelUserControls
+    public class SignalsAIUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public SignalsAIUserControlViewModel()
@@ -146,15 +143,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         private void OnCmdGeneratedTableExecuted()
         {
             #region Импорт сигналов из ТБ
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            TableSignalsUserControlViewModel MyViewModel = new();
-
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as TableSignalsUserControlViewModel
-                                     where _TabItem is not null
-                                     select _TabItem)
-                MyViewModel = _TabItem;
-
+            if (UserDialog.SearchControlViewModel("Таблица сигналов") is not TableSignalsUserControlViewModel _TabItem) return;
+            TableSignalsUserControlViewModel MyViewModel = _TabItem;
 
             if (MyViewModel is null) return;
             if (MyViewModel.Params is null) return;
@@ -259,11 +249,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             else if (int.Parse(SelectedParam.Signal.Area) == 1)
                 NameListSelected = "AI формируемые";
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
+
         }
         #endregion
 
@@ -290,11 +278,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             SignalServices.Id = SelectedParam.Signal.Id;
             SignalServices.Description = SelectedParam.Signal.Description;
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == SignalServices.ListName
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

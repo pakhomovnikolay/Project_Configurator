@@ -121,5 +121,7 @@ namespace Project_Сonfigurator.Services
                 ResetSignal();
         }
         #endregion
+
+
     }
 }

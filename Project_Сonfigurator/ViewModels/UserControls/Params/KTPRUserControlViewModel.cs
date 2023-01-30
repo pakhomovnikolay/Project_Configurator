@@ -9,14 +9,13 @@ using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class KTPRUserControlViewModel : ViewModelUserControls
+    public class KTPRUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public KTPRUserControlViewModel()
@@ -26,10 +25,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             UsingUserControl = new KTPRUserControl();
         }
 
+        private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
         private readonly IDBService DBServices;
-        public KTPRUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public KTPRUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
         {
+            UserDialog = _UserDialog;
             SignalServices = _ISignalService;
             DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
@@ -184,11 +185,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 

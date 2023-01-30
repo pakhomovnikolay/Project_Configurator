@@ -176,5 +176,12 @@ namespace Project_Сonfigurator.Models
         /// </summary>
         public ObservableCollection<BaseParam> Commands { get; set; }
         #endregion
+
+        #region Системы сообщения
+        /// <summary>
+        /// Сообщения
+        /// </summary>
+        public ObservableCollection<BaseSystemMessage> SystemMessages { get; set; } = new();
+        #endregion
     }
 }

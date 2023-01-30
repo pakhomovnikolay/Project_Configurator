@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
@@ -8,17 +7,15 @@ using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
-    public class ECUserControlViewModel : ViewModelUserControls
+    public class ECUserControlViewModel : ViewModelUserControl
     {
         #region Конструктор
         public ECUserControlViewModel()
@@ -188,11 +185,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SignalServices.Type = TypeModule.DI;
             }
 
-            foreach (var _TabItem in from object _Item in App.FucusedTabControl.Items
-                                     let _TabItem = _Item as IViewModelUserControls
-                                     where _TabItem.Title == NameListSelected
-                                     select _TabItem)
-                App.FucusedTabControl.SelectedItem = _TabItem;
+            if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion
 
@@ -207,15 +201,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         private void OnCmdGeneratedTableExecuted()
         {
             #region Импорт сигналов из ТБ
-            IEnumerable<IViewModelUserControls> _ViewModels = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            SignalsDIUserControlViewModel MyViewModel = new();
-
-            foreach (var _TabItem in from object _Item in _ViewModels
-                                     let _TabItem = _Item as SignalsDIUserControlViewModel
-                                     where _TabItem is not null
-                                     select _TabItem)
-                MyViewModel = _TabItem;
-
+            if (UserDialog.SearchControlViewModel("Сигналы DI") is not SignalsDIUserControlViewModel MyViewModel) return;
 
             if (MyViewModel is null) return;
             if (MyViewModel.Params is null) return;

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using System.Windows;
 
 namespace Project_Сonfigurator.Services.Interfaces
 {
@@ -128,6 +129,15 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// Открыть окно экспорта приложение PLS
         /// </summary>
         void OpenPLCExportASWindow();
+        #endregion
+
+        #region Поиск вкладки
+        /// <summary>
+        /// Поиск вкладки
+        /// </summary>
+        /// <param name="NameList"></param>
+        /// <returns></returns>
+        IViewModelUserControls SearchControlViewModel(string NameList);
         #endregion
     }
 }

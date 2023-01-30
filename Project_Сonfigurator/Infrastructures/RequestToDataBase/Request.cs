@@ -603,6 +603,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
         #region Сообщения
         public const string TableFieldMessages =
             "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+            "`ID` TEXT," +
             "`NAME_TAB` TEXT," +
             "`SYSTEM` TEXT," +
             "`DESCRIPTION` TEXT," +
@@ -616,7 +617,20 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldMessages =
-            "(NAME_TAB, SYSTEM, DESCRIPTION, COLOR, NEED_ACK, PATH_SOUND, TYPE_SOUND, NEED_PLAY, HIDE, LEVEL_ACCESS) VALUES";
+            "(ID, NAME_TAB, SYSTEM, DESCRIPTION, COLOR, NEED_ACK, PATH_SOUND, TYPE_SOUND, NEED_PLAY, HIDE, LEVEL_ACCESS) VALUES";
+        #endregion
+
+        #region Системы сообщения
+        public const string TableFieldSyatemMessages =
+            "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+            "`SYSTEM` TEXT," +
+            "`DESCRIPTION_MESSAGE` TEXT," +
+            "`DESCRIPTION_SYSTEM` TEXT," +
+            "`NAME_TAB` TEXT," +
+            "PRIMARY KEY(`INDEX`));";
+
+        public const string FieldSyatemMessages =
+            "(SYSTEM, DESCRIPTION_MESSAGE, DESCRIPTION_SYSTEM, NAME_TAB) VALUES";
         #endregion
 
         #endregion
