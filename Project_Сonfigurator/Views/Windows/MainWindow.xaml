@@ -218,11 +218,11 @@
                                   CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
 
                     <RibbonButton LargeImageSource="../../Resources/Icons/ContentTree.ico" Label="Экспорт приложение PLC"
-                                  Command="{Binding CmdOpenPLCExportASWindow}"
+                                  Command="{Binding CmdOpenExportNamespaceASWindow}"
                                   CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
 
                     <RibbonButton LargeImageSource="../../Resources/Icons/Augmented.ico" Label="Экспорт приложение IOS"
-                                  Command="{Binding CmdOpenIOSExportASWindow}"
+                                  Command="{Binding CmdOpenExportNamespaceASWindow}"
                                   CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
                 </RibbonGroup>
             </RibbonTab>

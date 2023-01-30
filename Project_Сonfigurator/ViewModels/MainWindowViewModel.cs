@@ -378,33 +378,19 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdOpenExportNamespaceASWindowExecute(object p) => p is not null && p is string;
         private void OnCmdOpenExportNamespaceASWindowExecuted(object p)
         {
-            App.Services.GetRequiredService<IUserDialogService>().OpenExportNamespaceASWindow();
-        }
-        #endregion
-
-        #region Команда - Открыть окно экспорта приложение IOS
-        private ICommand _CmdOpenIOSExportASWindow;
-        /// <summary>
-        /// Команда - Открыть окно экспорта приложение IOS
-        /// </summary>
-        public ICommand CmdOpenIOSExportASWindow => _CmdOpenIOSExportASWindow ??= new RelayCommand(OnCmdOpenIOSExportASWindowExecuted, CanCmdOpenIOSExportASWindowExecute);
-        private bool CanCmdOpenIOSExportASWindowExecute(object p) => p is not null && p is string;
-        private void OnCmdOpenIOSExportASWindowExecuted(object p)
-        {
-            App.Services.GetRequiredService<IUserDialogService>().OpenIOSExportASWindow();
-        }
-        #endregion
-
-        #region Команда - Открыть окно экспорта приложение PLC
-        private ICommand _CmdOpenPLCExportASWindow;
-        /// <summary>
-        /// Команда - Открыть окно экспорта приложение PLC
-        /// </summary>
-        public ICommand CmdOpenPLCExportASWindow => _CmdOpenPLCExportASWindow ??= new RelayCommand(OnCmdOpenPLCExportASWindowExecuted, CanCmdOpenPLCExportASWindowExecute);
-        private bool CanCmdOpenPLCExportASWindowExecute(object p) => p is not null && p is string;
-        private void OnCmdOpenPLCExportASWindowExecuted(object p)
-        {
-            App.Services.GetRequiredService<IUserDialogService>().OpenPLCExportASWindow();
+            var type_cmd = p as string;
+            switch (type_cmd)
+            {
+                case "Экспорт пространства имен":
+                    App.Services.GetRequiredService<IUserDialogService>().OpenExportNamespaceASWindow();
+                    break;
+                case "Экспорт приложение PLC":
+                    App.Services.GetRequiredService<IUserDialogService>().OpenPLCExportASWindow();
+                    break;
+                case "Экспорт приложение IOS":
+                    App.Services.GetRequiredService<IUserDialogService>().OpenIOSExportASWindow();
+                    break;
+            }
         }
         #endregion
 
