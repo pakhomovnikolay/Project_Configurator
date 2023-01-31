@@ -115,11 +115,13 @@
             <DataGrid.Columns>
 
                 <DataGridTemplateColumn Width="35">
+                    
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
@@ -134,54 +136,91 @@
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="150">
+                    
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <DataTemplate.Resources>
+                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
+                            </DataTemplate.Resources>
+                            <Border BorderBrush="Black">
+                                <Border.BorderThickness>
+                                    <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
+                                </Border.BorderThickness>
+                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
-
+                            
+                            <Border BorderBrush="Black">
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBox BorderThickness="0" Background="Transparent"
-                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                         Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Id}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="800">
+                    
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сигнала"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
-                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="2" />
+                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="Black">
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBox BorderThickness="0" VerticalContentAlignment="Center" Background="Transparent" 
-                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <DataTemplate.Resources>
+                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
+                            </DataTemplate.Resources>
+
+                            <Border BorderBrush="Black">
+                                <Border.BorderThickness>
+                                    <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
+                                </Border.BorderThickness>
+
+                                <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding Description}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="100">
@@ -272,4 +311,5 @@
         </DataGrid>
 
     </Grid>
+    
 </UserControl>
