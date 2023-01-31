@@ -70,489 +70,382 @@
                     Style="{StaticResource CustomButtonStyle}"
                     Command="{Binding CmdGeneratedMessageTabList}"
                     />
-        
-        <!--Данные-->
-        <TabControl Grid.Row="2"
-                    ItemsSource="{Binding Params}"
-                    SelectedValue="{Binding SelectedTabValue}"
-                    >
 
-            <TabControl.Template>
-                <ControlTemplate TargetType="{x:Type TabControl}">
+        <!--Данные-->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="500" MinWidth="125" Width="200"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <GridSplitter Width="5" Background="Transparent" Panel.ZIndex="999999"/>
+
+            <!--Список УСО-->
+            <GroupBox Grid.Column="0" BorderBrush="LightSlateGray" Margin="0,2,0,0">
+                <GroupBox.Header>
+                    <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" Text="Список вкладок" FontWeight="Bold"/>
+                </GroupBox.Header>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="25"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="1"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        
+                        <Button Grid.Column="0" ToolTip="Добавить вкладку"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Command="{Binding CmdCreateCollectionMessages}">
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Plus" FontSize="12" Foreground="Green"/>
+                        </Button>
+                        <Button Grid.Column="2" ToolTip="Удалить выбранную вкладку"
+                                Style="{StaticResource CustomButtonStyle}"
+                                Command="{Binding CmdDeleteCollectionMessages}"
+                                >
+                            <fa:FontAwesome Grid.Column="2" Icon="Solid_Minus" FontSize="12" Foreground="Red"/>
+                        </Button>
+                    </Grid>
+                    
+                    <ListView Grid.Row="0" Margin="2,0,2,5"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              BorderBrush="LightSlateGray"
+                              ItemsSource="{Binding Params, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding SelectedParam}">
+                        <ListView.Resources>
+                            <Style TargetType="{x:Type Border}">
+                                <Setter Property="CornerRadius" Value="2"/>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Background="Transparent"
+                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
+                                       TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
+                                       ToolTip="{Binding Description}"
+                                       Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </GroupBox>
+
+            <!--Данные-->
+            <Grid Grid.Column="1" >
+
+                <!--Сетка-->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="30"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+
+                <!--Имя вкладки-->
+                <Grid Grid.Row="0" Margin="0.5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Наименование вкладки:"/>
+                    <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
+                             Text="{Binding SelectedParam.Description, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
+
+                <!--Номер системы-->
+                <Grid Grid.Row="1" Margin="0.5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Номер системы:"/>
+                    <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
+                             Text="{Binding SelectedParam.IndexSystem, UpdateSourceTrigger=PropertyChanged}"/>
+
+                </Grid>
+
+                <!--Фильтрация-->
+                <Border Grid.Row="2" Margin="0,2" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
                     <Grid>
 
                         <!--Сетка-->
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="160"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="172"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition />
+                            <ColumnDefinition Width="30"/>
                         </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition Height="25"/>
-                        </Grid.RowDefinitions>
 
-                        <!--Управление вкладками-->
-                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0" Grid.Row="1" Grid.Column="0" VerticalAlignment="Top">
+                        <!--Иконка фильтра-->
+                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
 
-                            <!--Переместить ScrollViewer влево-->
-                            <Button Height="20" Width="25" Margin="0,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{StaticResource CmdPrevItemTabPanel}"
-                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                    >
-                                <fa:FontAwesome Icon="Solid_AngleLeft" Foreground="LightSlateGray"/>
-                            </Button>
-
-                            <!--Переместить ScrollViewer вправо-->
-                            <Button Height="20" Width="25" Margin="1,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{StaticResource CmdNextItemTabPanel}"
-                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                    >
-                                <fa:FontAwesome Icon="Solid_AngleRight" Foreground="LightSlateGray"/>
-                            </Button>
-
-                            <!--Список вкладок, для быстрого перехода-->
-                            <ToggleButton x:Name="TypeDB" Grid.Row="1" Grid.Column="1" Width="30" Height="21"
-                                          BorderThickness="1"
-                                          VerticalContentAlignment="Center"
-                                          HorizontalContentAlignment="Center"
-                                          Background="#FFE5E5E5"
-                                          BorderBrush="LightGray"
-                                          IsChecked="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          >
-                                <ToggleButton.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="5"/>
-                                    </Style>
-                                </ToggleButton.Resources>
-                                <fa:FontAwesome FontSize="10" Icon="Solid_EllipsisH" Foreground="LightSlateGray"/>
-                            </ToggleButton>
-                            <Popup AllowsTransparency="False" StaysOpen="False" x:Name="Popup"
-                                   PlacementTarget="{Binding ElementName=TypeDB}"
-                                   IsOpen="{Binding DataContext.ToggleButtonIsChecked, RelativeSource={RelativeSource AncestorType=Window}}"
-                                   >
-                                <ListView ItemsSource="{Binding DataContext.Params, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          SelectedItem="{Binding DataContext.SelectedParam, RelativeSource={RelativeSource AncestorType=Window}}"
-                                          Height="500"
-                                          >
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="ListViewItem">
-                                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                            <Setter Property="MinWidth" Value="200" />
-                                        </Style>
-                                    </ListView.ItemContainerStyle>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <TextBlock TextAlignment="Left" Background="Transparent" Text="{Binding Description}">
-                                                <TextBlock.InputBindings>
-                                                    <MouseBinding Gesture="LeftDoubleClick"
-                                                                  Command="{Binding DataContext.CmdSelectedTabPanelItem, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                                  CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                                                  />
-                                                </TextBlock.InputBindings>
-                                            </TextBlock>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
-                            </Popup>
-
-                            <!--Добавить вкладку-->
-                            <Button Height="21" Width="30" Margin="3,0,0,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    ToolTip="Добавить вкладку"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{Binding DataContext.CmdCreateCollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                    >
-                                <fa:FontAwesome Icon="Solid_Plus" Foreground="Green"/>
-                            </Button>
-
-                            <!--Удалить вкладку-->
-                            <Button Height="21" Width="30" Margin="1,0,0,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    ToolTip="Удалить вкладку"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{Binding DataContext.CmdDeleteCollectionMessages, RelativeSource={RelativeSource AncestorType=Window}}"
-                                    >
-                                <fa:FontAwesome Icon="Solid_Minus" Foreground="Red"/>
-                            </Button>
-
-                        </StackPanel>
-
-                        <!--Команды перемещения ScrollViewer до конца вправо\влево-->
-                        <StackPanel Orientation="Horizontal" Margin="0" Grid.Row="1" Grid.Column="2" VerticalAlignment="Top">
-
-                            <!--Переместить ScrollViewer влево-->
-                            <Button Height="21" Width="80" Margin="3,0,0,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    Content="В начало"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{StaticResource CmdScrollToLeftEnd}"
-                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                    />
-
-                            <!--Переместить ScrollViewer вправо-->
-                            <Button Height="21" Width="80" Margin="2,0,0,0"
-                                    BorderThickness="1"
-                                    BorderBrush="LightGray"
-                                    Content="В конец"
-                                    Style="{StaticResource CustomButtonStyle}"
-                                    Command="{StaticResource CmdScrollToRightEnd}"
-                                    CommandParameter="{Binding ElementName=MyScrollViewer}"
-                                    />
-
-                        </StackPanel>
-
-                        <!--Настройки ScrollViewer-->
-                        <ScrollViewer HorizontalScrollBarVisibility="Hidden"
-                                      VerticalScrollBarVisibility="Disabled"
-                                      x:Name="MyScrollViewer"
-                                      Grid.Row="1" Grid.Column="1"
-                                      Margin="0,-5,0,0"
-                                      >
-                            <TabPanel IsItemsHost="True" Margin="2,5" Grid.Column="1" Grid.Row="1"/>
-                        </ScrollViewer>
-
-                        <!--Настройки отображения-->
-                        <ContentPresenter x:Name="PART_SelectedContentHost" Margin="4" ContentSource="SelectedContent" Grid.Row="0" Grid.ColumnSpan="3"/>
-
-                    </Grid>
-                </ControlTemplate>
-            </TabControl.Template>
-
-            <TabControl.ContentTemplate>
-                <DataTemplate>
-                    <Grid>
-
-                        <!--Сетка-->
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
-
-                        <!--Имя вкладки-->
-                        <Grid Grid.Row="0" Margin="0.5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Наименование вкладки:"/>
-                            <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
-                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-
-                        </Grid>
-
-                        <!--Номер системы-->
-                        <Grid Grid.Row="1" Margin="0.5">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="150"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Номер системы:"/>
-                            <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
-                                     Text="{Binding IndexSystem, UpdateSourceTrigger=PropertyChanged}"/>
-
-                        </Grid>
-
-                        <!--Фильтрация-->
-                        <Border Grid.Row="2" Margin="0,2" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
-                            <Grid>
-
-                                <!--Сетка-->
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="30"/>
-                                    <ColumnDefinition />
-                                    <ColumnDefinition Width="30"/>
-                                </Grid.ColumnDefinitions>
-
-                                <!--Иконка фильтра-->
-                                <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                                <!--Текст фильтра-->
-                                <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
+                        <!--Текст фильтра-->
+                        <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
                                          BorderBrush="Black"
-                                         Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
+                                         Text="{Binding SelectedParam.TextFilter, UpdateSourceTrigger=PropertyChanged}"
                                          >
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="3"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                    <TextBox.InputBindings>
-                                        <KeyBinding Key="Return"
-                                                    Command="{Binding DataContext.CmdRefreshFilter, RelativeSource={RelativeSource AncestorType=Window}}"/>
-                                    </TextBox.InputBindings>
-                                </TextBox>
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="3"/>
+                                </Style>
+                            </TextBox.Resources>
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return"
+                                            Command="{Binding CmdRefreshFilter}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
 
-                                <!--Команда - Обновить фльтр-->
-                                <Button Grid.Column="2" Margin="1"
+                        <!--Команда - Обновить фльтр-->
+                        <Button Grid.Column="2" Margin="1"
                                         ToolTip="Обновить фльтр"
                                         Style="{StaticResource CustomButtonStyle}"
-                                        Command="{Binding DataContext.CmdRefreshFilter, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        Command="{Binding CmdRefreshFilter}"
                                         >
-                                    <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
-                                </Button>
+                            <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
+                        </Button>
 
-                            </Grid>
-                        </Border>
+                    </Grid>
+                </Border>
 
-                        <!--Данные-->
-                        <DataGrid Grid.Row="3"
-                                  x:Name="MyDataGrid"
-                                  BorderThickness="0"
-                                  BorderBrush="Black"
-                                  AutoGenerateColumns="False"
-                                  CanUserAddRows="False"
-                                  CanUserReorderColumns="False"
-                                  CanUserResizeRows="False"
-                                  GridLinesVisibility="None"
-                                  CanUserResizeColumns="False"
-                                  SelectionMode="Single"
-                                  SelectionUnit="FullRow"
-                                  Background="Gray"
-                                  HeadersVisibility="Column"
-                                  ItemsSource="{Binding DataContext.SubParamsDataView, RelativeSource={RelativeSource AncestorType=Window}}"
-                                  SelectedItem="{Binding DataContext.SelectedSubParam, RelativeSource={RelativeSource AncestorType=Window}}"
-                                  >
+                <!--Данные-->
+                <DataGrid Grid.Row="3"
+                          x:Name="MyDataGrid"
+                          BorderThickness="0"
+                          BorderBrush="Black"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          GridLinesVisibility="None"
+                          CanUserResizeColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          Background="Gray"
+                          HeadersVisibility="Column"
+                          ItemsSource="{Binding SubParamsDataView}"
+                          SelectedItem="{Binding SelectedSubParam}"
+                          >
 
-                            <DataGrid.Resources>
+                    <DataGrid.Resources>
 
-                                <Style TargetType="{x:Type DataGridCell}">
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Height" Value="25"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Opacity" Value="1"/>
                                     <Setter Property="BorderThickness" Value="0,0,0,1"/>
                                     <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="White"/>
-                                    <Setter Property="Height" Value="25"/>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Foreground" Value="Black"/>
-                                            <Setter Property="Opacity" Value="1"/>
-                                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                            <Setter Property="BorderBrush" Value="Black"/>
-                                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
+                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
 
-                                <Style TargetType="{x:Type DataGridColumnHeader}">
-                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="Gray"/>
-                                    <Setter Property="Height" Value="50"/>
-                                    <Setter Property="FontWeight" Value="Bold"/>
-                                </Style>
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="BorderThickness" Value="1,0,0,0"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="Gray"/>
+                            <Setter Property="Height" Value="50"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
 
-                                <Style TargetType="{x:Type DataGridRow}">
-                                    <Setter Property="BorderThickness" Value="0"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="Gray"/>
-                                </Style>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="Gray"/>
+                        </Style>
 
-                            </DataGrid.Resources>
+                    </DataGrid.Resources>
 
-                            <DataGrid.Columns>
+                    <DataGrid.Columns>
 
-                                <DataGridTemplateColumn Width="35">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="35">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="917">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сообщения"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="800">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сообщения"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="120">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Цвет&#x0a;сообщения"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellEditingTemplate>
-                                        <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding ColorList, Source={StaticResource Lists}}" SelectedItem="{Binding Color}"/>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellEditingTemplate>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                <Border.Background>
-                                                    <Binding Path="Color" Converter="{StaticResource BrushConverter}"/>
-                                                </Border.Background>
-                                                <TextBox TextAlignment="Center" VerticalAlignment="Center"
+                        <DataGridTemplateColumn Width="120">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Цвет&#x0a;сообщения"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <ComboBox ItemsSource="{Binding ColorList, Source={StaticResource Lists}}" SelectedItem="{Binding Color}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <Border.Background>
+                                            <Binding Path="Color" Converter="{StaticResource BrushConverter}"/>
+                                        </Border.Background>
+                                        <TextBox TextAlignment="Center" VerticalAlignment="Center"
                                                          BorderThickness="0" Background="Transparent"
                                                          Text="{Binding Color, UpdateSourceTrigger=PropertyChanged}">
-                                                    <TextBox.InputBindings>
-                                                        <MouseBinding MouseAction="LeftDoubleClick"
+                                            <TextBox.InputBindings>
+                                                <MouseBinding MouseAction="LeftDoubleClick"
                                                                       Command="{Binding DataContext.CmdBeginEditCell, RelativeSource={RelativeSource AncestorType=Window}}"
                                                                       CommandParameter="{Binding ElementName=MyDataGrid}"/>
-                                                    </TextBox.InputBindings>
-                                                </TextBox>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="120">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Необходимость&#x0a;квитирования"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="120">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Необходимость&#x0a;квитирования"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding NeedAck, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="300">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Файл звука"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <Grid>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition/>
-                                                        <ColumnDefinition Width="30"/>
-                                                    </Grid.ColumnDefinitions>
+                        <DataGridTemplateColumn Width="300">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Файл звука"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="30"/>
+                                            </Grid.ColumnDefinitions>
 
-                                                    <TextBox Grid.Column="0" BorderThickness="0" Background="Transparent"
+                                            <TextBox Grid.Column="0" BorderThickness="0" Background="Transparent"
                                                              TextAlignment="Left" VerticalContentAlignment="Center"
                                                              ToolTip="{Binding PathSound}"
                                                              Text="{Binding PathSound, UpdateSourceTrigger=PropertyChanged}"/>
-                                                    <Button Grid.Column="1" Content="..." Margin="1"
+                                            <Button Grid.Column="1" Content="..." Margin="1"
                                                             Style="{StaticResource CustomButtonStyle}"
                                                             Command="{Binding DataContext.CmdSelectionPathSound, RelativeSource={RelativeSource AncestorType=Window}}"
                                                             CommandParameter="{Binding ElementName=MyDataGrid}"
                                                             />
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="100">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Циклический&#x0a;звук"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="100">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Циклический&#x0a;звук"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding TypeSound, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="120">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Воспроизводить&#x0a;звук"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="120">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Воспроизводить&#x0a;звук"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding NeedPlay, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="80">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Скрытое"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="80">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Скрытое"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding Hide, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                                <DataGridTemplateColumn Width="100">
-                                    <DataGridTemplateColumn.Header>
-                                        <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Уровень&#x0a;доступа"/>
-                                        </Border>
-                                    </DataGridTemplateColumn.Header>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="Transparent">
-                                                <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                        <DataGridTemplateColumn Width="100">
+                            <DataGridTemplateColumn.Header>
+                                <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
+                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Уровень&#x0a;доступа"/>
+                                </Border>
+                            </DataGridTemplateColumn.Header>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="Transparent">
+                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
                                                          Text="{Binding LevelAccess, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
 
-                            </DataGrid.Columns>
+                    </DataGrid.Columns>
 
-                        </DataGrid>
+                </DataGrid>
 
-                    </Grid>
-
-                </DataTemplate>
-            </TabControl.ContentTemplate>
-
-            <TabControl.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock Text="{Binding Description}"/>
-                </DataTemplate>
-            </TabControl.ItemTemplate>
-
-        </TabControl>
-
+            </Grid>
+            
+        </Grid>
+        
         <!--Нижняя панель-->
         <Border Grid.Row="3" BorderThickness="1" BorderBrush="Black" Margin="5" CornerRadius="5">
             <Grid Background="AntiqueWhite" Margin="2,0">

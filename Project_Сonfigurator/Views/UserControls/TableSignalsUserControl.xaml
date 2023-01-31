@@ -15,7 +15,7 @@
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              >
-
+    
     <UserControl.InputBindings>
         <KeyBinding Key="F5" Command="{Binding CmdGenerateTable}"/>
     </UserControl.InputBindings>
@@ -32,35 +32,89 @@
             <ColumnDefinition MinWidth="200"/>
         </Grid.ColumnDefinitions>
         <GridSplitter Grid.Column="0" Margin="0,5" Panel.ZIndex="9999999" Width="2" Background="Transparent"/>
-        
-        <!--Список корзин-->
-        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
+
+        <!--Список УСО-->
+        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray" Margin="0,2,0,0">
+
             <GroupBox.Header>
-                <TextBlock Margin="5,0" Text="Список УСО" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
+                <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
             </GroupBox.Header>
 
-            <ListView BorderThickness="1" BorderBrush="LightGray"
-                      Margin="2,0,0,2"
+            <DataGrid Grid.Row="0"
+                      BorderThickness="1"
+                      BorderBrush="LightSlateGray"
+                      Background="White"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserReorderColumns="False"
+                      CanUserResizeRows="False"
+                      GridLinesVisibility="None"
+                      CanUserResizeColumns="False"
+                      SelectionMode="Single"
+                      SelectionUnit="FullRow"
+                      HeadersVisibility="None"
+                      ScrollViewer.CanContentScroll="False"
                       ItemsSource="{Binding ParamsDataView}"
                       SelectedItem="{Binding SelectedParam}"
                       >
-                <ListView.Resources>
+
+                <DataGrid.Resources>
+
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="3"/>
                     </Style>
-                </ListView.Resources>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                   ToolTip="{Binding Name}"
-                                   Text="{Binding Name}"/>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+
+                    <Style TargetType="{x:Type DataGridCell}">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="Height" Value="25"/>
+                        <Setter Property="Margin" Value="0,-1,0,2"/>
+                        <Style.Triggers>
+
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Opacity" Value="1"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                            </Trigger>
+
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="Black"/>
+                                <Setter Property="Opacity" Value="1"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Setter Property="BorderBrush" Value="Black"/>
+                                <Setter Property="Background" Value="LightSteelBlue"/>
+                            </Trigger>
+
+                        </Style.Triggers>
+                    </Style>
+
+                </DataGrid.Resources>
+
+                <DataGrid.Columns>
+
+                    <DataGridTemplateColumn Width="*">
+                        
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Border BorderThickness="0,1" BorderBrush="Black" CornerRadius="3">
+                                    <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                </Border>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+
+            </DataGrid>
+
         </GroupBox>
         
         <!--Данные-->
-        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray" Effect="{x:Null}">
+            
             <GroupBox.Header>
                 <TextBlock Margin="5,0" Text="Данные выбранного УСО" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
             </GroupBox.Header>
@@ -125,6 +179,8 @@
                           Background="Gray"
                           HeadersVisibility="Column"
                           ScrollViewer.CanContentScroll="False"
+                          
+                          
                           ItemsSource="{Binding SubParamsDataView}"
                           SelectedItem="{Binding SelectedSubParam}"
                           >
@@ -140,12 +196,14 @@
                             <Setter Property="BorderBrush" Value="Black"/>
                             <Setter Property="Background" Value="White"/>
                             <Setter Property="Height" Value="auto"/>
+                            
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="Black"/>
                                     <Setter Property="Opacity" Value="1"/>
                                 </Trigger>
                             </Style.Triggers>
+                            
                         </Style>
 
                         <Style TargetType="{x:Type DataGridColumnHeader}">
@@ -181,8 +239,9 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Type}">
+                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   Text="{Binding Type}">
                                             <TextBlock.LayoutTransform>
                                                 <RotateTransform Angle="-90"/>
                                             </TextBlock.LayoutTransform>
@@ -208,8 +267,9 @@
                                         <Border.Background>
                                             <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
                                         </Border.Background>
-                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Name}">
+                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   Text="{Binding Name}">
                                             <TextBlock.LayoutTransform>
                                                 <RotateTransform Angle="-90"/>
                                             </TextBlock.LayoutTransform>
@@ -240,7 +300,9 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Index}"/>
+                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                               FontWeight="Bold"
+                                                               Text="{Binding Index}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -250,17 +312,19 @@
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="150">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Vertical" Background="LightGray"/>
+                                                <StackPanel Orientation="Vertical" Background="White"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
@@ -283,15 +347,76 @@
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding Channels}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical" Background="White"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                                               Text="{Binding Id}">
+                                                        <TextBlock.Background>
+                                                            <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                                <Binding Path="Id"/>
+                                                                <Binding Path="Description"/>
+                                                            </MultiBinding>
+                                                        </TextBlock.Background>
+                                                    </TextBlock>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="800">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сигнала"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding Channels}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical" Background="White"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                                    <TextBox BorderThickness="0" Margin="3,0,0,0"
+                                                             TextAlignment="Left" VerticalContentAlignment="Center"
+                                                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                                             IsReadOnly="{Binding DataContext.DoSelection,
+                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                             >
+                                                        <TextBox.Background>
+                                                            <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                                <Binding Path="Id"/>
+                                                                <Binding Path="Description"/>
+                                                            </MultiBinding>
+                                                        </TextBox.Background>
+                                                    </TextBox>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
@@ -303,22 +428,23 @@
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="White" Height="25">
-                                                    <TextBox BorderThickness="0" VerticalContentAlignment="Center"
-                                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                                     IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}">
-                                                        <TextBox.Background>
+                                                    <TextBlock TextAlignment="Left" VerticalAlignment="Center"
+                                                               Margin="5,0,0,0"
+                                                               Text="{Binding Description}">
+                                                        <TextBlock.Background>
                                                             <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                                 <Binding Path="Id"/>
-                                                                <Binding Path="Description" />
+                                                                <Binding Path="Description"/>
                                                             </MultiBinding>
-                                                        </TextBox.Background>
-                                                    </TextBox>
+                                                        </TextBlock.Background>
+                                                    </TextBlock>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
@@ -361,8 +487,7 @@
                                             <Border.Height>
                                                 <Binding Path="Channels.Count" Converter="{StaticResource HeightModuleConverter}"/>
                                             </Border.Height>
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                               Text="{Binding Channels[0].VarName}"/>
+                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Channels[0].VarName}"/>
                                         </Border>
                                     </StackPanel>
                                 </DataTemplate>
@@ -528,4 +653,5 @@
         </Border>
         
     </Grid>
+    
 </UserControl>

@@ -114,7 +114,9 @@ namespace Project_Сonfigurator.ViewModels
             set
             {
                 if (Set(ref _Params, value))
-                    RefreshDataView();
+                    if (_Params is not null && _Params.Count > 0)
+                        SelectedParam = _Params.First();
+                RefreshDataView();
             }
         }
         #endregion
@@ -131,15 +133,19 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Выбранная вкладка, из списка вкладок
+        #region Выбранная вкладка
         private CollectionMessage _SelectedParam;
         /// <summary>
-        /// Выбранная вкладка, из списка вкладок
+        /// Выбранная вкладка
         /// </summary>
         public CollectionMessage SelectedParam
         {
             get => _SelectedParam;
-            set => Set(ref _SelectedParam, value);
+            set
+            {
+                if (Set(ref _SelectedParam, value))
+                    RefreshDataView();
+            }
         }
         #endregion
 
@@ -152,25 +158,6 @@ namespace Project_Сonfigurator.ViewModels
         {
             get => _ToggleButtonIsChecked;
             set => Set(ref _ToggleButtonIsChecked, value);
-        }
-        #endregion
-
-        #region Выбранная вкладка
-        private CollectionMessage _SelectedTabValue;
-        /// <summary>
-        /// Выбранная вкладка
-        /// </summary>
-        public CollectionMessage SelectedTabValue
-        {
-            get => _SelectedTabValue;
-            set
-            {
-                if (Set(ref _SelectedTabValue, value))
-                {
-                    if (_SelectedTabValue is null) return;
-                    RefreshDataView();
-                }
-            }
         }
         #endregion
 
@@ -233,7 +220,7 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdCreateCollectionMessagesExecuted(object p)
         {
             CreateCollectionMessages(Params);
-            SelectedTabValue = Params[^1];
+            SelectedParam = Params[^1];
         }
         #endregion
 
@@ -243,10 +230,15 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Удалить коллекция сообщений
         /// </summary>
         public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted, CanCmdDeleteCollectionMessagesExecute);
-        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedTabValue is not null;
+        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedParam is not null;
         private void OnCmdDeleteCollectionMessagesExecuted()
         {
-            Params.Remove(SelectedTabValue);
+            var index = Params.IndexOf(SelectedParam);
+            index = index == 0 ? index : index - 1;
+
+            Params.Remove(SelectedParam);
+            if (Params.Count > 0)
+                SelectedParam = Params[index];
         }
         #endregion
 
@@ -266,63 +258,6 @@ namespace Project_Сonfigurator.ViewModels
             SelectedSubParam.PathSound = select_file;
 
             MyDataGrid.Items.Refresh();
-        }
-        #endregion
-
-        #region Команда - Выбрать вкладку
-        private ICommand _CmdSelectedTabPanelItem;
-        /// <summary>
-        /// Команда - Выбрать вкладку
-        /// </summary>
-        public ICommand CmdSelectedTabPanelItem => _CmdSelectedTabPanelItem ??= new RelayCommand(OnCmdSelectedTabPanelItemExecuted, CanCmdSelectedTabPanelItemExecute);
-        private bool CanCmdSelectedTabPanelItemExecute(object p) => p is ScrollViewer;
-        private void OnCmdSelectedTabPanelItemExecuted(object p)
-        {
-            ToggleButtonIsChecked = false;
-            var _TabControl = App.FucusedTabControl;
-            if (_TabControl == null) return;
-            if (p is not ScrollViewer MyScrollViewer) return;
-
-            foreach (var _TabItem in from object _Item in _TabControl.Items
-                                     let _TabItem = _Item as CollectionMessage
-                                     where _TabItem.Description == SelectedParam.Description
-                                     select _TabItem)
-            {
-                var SelectedIndex = _TabControl.SelectedIndex;
-                _TabControl.SelectedItem = _TabItem;
-                if (_TabControl.SelectedIndex == (_TabControl.Items.Count - 1))
-                {
-                    MyScrollViewer.ScrollToRightEnd();
-                    return;
-                }
-                else if (_TabControl.SelectedIndex == 0)
-                {
-                    MyScrollViewer.ScrollToLeftEnd();
-                    return;
-                }
-
-                var Offset = 0d;
-                if (_TabControl.SelectedIndex > SelectedIndex)
-                {
-                    for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
-                    {
-                        var _Item = _TabControl.Items[i] as CollectionMessage;
-                        Offset += _Item.Description.Length * 6;
-
-                    }
-                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
-                }
-
-                else if (_TabControl.SelectedIndex < SelectedIndex)
-                {
-                    for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
-                    {
-                        var _Item = _TabControl.Items[i] as CollectionMessage;
-                        Offset += _Item.Description.Length * 6;
-                    }
-                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
-                }
-            }
         }
         #endregion
 
@@ -511,7 +446,7 @@ namespace Project_Сonfigurator.ViewModels
 
                 Params = new ObservableCollection<CollectionMessage>(_CollectionMessage);
                 if (Params.Count > 0)
-                    SelectedTabValue = Params[0];
+                    SelectedParam = Params[0];
 
                 UserDialog.SendMessage("Генерация вкладок", "Генерация успешно выполнена");
             }
@@ -554,16 +489,10 @@ namespace Project_Сonfigurator.ViewModels
         /// </summary>
         private void RefreshDataView()
         {
-            SelectedParam = null;
-            SelectedSubParam = null;
-            _SubParamsDataView.Source = null;
-            if (SelectedTabValue is not null)
-            {
-                SelectedParam = SelectedTabValue;
-                SelectedSubParam = SelectedTabValue.Messages[0];
-                _SubParamsDataView.Source = SelectedTabValue.Messages;
-            }
+            if (SelectedParam is not null && SelectedParam.Messages is not null && SelectedParam.Messages.Count > 0)
+                SelectedSubParam = SelectedParam.Messages[0];
 
+            _SubParamsDataView.Source = SelectedParam.Messages;
             _SubParamsDataView.View?.Refresh();
             OnPropertyChanged(nameof(SubParamsDataView));
         }

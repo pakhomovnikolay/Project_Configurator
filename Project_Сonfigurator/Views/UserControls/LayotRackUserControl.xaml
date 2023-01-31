@@ -25,14 +25,20 @@
 
         <!--Список УСО-->
         <GroupBox Grid.Column="0" BorderBrush="LightSlateGray" Margin="0,2,0,0">
+            
             <GroupBox.Header>
                 <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" Text="Список УСО" FontWeight="Bold"/>
             </GroupBox.Header>
+
             <Grid>
+                
+                <!--Сетка-->
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
+
+                <!--Команды управления-->
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="50"/>
@@ -78,42 +84,98 @@
                         <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="14" Foreground="Green"/>
                     </Button>
                 </Grid>
-                <ListView Grid.Row="0" Margin="2,0,2,5"
-                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                          BorderBrush="LightSlateGray"
-                          ItemsSource="{Binding Params, UpdateSourceTrigger=PropertyChanged}"
-                          SelectedItem="{Binding SelectedParam}">
-                    <ListView.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="2"/>
-                        </Style>
-                    </ListView.Resources>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Background="Transparent"
-                                       Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ListViewItem}}"
-                                       TextAlignment="Left" VerticalAlignment="Center" FontWeight="Bold"
-                                       ToolTip="{Binding Name}"
-                                       Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </Grid>
-        </GroupBox>
 
+                <!--Список УСО-->
+                <DataGrid Grid.Row="0"
+                          Margin="2,0,2,5"
+                          BorderThickness="1"
+                          BorderBrush="LightSlateGray"
+                          Background="White"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          GridLinesVisibility="None"
+                          CanUserResizeColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          HeadersVisibility="None"
+                          ScrollViewer.CanContentScroll="False"
+                          ItemsSource="{Binding Params}"
+                          SelectedItem="{Binding SelectedParam}"
+                          >
+
+                    <DataGrid.Resources>
+
+                        <Style TargetType="{x:Type Border}">
+                            <Setter Property="CornerRadius" Value="3"/>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Height" Value="25"/>
+                            <Setter Property="Margin" Value="0,-1,0,2"/>
+                            <Style.Triggers>
+                                
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="Background" Value="LightSteelBlue"/>
+                                </Trigger>
+                                
+                            </Style.Triggers>
+                        </Style>
+                        
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Width="*">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0,1" BorderBrush="Black" CornerRadius="3">
+                                        <TextBox BorderThickness="0" Margin="3,0,0,0" VerticalContentAlignment="Center"
+                                                 FontWeight="Bold" Background="Transparent"
+                                                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="0,1" BorderBrush="Black" CornerRadius="3">
+                                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+            
+            </Grid>
+            
+        </GroupBox>
+        
         <!--Данные УСО-->
-        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray" Margin="0,1,0,0">
+        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray" Margin="0,2,0,0">
             <GroupBox.Header>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="64"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="Данные - "/>
-                    <TextBox Grid.Column="1"  BorderThickness="1" Margin="0,0,5,0" FontWeight="Bold" MinWidth="150"
-                             Text="{Binding SelectedParam.Name, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
-                
+                <TextBlock Margin="5,0,5,0" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
+                               Text="{Binding SelectedParam.Name, StringFormat='Данные - {0}'}"/>
             </GroupBox.Header>
             <Grid>
                 <Grid.RowDefinitions>

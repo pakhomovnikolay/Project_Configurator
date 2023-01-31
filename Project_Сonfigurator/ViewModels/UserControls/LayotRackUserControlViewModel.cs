@@ -5,6 +5,7 @@ using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -72,12 +73,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public USO SelectedParam
         {
             get => _SelectedParam;
-            set
-            {
-                if (Set(ref _SelectedParam, value))
-                    if (_SelectedParam?.Racks?.Count <= 0) return;
-                SelectedSubParam = _SelectedParam?.Racks[0];
-            }
+            set => Set(ref _SelectedParam, value);
         }
         #endregion
 
@@ -105,88 +101,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdCreateNewUSO => _CmdCreateNewUSO ??= new RelayCommand(OnCmdCreateNewUSOExecuted);
         private void OnCmdCreateNewUSOExecuted()
         {
-            var modules = new ObservableCollection<RackModule>();
-            var racks = new ObservableCollection<Rack>();
-
-            #region Создаем корзины и модули
-            // Первое УСО - это КЦ. Для него создаем сразу 6 корзин, для всех остальный, одна корзина по умолчанию
-            if (Params.Count == 0)
-            {
-                for (int i = 0; i < 6; i++)
-                {
-                    modules = new ObservableCollection<RackModule>();
-
-                    #region Создаем модули
-                    // Для каждой корзины 26 модулей
-                    for (int j = 0; j < 26; j++)
-                    {
-                        var module = new RackModule()
-                        {
-                            Type = TypeModule.Unknown,
-                            Index = $"A{i + 1}.{j + 1}",
-                            Name = $"",
-                            EndAddress = $"",
-                            StartAddress = $"",
-                            Channels = null
-                        };
-                        modules.Add(module);
-                    }
-                    #endregion
-
-                    #region Создаем корзины
-                    var rack = new Rack()
-                    {
-                        Index = $"{i + 1}",
-                        Name = $"A{i + 1}",
-                        IsEnable = true,
-                        Modules = modules
-                    };
-                    racks.Add(rack);
-                    #endregion
-                }
-            }
-            else
-            {
-                #region Создаем модули
-                // Для каждой корзины 26 модулей
-                for (int j = 0; j < 26; j++)
-                {
-                    var module = new RackModule()
-                    {
-                        Type = TypeModule.Unknown,
-                        Index = $"A1.{j + 1}",
-                        Name = $"",
-                        EndAddress = $"",
-                        StartAddress = $"",
-                        Channels = null
-                    };
-                    modules.Add(module);
-                }
-                #endregion
-
-                #region Создаем корзину
-                var rack = new Rack()
-                {
-                    Index = $"1",
-                    Name = $"A1",
-                    IsEnable = true,
-                    Modules = modules
-                };
-                racks.Add(rack);
-                #endregion
-            }
-            #endregion
-
-            #region Создаем УСО
-            var uso = new USO()
-            {
-                Index = $"{Params.Count + 1}",
-                Name = Params.Count == 0 ? $"КЦ" : $"УСО {Params.Count}",
-                Racks = racks
-            };
-            Params.Add(uso);
-            #endregion
-
+            CreateNewUSO(Params);
             SelectedParam = Params[^1];
         }
         #endregion
@@ -222,30 +137,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
 
-            var modules = new ObservableCollection<RackModule>();
-            for (int i = 0; i < 26; i++)
-            {
-                var module = new RackModule()
-                {
-                    Type = TypeModule.Unknown,
-                    Index = $"A{SelectedParam.Racks.Count + 1}.{i + 1}",
-                    Name = $"",
-                    EndAddress = $"",
-                    StartAddress = $"",
-                    Channels = null
-                };
-                modules.Add(module);
-            }
-
-            var rack = new Rack()
-            {
-                Index = $"{SelectedParam.Racks.Count + 1}",
-                Name = $"A{SelectedParam.Racks.Count + 1}",
-                IsEnable = true,
-                Modules = modules
-            };
-            SelectedParam.Racks.Add(rack);
-
+            CreateNewRack(SelectedParam);
             SelectedSubParam = SelectedParam.Racks[^1];
         }
         #endregion
@@ -360,15 +252,82 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         #region Функции
 
-        #region Генерируем данные
-        public void GeneratedData()
+        #region Создаем новое УСО
+        private static void CreateNewUSO(ObservableCollection<USO> _Params)
         {
-            //_DataView.Source = Params;
-            //_DataView.View?.Refresh();
-            //OnPropertyChanged(nameof(DataView));
+            // Первое УСО - это КЦ. Для него создаем сразу 6 корзин, для всех остальных - одна корзина по умолчанию
+            var racks = new ObservableCollection<Rack>();
+            var RackCount = _Params.Count == 0 ? 6 : 1;                         // Кол-во корзин в УСО
+            var NameUSO = _Params.Count == 0 ? $"КЦ" : $"УСО {_Params.Count}";  // Имя УСО
+            var Index = $"{_Params.Count + 1}";                                 // Индекс создаваемого УСО
 
-            if (Params is null || Params.Count <= 0)
-                SelectedParam = null;
+            for (int i = 0; i < RackCount; i++)
+            {
+                #region Создаем модули
+                var modules = Enumerable.Range(1, 26).Select(
+                    j => new RackModule()
+                    {
+                        Type = TypeModule.Unknown,
+                        Index = $"{i + 1}.{j}",
+                        Name = $"",
+                        EndAddress = $"",
+                        StartAddress = $"",
+                        Channels = null
+                    });
+                #endregion
+
+                #region Создаем корзины
+                var rack = new Rack()
+                {
+                    Index = $"{i + 1}",
+                    Name = $"A{i + 1}",
+                    IsEnable = true,
+                    Modules = new ObservableCollection<RackModule>(modules)
+                };
+                racks.Add(rack);
+                #endregion
+            }
+
+            #region Создаем УСО
+            var uso = new USO()
+            {
+                Index = Index,
+                Name = NameUSO,
+                Racks = new ObservableCollection<Rack>(racks)
+            };
+            _Params.Add(uso);
+            #endregion
+        }
+        #endregion
+
+        #region Создаем новую корзину
+        private static void CreateNewRack(USO _SelectedParam)
+        {
+            var IndexRack = $"A{_SelectedParam.Racks.Count + 1}";
+
+            #region Создаем модули
+            var modules = Enumerable.Range(1, 26).Select(
+                i => new RackModule()
+                {
+                    Type = TypeModule.Unknown,
+                    Index = $"{IndexRack}.{i}",
+                    Name = $"",
+                    EndAddress = $"",
+                    StartAddress = $"",
+                    Channels = null
+                });
+            #endregion
+
+            #region Создаем корзину
+            var rack = new Rack()
+            {
+                Index = IndexRack,
+                Name = IndexRack,
+                IsEnable = true,
+                Modules = new ObservableCollection<RackModule>(modules)
+            };
+            _SelectedParam.Racks.Add(rack);
+            #endregion
         }
         #endregion
 

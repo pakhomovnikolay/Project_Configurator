@@ -112,45 +112,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             {
                 if (Set(ref _SelectedParam, value))
                 {
-                    if (_SelectedParam is null)
-                    {
-                        SubParams = new();
-                        return;
-                    }
-
-                    var modules = new ObservableCollection<RackModule>();
-                    foreach (var Rack in value?.Racks)
-                    {
-                        foreach (var Module in Rack.Modules)
-                        {
-                            switch (Module.Type)
-                            {
-                                case TypeModule.AI:
-                                case TypeModule.DI:
-                                case TypeModule.AO:
-                                case TypeModule.DO:
-                                case TypeModule.DA:
-                                    var module = new RackModule()
-                                    {
-                                        Index = Module.Index,
-                                        Name = Module.Name,
-                                        Type = Module.Type,
-                                        Channels = Module.Channels,
-                                        EndAddress = Module.EndAddress,
-                                        StartAddress = Module.StartAddress
-                                    };
-                                    modules.Add(module);
-
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                    }
-                    SubParams = new ObservableCollection<RackModule>(modules);
-                    if (SubParams.Count > 0)
-                        SelectedSubParam = SubParams[0];
-                    RefreshDataView();
+                    if (_SelectedParam is null) return;
+                    GeneratedDataView();
+                    RefreshSubDataView();
                 }
             }
         }
@@ -239,42 +203,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (!UserDialog.SendMessage("Внимание!", "Все данные по сигналам будут потеряны!\nПродолжить?",
                 MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            Params = new();
-            foreach (var _USO in LayotRackViewModel.Params)
-            {
-                var need_add_uso = false;
-                foreach (var _Rack in _USO.Racks)
-                {
-                    foreach (var _Module in _Rack.Modules)
-                    {
-                        switch (_Module.Type)
-                        {
-                            case TypeModule.AI:
-                            case TypeModule.DI:
-                            case TypeModule.AO:
-                            case TypeModule.DO:
-                            case TypeModule.DA:
-                                if (_Module.Channels is null || _Module.Channels.Count <= 0)
-                                    if (UserDialog.SendMessage("Внимание!", "Неверные данные таблицы сигналов. Проверьте вкладку",
-                                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
-
-                                foreach (var Channel in _Module.Channels)
-                                {
-                                    Channel.Description = "";
-                                    Channel.Id = "";
-                                }
-                                need_add_uso = true;
-                                break;
-                        }
-                    }
-                }
-
-                if (need_add_uso)
-                    Params.Add(_USO);
-            }
-
-            if (Params.Count > 0)
-                SelectedParam = Params[0];
+            GenerateTable(LayotRackViewModel);
+            if (Params.Count > 0) SelectedParam = Params[0];
         }
         #endregion
 
@@ -315,61 +245,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             if (p is not DataGrid MyDataGrid) return;
             if (MyDataGrid is null) return;
 
-            try
-            {
-                using var work_book = new XLWorkbook(PathImport);
-                var worksheet = work_book.Worksheets.Worksheet(1);
-
-                var StartIndexRow = int.Parse(App.Settings.Config.Import.StartIndexRow);
-                var IndexColumnId = int.Parse(App.Settings.Config.Import.IndexColumnId);
-                var IndexColumnDescription = int.Parse(App.Settings.Config.Import.IndexColumnDescription);
-                var IndexColumnRack = int.Parse(App.Settings.Config.Import.IndexColumnRack);
-                var IndexColumnModule = int.Parse(App.Settings.Config.Import.IndexColumnModule);
-
-                var Id = new ObservableCollection<string>();
-                var Description = new ObservableCollection<string>();
-
-                #region Формируем листы Идентификаторов и Наименования параметров
-                while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnRack).Value.ToString()))
-                {
-                    if (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnModule).Value.ToString()))
-                    {
-                        if (!worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString().Contains(SelectedParam.Name, StringComparison.CurrentCultureIgnoreCase))
-                            Id.Add(worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString());
-                        else
-                            Id.Add("");
-
-                        Description.Add(worksheet.Cell(StartIndexRow, IndexColumnDescription).Value.ToString());
-                    }
-                    StartIndexRow++;
-                }
-                #endregion
-
-                #region Переописываем каналы модулей
-                var jSh = 0;
-                if (Id.Count > 0 && Description.Count > 0)
-                {
-                    foreach (var _Rack in SelectedParam.Racks)
-                    {
-                        foreach (var _Module in _Rack.Modules)
-                        {
-                            foreach (var _Channel in _Module.Channels)
-                            {
-                                _Channel.Id = Id[jSh];
-                                _Channel.Description = Description[jSh++];
-                            }
-                        }
-                    }
-                }
-                #endregion
-
-                MyDataGrid.Items.Refresh();
-            }
-            catch (Exception)
-            {
-                var desc = "Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу,\nконфигурацию проекта и настройки импорта";
-                UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
-            }
+            ImportTB(MyDataGrid);
         }
         #endregion
 
@@ -466,12 +342,160 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// </summary>
         private void RefreshDataView()
         {
-            _ParamsDataView.Source = Params;
             _SubParamsDataView.Source = SubParams;
-            _ParamsDataView.View?.Refresh();
             _SubParamsDataView.View?.Refresh();
-            OnPropertyChanged(nameof(ParamsDataView));
             OnPropertyChanged(nameof(SubParamsDataView));
+
+            _ParamsDataView.Source = Params;
+            _ParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(ParamsDataView));
+        }
+        #endregion
+
+        #region Обновляем данные модулей для отображения
+        /// <summary>
+        /// Обновляем данные модулей для отображения
+        /// </summary>
+        private void RefreshSubDataView()
+        {
+            _SubParamsDataView.Source = SubParams;
+            _SubParamsDataView.View?.Refresh();
+            OnPropertyChanged(nameof(SubParamsDataView));
+        }
+        #endregion
+
+        #region Генерируем таблицу сигналов
+        /// <summary>
+        /// Генерируем таблицу сигналов
+        /// </summary>
+        /// <param name="_LayotRackViewModel"></param>
+        private void GenerateTable(LayotRackUserControlViewModel _LayotRackViewModel)
+        {
+            Params = new();
+            foreach (var _USO in _LayotRackViewModel.Params)
+            {
+                var need_add_uso = false;
+                foreach (var _Rack in _USO.Racks)
+                {
+                    foreach (var _Module in _Rack.Modules)
+                    {
+                        switch (_Module.Type)
+                        {
+                            case TypeModule.AI:
+                            case TypeModule.DI:
+                            case TypeModule.AO:
+                            case TypeModule.DO:
+                            case TypeModule.DA:
+                                if (_Module.Channels is null || _Module.Channels.Count <= 0)
+                                    if (UserDialog.SendMessage("Внимание!", "Неверные данные таблицы сигналов. Проверьте вкладку",
+                                        MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
+
+                                foreach (var Channel in _Module.Channels)
+                                {
+                                    Channel.Description = "";
+                                    Channel.Id = "";
+                                }
+                                need_add_uso = true;
+                                break;
+                        }
+                    }
+                }
+
+                if (need_add_uso)
+                    Params.Add(_USO);
+            }
+        }
+        #endregion
+
+        #region Импорт сигналов из ТБ
+        /// <summary>
+        /// Импорт сигналов из ТБ
+        /// </summary>
+        /// <param name="MyDataGrid"></param>
+        private void ImportTB(DataGrid MyDataGrid)
+        {
+            try
+            {
+                using var work_book = new XLWorkbook(PathImport);
+                var worksheet = work_book.Worksheets.Worksheet(1);
+
+                var StartIndexRow = int.Parse(App.Settings.Config.Import.StartIndexRow);
+                var IndexColumnId = int.Parse(App.Settings.Config.Import.IndexColumnId);
+                var IndexColumnDescription = int.Parse(App.Settings.Config.Import.IndexColumnDescription);
+                var IndexColumnRack = int.Parse(App.Settings.Config.Import.IndexColumnRack);
+                var IndexColumnModule = int.Parse(App.Settings.Config.Import.IndexColumnModule);
+
+                var Id = new ObservableCollection<string>();
+                var Description = new ObservableCollection<string>();
+
+                #region Формируем листы Идентификаторов и Наименования параметров
+                while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnRack).Value.ToString()))
+                {
+                    if (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, IndexColumnModule).Value.ToString()))
+                    {
+                        if (!worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString().Contains(SelectedParam.Name, StringComparison.CurrentCultureIgnoreCase))
+                            Id.Add(worksheet.Cell(StartIndexRow, IndexColumnId).Value.ToString());
+                        else
+                            Id.Add("");
+
+                        Description.Add(worksheet.Cell(StartIndexRow, IndexColumnDescription).Value.ToString());
+                    }
+                    StartIndexRow++;
+                }
+                #endregion
+
+                #region Переописываем каналы модулей
+                var jSh = 0;
+                if (Id.Count > 0 && Description.Count > 0)
+                {
+                    foreach (var _Rack in SelectedParam.Racks)
+                    {
+                        foreach (var _Module in _Rack.Modules)
+                        {
+                            foreach (var _Channel in _Module.Channels)
+                            {
+                                _Channel.Id = Id[jSh];
+                                _Channel.Description = Description[jSh++];
+                            }
+                        }
+                    }
+                }
+                #endregion
+
+                MyDataGrid.Items.Refresh();
+            }
+            catch (Exception)
+            {
+                var desc = "Импорт завершен с ошибкой:\nПроверьте указанный путь к файлу,\nконфигурацию проекта и настройки импорта";
+                UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
+            }
+        }
+        #endregion
+
+        #region Генерируем модули, для выбранного УСО
+        /// <summary>
+        /// Генерируем модули, для выбранного УСО
+        /// </summary>
+        private void GeneratedDataView()
+        {
+            SubParams = new();
+            SelectedSubParam = new();
+            foreach (var Rack in _SelectedParam.Racks)
+            {
+                if (!Rack.IsEnable) continue;
+                foreach (var Module in Rack.Modules)
+                {
+                    if (string.IsNullOrWhiteSpace(Module.Name)) continue;
+                    if (Module.Type != TypeModule.AI &&
+                        Module.Type != TypeModule.DI &&
+                        Module.Type != TypeModule.AO &&
+                        Module.Type != TypeModule.DO &&
+                        Module.Type != TypeModule.DA) continue;
+
+                    SubParams.Add(Module);
+                    SelectedSubParam = SubParams[0];
+                }
+            }
         }
         #endregion
 
