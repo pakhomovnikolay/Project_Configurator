@@ -9,11 +9,6 @@
 	  <PackageIcon>MagicIcon.jpg</PackageIcon>
 	  <ApplicationIcon>Resources\Icons\MagicIcon.ico</ApplicationIcon>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\Icons\CodeBrackets.ico" />
-    <None Remove="Resources\Icons\ContentTree.ico" />
-  </ItemGroup>
 	
   <ItemGroup>
     <Content Include="Resources\Icons\MagicIcon.ico">

@@ -147,7 +147,7 @@
                 
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                        <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                             <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                      Text="{Binding NameTabList, UpdateSourceTrigger=PropertyChanged}"
                                      >
@@ -163,7 +163,7 @@
 
                 <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
-                        <Border x:Name="border" BorderThickness="1,0,0,0" BorderBrush="Black">
+                        <Border x:Name="border" BorderThickness="1,0,2,0" BorderBrush="Black">
                             <StackPanel>
                                 <ToggleButton x:Name="ListModule"
                                               BorderThickness="0"

@@ -11,7 +11,6 @@
               BorderBrush="Black"
               BorderThickness="0"
               Background="AliceBlue"
-              Icon="../../Resources/Icons/MagicIcon.ico"
               
               d:DataContext="{d:DesignInstance vm:MainWindowViewModel, IsDesignTimeCreatable=True}"
               Height="{Binding WindowHeight}"
