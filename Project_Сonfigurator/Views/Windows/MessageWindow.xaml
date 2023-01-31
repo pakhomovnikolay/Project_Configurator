@@ -267,11 +267,13 @@
                     <DataGrid.Columns>
 
                         <DataGridTemplateColumn Width="35">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
@@ -279,35 +281,50 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="800">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сообщения"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" Text="{Binding Description}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="120">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Цвет&#x0a;сообщения"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <ComboBox ItemsSource="{Binding ColorList, Source={StaticResource Lists}}" SelectedItem="{Binding Color}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,0" BorderBrush="Black">
@@ -326,33 +343,49 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="120">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Необходимость&#x0a;квитирования"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding NeedAck, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding NeedAck, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NeedAck}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="300">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Файл звука"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
-                            <DataGridTemplateColumn.CellTemplate>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
+                                    
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition/>
@@ -360,82 +393,151 @@
                                             </Grid.ColumnDefinitions>
 
                                             <TextBox Grid.Column="0" BorderThickness="0" Background="Transparent"
-                                                             TextAlignment="Left" VerticalContentAlignment="Center"
-                                                             ToolTip="{Binding PathSound}"
-                                                             Text="{Binding PathSound, UpdateSourceTrigger=PropertyChanged}"/>
+                                                     VerticalContentAlignment="Center" Margin="3,0,0,0"
+                                                     ToolTip="{Binding PathSound}"
+                                                     Text="{Binding PathSound, UpdateSourceTrigger=PropertyChanged}"/>
                                             <Button Grid.Column="1" Content="..." Margin="1"
-                                                            Style="{StaticResource CustomButtonStyle}"
-                                                            Command="{Binding DataContext.CmdSelectionPathSound, RelativeSource={RelativeSource AncestorType=Window}}"
-                                                            CommandParameter="{Binding ElementName=MyDataGrid}"
-                                                            />
+                                                    Style="{StaticResource CustomButtonStyle}"
+                                                    Command="{Binding DataContext.CmdSelectionPathSound, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding ElementName=MyDataGrid}"
+                                                    />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="30"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0" ToolTip="{Binding PathSound}" Text="{Binding PathSound}"/>
+                                            <Button Grid.Column="1" Content="..." Margin="1"
+                                                    Style="{StaticResource CustomButtonStyle}"
+                                                    Command="{Binding DataContext.CmdSelectionPathSound, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding ElementName=MyDataGrid}"
+                                                    />
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Циклический&#x0a;звук"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding TypeSound, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding TypeSound, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding TypeSound}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="120">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Воспроизводить&#x0a;звук"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding NeedPlay, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding NeedPlay, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding NeedPlay}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="80">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Скрытое"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding Hide, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding Hide, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Hide}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Уровень&#x0a;доступа"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black">
+                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                                                 Text="{Binding LevelAccess, UpdateSourceTrigger=PropertyChanged}"
+                                                 IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="Transparent">
-                                        <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
-                                                         Text="{Binding LevelAccess, UpdateSourceTrigger=PropertyChanged}"/>
+                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black">
+                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding LevelAccess}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                     </DataGrid.Columns>

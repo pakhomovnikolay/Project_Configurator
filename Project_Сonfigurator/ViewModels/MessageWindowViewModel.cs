@@ -115,7 +115,7 @@ namespace Project_Сonfigurator.ViewModels
             {
                 if (Set(ref _Params, value))
                     if (_Params is not null && _Params.Count > 0)
-                        SelectedParam = _Params.First();
+                        SelectedParam = _Params[0];
                 RefreshDataView();
             }
         }
@@ -489,6 +489,7 @@ namespace Project_Сonfigurator.ViewModels
         /// </summary>
         private void RefreshDataView()
         {
+            if (SelectedParam is null) return;
             if (SelectedParam is not null && SelectedParam.Messages is not null && SelectedParam.Messages.Count > 0)
                 SelectedSubParam = SelectedParam.Messages[0];
 
