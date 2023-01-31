@@ -47,11 +47,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             set
             {
                 if (Set(ref _IsSelected, value))
-                {
-                    SignalServices.RedefineSignal(SelectedParam, _IsSelected, Title);
-                    DoSelection = SignalServices.DoSelection;
-                }
+                    DoSelection = SignalServices.RedefineAddress(SelectedParam, _IsSelected, Title);
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -102,18 +111,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         }
         #endregion
 
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
-        }
-        #endregion
-
         #region Коллекция AI формируемых для отображения
         /// <summary>
         /// Коллекция AI формируемых для отображения
@@ -159,11 +156,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (Index != SelectedParam.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.Address = SelectedParam.Address;
-            SignalServices.Id = SelectedParam.Id;
-            SignalServices.Description = SelectedParam.Description;
-
-            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            SignalServices.SelecteAddress(SelectedParam);
+            if (UserDialog.SearchControlViewModel(SignalServices.FromName) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion

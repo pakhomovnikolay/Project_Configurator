@@ -19,15 +19,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Регистры формируемые";
             Description = "Регистры формируемые для ВУ";
             UsingUserControl = new UserRegUserControl();
+            _ParamsDataView.Filter += ParamsFiltered;
         }
 
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServiceы;
-        public UserRegUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public UserRegUserControlViewModel(ISignalService _ISignalService) : this()
         {
             SignalServices = _ISignalService;
-            DBServiceы = _IDBService;
-            _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -44,14 +42,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             set
             {
                 if (Set(ref _IsSelected, value))
-                {
-                    if (SelectedParam is not null)
-                        SignalServices.RedefineParam(SelectedParam, _IsSelected, Title);
-                    DoSelection = SignalServices.DoSelection;
-                    if (_IsSelected)
-                        RefreshDataView();
-                }
+                    if (_IsSelected) SignalServices.ResetSignal();
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -99,18 +103,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _TextFilter;
             set => Set(ref _TextFilter, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 

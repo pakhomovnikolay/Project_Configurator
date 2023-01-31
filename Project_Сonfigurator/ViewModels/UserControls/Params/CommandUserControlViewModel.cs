@@ -37,7 +37,23 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public override bool IsSelected
         {
             get => _IsSelected;
-            set => Set(ref _IsSelected, value);
+            set
+            {
+                if (Set(ref _IsSelected, value))
+                    if (_IsSelected) SignalServices.ResetSignal();
+            }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -81,18 +97,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _TextFilter;
             set => Set(ref _TextFilter, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 

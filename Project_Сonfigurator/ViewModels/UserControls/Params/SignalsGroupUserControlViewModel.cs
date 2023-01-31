@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
-using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -25,12 +24,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public SignalsGroupUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public SignalsGroupUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -49,11 +46,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (SelectedParam is not null)
-                        SignalServices.RedefineParam(SelectedParam, _IsSelected, Title);
-                    DoSelection = SignalServices.DoSelection;
-                    if (_IsSelected)
-                        RefreshDataView();
+                    if (DoSelection) DoSelection = SignalServices.RedefineAddress(SelectedParam, _IsSelected, Title);
+                    if (_IsSelected) RefreshDataView();
                 }
             }
         }
@@ -111,7 +105,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние необходимости выбора сигнала
         /// </summary>
-        public bool DoSelection
+        public override bool DoSelection
         {
             get => _DoSelection;
             set => Set(ref _DoSelection, value);
@@ -162,27 +156,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (Index != SelectedParam.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.Unknown;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedParam.TypeSignal) || int.Parse(SelectedParam.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                SignalServices.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedParam.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                SignalServices.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedParam.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                SignalServices.Type = TypeModule.DI;
-            }
-
+            DoSelection = true;
+            var NameListSelected = SignalServices.ChangeAddress(Title, SelectedParam.TypeSignal);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -207,11 +182,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (Index != SelectedParam.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.Address = SelectedParam.Index;
-            SignalServices.Id = SelectedParam.Id;
-            SignalServices.Description = SelectedParam.Description;
-
-            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            SignalServices.SelecteAddress(SelectedParam);
+            if (UserDialog.SearchControlViewModel(SignalServices.FromName) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion

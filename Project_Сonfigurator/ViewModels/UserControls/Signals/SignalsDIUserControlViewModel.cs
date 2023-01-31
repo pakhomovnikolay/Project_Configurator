@@ -26,12 +26,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public SignalsDIUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public SignalsDIUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -50,13 +48,22 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (SelectedParam is not null)
-                        SignalServices.RedefineSignal(SelectedParam.Signal, _IsSelected, Title);
-                    DoSelection = SignalServices.DoSelection;
-                    if (_IsSelected)
-                        RefreshDataView();
+                    if (DoSelection) DoSelection = SignalServices.RedefineAddress(SelectedParam.Signal, _IsSelected, Title);
+                    if (_IsSelected) RefreshDataView();
                 }
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -104,18 +111,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
         {
             get => _TextFilter;
             set => Set(ref _TextFilter, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -233,16 +228,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (Index != SelectedParam.Signal.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.DI;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedParam.Signal.Area) || int.Parse(SelectedParam.Signal.Area) == 0)
-                NameListSelected = "Таблица сигналов";
-            else if (int.Parse(SelectedParam.Signal.Area) == 1)
-                NameListSelected = "DI формируемые";
-
+            DoSelection = true;
+            var NameListSelected = SignalServices.ChangeAddress(Title, TypeAddress.DI, SelectedParam.Signal.Area);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -267,11 +254,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             if (Index != SelectedParam.Signal.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.Address = SelectedParam.Signal.Index;
-            SignalServices.Id = SelectedParam.Signal.Id;
-            SignalServices.Description = SelectedParam.Signal.Description;
-
-            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            SignalServices.SelecteAddress(SelectedParam.Signal);
+            if (UserDialog.SearchControlViewModel(SignalServices.FromName) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion

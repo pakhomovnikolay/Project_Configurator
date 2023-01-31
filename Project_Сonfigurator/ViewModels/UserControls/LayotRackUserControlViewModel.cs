@@ -18,17 +18,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             Title = "Компоновка корзин";
             Description = $"Компоновка корзин {App.Settings.Config.NameProject}";
             UsingUserControl = new LayotRackUserControl();
-
         }
 
         private readonly ILayotRackService LayotRackServices;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, ISignalService _ISignalService) : this()
         {
             LayotRackServices = _ILayotRackService;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
         }
         #endregion
 
@@ -45,10 +42,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             set
             {
                 if (Set(ref _IsSelected, value))
-                {
-                    if (string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.DoSelection)
-                        SignalServices.ResetSignal();
-                }
+                    if (_IsSelected) SignalServices.ResetSignal();
             }
         }
         #endregion

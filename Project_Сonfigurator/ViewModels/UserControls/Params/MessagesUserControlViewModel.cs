@@ -26,25 +26,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Команды
-
-        #region Команда - Выбрать лист пренадлежности
-        private ICommand _CmdSelecteTabList;
-        /// <summary>
-        /// Команда - Выбрать лист пренадлежности
-        /// </summary>
-        public ICommand CmdSelecteTabList => _CmdSelecteTabList ??= new RelayCommand(OnCmdSelecteTabListExecuted, CanCmdSelecteTabListExecute);
-        private bool CanCmdSelecteTabListExecute(object p) => p is DataGrid;
-
-        private void OnCmdSelecteTabListExecuted(object p)
-        {
-            if (p is not DataGrid _DataGrid) return;
-            _DataGrid.BeginEdit();
-        }
-        #endregion
-
-        #endregion
-
         #region Параметры
 
         #region Состояние активной вкладки
@@ -58,9 +39,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             set
             {
                 if (Set(ref _IsSelected, value))
-                {
-                    SignalServices.ResetSignal();
-                }
+                    if (_IsSelected) SignalServices.ResetSignal();
             }
         }
         #endregion
@@ -93,6 +72,25 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _SelectedParam;
             set => Set(ref _SelectedParam, value);
+        }
+        #endregion
+
+        #endregion
+
+        #region Команды
+
+        #region Команда - Выбрать лист пренадлежности
+        private ICommand _CmdSelecteTabList;
+        /// <summary>
+        /// Команда - Выбрать лист пренадлежности
+        /// </summary>
+        public ICommand CmdSelecteTabList => _CmdSelecteTabList ??= new RelayCommand(OnCmdSelecteTabListExecuted, CanCmdSelecteTabListExecute);
+        private bool CanCmdSelecteTabListExecute(object p) => p is DataGrid;
+
+        private void OnCmdSelecteTabListExecuted(object p)
+        {
+            if (p is not DataGrid _DataGrid) return;
+            _DataGrid.BeginEdit();
         }
         #endregion
 

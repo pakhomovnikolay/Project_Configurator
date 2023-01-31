@@ -25,12 +25,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public GroupsSignalUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public GroupsSignalUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
             _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -49,61 +47,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (_IsSelected)
+                    if (DoSelectionAddressStart)
                     {
-                        DoSelection = SignalServices.DoSelection;
-                        if (SignalServices.DoSelection && !string.IsNullOrWhiteSpace(SignalServices.Address))
-                        {
-                            #region Сменить стартовый адрес
-                            if (DoSelectionAddressStart)
-                            {
-                                SelectedParam.AddressStart = SignalServices.Address;
-                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
-                                    SelectedParam.Param.Id = SignalServices.Id;
-                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
-                                    SelectedParam.Param.Description = SignalServices.Description;
-                            }
-                            #endregion
-
-                            #region Сменить конечный адрес
-                            if (DoSelectionAddressEnd)
-                            {
-                                SelectedParam.AddressEnd = SignalServices.Address;
-                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Id))
-                                    SelectedParam.Param.Id = SignalServices.Id;
-                                if (string.IsNullOrWhiteSpace(SelectedParam.Param.Description))
-                                    SelectedParam.Param.Description = SignalServices.Description;
-                            }
-                            #endregion
-
-                            #region Обнуляем данные
-                            SignalServices.ResetSignal();
-                            DoSelectionAddressStart = SignalServices.DoSelection;
-                            DoSelectionAddressEnd = SignalServices.DoSelection;
-                            DoSelection = SignalServices.DoSelection;
-                            #endregion
-
-                            RefreshDataView();
-                        }
-                        else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
-                        {
-                            #region Обнуляем данные
-                            SignalServices.ResetSignal();
-                            DoSelectionAddressStart = SignalServices.DoSelection;
-                            DoSelectionAddressEnd = SignalServices.DoSelection;
-                            DoSelection = SignalServices.DoSelection;
-                            #endregion
-                        }
+                        DoSelectionAddressStart = SignalServices.RedefineAddress(SelectedParam.Param, _IsSelected, Title);
+                        SelectedParam.AddressStart = SelectedParam.Param.Address;
                     }
-                    else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName != Title)
+                    if (DoSelectionAddressEnd)
                     {
-                        #region Обнуляем данные
-                        SignalServices.ResetSignal();
-                        DoSelectionAddressStart = SignalServices.DoSelection;
-                        DoSelectionAddressEnd = SignalServices.DoSelection;
-                        DoSelection = SignalServices.DoSelection;
-                        #endregion
+                        DoSelectionAddressEnd = SignalServices.RedefineAddress(SelectedParam.Param, _IsSelected, Title);
+                        SelectedParam.AddressEnd = SelectedParam.Param.Address;
                     }
+                    DoSelection = DoSelectionAddressStart || DoSelectionAddressEnd;
                 }
             }
         }
@@ -161,7 +115,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// <summary>
         /// Состояние необходимости выбора сигнала
         /// </summary>
-        public bool DoSelection
+        public override bool DoSelection
         {
             get => _DoSelection;
             set => Set(ref _DoSelection, value);
@@ -237,11 +191,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedParam = Params[int.Parse(Index) - 1];
 
             DoSelectionAddressStart = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.DI;
-
-            var NameListSelected = "Сигналы групп";
+            var NameListSelected = SignalServices.ChangeAddress(Title, TypeAddress.GrpSig);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -266,11 +216,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedParam = Params[int.Parse(Index) - 1];
 
             DoSelectionAddressEnd = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.DI;
-
-            var NameListSelected = "Сигналы групп";
+            var NameListSelected = SignalServices.ChangeAddress(Title, TypeAddress.GrpSig);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -295,11 +241,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             if (Index != SelectedParam.Param.Index)
                 SelectedParam = Params[int.Parse(Index) - 1];
 
-            SignalServices.Address = SelectedParam.Param.Index;
-            SignalServices.Id = SelectedParam.Param.Id;
-            SignalServices.Description = SelectedParam.Param.Description;
-
-            if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
+            SignalServices.SelecteAddress(SelectedParam.Param);
+            if (UserDialog.SearchControlViewModel(SignalServices.FromName) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
         #endregion

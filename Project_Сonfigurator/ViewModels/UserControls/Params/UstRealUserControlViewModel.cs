@@ -20,15 +20,13 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Уставки Real";
             Description = "Уставки типа Real";
             UsingUserControl = new UstRealUserControl();
+            _ParamsDataView.Filter += ParamsFiltered;
         }
 
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public UstRealUserControlViewModel(ISignalService _ISignalService, IDBService _IDBService) : this()
+        public UstRealUserControlViewModel(ISignalService _ISignalService) : this()
         {
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
-            _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
 
@@ -45,12 +43,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             set
             {
                 if (Set(ref _IsSelected, value))
-                {
-                    if (SelectedParam is not null)
-                        SignalServices.ResetSignal();
-                    DoSelection = SignalServices.DoSelection;
-                }
+                    if (_IsSelected) SignalServices.ResetSignal();
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -98,18 +104,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _TextFilter;
             set => Set(ref _TextFilter, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 

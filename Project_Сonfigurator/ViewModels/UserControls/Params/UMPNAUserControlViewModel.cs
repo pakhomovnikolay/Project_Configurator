@@ -26,12 +26,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public UMPNAUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public UMPNAUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
         }
         #endregion
 
@@ -49,53 +47,26 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             {
                 if (Set(ref _IsSelected, value))
                 {
-                    if (_IsSelected)
-                    {
-                        DoSelection = SignalServices.DoSelection;
-                        if (SignalServices.DoSelection && !string.IsNullOrWhiteSpace(SignalServices.Address))
-                        {
-                            #region Сменить входной параметр
-                            if (DoSelectionInputParam)
-                            {
-                                SignalServices.RedefineParam(SelectedInputParam, _IsSelected, Title);
-                            }
-                            #endregion
-
-                            #region Сменить выходной параметр
-                            if (DoSelectionInputParam)
-                            {
-                                SignalServices.RedefineParam(SelectedOutputParam, _IsSelected, Title);
-                            }
-                            #endregion
-
-                            #region Обнуляем данные
-                            SignalServices.ResetSignal();
-                            DoSelectionInputParam = SignalServices.DoSelection;
-                            DoSelectionOutputParam = SignalServices.DoSelection;
-                            DoSelection = SignalServices.DoSelection;
-                            #endregion
-                        }
-                        else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName == Title)
-                        {
-                            #region Обнуляем данные
-                            SignalServices.ResetSignal();
-                            DoSelectionInputParam = SignalServices.DoSelection;
-                            DoSelectionOutputParam = SignalServices.DoSelection;
-                            DoSelection = SignalServices.DoSelection;
-                            #endregion
-                        }
-                    }
-                    else if (SignalServices.DoSelection && string.IsNullOrWhiteSpace(SignalServices.Address) && SignalServices.ListName != Title)
-                    {
-                        #region Обнуляем данные
-                        SignalServices.ResetSignal();
-                        DoSelectionInputParam = SignalServices.DoSelection;
-                        DoSelectionOutputParam = SignalServices.DoSelection;
-                        DoSelection = SignalServices.DoSelection;
-                        #endregion
-                    }
+                    if (DoSelectionInputParam) DoSelectionInputParam = SignalServices.RedefineAddress(SelectedInputParam, _IsSelected, Title);
+                    if (DoSelectionOutputParam) DoSelectionOutputParam = SignalServices.RedefineAddress(SelectedOutputParam, _IsSelected, Title);
+                    if (DoSelectionKGMPNA) DoSelectionKGMPNA = SignalServices.RedefineAddress(SelectedKGMPNA.Param, _IsSelected, Title);
+                    if (DoSelectionKTPRA) DoSelectionKTPRA = SignalServices.RedefineAddress(SelectedKTPRA.Param, _IsSelected, Title);
+                    if (DoSelectionKTPRAS) DoSelectionKTPRAS = SignalServices.RedefineAddress(SelectedKTPRAS.Param, _IsSelected, Title);
+                    DoSelection = DoSelectionInputParam || DoSelectionOutputParam || DoSelectionKGMPNA || DoSelectionKTPRA || DoSelectionKTPRAS;
                 }
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -185,18 +156,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         {
             get => _SelectedKTPRAS;
             set => Set(ref _SelectedKTPRAS, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -414,27 +373,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedInputParam = SelectedParam.InputParam[int.Parse(Index) - 1];
 
             DoSelectionInputParam = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.Unknown;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedInputParam.TypeSignal) || int.Parse(SelectedInputParam.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                SignalServices.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedInputParam.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                SignalServices.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedInputParam.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                SignalServices.Type = TypeModule.DI;
-            }
-
+            var NameListSelected = SignalServices.ChangeAddress(Title, SelectedInputParam.TypeSignal);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -459,11 +398,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedOutputParam = SelectedParam.OutputParam[int.Parse(Index) - 1];
 
             DoSelectionOutputParam = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.DO;
-
-            var NameListSelected = "Сигналы DO";
+            var NameListSelected = SignalServices.ChangeAddress(Title, TypeAddress.DO);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -488,27 +423,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKGMPNA = SelectedParam.KGMPNA[int.Parse(Index) - 1];
 
             DoSelectionKGMPNA = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.Unknown;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedKGMPNA.Param.TypeSignal) || int.Parse(SelectedKGMPNA.Param.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                SignalServices.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                SignalServices.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedKGMPNA.Param.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                SignalServices.Type = TypeModule.DI;
-            }
-
+            var NameListSelected = SignalServices.ChangeAddress(Title, SelectedKGMPNA.Param.TypeSignal);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -533,27 +448,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKTPRA = SelectedParam.KTPRA[int.Parse(Index) - 1];
 
             DoSelectionKTPRA = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.Unknown;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedKTPRA.Param.TypeSignal) || int.Parse(SelectedKTPRA.Param.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                SignalServices.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                SignalServices.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedKTPRA.Param.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                SignalServices.Type = TypeModule.DI;
-            }
-
+            var NameListSelected = SignalServices.ChangeAddress(Title, SelectedKTPRA.Param.TypeSignal);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }
@@ -578,27 +473,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 SelectedKTPRAS = SelectedParam.KTPRAS[int.Parse(Index) - 1];
 
             DoSelectionKTPRAS = true;
-            SignalServices.DoSelection = true;
-            SignalServices.ListName = Title;
-            SignalServices.Type = TypeModule.Unknown;
-
-            var NameListSelected = "";
-            if (string.IsNullOrWhiteSpace(SelectedKTPRAS.Param.TypeSignal) || int.Parse(SelectedKTPRAS.Param.TypeSignal) == 0)
-            {
-                NameListSelected = "Сигналы DI";
-                SignalServices.Type = TypeModule.DI;
-            }
-            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 1)
-            {
-                NameListSelected = "Сигналы AI";
-                SignalServices.Type = TypeModule.AI;
-            }
-            else if (int.Parse(SelectedKTPRAS.Param.TypeSignal) > 0)
-            {
-                NameListSelected = "Группы сигналов";
-                SignalServices.Type = TypeModule.DI;
-            }
-
+            var NameListSelected = SignalServices.ChangeAddress(Title, SelectedKTPRAS.Param.TypeSignal);
             if (UserDialog.SearchControlViewModel(NameListSelected) is not IViewModelUserControls _TabItem) return;
             App.FucusedTabControl.SelectedItem = _TabItem;
         }

@@ -280,7 +280,7 @@
 
         <!--Данные-->
         <TabControl Grid.Row="2" ItemsSource="{Binding ViewModelUserControls}" SelectedIndex="{Binding SelectedTabIndex}">
-
+            
             <TabControl.Template>
                 <ControlTemplate TargetType="{x:Type TabControl}">
                     <Grid>

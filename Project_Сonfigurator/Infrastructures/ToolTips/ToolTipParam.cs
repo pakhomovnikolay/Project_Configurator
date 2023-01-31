@@ -477,6 +477,31 @@ namespace Project_Сonfigurator.Infrastructures.ToolTips
                 "2 - Сообщение"));
         #endregion
 
+        #region Всплывающая подсказка "Тип параметра Табло и сирен"
+        /// <summary>
+        /// Всплывающая подсказка "Тип параметра Табло и сирен"
+        /// </summary>
+        public string TypeParamUTS
+        {
+            get => (string)GetValue(TypeParamUTSProperty);
+            set => SetValue(TypeParamUTSProperty, value);
+        }
+
+        public static readonly DependencyProperty TypeParamUTSProperty = DependencyProperty.Register(
+            nameof(TypeParamUTS),
+            typeof(string),
+            typeof(ToolTipParam),
+            new PropertyMetadata(
+                "0(пусто) - DO остальные\n" +
+                "1 - Табло\n" +
+                "2 - Cирены\n" +
+                "3 - Cирены с возможностью блокировки\n" +
+                "4 - Датчик СОД c контролем\n" +
+                "5 - Датчик СОД с контролем и деблокировкой\n" +
+                "6 - Датчик СОД  с контролем и питанием\n" +
+                "7 - Датчик СОД с контролем, деблокировкой и питанием"));
+        #endregion
+
         #region Всплывающая подсказка "Флаг табло: АПТ Отключено"
         /// <summary>
         /// Всплывающая подсказка "Флаг табло: АПТ Отключено"

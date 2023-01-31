@@ -31,5 +31,12 @@ namespace Project_Сonfigurator.ViewModels.Base.Interfaces
         /// </summary>
         bool IsSelected { get; set; }
         #endregion
+
+        #region Состояние необходимости выбора сигнала
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        bool DoSelection { get; set; }
+        #endregion
     }
 }

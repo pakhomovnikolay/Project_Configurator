@@ -207,7 +207,7 @@
                 <DataGridTemplateColumn Width="110">
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
-                                ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}"
+                                ToolTip="{Binding TypeParamUTS, Source={StaticResource ToolTipParam}}"
                                 >
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -379,7 +379,7 @@
                                         <TextBox.InputBindings>
                                             <MouseBinding MouseAction="RightClick"
                                                       Command="{Binding DataContext.CmdChangeAddressKCO, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                      CommandParameter="{Binding KCO.Index}"/>
+                                                      CommandParameter="{Binding Param.Index}"/>
                                         </TextBox.InputBindings>
                                     </TextBox>
                                 </Border>
@@ -506,4 +506,5 @@
         </DataGrid>
 
     </Grid>
+    
 </UserControl>

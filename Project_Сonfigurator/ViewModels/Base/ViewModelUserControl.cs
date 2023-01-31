@@ -57,5 +57,12 @@ namespace Project_Сonfigurator.ViewModels.Base
         /// </summary>
         public virtual bool IsSelected { get; set; }
         #endregion
+
+        #region Состояние необходимости выбора сигнала
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public virtual bool DoSelection { get; set; }
+        #endregion
     }
 }

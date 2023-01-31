@@ -28,12 +28,10 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         private readonly IUserDialogService UserDialog;
         private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public TableSignalsUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
+        public TableSignalsUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
         {
             UserDialog = _UserDialog;
             SignalServices = _ISignalService;
-            DBServices = _IDBService;
 
             _ParamsDataView.Filter += ParamsFiltered;
             _SubParamsDataView.Filter += SubParamsFiltered;
@@ -60,6 +58,18 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                     DoSelection = SignalServices.DoSelection;
                 }
             }
+        }
+        #endregion
+
+        #region Состояние необходимости выбора сигнала
+        private bool _DoSelection;
+        /// <summary>
+        /// Состояние необходимости выбора сигнала
+        /// </summary>
+        public override bool DoSelection
+        {
+            get => _DoSelection;
+            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -191,18 +201,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         {
             get => _PathImport;
             set => Set(ref _PathImport, value);
-        }
-        #endregion
-
-        #region Состояние необходимости выбора сигнала
-        private bool _DoSelection;
-        /// <summary>
-        /// Состояние необходимости выбора сигнала
-        /// </summary>
-        public bool DoSelection
-        {
-            get => _DoSelection;
-            set => Set(ref _DoSelection, value);
         }
         #endregion
 
@@ -385,106 +383,20 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         private void OnCmdSelectionSignalExecuted(object p)
         {
             var index = int.Parse((string)p);
-            var message = "";
             if (App.FucusedTabControl == null) return;
 
             #region Проверка корректного выбора сигнала
-            switch (SignalServices.Type)
+            if (!SignalServices.CheckCurrentSelectedSignal(index, out string message))
             {
-                case TypeModule.AI:
-                    if (index >= 100000)
-                    {
-                        message =
-                            "Выбор неверный!\n" +
-                            "Вы выбрали не аналоговый входной сигнал.\n" +
-                            "Запрашивается ссылка на аналоговый входной сигнал (0-99999)" +
-                            "Повторить выбор?";
-                    }
-                    break;
-                case TypeModule.DI:
-                    if (index < 100000 || index >= 200000)
-                    {
-                        message =
-                            "Выбор неверный!\n" +
-                            "Вы выбрали не дискретный входной сигнал.\n" +
-                            "Запрашивается ссылка на дискретный входной сигнал (100000-199999)" +
-                            "Повторить выбор?";
-                    }
-                    break;
-                case TypeModule.AO:
-                    if (index < 300000 || index >= 400000)
-                    {
-                        message =
-                            "Выбор неверный!\n" +
-                            "Вы выбрали не аналоговый выходной сигнал.\n" +
-                            "Запрашивается ссылка на аналоговый выходной сигнал (300000-399999)" +
-                            "Повторить выбор?";
-                    }
-                    break;
-                case TypeModule.DO:
-                    if (index < 200000 || index >= 300000)
-                    {
-                        message =
-                            "Выбор неверный!\n" +
-                            "Вы выбрали не дискретный выходной сигнал.\n" +
-                            "Запрашивается ссылка на аналоговый входной сигнал (200000-299999)" +
-                            "Повторить выбор?";
-                    }
-                    break;
-                default:
-                    break;
-            }
-            #endregion
-
-            #region Оповещение пользователя о некореектном выборе сигнала
-            if (!string.IsNullOrWhiteSpace(message))
-            {
-                if (UserDialog.SendMessage("Выбор сигнала", message, MessageBoxButton.YesNo, ResultType: MessageBoxResult.Yes))
-                    return;
-                else
-                {
-                    SignalServices.ResetSignal();
-                    DoSelection = SignalServices.DoSelection;
-                }
+                if (UserDialog.SendMessage("Выбор сигнала", message, MessageBoxButton.YesNo, ResultType: MessageBoxResult.Yes)) return;
+                else { DoSelection = SignalServices.ResetSignal(); return; }
             }
             #endregion
 
             #region Возврат на вкладку измененного сигнала
-            else
-            {
-                foreach (var _Channel in SelectedSubParam.Channels)
-                {
-                    if (_Channel.Address == index.ToString())
-                    {
-                        SignalServices.Id = _Channel.Id;
-                        SignalServices.Description = _Channel.Description;
-
-                        switch (SignalServices.Type)
-                        {
-                            case TypeModule.AI:
-                                SignalServices.Address = $"{index}";
-                                break;
-                            case TypeModule.DI:
-                                SignalServices.Address = $"{index - 100000}";
-                                break;
-                            case TypeModule.AO:
-                                SignalServices.Address = $"{index - 300000}";
-                                break;
-                            case TypeModule.DO:
-                                SignalServices.Address = $"{index - 200000}";
-                                break;
-                            default:
-                                break;
-                        }
-
-                        break;
-                    }
-                }
-
-                if (UserDialog.SearchControlViewModel(SignalServices.ListName) is not IViewModelUserControls _TabItem) return;
-                App.FucusedTabControl.SelectedItem = _TabItem;
-
-            }
+            SignalServices.SelecteAddress(SelectedSubParam.Channels, index);
+            if (UserDialog.SearchControlViewModel(SignalServices.FromName) is not IViewModelUserControls _TabItem) return;
+            App.FucusedTabControl.SelectedItem = _TabItem;
             #endregion
         }
         #endregion
