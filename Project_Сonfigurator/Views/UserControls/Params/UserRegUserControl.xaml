@@ -14,6 +14,7 @@
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              >
+    
     <Grid>
 
         <!--Сетка-->
@@ -22,7 +23,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         
-        <!--Данные-->
+        <!--Фильтр-->
         <Border Grid.Row="0" Margin="0,2,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
             <Grid>
 
@@ -58,6 +59,8 @@
                 </Button>
             </Grid>
         </Border>
+
+        <!--Данные-->
         <DataGrid Grid.Row="1"
                   Margin="0,1,0,0"
                   BorderThickness="0"
@@ -131,37 +134,69 @@
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="150">
+                    
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
+                                         BorderThickness="0" Background="Transparent"
+                                         Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         />
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
-                                         Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                           Text="{Binding Id}"
+                                           />
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="800">
+                    
                     <DataGridTemplateColumn.Header>
                         <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование параметра" Margin="0,0,0,5"/>
                         </Border>
                     </DataGridTemplateColumn.Header>
+
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                <TextBox VerticalContentAlignment="Center"
+                                         BorderThickness="0" Background="Transparent"
+                                         Margin="3,0,0,0"
+                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                         />
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
-                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+                                <TextBlock VerticalAlignment="Center"
+                                           Margin="5,0,0,0"
+                                           Text="{Binding Description}"
+                                           />
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
                 <DataGridTemplateColumn Width="100">
@@ -201,4 +236,5 @@
         </DataGrid>
 
     </Grid>
+    
 </UserControl>

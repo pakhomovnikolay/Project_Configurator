@@ -15,7 +15,8 @@
     <l:CmdScrollToRightEnd x:Key="CmdScrollToRightEnd"/>
 
     <l:CmdOpenWindowEditText x:Key="CmdOpenWindowEditText"/>
+    <l:CmdSelectionServer x:Key="CmdSelectionServer"/>
+    <l:CmdSelectedTabPanelItem x:Key="CmdSelectedTabPanelItem"/>
 
     
-
 </ResourceDictionary>

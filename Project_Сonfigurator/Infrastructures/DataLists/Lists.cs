@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.ToolTips;
+using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -6,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace Project_Сonfigurator.Infrastructures.Lists
+namespace Project_Сonfigurator.Infrastructures.DataLists
 {
     public class Lists : Freezable
     {
@@ -179,10 +181,10 @@ namespace Project_Сonfigurator.Infrastructures.Lists
 
         #endregion
 
-        #region Список листов проекта
+        #region Список наименований листов проекта
         private List<string> _TabList = new();
         /// <summary>
-        /// Список листов проекта
+        /// Список наименований листов проекта
         /// </summary>
         public List<string> TabList
         {
@@ -194,9 +196,28 @@ namespace Project_Сonfigurator.Infrastructures.Lists
                     _TabList.Add(_ViewModel.Title);
 
                 return _TabList;
-
-                //return App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
             }
+        }
+        #endregion
+
+        #region Список листов проекта
+        /// <summary>
+        /// Список листов проекта
+        /// </summary>
+        public static IEnumerable<IViewModelUserControls> ViewModelUserControls
+        {
+            get => App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
+        }
+        #endregion
+
+        #region Выбранный лист
+        /// <summary>
+        /// Выбранный лист
+        /// </summary>
+        public static IViewModelUserControls SelectedViewModel
+        {
+            get => App.Services.GetRequiredService<MainWindowViewModel>().SelectedViewModel;
+            set => App.Services.GetRequiredService<MainWindowViewModel>().SelectedViewModel = value;
         }
         #endregion
     }

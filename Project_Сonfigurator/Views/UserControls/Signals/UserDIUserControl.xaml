@@ -22,8 +22,8 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <!--Данные-->
+
+        <!--Фильтр-->
         <Border Grid.Row="0" Margin="0,2,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
             <Grid>
                 
@@ -59,6 +59,8 @@
                 </Button>
             </Grid>
         </Border>
+
+        <!--Данные-->
         <DataGrid Grid.Row="1"
                   Margin="0,1,0,0"
                   BorderThickness="1"

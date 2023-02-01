@@ -13,7 +13,7 @@
                 <ResourceDictionary Source="Resources\BrushList\DictionaryBrush.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Converters\DictionaryConverters.xaml"/>
                 <ResourceDictionary Source="Infrastructures\ToolTips\ToolTipsDictionary.xaml"/>
-                <ResourceDictionary Source="Infrastructures\Lists\ListsDictionary.xaml"/>
+                <ResourceDictionary Source="Infrastructures\DataLists\ListsDictionary.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

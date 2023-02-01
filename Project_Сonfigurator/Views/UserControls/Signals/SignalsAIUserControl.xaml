@@ -22,12 +22,14 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <!--Данные-->
+
+        <!--Команда - Импорт сигналов-->
         <Button Margin="3,-40,0,20" Width="150" Height="24" HorizontalAlignment="Left"
                 Content="Импорт сигналов" FontWeight="Bold"
                 Style="{StaticResource CustomButtonStyle}"
                 Command="{Binding CmdGeneratedTable}"/>
+
+        <!--Фильтр-->
         <Border Grid.Row="0" Margin="0,2,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
             <Grid>
 
@@ -63,6 +65,8 @@
                 </Button>
             </Grid>
         </Border>
+
+        <!--Данные-->
         <TabControl Grid.Row="1">
             
             <TabControl.Template>
@@ -74,7 +78,6 @@
                         </Grid.RowDefinitions>
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Grid.Row="0" Margin="0">
                             <TabPanel IsItemsHost="True" Margin="0,5,0,0" Grid.Column="1"/>
-
                         </ScrollViewer>
                         <ContentPresenter x:Name="PART_SelectedContentHost" Margin="0,5,0,0" ContentSource="SelectedContent" Grid.Row="1"/>
                     </Grid>
@@ -813,7 +816,7 @@
 
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                                         <TextBox TextAlignment="Center" VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
                                                  Text="{Binding ConverterKgs, UpdateSourceTrigger=PropertyChanged}"
                                                  IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
@@ -823,7 +826,7 @@
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                                    <Border BorderThickness="1,0,2,0" BorderBrush="Black">
                                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding ConverterKgs}"/>
                                     </Border>
                                 </DataTemplate>

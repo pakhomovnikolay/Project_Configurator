@@ -26,11 +26,9 @@ namespace Project_Сonfigurator.ViewModels
         }
 
         private readonly IUserDialogService UserDialog;
-        private readonly IDBService DBServices;
-        public MessageWindowViewModel(IUserDialogService _UserDialog, IDBService _IDBService) : this()
+        public MessageWindowViewModel(IUserDialogService _UserDialog) : this()
         {
             UserDialog = _UserDialog;
-            DBServices = _IDBService;
             _SubParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -114,9 +112,10 @@ namespace Project_Сonfigurator.ViewModels
             set
             {
                 if (Set(ref _Params, value))
-                    if (_Params is not null && _Params.Count > 0)
-                        SelectedParam = _Params[0];
-                RefreshDataView();
+                {
+                    if (_Params is null && _Params.Count <= 0) return;
+                    SelectedTabIndex = 0;
+                }
             }
         }
         #endregion
@@ -141,10 +140,30 @@ namespace Project_Сonfigurator.ViewModels
         public CollectionMessage SelectedParam
         {
             get => _SelectedParam;
+            set => Set(ref _SelectedParam, value);
+        }
+        #endregion
+
+        #region Индекс выбранной вкладки
+        private int _SelectedTabIndex = -1;
+        /// <summary>
+        /// Индекс выбранной вкладки
+        /// </summary>
+        public int SelectedTabIndex
+        {
+            get => _SelectedTabIndex;
             set
             {
-                if (Set(ref _SelectedParam, value))
+                if (Set(ref _SelectedTabIndex, value))
+                {
+                    SelectedParam = null;
+                    if (_SelectedTabIndex < 0) return;
+                    if (Params is null || Params.Count <= 0) return;
+
+                    SelectedParam = Params[_SelectedTabIndex];
+                    SelectedSubParam = SelectedParam.Messages[0];
                     RefreshDataView();
+                }
             }
         }
         #endregion
@@ -220,7 +239,7 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdCreateCollectionMessagesExecuted(object p)
         {
             CreateCollectionMessages(Params);
-            SelectedParam = Params[^1];
+            SelectedTabIndex = Params.Count - 1;
         }
         #endregion
 
@@ -230,15 +249,10 @@ namespace Project_Сonfigurator.ViewModels
         /// Команда - Удалить коллекция сообщений
         /// </summary>
         public ICommand CmdDeleteCollectionMessages => _CmdDeleteCollectionMessages ??= new RelayCommand(OnCmdDeleteCollectionMessagesExecuted, CanCmdDeleteCollectionMessagesExecute);
-        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedParam is not null;
+        private bool CanCmdDeleteCollectionMessagesExecute() => SelectedTabIndex >= 0;
         private void OnCmdDeleteCollectionMessagesExecuted()
         {
-            var index = Params.IndexOf(SelectedParam);
-            index = index == 0 ? index : index - 1;
-
-            Params.Remove(SelectedParam);
-            if (Params.Count > 0)
-                SelectedParam = Params[index];
+            Params.RemoveAt(SelectedTabIndex);
         }
         #endregion
 
@@ -258,6 +272,62 @@ namespace Project_Сonfigurator.ViewModels
             SelectedSubParam.PathSound = select_file;
 
             MyDataGrid.Items.Refresh();
+        }
+        #endregion
+
+        #region Команда - Выбрать вкладку
+        private ICommand _CmdSelectedTabPanelItem;
+        /// <summary>
+        /// Команда - Выбрать вкладку
+        /// </summary>
+        public ICommand CmdSelectedTabPanelItem => _CmdSelectedTabPanelItem ??= new RelayCommand(OnCmdSelectedTabPanelItemExecuted, CanCmdSelectedTabPanelItemExecute);
+        private bool CanCmdSelectedTabPanelItemExecute(object p) => p is ScrollViewer;
+        private void OnCmdSelectedTabPanelItemExecuted(object p)
+        {
+            ToggleButtonIsChecked = false;
+            var _TabControl = App.FucusedTabControl;
+            if (_TabControl == null) return;
+            if (p is not ScrollViewer MyScrollViewer) return;
+
+            foreach (var _TabItem in from object _Item in _TabControl.Items
+                                     let _TabItem = _Item as CollectionMessage
+                                     where _TabItem.Description == SelectedParam.Description
+                                     select _TabItem)
+            {
+                var SelectedIndex = _TabControl.SelectedIndex;
+                _TabControl.SelectedItem = _TabItem;
+                if (_TabControl.SelectedIndex == (_TabControl.Items.Count - 1))
+                {
+                    MyScrollViewer.ScrollToRightEnd();
+                    return;
+                }
+                else if (_TabControl.SelectedIndex == 0)
+                {
+                    MyScrollViewer.ScrollToLeftEnd();
+                    return;
+                }
+                var Offset = 0d;
+                if (_TabControl.SelectedIndex > SelectedIndex)
+                {
+                    for (int i = SelectedIndex; i < _TabControl.SelectedIndex; i++)
+                    {
+                        var _Item = _TabControl.Items[i] as CollectionMessage;
+                        Offset += _Item.Description.Length * 6;
+
+                    }
+                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset + Offset);
+                }
+
+                else if (_TabControl.SelectedIndex < SelectedIndex)
+                {
+                    for (int i = SelectedIndex - 1; i >= _TabControl.SelectedIndex; i--)
+                    {
+                        var _Item = _TabControl.Items[i] as CollectionMessage;
+                        Offset += _Item.Description.Length * 6;
+                    }
+                    MyScrollViewer.ScrollToHorizontalOffset(MyScrollViewer.HorizontalOffset - Offset);
+                }
+            }
         }
         #endregion
 
@@ -472,6 +542,7 @@ namespace Project_Сonfigurator.ViewModels
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
             if (e.Item is not BaseMessage _Param || _Param is null) { e.Accepted = false; return; }
+            if (SelectedParam is null) { e.Accepted = false; return; }
             if (string.IsNullOrWhiteSpace(SelectedParam.TextFilter)) return;
             #endregion
 
@@ -489,10 +560,6 @@ namespace Project_Сonfigurator.ViewModels
         /// </summary>
         private void RefreshDataView()
         {
-            if (SelectedParam is null) return;
-            if (SelectedParam is not null && SelectedParam.Messages is not null && SelectedParam.Messages.Count > 0)
-                SelectedSubParam = SelectedParam.Messages[0];
-
             _SubParamsDataView.Source = SelectedParam.Messages;
             _SubParamsDataView.View?.Refresh();
             OnPropertyChanged(nameof(SubParamsDataView));

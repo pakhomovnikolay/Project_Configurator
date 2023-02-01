@@ -87,54 +87,93 @@
             </DataGridTemplateColumn>
 
             <DataGridTemplateColumn Width="350">
+                
                 <DataGridTemplateColumn.Header>
                     <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя системы"/>
                     </Border>
                 </DataGridTemplateColumn.Header>
-                <DataGridTemplateColumn.CellTemplate>
+
+                <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
+                                     BorderThickness="0" Background="Transparent"
                                      Text="{Binding SystemMessage, UpdateSourceTrigger=PropertyChanged}"
                                      />
                         </Border>
                     </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
+                                       Text="{Binding SystemMessage}"/>
+                        </Border>
+                    </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
+                
             </DataGridTemplateColumn>
 
             <DataGridTemplateColumn Width="800">
+                
                 <DataGridTemplateColumn.Header>
                     <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сообщения"/>
                     </Border>
                 </DataGridTemplateColumn.Header>
-                <DataGridTemplateColumn.CellTemplate>
+
+                <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
+                                     BorderThickness="0" Background="Transparent"
                                      Text="{Binding DescriptionMessage, UpdateSourceTrigger=PropertyChanged}"
                                      />
                         </Border>
                     </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
+                                       Text="{Binding DescriptionMessage}"/>
+                        </Border>
+                    </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
+                
             </DataGridTemplateColumn>
 
             <DataGridTemplateColumn Width="350">
+                
                 <DataGridTemplateColumn.Header>
                     <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание системы сообщения"/>
                     </Border>
                 </DataGridTemplateColumn.Header>
-                <DataGridTemplateColumn.CellTemplate>
+
+                <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
+                                     BorderThickness="0" Background="Transparent"
                                      Text="{Binding DescriptionSystem, UpdateSourceTrigger=PropertyChanged}"
                                      />
                         </Border>
                     </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
+                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
+                                       Text="{Binding DescriptionSystem}"/>
+                        </Border>
+                    </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
+                
             </DataGridTemplateColumn>
 
             <DataGridTemplateColumn Width="350">
@@ -148,7 +187,8 @@
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" BorderThickness="0" Background="Transparent"
+                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
+                                     BorderThickness="0" Background="Transparent"
                                      Text="{Binding NameTabList, UpdateSourceTrigger=PropertyChanged}"
                                      >
                                 <TextBox.InputBindings>
@@ -172,8 +212,8 @@
                                               Background="#FFE5E5E5"
                                               BorderBrush="#FFACACAC"
                                               Height="{Binding ElementName=border, Path=ActualHeight}">
-                                    <TextBlock HorizontalAlignment="Center"
-                                               TextAlignment="Left"
+                                    <TextBlock HorizontalAlignment="Center" TextAlignment="Left"
+                                               Margin="5,0,0,0"
                                                Text="{Binding NameTabList, UpdateSourceTrigger=PropertyChanged}">
                                     </TextBlock>
                                 </ToggleButton>

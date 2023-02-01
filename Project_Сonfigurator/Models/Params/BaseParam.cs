@@ -47,10 +47,22 @@ namespace Project_Сonfigurator.Models.Params
         #endregion
 
         #region Инверсия
+        private string _Inv;
         /// <summary>
         /// Инверсия
         /// </summary>
-        public string Inv { get; set; }
+        public string Inv
+        {
+            get { return _Inv; }
+            set
+            {
+                _Inv = value;
+                if (string.IsNullOrWhiteSpace(_Inv)) return;
+                if (!int.TryParse(_Inv, out int _value))
+                    _Inv = _value.ToString();
+                else if (_value > 1) _Inv = "1";
+            }
+        }
         #endregion
 
         #region Тип сигнала
