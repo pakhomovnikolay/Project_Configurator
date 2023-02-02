@@ -493,6 +493,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
                         Module.Type != TypeModule.DA) continue;
 
                     SubParams.Add(Module);
+                    SubParams[^1].Name = $"{Module.Index} {Module.Name.Replace(Module.Index, "").Trim()}";
                     SelectedSubParam = SubParams[0];
                 }
             }

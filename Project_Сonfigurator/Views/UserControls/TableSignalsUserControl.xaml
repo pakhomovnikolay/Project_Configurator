@@ -125,6 +125,8 @@
                     <RowDefinition Height="30"/>
                     <RowDefinition/>
                 </Grid.RowDefinitions>
+                
+                <!--Фильтр-->
                 <Border Grid.Row="0" Margin="0,2" CornerRadius="3"
                         BorderThickness="1" BorderBrush="Black"
                         Background="AntiqueWhite"
@@ -163,6 +165,8 @@
                         </Button>
                     </Grid>
                 </Border>
+                
+                <!--Данные-->
                 <DataGrid Grid.Row="1"
                           x:Name="MyDataGrid"
                           Margin="0,0,0,0"
@@ -193,8 +197,6 @@
                             <Setter Property="BorderThickness" Value="0,0,0,1"/>
                             <Setter Property="BorderBrush" Value="Black"/>
                             <Setter Property="Background" Value="White"/>
-                            <Setter Property="Height" Value="auto"/>
-                            
                             <Style.Triggers>
                                 <Trigger Property="IsSelected" Value="True">
                                     <Setter Property="Foreground" Value="Black"/>
@@ -221,10 +223,11 @@
                         </Style>
                         
                     </DataGrid.Resources>
-
+                    
                     <DataGrid.Columns>
                         
                         <DataGridTemplateColumn Width="25">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Тип модуля" Margin="0,0,0,5">
@@ -234,6 +237,7 @@
                                     </TextBlock>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="2,0,0,1" BorderBrush="Black" Background="White">
@@ -247,9 +251,11 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="25">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="Имя модуля" Margin="0,0,0,5">
@@ -259,6 +265,7 @@
                                     </TextBlock>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <Border BorderThickness="1,0,0,1" BorderBrush="Black">
@@ -275,9 +282,11 @@
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="25">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Left" HorizontalAlignment="Center" Text="№ канала" Margin="0,0,0,5">
@@ -287,26 +296,29 @@
                                     </TextBlock>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
+                                        
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <StackPanel/>
+                                                <StackPanel Orientation="Vertical" Background="Transparent"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                               FontWeight="Bold"
-                                                               Text="{Binding Index}"/>
+                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="LightGray" Height="25">
+                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
+                                        
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="150">
@@ -320,41 +332,13 @@
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
+                                        
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical" Background="White"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
-                                        <ItemsControl.ItemTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
-                                                    
-                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                             Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                                             IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                             >
-                                                        <TextBox.Background>
-                                                            <MultiBinding Converter="{StaticResource BackLightConverter}">
-                                                                <Binding Path="Id"/>
-                                                                <Binding Path="Description"/>
-                                                            </MultiBinding>
-                                                        </TextBox.Background>
-                                                    </TextBox>
-                                                </Border>
-                                            </DataTemplate>
-                                        </ItemsControl.ItemTemplate>
-                                    </ItemsControl>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <ItemsControl ItemsSource="{Binding Channels}">
-                                        <ItemsControl.ItemsPanel>
-                                            <ItemsPanelTemplate>
-                                                <StackPanel Orientation="Vertical" Background="Transparent"/>
-                                            </ItemsPanelTemplate>
-                                        </ItemsControl.ItemsPanel>
+                                        
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
@@ -364,18 +348,49 @@
                                                             <Binding Path="Description"/>
                                                         </MultiBinding>
                                                     </Border.Background>
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                               Text="{Binding Id}"/>
+                                                    <TextBox BorderThickness="0" Margin="3,0,0,0" TextAlignment="Center" VerticalContentAlignment="Center" Background="Transparent"
+                                                             Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                                             IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                             />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
+                                        
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding Channels}">
+                                        
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <StackPanel Orientation="Vertical" Background="Transparent"/>
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
+                                                    <Border.Background>
+                                                        <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                            <Binding Path="Id"/>
+                                                            <Binding Path="Description"/>
+                                                        </MultiBinding>
+                                                    </Border.Background>
+                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Id}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                        
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
 
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="800">
+                        <DataGridTemplateColumn Width="1000">
                             
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
@@ -386,30 +401,30 @@
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
+                                        
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical" Background="White"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+                                        
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
-                                                    <TextBox BorderThickness="0" Margin="3,0,0,0"
-                                                             TextAlignment="Left" VerticalContentAlignment="Center"
+                                                    <Border.Background>
+                                                        <MultiBinding Converter="{StaticResource BackLightConverter}">
+                                                            <Binding Path="Id"/>
+                                                            <Binding Path="Description"/>
+                                                        </MultiBinding>
+                                                    </Border.Background>
+                                                    <TextBox BorderThickness="0" Margin="3,0,0,0" VerticalContentAlignment="Center" Background="Transparent"
                                                              Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                                             IsReadOnly="{Binding DataContext.DoSelection,
-                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                             >
-                                                        <TextBox.Background>
-                                                            <MultiBinding Converter="{StaticResource BackLightConverter}">
-                                                                <Binding Path="Id"/>
-                                                                <Binding Path="Description"/>
-                                                            </MultiBinding>
-                                                        </TextBox.Background>
-                                                    </TextBox>
+                                                             IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                             />
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
+                                        
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
@@ -417,11 +432,13 @@
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
+                                        
                                         <ItemsControl.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <StackPanel Orientation="Vertical" Background="LightGray"/>
                                             </ItemsPanelTemplate>
                                         </ItemsControl.ItemsPanel>
+                                        
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
                                                 <Border BorderThickness="1,0,0,1" BorderBrush="Black" Height="25">
@@ -437,6 +454,7 @@
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
+                                        
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
@@ -444,26 +462,32 @@
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel>
                                         <ItemsControl ItemsSource="{Binding Channels}">
+
                                             <ItemsControl.Resources>
                                                 <converter:VisibilityModuleConverter x:Key="VisibilityModuleConverter" CountRow="8"/>
                                             </ItemsControl.Resources>
+
                                             <ItemsControl.Visibility>
                                                 <Binding Path="Type" Converter="{StaticResource VisibilityModuleConverter}"/>
                                             </ItemsControl.Visibility>
+
                                             <ItemsControl.ItemsPanel>
                                                 <ItemsPanelTemplate>
                                                     <StackPanel Orientation="Vertical" Background="LightGray"/>
                                                 </ItemsPanelTemplate>
                                             </ItemsControl.ItemsPanel>
+
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
                                                     <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="LightGray" Height="25">
@@ -471,26 +495,33 @@
                                                     </Border>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>
+
                                         </ItemsControl>
 
                                         <Border BorderThickness="1,0,0,1" BorderBrush="Black" Background="LightGray">
+                                            
                                             <Border.Resources>
                                                 <converter:VisibilityModuleConverter x:Key="VisibilityModuleConverter" CountRow="32"/>
                                             </Border.Resources>
+                                            
                                             <Border.Visibility>
                                                 <Binding Path="Type" Converter="{StaticResource VisibilityModuleConverter}"/>
                                             </Border.Visibility>
+                                            
                                             <Border.Height>
                                                 <Binding Path="Channels.Count" Converter="{StaticResource HeightModuleConverter}"/>
                                             </Border.Height>
+                                            
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Channels[0].VarName}"/>
                                         </Border>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="25">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Бит" Margin="0,0,0,5">
@@ -500,6 +531,7 @@
                                     </TextBlock>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
@@ -518,14 +550,17 @@
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,0,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;сигнала"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+                            
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <ItemsControl ItemsSource="{Binding Channels}">
@@ -555,14 +590,17 @@
                                     </ItemsControl>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+                            
                         </DataGridTemplateColumn>
 
                         <DataGridTemplateColumn Width="100">
+                            
                             <DataGridTemplateColumn.Header>
                                 <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
                                     <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной&#x0a;для ВУ"/>
                                 </Border>
                             </DataGridTemplateColumn.Header>
+
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel>
@@ -603,6 +641,7 @@
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
+
                         </DataGridTemplateColumn>
 
                     </DataGrid.Columns>

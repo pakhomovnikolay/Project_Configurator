@@ -115,15 +115,13 @@ namespace Project_Сonfigurator.Services
                                         Index = $"{i + 1}",
                                         Id = "",
                                         Description = "",
-                                        VarName = $"{VarName}[{int.Parse(_Module.StartAddress) + i}]",
+                                        VarName = $"{VarName}[{int.Parse(_Module.StartAddress)}]",
                                         Bit = $"{i}",
                                         Address = $"{int.Parse(_Module.StartAddress) * 32 + i + address}",
-                                        VarNameVU = $"{VarNameVU}[{VUIndex + i}]"
+                                        VarNameVU = $"{VarNameVU}[{VUIndex}]"
                                     };
                                     _Module.Channels.Add(ch);
                                 }
-                                if (_Module.Type == TypeModule.AI) VUIndexAI += 8;
-                                else VUIndexAI += 8;
                                 break;
 
                             case TypeModule.DA:
