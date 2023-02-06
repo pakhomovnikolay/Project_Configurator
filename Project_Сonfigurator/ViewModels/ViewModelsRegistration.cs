@@ -408,6 +408,15 @@ namespace Project_Сonfigurator.ViewModels
             })
         #endregion
 
+        #region SettingsDeviceControlsUserControl
+            .AddTransient(s =>
+            {
+                var model = s.GetRequiredService<SettingWindowViewModels>();
+                var window = new SettingAddressMapUserControl { DataContext = model };
+                return window;
+            })
+        #endregion
+
         #endregion
 
             ;

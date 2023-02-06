@@ -17,6 +17,7 @@
     <l:CmdOpenWindowEditText x:Key="CmdOpenWindowEditText"/>
     <l:CmdSelectionServer x:Key="CmdSelectionServer"/>
     <l:CmdSelectedTabPanelItem x:Key="CmdSelectedTabPanelItem"/>
-
+    <l:CmdRefreshModbusAddress x:Key="CmdRefreshModbusAddress"/>
+    <l:CmdSelectionPath x:Key="CmdSelectionPath"/>
     
 </ResourceDictionary>

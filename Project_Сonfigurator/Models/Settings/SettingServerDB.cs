@@ -1,5 +1,4 @@
-﻿using Project_Сonfigurator.Infrastructures.Validate;
-using Project_Сonfigurator.Models.Settings.Interfaces;
+﻿using Project_Сonfigurator.Models.Settings.Interfaces;
 using System.Windows;
 
 namespace Project_Сonfigurator.Models.Settings

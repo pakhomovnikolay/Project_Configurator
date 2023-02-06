@@ -74,6 +74,20 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         string TypeSystem { get; set; }
         #endregion
 
+        #region Полный путь у OPC тегам
+        /// <summary>
+        /// Полный путь у OPC тегам
+        /// </summary>
+        string CommonPathTag_OPC { get; set; }
+        #endregion
+
+        #region Для обмена использовать OPC
+        /// <summary>
+        /// Для обмена использовать OPC
+        /// </summary>
+        bool UseOPC { get; set; }
+        #endregion
+
         #region Карта агрегатных готовностей по умолчанию
         /// <summary>
         /// Карта агрегатных готовностей по умолчанию
@@ -121,6 +135,20 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// Список ПЛК для диагностики
         /// </summary>
         ObservableCollection<BaseText> PLC_List { get; set; }
+        #endregion
+
+        #region Modbus TCP slave - Input Registers
+        /// <summary>
+        /// Modbus TCP slave - Input Registers
+        /// </summary>
+        ObservableCollection<BaseAddressMap> ModbusTCP_IR { get; set; }
+        #endregion
+
+        #region Modbus TCP slave - Holding Registers
+        /// <summary>
+        /// Modbus TCP slave - Holding Registers
+        /// </summary>
+        ObservableCollection<BaseAddressMap> ModbusTCP_HR { get; set; } 
         #endregion
     }
 }

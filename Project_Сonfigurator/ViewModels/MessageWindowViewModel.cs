@@ -488,8 +488,6 @@ namespace Project_Сonfigurator.ViewModels
                 UserDialog.SendMessage(Title, desc, MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.None);
             }
         }
-
-
         #endregion
 
         #region Команда - Генерировать вкладки сообщений, на основе созданных систем сообщений

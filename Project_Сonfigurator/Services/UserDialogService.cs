@@ -265,7 +265,6 @@ namespace Project_Сonfigurator.Services
             window.Closed += (_, _) => _MessageWindow = null;
             window.Owner = Application.Current.MainWindow;
 
-
             _SettingWindow = window;
             window.ShowDialog();
         }

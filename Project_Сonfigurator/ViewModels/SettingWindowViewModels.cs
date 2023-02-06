@@ -7,6 +7,7 @@ using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
 using Project_Сonfigurator.Views.UserControls.Settings;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -36,9 +37,31 @@ namespace Project_Сonfigurator.ViewModels
                 new BaseText { Text = "Настройки вендора" },
                 new BaseText { Text = "Настройки узов" },
                 new BaseText { Text = "Настройки импорта" },
-                new BaseText { Text = "Настройки испольнительных механизмов" }
+                new BaseText { Text = "Настройки испольнительных механизмов" },
+                new BaseText { Text = "Настройки карты адресов" }
             };
             SelectedSettingType = SettingsList[0];
+
+            #region Создаем карты адресов при их отсутствии
+            var _BaseAddressMap = Enumerable.Range(1, 1000).Select(
+                    i => new BaseAddressMap()
+                    {
+                        Index = i.ToString(),
+                        AddressEnd = "",
+                        AddressInPLC = "",
+                        AddressStart = "",
+                        Description = "",
+                        LengthByte = "",
+                        LengthWord = "",
+                        PathTag = ""
+                    });
+
+            if (App.Settings.Config.ModbusTCP_HR is null || App.Settings.Config.ModbusTCP_HR.Count <= 0)
+                App.Settings.Config.ModbusTCP_HR = new ObservableCollection<BaseAddressMap>(_BaseAddressMap);
+
+            if (App.Settings.Config.ModbusTCP_IR is null || App.Settings.Config.ModbusTCP_IR.Count <= 0)
+                App.Settings.Config.ModbusTCP_IR = new ObservableCollection<BaseAddressMap>(_BaseAddressMap);
+            #endregion
         }
         #endregion
 
@@ -181,16 +204,19 @@ namespace Project_Сonfigurator.ViewModels
                         case "Настройки испольнительных механизмов":
                             SelectedUserControl = new SettingsDeviceControlsUserControl();
                             break;
+                        case "Настройки карты адресов":
+                            SelectedUserControl = new SettingAddressMapUserControl();
+                            break;
                     }
                 }
             }
         }
         #endregion
 
-        #region Выбранный тип настроек
+        #region Выбранный ПЛК из списка
         private BaseText _SelectedPLC;
         /// <summary>
-        /// Выбранный тип настроек
+        /// Выбранный ПЛК из списка
         /// </summary>
         public BaseText SelectedPLC
         {
@@ -521,9 +547,9 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Команда - Удалить вендора
+        #region Команда - Удалить PLC
         /// <summary>
-        /// Команда - Удалить вендора
+        /// Команда - Удалить PLC
         /// </summary>
         private ICommand _CmdRemovePLC;
         public ICommand CmdRemovePLC => _CmdRemovePLC ??= new RelayCommand(OnCmdRemovePLCExecuted, CanCmdRemovePLCExecute);

@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Models.Setpoints;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Models.Settings.Interfaces
