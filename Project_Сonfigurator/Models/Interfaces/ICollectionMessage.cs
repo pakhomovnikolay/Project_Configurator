@@ -11,11 +11,18 @@ namespace Project_Сonfigurator.Models.Interfaces
         string Description { get; set; }
         #endregion
 
-        #region Номер подсистемы
+        #region Номер системы
         /// <summary>
-        /// Номер подсистемы
+        /// Номер системы
         /// </summary>
         string IndexSystem { get; set; }
+        #endregion
+
+        #region Имя системы
+        /// <summary>
+        /// Имя системы
+        /// </summary>
+        string NameSystem { get; set; }
         #endregion
 
         #region Коллекция сообщений

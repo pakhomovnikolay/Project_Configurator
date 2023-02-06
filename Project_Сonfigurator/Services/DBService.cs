@@ -889,9 +889,9 @@ namespace Project_Сonfigurator.Services
                             }
                             #endregion
                         }
-                        if (UstFieldValue is null || UstFieldValue.Count <= 0) continue;
-                        if (!Request.SetData("SETPOINTS", Request.TableFieldUstCommon, Request.FieldUstCommon, UstFieldValue))
-                            ConnectSetting.SuccessUpdate = false;
+                        if (UstFieldValue is not null && UstFieldValue.Count > 0)
+                            if (!Request.SetData("SETPOINTS", Request.TableFieldUstCommon, Request.FieldUstCommon, UstFieldValue))
+                                ConnectSetting.SuccessUpdate = false;
                         #endregion
 
                         #region Сообщения
@@ -907,7 +907,7 @@ namespace Project_Сonfigurator.Services
                                 if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
 
                                 var _FieldValue =
-                                    $"('{_Message.Index}', '{_Param.Description}', '{_Param.IndexSystem}', " +
+                                    $"('{_Message.Index}', '{_Param.Description}', '{_Param.IndexSystem}', '{_Param.NameSystem}', " +
                                     $"'{_Message.Description}', '{_Message.Color}', '{_Message.NeedAck}', '{_Message.PathSound}', " +
                                     $"'{_Message.TypeSound}', '{_Message.NeedPlay}', '{_Message.Hide}', '{_Message.LevelAccess}'),";
 

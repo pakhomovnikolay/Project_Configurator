@@ -229,7 +229,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                         else if (TypeExport == "Команды") { name = "CMD"; base_type = "CMD.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.CMD"; }
                         else if (TypeExport == "Сигналы AI") { name = "OIP"; base_type = "OIP.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.OIP"; }
                         else if (TypeExport == "Регистры формируемые") { name = "UserReg"; base_type = "UserReg.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.UserReg"; }
-
+                        else if (TypeExport == "Сообщения") { name = "Messages"; base_type = "Messages.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.Messages"; }
                         else if (TypeExport == "Диагностика")
                         {
                             need_add = false;
@@ -305,8 +305,6 @@ namespace Project_Сonfigurator.Services.Export.VU
                             Attributes = new() { { "ref", "_PLC Device" }, { "target", original_type } };
                             CreateSocketParametrNode("ct:object", "r:init-ref", Nodes: Nodes, Attributes: Attributes);
                         }
-
-                        //"Сообщения" => Messages()
                     }
                 }
 

@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
              d:Background="AliceBlue"
@@ -16,19 +17,15 @@
         
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
         <!--Resources-->
         <Grid.Resources>
-
-            <!--Стиль ряда-->
-            <Style TargetType="{x:Type RowDefinition}">
-                <Setter Property="Height" Value="25"/>
-            </Style>
             
             <!--Стиль рамки-->
             <Style TargetType="{x:Type Border}">
@@ -133,6 +130,131 @@
                 
             </Grid>
         </Border>
+        
+        <!--Настройки типов и количества ПЛК-->
+        <GroupBox Grid.Row="4" BorderBrush="Black">
+            
+            <GroupBox.Header>
+                <TextBlock Text="Список ПЛК для диагностики" Margin="5,3"/>
+            </GroupBox.Header>
+
+            <Grid>
+
+                <!--Сетка-->
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+
+                <!--Данные-->
+                <DataGrid Grid.Row="0" Grid.Column="0"
+                          x:Name="MyDataGrid"
+                          BorderThickness="0"
+                          AutoGenerateColumns="False"
+                          CanUserAddRows="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeRows="False"
+                          GridLinesVisibility="None"
+                          CanUserResizeColumns="False"
+                          SelectionMode="Single"
+                          SelectionUnit="FullRow"
+                          Background="Transparent"
+                          HeadersVisibility="None"
+                          ItemsSource="{Binding Config.PLC_List}"
+                          SelectedItem="{Binding SelectedPLC}"
+                          >
+
+                    <DataGrid.Resources>
+
+                        <Style TargetType="{x:Type DataGridCell}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="White"/>
+                            <Setter Property="Height" Value="25"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected" Value="True">
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="BorderThickness" Value="0"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridColumnHeader}">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="Gray"/>
+                            <Setter Property="Height" Value="40"/>
+                            <Setter Property="FontWeight" Value="Bold"/>
+                        </Style>
+
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="BorderBrush" Value="Black"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Width="*">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1" BorderBrush="Black" Margin="0.5" CornerRadius="3">
+                                        <Grid>
+                                            
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition/>
+                                                <ColumnDefinition Width="30"/>
+                                                <ColumnDefinition Width="30"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBox Grid.Column="0" Margin="3,0,0,0" BorderThickness="0"
+                                                     TextAlignment="Left" VerticalAlignment="Center"
+                                                     Background="Transparent" FontWeight="Bold"
+                                                     Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+                                            <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
+                                                    Style="{StaticResource CustomButtonStyle}"
+                                                    Command="{Binding DataContext.CmdRemovePLC, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
+                                                <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
+                                            </Button>
+                                            
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border BorderThickness="1" BorderBrush="Black" Margin="0.5" CornerRadius="3">
+                                        <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding Text,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+                <!--Команды управления-->
+                <Button Grid.Row="1" Margin="1" Width="25"
+                        ToolTip="Добавить узел" HorizontalAlignment="Left"
+                        Style="{StaticResource CustomButtonStyle}"
+                        Command="{Binding CmdAddPLC}">
+                    <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
+                </Button>
+
+            </Grid>
+            
+        </GroupBox>
         
     </Grid>
     

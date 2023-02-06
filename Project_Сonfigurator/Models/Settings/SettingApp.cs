@@ -79,42 +79,49 @@ namespace Project_Сonfigurator.Models.Settings
         /// <summary>
         /// Карта агрегатных готовностей по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKGMPNA { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKGMPNA { get; set; } = new();
         #endregion
 
         #region Карта общестанционных защит по умолчанию
         /// <summary>
         /// Карта общестанционных защит по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPR { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPR { get; set; } = new();
         #endregion
 
         #region Карта агрегатных защит по умолчанию
         /// <summary>
         /// Карта агрегатных защит по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRA { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRA { get; set; } = new();
         #endregion
 
         #region Карта предельных параметров агрегатных защит по умолчанию
         /// <summary>
         /// Карта предельных параметров агрегатных защит по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRAS { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRAS { get; set; } = new();
         #endregion
 
         #region Карта предельных параметров общестанционных защит по умолчанию
         /// <summary>
         /// Карта предельных параметров общестанционных защит по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRS { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapKTPRS { get; set; } = new();
         #endregion
 
         #region Карта общесистемных параметров по умолчанию
         /// <summary>
         /// Карта общесистемных параметров по умолчанию
         /// </summary>
-        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapSignaling { get; set; }
+        public ObservableCollection<SettingDefualtDefenseMap> DefualtMapSignaling { get; set; } = new();
+        #endregion
+
+        #region Список ПЛК для диагностики
+        /// <summary>
+        /// Список ПЛК для диагностики
+        /// </summary>
+        public ObservableCollection<BaseText> PLC_List { get; set; } = new();
         #endregion
     }
 }

@@ -606,6 +606,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "`ID` TEXT," +
             "`NAME_TAB` TEXT," +
             "`SYSTEM` TEXT," +
+            "`SYSTEM_NAME` TEXT," +
             "`DESCRIPTION` TEXT," +
             "`COLOR` TEXT," +
             "`NEED_ACK` TEXT," +
@@ -617,7 +618,7 @@ namespace Project_Сonfigurator.Infrastructures.RequestToDataBase
             "PRIMARY KEY(`INDEX`));";
 
         public const string FieldMessages =
-            "(ID, NAME_TAB, SYSTEM, DESCRIPTION, COLOR, NEED_ACK, PATH_SOUND, TYPE_SOUND, NEED_PLAY, HIDE, LEVEL_ACCESS) VALUES";
+            "(ID, NAME_TAB, SYSTEM, SYSTEM_NAME, DESCRIPTION, COLOR, NEED_ACK, PATH_SOUND, TYPE_SOUND, NEED_PLAY, HIDE, LEVEL_ACCESS) VALUES";
         #endregion
 
         #region Системы сообщения

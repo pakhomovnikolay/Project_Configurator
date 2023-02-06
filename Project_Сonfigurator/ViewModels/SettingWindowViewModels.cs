@@ -38,7 +38,7 @@ namespace Project_Сonfigurator.ViewModels
                 new BaseText { Text = "Настройки импорта" },
                 new BaseText { Text = "Настройки испольнительных механизмов" }
             };
-            SettingsSettingType = SettingsList[0];
+            SelectedSettingType = SettingsList[0];
         }
         #endregion
 
@@ -153,18 +153,18 @@ namespace Project_Сonfigurator.ViewModels
         #endregion
 
         #region Выбранный тип настроек
-        private BaseText _SettingsSettingType;
+        private BaseText _SelectedSettingType;
         /// <summary>
         /// Выбранный тип настроек
         /// </summary>
-        public BaseText SettingsSettingType
+        public BaseText SelectedSettingType
         {
-            get => _SettingsSettingType;
+            get => _SelectedSettingType;
             set
             {
-                if (Set(ref _SettingsSettingType, value))
+                if (Set(ref _SelectedSettingType, value))
                 {
-                    switch (_SettingsSettingType.Text)
+                    switch (_SelectedSettingType.Text)
                     {
                         case "Общие настройки":
                             SelectedUserControl = new SettingsCommonUserControl();
@@ -184,6 +184,18 @@ namespace Project_Сonfigurator.ViewModels
                     }
                 }
             }
+        }
+        #endregion
+
+        #region Выбранный тип настроек
+        private BaseText _SelectedPLC;
+        /// <summary>
+        /// Выбранный тип настроек
+        /// </summary>
+        public BaseText SelectedPLC
+        {
+            get => _SelectedPLC;
+            set => Set(ref _SelectedPLC, value);
         }
         #endregion
 
@@ -492,6 +504,49 @@ namespace Project_Сonfigurator.ViewModels
                 Config.PathExportVU = path;
 
             OnPropertyChanged(nameof(Config));
+        }
+        #endregion
+
+        #region Команда - Добавить PLC
+        /// <summary>
+        /// Команда - Добавить PLC
+        /// </summary>
+        private ICommand _CmdAddPLC;
+        public ICommand CmdAddPLC => _CmdAddPLC ??= new RelayCommand(OnCmdAddPLCExecuted, CanCmdAddPLCExecute);
+        private bool CanCmdAddPLCExecute() => true;
+        private void OnCmdAddPLCExecuted()
+        {
+            Config.PLC_List.Add(new BaseText { Text = $"ПЛК №{Config.PLC_List.Count + 1}" });
+            SelectedPLC = Config.PLC_List[^1];
+        }
+        #endregion
+
+        #region Команда - Удалить вендора
+        /// <summary>
+        /// Команда - Удалить вендора
+        /// </summary>
+        private ICommand _CmdRemovePLC;
+        public ICommand CmdRemovePLC => _CmdRemovePLC ??= new RelayCommand(OnCmdRemovePLCExecuted, CanCmdRemovePLCExecute);
+        private bool CanCmdRemovePLCExecute(object p) => SelectedPLC is not null && Config.PLC_List.Count > 0;
+        private void OnCmdRemovePLCExecuted(object p)
+        {
+            if (p is null) return;
+            if (p is not DataGrid MyDataGrid) return;
+            if (MyDataGrid.CommitEdit()) MyDataGrid.CancelEdit();
+
+            if (!UserDialog.SendMessage(Title, "Вы действительно хотите\nудалить выбранный ПЛК?",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning,
+                MessageBoxResult.Yes,
+                MessageBoxOptions.None))
+                return;
+
+            var index = Config.PLC_List.IndexOf(SelectedPLC);
+            index = index == 0 ? index : index - 1;
+
+            Config.PLC_List.Remove(SelectedPLC);
+            if (Config.PLC_List.Count > 0)
+                SelectedPLC = Config.PLC_List[index];
         }
         #endregion
 

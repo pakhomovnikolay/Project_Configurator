@@ -115,5 +115,12 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         /// </summary>
         ObservableCollection<SettingDefualtDefenseMap> DefualtMapSignaling { get; set; }
         #endregion
+
+        #region Список ПЛК для диагностики
+        /// <summary>
+        /// Список ПЛК для диагностики
+        /// </summary>
+        ObservableCollection<BaseText> PLC_List { get; set; }
+        #endregion
     }
 }

@@ -208,7 +208,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                         else if (TypeExport == "Команды") { name = "CMD"; base_type = "CMD.PLC Device"; }
                         else if (TypeExport == "Сигналы AI") { name = "OIP"; base_type = "OIP.PLC Device"; }
                         else if (TypeExport == "Регистры формируемые") { name = "UserReg"; base_type = "UserReg.PLC Device"; }
-
+                        else if (TypeExport == "Сообщения") { name = "Messages"; base_type = "Messages.PLC Device"; }
                         else if (TypeExport == "Диагностика")
                         {
                             ListNodes = new();
@@ -252,8 +252,6 @@ namespace Project_Сonfigurator.Services.Export.VU
                             };
                             CreateSocketParametrNode("ct:object", Nodes: Nodes);
                         }
-
-                        //"Сообщения" => Messages()
                     }
                 }
 

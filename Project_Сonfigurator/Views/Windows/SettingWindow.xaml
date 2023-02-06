@@ -61,7 +61,7 @@
             <GridSplitter Width="5" Background="Transparent" Panel.ZIndex="99999"/>
 
             <!--Список настроек-->
-            <ListView Grid.Column="0" Background="GhostWhite" ItemsSource="{Binding SettingsList}" SelectedItem="{Binding SettingsSettingType}">
+            <ListView Grid.Column="0" Background="GhostWhite" ItemsSource="{Binding SettingsList}" SelectedItem="{Binding SelectedSettingType}">
                 
                 <ListView.Resources>
                     <Style TargetType="{x:Type Border}">

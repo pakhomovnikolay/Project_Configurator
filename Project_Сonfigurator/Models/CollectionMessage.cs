@@ -12,11 +12,18 @@ namespace Project_Сonfigurator.Models
         public string Description { get; set; }
         #endregion
 
-        #region Номер подсистемы
+        #region Номер системы
         /// <summary>
-        /// Номер подсистемы
+        /// Номер системы
         /// </summary>
         public string IndexSystem { get; set; }
+        #endregion
+
+        #region Имя системы
+        /// <summary>
+        /// Имя системы
+        /// </summary>
+        public string NameSystem { get; set; }
         #endregion
 
         #region Коллекция сообщений

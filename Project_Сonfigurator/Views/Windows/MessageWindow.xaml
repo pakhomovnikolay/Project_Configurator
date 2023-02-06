@@ -240,6 +240,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25"/>
                             <RowDefinition Height="25"/>
+                            <RowDefinition Height="25"/>
                             <RowDefinition Height="30"/>
                             <RowDefinition/>
                         </Grid.RowDefinitions>
@@ -267,9 +268,32 @@
                                      Text="{Binding IndexSystem, UpdateSourceTrigger=PropertyChanged}"/>
 
                         </Grid>
-                        
+
+                        <!--Номер системы-->
+                        <Grid Grid.Row="1" Margin="0.5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Номер системы:"/>
+                            <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
+                                     Text="{Binding IndexSystem, UpdateSourceTrigger=PropertyChanged}"/>
+
+                        </Grid>
+
+                        <!--Номер системы-->
+                        <Grid Grid.Row="2" Margin="0.5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" TextAlignment="Right" VerticalAlignment="Center" Margin="0,0,10,0" Text="Имя системы:"/>
+                            <TextBox Grid.Column="1" TextAlignment="Left" VerticalContentAlignment="Center"
+                                     Text="{Binding NameSystem, UpdateSourceTrigger=PropertyChanged}"/>
+                        </Grid>
+
                         <!--Фильтр-->
-                        <Border Grid.Row="2" Margin="0,2" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
+                        <Border Grid.Row="3" Margin="0,2" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
                             <Grid>
 
                                 <!--Сетка-->
@@ -308,7 +332,7 @@
                         </Border>
 
                         <!--Данные-->
-                        <DataGrid Grid.Row="3"
+                        <DataGrid Grid.Row="4"
                                   x:Name="MyDataGrid"
                                   BorderThickness="0"
                                   BorderBrush="Black"
@@ -649,8 +673,7 @@
             </TabControl.ContentTemplate>
 
         </TabControl>
-
-
+        
         <!--Данные-->
         <Grid Grid.Row="2" Margin="0,5,0,0" Visibility="Collapsed">
             <Grid.ColumnDefinitions>

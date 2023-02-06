@@ -5,6 +5,7 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
+using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -19,18 +20,23 @@ namespace Project_Сonfigurator.Services.Export.VU
 {
     public class VUNamespaceASExportRedefineService : IVUNamespaceASExportRedefineService
     {
+        private const int iBufferSize = 4095;
+        private static readonly IUserDialogService UserDialog = new UserDialogService();
         private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "system";
         private const string ValueAttributeTypeHistory = "Enable=\"True\"; ServerTime=\"False\";";
         private const string TypeAttributeInitialValue = "unit.System.Attributes.InitialValue";
         private const string TypeAttributeHistory = "unit.Server.Attributes.History";
-        //private const string TypeAttributeAlarm = "unit.Server.Attributes.Alarm";
+        private const string TypeAttributeComment = "unit.System.Attributes.Comment";
+        private const string TypeAttributeAlarm = "unit.Server.Attributes.Alarm";
         //private const string TypeAttributeIsReadOnly = "unit.Server.Attributes.IsReadOnly";
 
         private static Dictionary<string, string> Nodes;
         private static Dictionary<string, string> Attributes;
         private static List<Dictionary<string, string>> ListNodes;
-        private static string CourceCode = "";
+        private static List<Dictionary<string, string>> ListAttributes;
+        private static string SourceCodeHandler = "";
+        private static string ExceptionSystemName = "";
 
         private static XmlDocument Doc = new();
         private static XmlNode RootNode;
@@ -240,6 +246,147 @@ namespace Project_Сonfigurator.Services.Export.VU
         }
         #endregion
 
+        #region Создание параметра для узла сокета с атрибутами для сообщений
+        /// <summary>
+        /// Создание параметра для узла сокета с атрибутами для сообщений
+        /// </summary>
+        private static void CreateSocketParametrNodeWithAttributeMessage(string NodeName, string AttributeNodeName = "",
+            Dictionary<string, string> Nodes = null, List<Dictionary<string, string>> Attributes = null)
+        {
+            SocketParametrNode = Doc.CreateNode(XmlNodeType.Element, NodeName, Namespace);
+            if (Nodes is not null)
+            {
+                foreach (var _Node in Nodes)
+                {
+                    XmlAttribute attribute = Doc.CreateAttribute(_Node.Key);
+                    attribute.Value = _Node.Value;
+                    SocketParametrNode.Attributes.SetNamedItem(attribute);
+                }
+                SocketTypeNode.AppendChild(SocketParametrNode);
+            }
+
+            if (!string.IsNullOrWhiteSpace(AttributeNodeName))
+            {
+
+                foreach (var _Attribute in Attributes)
+                {
+                    AttributeParametrNode = Doc.CreateNode(XmlNodeType.Element, AttributeNodeName, Namespace);
+                    foreach (var item in _Attribute)
+                    {
+                        XmlAttribute attribute = Doc.CreateAttribute(item.Key);
+                        attribute.Value = item.Value;
+                        AttributeParametrNode.Attributes.SetNamedItem(attribute);
+                    }
+                    SocketParametrNode.AppendChild(AttributeParametrNode);
+                }
+            }
+        }
+        #endregion
+
+        #region Преобразование цвета сообщения в приоритет сообщения
+        /// <summary>
+        /// Преобразование цвета сообщения в приоритет сообщения
+        /// </summary>
+        private static string ConverMessageSeverity(string Severity)
+        {
+            switch (Severity)
+            {
+                case "зеленый":
+                    return "200";
+                case "желтый":
+                    return "500";
+                case "красный":
+                    return "800";
+                default:
+                    return "1";
+
+            }
+        }
+        #endregion
+
+        #region Создание условий выдачи сообщений
+        /// <summary>
+        /// Создание условий выдачи сообщений
+        /// </summary>
+        private static string CreateConditionMessage(List<string> ConditionValue)
+        {
+            var _ConditionValue = "";
+            if (ConditionValue is null || ConditionValue.Count <= 0) return _ConditionValue;
+            foreach (var _Value in ConditionValue)
+                _ConditionValue += $"{_Value}}},";
+
+            _ConditionValue = _ConditionValue.TrimEnd(',');
+            return FinalyConditionMessage(_ConditionValue);
+        }
+        #endregion
+
+        #region Создание условий выдачи сообщений
+        /// <summary>
+        /// Создание условий выдачи сообщений
+        /// </summary>
+        private static string CreateConditionMessage(string AckStrategy, string IsEnabled, string Message, string Severity, string Sound, string Value)
+        {
+            _ = int.TryParse(AckStrategy, out int _AckStrategy);
+            return $"{{\"AckStrategy\":{_AckStrategy}," +
+                $"\"IsEnabled\":{IsEnabled}," +
+                $"\"Message\":{FormatingMessage(Message)}," +
+                $"\"Severity\":{ConverMessageSeverity(Severity.ToLower())}," +
+                $"\"Sound\":{FormatingPathSound(Sound)}," +
+                $"\"Value\":{Value}}},";
+        }
+        #endregion
+
+        #region Финальное создание условий выдачи сообщений
+        /// <summary>
+        /// Финальное создание условий выдачи сообщений
+        /// </summary>
+        private static string FinalyConditionMessage(string ConditionValue)
+        {
+            return $"{{\"Condition\":{{\"IsEnabled\":\"true\",\"Subconditions\":[{ConditionValue.TrimEnd(',')}]}}}}";
+        }
+        #endregion
+
+        #region Форматирование текста сообщения
+        /// <summary>
+        /// Форматирование текста сообщения
+        /// </summary>
+        private static string FormatingMessage(string Message, bool WriteDotAtEnd = false)
+        {
+            var Dot = WriteDotAtEnd ? ". " : "";
+            var MessageResult = $"\"{Message.Trim().ToUpper().Replace("\\", "\\\\").Replace("\"", "\\\"")}{Dot}\"";
+            return MessageResult;
+        }
+        #endregion
+
+        #region Форматирование пути воспроизведения звукового оповещения
+        /// <summary>
+        /// Форматирование пути воспроизведения звукового оповещения
+        /// </summary>
+        private static string FormatingPathSound(string PathSound)
+        {
+            var PathSoundResult = "\"\"";
+            if (!string.IsNullOrWhiteSpace(PathSound.Trim()))
+                PathSoundResult = $"\"{PathSound.Replace("\\", "\\\\")}\"";
+
+            return PathSoundResult;
+        }
+        #endregion
+
+        #region Форматирование пути воспроизведения звукового оповещения
+        /// <summary>
+        /// Форматирование пути воспроизведения звукового оповещения
+        /// </summary>
+        private static bool EqualTextList(string Equal, List<string> ListEqual)
+        {
+            var Result = false;
+            foreach (var _List in ListEqual)
+                if (Equal.Contains(_List, StringComparison.CurrentCultureIgnoreCase))
+                    Result = true;
+
+            return Result;
+        }
+        #endregion
+
         #region Сохранение документа
         /// <summary>
         /// Сохранение документа
@@ -301,7 +448,520 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// <returns></returns>
         private static bool Messages()
         {
-            return false;
+            ObservableCollection<BaseSystemMessage> Params = null;
+            var SubParams = App.Services.GetRequiredService<MessageWindowViewModel>().Params;
+            if (UserDialog.SearchControlViewModel("Сообщения") is MessagesUserControlViewModel _MessagesUserControlViewModel)
+                Params = _MessagesUserControlViewModel.Params;
+
+            try
+            {
+                // Добавляем корневой узел "omx"
+                CreateRootNode("omx");
+
+                // Добавляем узел сокета "namespace"
+                Nodes = new() { { "name", "Messages" }, { "uuid", "0" } };
+                CreateSocketNode("namespace", Nodes);
+
+                #region StructPLC
+                // Добавляем узел типа сокета "ct:socket-type"
+                Nodes = new() { { "name", "StructPLC" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:socket-type", Nodes);
+
+                // Добавляем узел параметра сокета "ct:socket-parameter" с атрибутом - "TypeAttributeComment"
+                Nodes = new() { { "name", "Val_1" }, { "type", "float32" }, { "uuid", "0" } };
+                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Текущее значение" } };
+                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+
+                Nodes = new() { { "name", "Val_2" }, { "type", "float32" }, { "uuid", "0" } };
+                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Предыдущее значение" } };
+                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+
+                Nodes = new() { { "name", "MsgCode" }, { "type", "uint32" }, { "uuid", "0" } };
+                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Код сообщения - Система, подсистема, код" } };
+                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+
+                Nodes = new() { { "name", "YMD" }, { "type", "uint32" }, { "uuid", "0" } };
+                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - год, месяц, день" } };
+                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+
+                Nodes = new() { { "name", "HMSmS" }, { "type", "uint32" }, { "uuid", "0" } };
+                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - Часы, минуты, секунды, милисекунды" } };
+                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+                #endregion
+
+                #region StructIOS
+                // Добавляем узел типа сокета "ct:socket-type"
+                Nodes = new() { { "name", "StructIOS" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:socket-type", Nodes);
+
+                // Добавляем узел параметра сокета "ct:socket-parameter" с атрибутом - "TypeAttributeComment"
+                ListNodes = new()
+                {
+                    new (){ { "name", "Val_1" },        { "type", "float32" },  { "uuid", "0" } },
+                    new (){ { "name", "Val_2" },        { "type", "float32" },  { "uuid", "0" } },
+                    new (){ { "name", "System" },       { "type", "uint16" },   { "uuid", "0" } },
+                    new (){ { "name", "SubSystem" },    { "type", "uint16" },   { "uuid", "0" } },
+                    new (){ { "name", "NaIndex" },      { "type", "uint16" },   { "uuid", "0" } },
+                    new (){ { "name", "Code" },         { "type", "uint16" },   { "uuid", "0" } }
+                };
+                foreach (var _Nodes in ListNodes)
+                    CreateSocketParametrNode("ct:socket-parameter", Nodes: _Nodes);
+                #endregion
+
+                #region StructSystem
+                // Добавляем узел типа сокета "ct:socket-type"
+                Nodes = new() { { "name", "StructSystem" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:socket-type", Nodes);
+
+                ExceptionSystemName = "";
+                foreach (var _SubParam in SubParams)
+                {
+                    SourceCodeHandler = "";
+                    foreach (var _Message in _SubParam.Messages)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
+                        SourceCodeHandler += CreateConditionMessage(_Message.NeedAck, "true", _Message.Description, _Message.Color, _Message.PathSound, _Message.Index);
+
+                    }
+
+                    if (string.IsNullOrWhiteSpace(SourceCodeHandler)) { ExceptionSystemName += _SubParam.NameSystem; continue; }
+                    Nodes = new()
+                    {
+                        { "name", _SubParam.NameSystem },
+                        { "type", "uint16" },
+                        { "uuid", "0" }
+                    };
+                    ListAttributes = new()
+                    {
+                        new() { { "type", TypeAttributeHistory },   { "value", ValueAttributeTypeHistory } },
+                        new() { { "type", TypeAttributeAlarm },     { "value", FinalyConditionMessage(SourceCodeHandler) } }
+                    };
+                    CreateSocketParametrNodeWithAttributeMessage("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: ListAttributes);
+                }
+                #endregion
+
+                #region PLC Device
+                // Добавляем узел типа сокета "ct:type"
+                Nodes = new() { { "name", "PLC Device" }, { "aspect", "Aspects.PLC" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:type", Nodes);
+
+                // Добавляем узел параметра сокета "ct:socket"
+                for (int i = 0; i < iBufferSize; i++)
+                {
+                    var Name = $"Msg_{i + 1}";
+                    Nodes = new()
+                    {
+                        { "name", Name },
+                        { "access-level", "public" },
+                        { "access-scope", "global" },
+                        { "direction", "out" },
+                        { "type", "StructPLC" },
+                        { "uuid", "0" }
+                    };
+                    CreateSocketParametrNode("ct:socket", Nodes: Nodes);
+                }
+                #endregion
+
+                #region IO Server
+                // Добавляем узел типа сокета "ct:type"
+                Nodes = new() { { "name", "IO Server" }, { "aspect", "Aspects.IOS" }, { "original", "PLC Device" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:type", Nodes);
+
+                // Добавляем узел параметра сокета "r:ref"
+                Nodes = new() { { "name", "_PLC Device" }, { "type", "PLC Device" }, { "const-access", "false" }, { "aspected", "true" }, { "uuid", "0" } };
+                CreateSocketParametrNode("r:ref", Nodes: Nodes);
+
+                // Добавляем узел параметра сокета "ct:socket"
+                ListNodes = new()
+                {
+                    new()
+                    {
+                        { "name", "Msg" }, { "access-level", "public" }, { "access-scope", "global" },
+                        { "direction", "none" }, { "type", "StructIOS" }, { "uuid", "0" }
+                    },
+                    new()
+                    {
+                        { "name", "System" }, { "access-level", "public" }, { "access-scope", "global" },
+                        { "direction", "none" }, { "type", "StructSystem" }, { "uuid", "0" }
+                    }
+                };
+                foreach (var _Nodes in ListNodes)
+                    CreateSocketParametrNode("ct:socket", Nodes: _Nodes);
+
+                // Добавляем узел параметра сокета "socket-parameter"
+                SourceCodeHandler = FinalyConditionMessage(CreateConditionMessage("1", "true", "Dynamic", "1", "\"\"", "1"));
+                Nodes = new()
+                {
+                    { "name", "VUMessage" }, { "access-level", "public" }, { "access-scope", "global" },
+                    { "direction", "none" }, { "type", "string" }, { "uuid", "0" }
+                };
+                ListAttributes = new()
+                {
+                    new() { { "type", TypeAttributeHistory },   { "value", ValueAttributeTypeHistory } },
+                    new() { { "type", TypeAttributeAlarm },     { "value", SourceCodeHandler } }
+                };
+                CreateSocketParametrNodeWithAttributeMessage("ct:parameter", "attribute", Nodes: Nodes, Attributes: ListAttributes);
+
+                // Добавляем узел параметра сокета "ct:handler"
+                for (int i = 0; i < iBufferSize; i++)
+                {
+                    #region Код обработчика события изменения кода сообщения
+                    SourceCodeHandler =
+                        $"// Получаем метку времени\n" +
+                        $"Year:  uint2       = TypeConvert.ToUint2($\"_PLC Device\".Msg_{i + 1}.YMD >> 16);\n" +
+                        $"Month: uint1       = TypeConvert.ToUint1(($\"_PLC Device\".Msg_{i + 1}.YMD >> 8) & 255);\n" +
+                        $"Day:   uint1       = TypeConvert.ToUint1($\"_PLC Device\".Msg_{i + 1}.YMD & 255);\n" +
+                        $"Hour:  uint1       = TypeConvert.ToUint1(($\"_PLC Device\".Msg_{i + 1}.HMSmS >> 28) & 15);\n" +
+                        $"Min:   uint1       = TypeConvert.ToUint1(($\"_PLC Device\".Msg_{i + 1}.HMSmS >> 22) & 63);\n" +
+                        $"Sec:   uint1       = TypeConvert.ToUint1(($\"_PLC Device\".Msg_{i + 1}.HMSmS >> 16) & 63);\n" +
+                        $"mSec:  uint2       = TypeConvert.ToUint1($\"_PLC Device\".Msg_{i + 1}.HMSmS & 1023);\n\r" +
+
+                        $"// Разбираем структуру сообщения\n" +
+                        $"Msg.Val_1          = $\"_PLC Device\".Msg_{i + 1}.Val_1;\n" +
+                        $"Msg.Val_2          = $\"_PLC Device\".Msg_{i + 1}.Val_2;\n" +
+                        $"Msg.System         = TypeConvert.ToUint2($\"_PLC Device\".Msg_{i + 1}.MsgCode >> 24);\n" +
+                        $"Msg.SubSystem      = TypeConvert.ToUint2(($\"_PLC Device\".Msg_{i + 1}.MsgCode >> 12) & 4095);\n" +
+                        $"Msg.NaIndex        = TypeConvert.ToUint2(($\"_PLC Device\".Msg_{i + 1}.MsgCode & 3968) >> 7);\n" +
+                        $"Msg.Code           = TypeConvert.ToUint2($\"_PLC Device\".Msg_{i + 1}.MsgCode & 4095);\n" +
+                        $"Msg.Code.Timestamp = DateTime.Create(Year, Month, Day, Hour, Min, Sec, mSec);"
+                        ;
+                    #endregion
+
+                    var Name = $"ParseMsg_{i + 1}";
+                    Nodes = new()
+                    {
+                        { "name", Name },
+                        { "source-code", SourceCodeHandler },
+                        { "uuid", "0" }
+                    };
+                    Attributes = new() { { "on", $"_PLC Device.Msg_{i + 1}.HMSmS" }, { "cause", "change" } };
+                    CreateSocketParametrNode("ct:handler", "ct:trigger", Nodes: Nodes, Attributes: Attributes);
+                }
+
+                // Добавляем узел параметра сокета "ct:handler"
+                var Operator = "";
+                SourceCodeHandler = "";
+                foreach (var _Param in Params)
+                {
+                    if (string.IsNullOrWhiteSpace(_Param.SystemMessage)) continue;
+                    if (ExceptionSystemName.Contains(_Param.SystemMessage, StringComparison.CurrentCultureIgnoreCase)) continue;
+                    Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                    SourceCodeHandler += $"{Operator} (Msg.System == {_Param.Index}) {{System.{_Param.SystemMessage} = Msg.Code;}}\n";
+                }
+                Nodes = new()
+                {
+                    { "name", "SortingSystem" },
+                    { "source-code", SourceCodeHandler },
+                    { "uuid", "0" }
+                };
+                Attributes = new() { { "on", "Msg.Code" }, { "cause", "update" } };
+                CreateSocketParametrNode("ct:handler", "ct:trigger", Nodes: Nodes, Attributes: Attributes);
+
+                if (Params is not null && Params.Count > 0)
+                {
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.SystemMessage)) continue;
+                        if (ExceptionSystemName.Contains(_Param.SystemMessage, StringComparison.CurrentCultureIgnoreCase)) continue;
+
+                        SourceCodeHandler = "";
+                        Operator = "";
+                        var _System = _Param.SystemMessage;
+                        var _SubSystem = _Param.NameTabList;
+                        var _DescriptionSystem = _Param.DescriptionSystem;
+                        var _HandlerName = $"PrepareMsg_{_System}";
+                        var Message = $"System.{_System}.Messages.Selected.Message";
+                        var Severity = $"System.{_System}.Messages.Selected.Severity";
+
+                        #region Код обработчика события изменения кода сообщения
+                        SourceCodeHandler = $"{Message} = String.Replace({Message}, \"$\", String.ToString(Msg.Val_1));\n";
+                        SourceCodeHandler += $"{Message} = String.Replace({Message}, \"&\", String.ToString(Msg.Val_2));\n";
+                        SourceCodeHandler += $"msg: string = \"\";\n\r";
+                        if (_System == "LIST5") SourceCodeHandler += $"Severity: uint4 = 0;\n";
+
+                        if (_DescriptionSystem == _SubSystem)
+                        {
+                            SourceCodeHandler += $"{Message} = String.Concat(msg, {Message});";
+                            Nodes = new()
+                            {
+                                { "name", _HandlerName },
+                                { "source-code", SourceCodeHandler },
+                                { "uuid", "0" }
+                            };
+                            Attributes = new() { { "on", $"System.{_System}" }, { "cause", "message-prepare" } };
+                            CreateSocketParametrNode("ct:handler", "ct:trigger", Nodes: Nodes, Attributes: Attributes);
+                            continue;
+                        }
+
+                        #region Сигналы AI
+                        if (_SubSystem == "Сигналы AI")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not SignalsAIUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Signal.Description)) continue;
+                                var Description = FormatingMessage(item.Signal.Description, true);
+                                var Index = item.Signal.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Настройки МПНА
+                        if (_SubSystem == "Настройки МПНА")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not UMPNAUserControlViewModel _ViewModel) continue;
+
+                            #region Данные
+                            var ListEqual = new List<string>()
+                                {
+                                    "UMPNA", "KTPRAS_1", "KTPRAS_2", "CMNA", "NARAB"
+                                };
+                            if (EqualTextList(_System, ListEqual))
+                            {
+                                foreach (var item in _ViewModel.Params)
+                                {
+                                    var Description = FormatingMessage(item.Description, true);
+                                    _ = int.TryParse(item.Index, out int Index);
+                                    Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                    SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                                }
+                            }
+                            #endregion
+
+                            #region Параметры
+                            else
+                            {
+                                ListEqual = new List<string>()
+                                {
+                                    "KGMPNA", "KTPRA", "KTPRAS"
+                                };
+                                if (EqualTextList(_System, ListEqual))
+                                {
+                                    foreach (var item in _ViewModel.Params)
+                                    {
+                                        var SubOperator = "";
+                                        _ = int.TryParse(item.Index, out int Index);
+                                        Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                        SourceCodeHandler += $"{Operator} (Msg.NaIndex == {Index - 1})\n{{\n";
+                                        foreach (var __Param in item.KGMPNA)
+                                        {
+                                            if (string.IsNullOrWhiteSpace(__Param.Param.Description)) continue;
+                                            var SubIndex = __Param.Param.Index;
+                                            var Description = FormatingMessage($"{__Param.Param.Description} {item.Description}", true);
+                                            SubOperator = string.IsNullOrWhiteSpace(SubOperator) ? "if" : "else if";
+                                            SourceCodeHandler += $"\t{SubOperator} (Msg.SubSystem == {SubIndex}) {{ msg = {Description}; }}\n";
+                                        }
+                                        SourceCodeHandler += $"}}\n";
+                                    }
+                                }
+                            }
+                            #endregion
+                        }
+                        #endregion
+
+                        #region Общестанционные защиты
+                        if (_SubSystem == "Общестанционные защиты")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not KTPRUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                                var Description = FormatingMessage(item.Param.Description, true);
+                                var Index = item.Param.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Предельные параметры
+                        if (_SubSystem == "Предельные параметры")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not KTPRSUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                                var Description = FormatingMessage(item.Param.Description, true);
+                                var Index = item.Param.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Сигнализация
+                        if (_SubSystem == "Сигнализация")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not SignalingUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                                var Description = FormatingMessage(item.Param.Description, true);
+                                var Index = item.Param.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Настройки задвижек
+                        if (_SubSystem == "Настройки задвижек")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not UZDUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                var Description = FormatingMessage(item.Description, true);
+                                var Index = item.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Настройки вспомсистем
+                        if (_SubSystem == "Настройки вспомсистем" && _Param.SystemMessage == "UVSGRP")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not UVSUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                var Description = FormatingMessage(item.Description, true);
+                                var Index = item.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region DO остальные
+                        if (_SubSystem == "DO остальные")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not UTSUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                                var Description = FormatingMessage(item.Param.Description, true);
+                                var Index = item.Param.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Карта ручн. ввода
+                        if (_SubSystem == "Карта ручн. ввода")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not HandMapUserControlViewModel _ViewModel) continue;
+                            foreach (var item in _ViewModel.Params)
+                            {
+                                if (string.IsNullOrWhiteSpace(item.Description)) continue;
+                                var Description = FormatingMessage(item.Description, true);
+                                var Index = item.Index;
+                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                            }
+                        }
+                        #endregion
+
+                        #region Компоновка корзин
+                        if (_SubSystem == "Компоновка корзин")
+                        {
+                            if (UserDialog.SearchControlViewModel(_SubSystem) is not LayotRackUserControlViewModel _ViewModel) continue;
+
+                            #region Диагностика ПЛК
+                            if (_System == "DiagPLC")
+                            {
+                                if (App.Settings.Config.PLC_List is not null && App.Settings.Config.PLC_List.Count > 0)
+                                {
+                                    var PLC_List = App.Settings.Config.PLC_List;
+                                    var Index = 0;
+                                    foreach (var _PLC in PLC_List)
+                                    {
+                                        Index++;
+                                        var Description = FormatingMessage(_PLC.Text, true);
+                                        Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                        SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                                    }
+                                }
+                            }
+                            #endregion
+
+                            else
+                            {
+                                #region Диагностика корзин
+                                if (_System == "DiagRack" || _System == "DiagLink")
+                                {
+                                    if (_System == "DiagLink") SourceCodeHandler += $"if (Msg.Code > 9)\n{{\n";
+
+                                    var Index = 0;
+                                    foreach (var item in _ViewModel.Params)
+                                    {
+                                        foreach (var _Rack in item.Racks)
+                                        {
+                                            Index++;
+                                            var Description = FormatingMessage($"{item.Name} корзина {_Rack.Name}", true);
+                                            Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                            SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                                        }
+                                    }
+                                    if (_System == "DiagLink") SourceCodeHandler += $"}}\n";
+                                }
+                                #endregion
+
+
+                                #region Диагностика модулей
+                                else if (_System == "DiagModule")
+                                {
+                                    var Index = 0;
+                                    foreach (var item in _ViewModel.Params)
+                                    {
+                                        foreach (var _Rack in item.Racks)
+                                        {
+                                            Index++;
+                                            foreach (var _Module in _Rack.Modules)
+                                            {
+                                                if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
+                                                _ = int.TryParse(_Module.Index.Replace($"{_Rack.Name}.", ""), out int IndexModule);
+                                                var SubSystem = (Index - 1) * 16 + IndexModule;
+                                                var Description = FormatingMessage($"{item.Name} модуль {_Module.Index} {_Module.Name}", true);
+                                                Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
+                                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {SubSystem}) {{ msg = {Description}; }}\n";
+                                            }
+                                        }
+                                    }
+                                }
+                                #endregion
+                            }
+                        }
+                        #endregion
+
+                        if (_System == "LIST5") { SourceCodeHandler += $"if (Msg.Code == 1) {{ {Severity} = Severity; }}\n"; }
+                        SourceCodeHandler += $"{Message} = String.Concat(msg, {Message});";
+                        #endregion
+
+                        Nodes = new()
+                        {
+                            { "name", _HandlerName },
+                            { "source-code", SourceCodeHandler },
+                            { "uuid", "0" }
+                        };
+                        Attributes = new() { { "on", $"System.{_System}" }, { "cause", "message-prepare" } };
+                        CreateSocketParametrNode("ct:handler", "ct:trigger", Nodes: Nodes, Attributes: Attributes);
+                    }
+                }
+                #endregion
+
+                SaveDoc("Messages");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog($"Экспорт сообщений - {e}", App.NameApp);
+                return false;
+            }
+
+
         }
         #endregion
 
@@ -433,7 +1093,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 CreateSocketParametrNode("ct:parameter", Nodes: Nodes);
 
                 // Добавляем узел параметра сокета "ct:handler"
-                CourceCode =
+                SourceCodeHandler =
                     "if (COUNTER_LOCAL != $\"_PLC Device\".COUNTER) { COUNTER_STATE = 0; }\n" +
                     "else if (COUNTER_STATE < 5) { COUNTER_STATE += 1; }\n" +
                     "LinkOk = (COUNTER_STATE < 5);\n" +
@@ -442,7 +1102,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 Nodes = new()
                 {
                     { "name", "Handler" },
-                    { "source-code", $"{CourceCode}" },
+                    { "source-code", $"{SourceCodeHandler}" },
                     { "uuid", "0" }
                 };
                 Attributes = new() { { "on", "Timer" }, { "cause", "update" } };
@@ -1082,7 +1742,7 @@ namespace Project_Сonfigurator.Services.Export.VU
             }
             catch (Exception e)
             {
-                Logger.WriteLog($"Экспорт регистров формируемых - {e}", App.NameApp);
+                Logger.WriteLog($"Экспорт диагностики - {e}", App.NameApp);
                 return false;
             }
         }
@@ -3076,7 +3736,7 @@ namespace Project_Сonfigurator.Services.Export.VU
             }
             catch (Exception e)
             {
-                Logger.WriteLog($"Экспорт данных карты ручного ввода - {e}", App.NameApp);
+                Logger.WriteLog($"Экспорт команд - {e}", App.NameApp);
                 return false;
             }
         }

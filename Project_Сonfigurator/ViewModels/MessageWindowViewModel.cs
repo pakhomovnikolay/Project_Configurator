@@ -376,6 +376,8 @@ namespace Project_Сonfigurator.ViewModels
             try
             {
                 using var work_book = new XLWorkbook(SelectedPathImport);
+
+                #region Экпорт сообщений для указанных вкладок
                 if (!string.IsNullOrWhiteSpace(ListTableImport))
                 {
                     var _TabItems = ListTableImport.Split(",");
@@ -384,7 +386,7 @@ namespace Project_Сonfigurator.ViewModels
                         try
                         {
                             var StartIndexRow = 6;
-                            var worksheet = work_book.Worksheets.Worksheet(1);
+                            var worksheet = work_book.Worksheets.First();
                             try
                             {
                                 worksheet = work_book.Worksheets.Worksheet(Item);
@@ -404,23 +406,19 @@ namespace Project_Сonfigurator.ViewModels
                                 {
                                     _Messages.IndexSystem = worksheet.Cell(2, 1).Value.ToString();
 
-                                    while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, 1).Value.ToString()))
+                                    foreach (var _Message in _Messages.Messages)
                                     {
-                                        foreach (var _Message in _Messages.Messages)
-                                        {
-                                            _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();
-                                            _Message.Color = worksheet.Cell(StartIndexRow, 3).Value.ToString();
-                                            _Message.NeedAck = worksheet.Cell(StartIndexRow, 4).Value.ToString();
-                                            _Message.PathSound = worksheet.Cell(StartIndexRow, 5).Value.ToString();
-                                            _Message.TypeSound = worksheet.Cell(StartIndexRow, 6).Value.ToString();
-                                            _Message.NeedPlay = worksheet.Cell(StartIndexRow, 7).Value.ToString();
-                                            _Message.Hide = worksheet.Cell(StartIndexRow, 8).Value.ToString();
-                                            _Message.LevelAccess = worksheet.Cell(StartIndexRow, 9).Value.ToString();
+                                        _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();
+                                        _Message.Color = worksheet.Cell(StartIndexRow, 3).Value.ToString();
+                                        _Message.NeedAck = worksheet.Cell(StartIndexRow, 4).Value.ToString();
+                                        _Message.PathSound = worksheet.Cell(StartIndexRow, 5).Value.ToString();
+                                        _Message.TypeSound = worksheet.Cell(StartIndexRow, 6).Value.ToString();
+                                        _Message.NeedPlay = worksheet.Cell(StartIndexRow, 7).Value.ToString();
+                                        _Message.Hide = worksheet.Cell(StartIndexRow, 8).Value.ToString();
+                                        _Message.LevelAccess = worksheet.Cell(StartIndexRow, 9).Value.ToString();
 
-                                            StartIndexRow++;
-                                        }
+                                        StartIndexRow++;
                                     }
-
                                 }
                             }
                         }
@@ -431,6 +429,9 @@ namespace Project_Сonfigurator.ViewModels
                         }
                     }
                 }
+                #endregion
+
+                #region Экпорт сообщений для всех созданных вкладок
                 else
                 {
                     foreach (var _Messages in Params)
@@ -453,22 +454,18 @@ namespace Project_Сonfigurator.ViewModels
                             }
 
                             _Messages.IndexSystem = worksheet.Cell(2, 1).Value.ToString();
-
-                            while (!string.IsNullOrWhiteSpace(worksheet.Cell(StartIndexRow, 1).Value.ToString()))
+                            foreach (var _Message in _Messages.Messages)
                             {
-                                foreach (var _Message in _Messages.Messages)
-                                {
-                                    _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();
-                                    _Message.Color = worksheet.Cell(StartIndexRow, 3).Value.ToString();
-                                    _Message.NeedAck = worksheet.Cell(StartIndexRow, 4).Value.ToString();
-                                    _Message.PathSound = worksheet.Cell(StartIndexRow, 5).Value.ToString();
-                                    _Message.TypeSound = worksheet.Cell(StartIndexRow, 6).Value.ToString();
-                                    _Message.NeedPlay = worksheet.Cell(StartIndexRow, 7).Value.ToString();
-                                    _Message.Hide = worksheet.Cell(StartIndexRow, 8).Value.ToString();
-                                    _Message.LevelAccess = worksheet.Cell(StartIndexRow, 9).Value.ToString();
+                                _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();
+                                _Message.Color = worksheet.Cell(StartIndexRow, 3).Value.ToString();
+                                _Message.NeedAck = worksheet.Cell(StartIndexRow, 4).Value.ToString();
+                                _Message.PathSound = worksheet.Cell(StartIndexRow, 5).Value.ToString();
+                                _Message.TypeSound = worksheet.Cell(StartIndexRow, 6).Value.ToString();
+                                _Message.NeedPlay = worksheet.Cell(StartIndexRow, 7).Value.ToString();
+                                _Message.Hide = worksheet.Cell(StartIndexRow, 8).Value.ToString();
+                                _Message.LevelAccess = worksheet.Cell(StartIndexRow, 9).Value.ToString();
 
-                                    StartIndexRow++;
-                                }
+                                StartIndexRow++;
                             }
                         }
                         catch (Exception e)
@@ -478,6 +475,8 @@ namespace Project_Сonfigurator.ViewModels
                         }
                     }
                 }
+                #endregion
+
                 var desc_msg = $"Импорт успешно завершен";
                 UserDialog.SendMessage(Title, desc_msg);
                 RefreshDataView();
@@ -622,6 +621,7 @@ namespace Project_Сonfigurator.ViewModels
                 {
                     IndexSystem = ImportData.Index,
                     Description = ImportData.DescriptionSystem,
+                    NameSystem = ImportData.SystemMessage,
                     TextFilter = "",
                     Messages = new ObservableCollection<BaseMessage>(_Messages)
                 });
