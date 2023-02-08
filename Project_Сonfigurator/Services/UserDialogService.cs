@@ -259,10 +259,10 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenSettingsWindow()
         {
-            if (_SettingWindow is { } window) { window.Show(); return; }
+            if (_SettingWindow is { } window) { window.ShowDialog(); return; }
 
             window = _Services.GetRequiredService<SettingWindow>();
-            window.Closed += (_, _) => _MessageWindow = null;
+            window.Closed += (_, _) => _SettingWindow = null;
             window.Owner = Application.Current.MainWindow;
 
             _SettingWindow = window;
@@ -300,7 +300,7 @@ namespace Project_Сonfigurator.Services
             window = _Services.GetRequiredService<ExportNamespaceASWindow>();
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _MessageWindow = null;
+            window.Closed += (_, _) => _ExportNamespaceASWindow = null;
 
 
             _ExportNamespaceASWindow = window;
@@ -319,7 +319,7 @@ namespace Project_Сonfigurator.Services
             window = _Services.GetRequiredService<IOSExportASWindow>();
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _MessageWindow = null;
+            window.Closed += (_, _) => _IOSExportASWindow = null;
 
 
             _IOSExportASWindow = window;
@@ -338,7 +338,7 @@ namespace Project_Сonfigurator.Services
             window = _Services.GetRequiredService<PLCExportASWindow>();
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _MessageWindow = null;
+            window.Closed += (_, _) => _PLCExportASWindow = null;
 
 
             _PLCExportASWindow = window;

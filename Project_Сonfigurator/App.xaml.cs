@@ -17,6 +17,7 @@ namespace Project_Сonfigurator
         public const string __EncryptedConfigFileSuffix = ".configproject";
         public const string __EncryptedProjectFileSuffix = ".myprojectodb";
         public const string __SocketsExportFileSuffix = ".omx-export";
+        public const string __XMLExportFileSuffix = ".xml";
 
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();
@@ -44,8 +45,9 @@ namespace Project_Сonfigurator
         public static IHost Host => __Host ??= Program.CreateHostBuilder(Environment.GetCommandLineArgs()).Build();
         public static IServiceProvider Services => Host.Services;
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services) => services
+            .AddViewModels()
             .AddServices()
-            .AddViewModels();
+            ;
 
         protected override async void OnStartup(StartupEventArgs e)
         {

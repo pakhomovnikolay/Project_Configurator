@@ -75,11 +75,18 @@ namespace Project_Сonfigurator.Models.Settings
         public string TypeSystem { get; set; }
         #endregion
 
-        #region Полный путь у OPC тегам
+        #region Адресное пространство
         /// <summary>
-        /// Полный путь у OPC тегам
+        /// Адресное пространство
         /// </summary>
-        public string CommonPathTag_OPC { get; set; }
+        public string NamespaceOPC { get; set; }
+        #endregion
+
+        #region Идентификатор узла
+        /// <summary>
+        /// Идентификатор узла
+        /// </summary>
+        public string NodeID { get; set; }
         #endregion
 
         #region Для обмена использовать OPC

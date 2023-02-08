@@ -1,12 +1,15 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.ToolTips;
+using Project_Сonfigurator.Models;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Project_Сonfigurator.Infrastructures.DataLists
 {
@@ -177,8 +180,6 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
             }
             set => _ColorList = value;
         }
-
-
         #endregion
 
         #region Список наименований листов проекта
@@ -218,6 +219,40 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
         {
             get => App.Services.GetRequiredService<MainWindowViewModel>().SelectedViewModel;
             set => App.Services.GetRequiredService<MainWindowViewModel>().SelectedViewModel = value;
+        }
+        #endregion
+
+        #region Список цветов
+        private ObservableCollection<CheckBox> _CheckBoxs = new();
+        /// <summary>
+        /// Список цветов
+        /// </summary>
+        public ObservableCollection<CheckBox> CheckBoxs
+        {
+            get
+            {
+                _CheckBoxs = new ObservableCollection<CheckBox>()
+                {
+                    new CheckBox{ Content = "Сообщения" },
+                    new CheckBox{ Content = "Диагностика" },
+                    new CheckBox{ Content = "Сигналы AI" },
+                    new CheckBox{ Content = "Регистры формируемые" },
+                    new CheckBox{ Content = "Карта готовностей агрегатов (Лист 1)" },
+                    new CheckBox{ Content = "Общестанционные защиты (Лист 2)" },
+                    new CheckBox{ Content = "Агрегатные защиты (Лист 3)" },
+                    new CheckBox{ Content = "Предельные параметры (Лист 4)" },
+                    new CheckBox{ Content = "Лист 5" },
+                    new CheckBox{ Content = "Состояние НА" },
+                    new CheckBox{ Content = "Состояние ЗД" },
+                    new CheckBox{ Content = "Состояние ВС" },
+                    new CheckBox{ Content = "Состояние ТС" },
+                    new CheckBox{ Content = "Карта ручного ввода" },
+                    new CheckBox{ Content = "Команды" }
+                };
+
+                return _CheckBoxs;
+            }
+            set => _CheckBoxs = value;
         }
         #endregion
     }

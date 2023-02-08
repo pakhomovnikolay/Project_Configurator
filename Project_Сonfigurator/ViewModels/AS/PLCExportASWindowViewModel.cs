@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Infrastructures.DataLists;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -30,24 +31,9 @@ namespace Project_Сonfigurator.ViewModels.AS
             UserDialog = _UserDialog;
 
             #region Создаем CheckBox'ы
-            CheckBoxs = new()
-            {
-                new CheckBox{ Command = CmdSelectParam, Content = "Сообщения" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Диагностика" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Сигналы AI" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Регистры формируемые" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Карта готовностей агрегатов (Лист 1)" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Общестанционные защиты (Лист 2)" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Агрегатные защиты (Лист 3)" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Предельные параметры (Лист 4)" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Лист 5" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Состояние НА" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Состояние ЗД" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Состояние ВС" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Состояние ТС" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Карта ручного ввода" },
-                new CheckBox{ Command = CmdSelectParam, Content = "Команды" }
-            };
+            CheckBoxs = new ObservableCollection<CheckBox>(new Lists().CheckBoxs);
+            foreach (var _CheckBox in CheckBoxs)
+                _CheckBox.Command = CmdSelectParam;
             #endregion
         }
         #endregion

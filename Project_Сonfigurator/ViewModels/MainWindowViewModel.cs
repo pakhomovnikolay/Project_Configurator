@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
 using Project_Сonfigurator.Services.Export.SU.Interfaces;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
@@ -25,23 +24,24 @@ namespace Project_Сonfigurator.ViewModels
 
         public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
         private readonly IUserDialogService UserDialog;
-        private readonly ILogSerivece LogSeriveces;
         private readonly IDBService DBServices;
         public readonly ISettingService SettingServices;
         private readonly ISUExportRedefineService SUExportRedefineServices;
-        private readonly IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices;
-        public MainWindowViewModel(IUserDialogService _UserDialog, ILogSerivece _ILogSerivece, IDBService _IDBService,
-            ISettingService _ISettingService, ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
-            IVUNamespaceASExportRedefineService _VUSocketsASExportRedefineService) : this()
+        private readonly IVUExportOPCMap VUExportOPCMaps;
+        private readonly IVUExportModbusMap IVUExportModbusMaps;
+
+        public MainWindowViewModel(IUserDialogService _UserDialog, IDBService _IDBService, ISettingService _ISettingService,
+            ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
+            IVUExportOPCMap _IVUExportOPCMap, IVUExportModbusMap _IVUExportModbusMaps) : this()
         {
             #region Сервисы
             ViewModelUserControls = viewModelUserControls;
             UserDialog = _UserDialog;
-            LogSeriveces = _ILogSerivece;
             DBServices = _IDBService;
             SettingServices = _ISettingService;
             SUExportRedefineServices = _ISUExportRedefineService;
-            VUSocketsASExportRedefineServices = _VUSocketsASExportRedefineService;
+            VUExportOPCMaps = _IVUExportOPCMap;
+            IVUExportModbusMaps = _IVUExportModbusMaps;
             #endregion
 
             #region Задаем имя проекта
@@ -226,7 +226,7 @@ namespace Project_Сonfigurator.ViewModels
         public ICommand CmdOpenSettingWindow => _CmdOpenSettingWindow ??= new RelayCommand(OnCmdOpenSettingWindowExecuted);
         private void OnCmdOpenSettingWindowExecuted()
         {
-            App.Services.GetRequiredService<IUserDialogService>().OpenSettingsWindow();
+            UserDialog.OpenSettingsWindow();
         }
         #endregion
 
@@ -368,10 +368,10 @@ namespace Project_Сonfigurator.ViewModels
         }
         #endregion
 
-        #region Команда - Открыть окно экспорта пространство имен
+        #region Команда - Экспорт ВУ
         private ICommand _CmdOpenExportNamespaceASWindow;
         /// <summary>
-        /// Команда - Открыть окно экспорта пространство имен
+        /// Команда - Экспорт ВУ
         /// </summary>
         public ICommand CmdOpenExportNamespaceASWindow => _CmdOpenExportNamespaceASWindow ??= new RelayCommand(OnCmdOpenExportNamespaceASWindowExecuted, CanCmdOpenExportNamespaceASWindowExecute);
         private bool CanCmdOpenExportNamespaceASWindowExecute(object p) => p is not null && p is string;
@@ -381,15 +381,37 @@ namespace Project_Сonfigurator.ViewModels
             switch (type_cmd)
             {
                 case "Экспорт пространства имен":
-                    App.Services.GetRequiredService<IUserDialogService>().OpenExportNamespaceASWindow();
+                    UserDialog.OpenExportNamespaceASWindow();
                     break;
                 case "Экспорт приложение PLC":
-                    App.Services.GetRequiredService<IUserDialogService>().OpenPLCExportASWindow();
+                    UserDialog.OpenPLCExportASWindow();
                     break;
                 case "Экспорт приложение IOS":
-                    App.Services.GetRequiredService<IUserDialogService>().OpenIOSExportASWindow();
+                    UserDialog.OpenIOSExportASWindow();
                     break;
             }
+        }
+        #endregion
+
+        #region Команда - Экспорт карты адресов для данных ВУ
+        private ICommand _CmdExportAddressMap;
+        /// <summary>
+        /// Команда - Экспорт карты адресов для данных ВУ
+        /// </summary>
+        public ICommand CmdExportAddressMap => _CmdExportAddressMap ??= new RelayCommand(OnCmdExportAddressMapExecuted, CanCmdExportAddressMapExecute);
+        private bool CanCmdExportAddressMapExecute(object p) => true;
+        private void OnCmdExportAddressMapExecuted(object p)
+        {
+            bool SuccessfulCompletion;
+            if (Config.UseOPC)
+                SuccessfulCompletion = VUExportOPCMaps.ASExprot();
+            else
+                SuccessfulCompletion = IVUExportModbusMaps.ASExprot();
+
+            if (!SuccessfulCompletion)
+                if (UserDialog.SendMessage("Внимание!", $"Экспорт выполнен c ошибками.\nСм. лог", ImageType: MessageBoxImage.Warning)) return;
+
+            UserDialog.SendMessage(Title, $"Экпорт выполнен успешно.\nДанные сохранены - {App.Settings.Config.PathExportVU}");
         }
         #endregion
 
@@ -492,7 +514,7 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdOpenMessageWindowExecute(object p) => true;
         private void OnCmdOpenMessageWindowExecuted(object p)
         {
-            App.Services.GetRequiredService<IUserDialogService>().OpenMessageWindow();
+            UserDialog.OpenMessageWindow();
         }
         #endregion
 

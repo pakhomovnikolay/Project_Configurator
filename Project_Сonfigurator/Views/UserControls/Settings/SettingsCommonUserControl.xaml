@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
@@ -17,6 +18,9 @@
         
         <!--Сетка-->
         <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
@@ -130,9 +134,102 @@
                 
             </Grid>
         </Border>
-        
+
+        <!--Для обмена данными используется OPC UA-->
+        <Border Grid.Row="4">
+            <CheckBox Content="Для обмена данными используется OPC UA" FontWeight="Bold"
+                      VerticalAlignment="Center" Margin="3,0,0,0"
+                      IsChecked="{Binding Config.UseOPC}"/>
+        </Border>
+
+        <!--Адресное пространство-->
+        <Border Grid.Row="5">
+            <Grid>
+
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Адресное пространство:"/>
+                <TextBox Grid.Column="3" Margin="1" VerticalContentAlignment="Center"
+                         IsEnabled="{Binding Config.UseOPC}"
+                         Text="{Binding Config.NamespaceOPC, UpdateSourceTrigger=PropertyChanged}">
+
+                    <TextBox.Resources>
+                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                            <VisualBrush.Visual>
+                                <Label Foreground="Gray" Background="White" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=TextBox}}"
+                                       Content="Например: http://schneider-electric.com/UA/OFSUA-Server/DA"
+                                       />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Resources>
+                    
+                </TextBox>
+                
+            </Grid>
+        </Border>
+
+        <!--Идентификатор узла-->
+        <Border Grid.Row="6">
+            <Grid>
+
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Идентификатор узла:"/>
+                <TextBox Grid.Column="3" Margin="1" VerticalContentAlignment="Center"
+                         IsEnabled="{Binding Config.UseOPC}"
+                         Text="{Binding Config.NodeID, UpdateSourceTrigger=PropertyChanged}">
+
+                    <TextBox.Resources>
+                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
+                            <VisualBrush.Visual>
+                                <Label Foreground="Gray" Background="White" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=TextBox}}"
+                                       Content="Например: 0:M580!"
+                                       />
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                        <Style TargetType="{x:Type TextBox}">
+                            <Style.Triggers>
+                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
+                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                                <Trigger Property="IsKeyboardFocused" Value="True">
+                                    <Setter Property="Background" Value="White" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Resources>
+
+                </TextBox>
+                
+            </Grid>
+        </Border>
+
         <!--Настройки типов и количества ПЛК-->
-        <GroupBox Grid.Row="4" BorderBrush="Black">
+        <GroupBox Grid.Row="7" BorderBrush="Black">
             
             <GroupBox.Header>
                 <TextBlock Text="Список ПЛК для диагностики" Margin="5,3"/>
@@ -257,5 +354,5 @@
         </GroupBox>
         
     </Grid>
-    
+
 </UserControl>

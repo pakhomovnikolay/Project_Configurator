@@ -525,7 +525,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             IUserDialogService UserDialog = new UserDialogService();
 
-            string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
+            string Filter = $"Файлы (*.*)|*.*";
             if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathExportVU, Filter))
                 Config.PathExportVU = path;
 

@@ -19,10 +19,15 @@ namespace Project_Сonfigurator.ViewModels
 
         #region ViewModels
             .AddSingleton<MainWindowViewModel>()
+            .AddSingleton<SettingWindowViewModels>()
+            .AddSingleton<MessageWindowViewModel>()
+            .AddSingleton<ExportNamespaceASWindowViewModel>()
+            .AddSingleton<IOSExportASWindowViewModel>()
+            .AddSingleton<PLCExportASWindowViewModel>()
+
             .AddSingleton<LayotRackUserControlViewModel>()
             .AddSingleton<TableSignalsUserControlViewModel>()
             .AddSingleton<SignalsDIUserControlViewModel>()
-            .AddSingleton<SettingWindowViewModels>()
             .AddSingleton<SignalsAIUserControlViewModel>()
             .AddSingleton<SignalsDOUserControlViewModel>()
             .AddSingleton<SignalsAOUserControlViewModel>()
@@ -42,11 +47,7 @@ namespace Project_Сonfigurator.ViewModels
             .AddSingleton<UstRealUserControlViewModel>()
             .AddSingleton<UstCommonUserControlViewModel>()
             .AddSingleton<HandMapUserControlViewModel>()
-            .AddSingleton<MessageWindowViewModel>()
             .AddSingleton<CommandUserControlViewModel>()
-            .AddSingleton<ExportNamespaceASWindowViewModel>()
-            .AddSingleton<IOSExportASWindowViewModel>()
-            .AddSingleton<PLCExportASWindowViewModel>()
             .AddSingleton<MessagesUserControlViewModel>()
         #endregion
 

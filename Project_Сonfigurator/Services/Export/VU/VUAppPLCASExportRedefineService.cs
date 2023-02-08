@@ -1,14 +1,8 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.Enum;
-using Project_Сonfigurator.Models.LayotRack;
-using Project_Сonfigurator.Services.Export.VU.Interfaces;
+﻿using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
-using Project_Сonfigurator.ViewModels.Base.Interfaces;
-using Project_Сonfigurator.ViewModels.UserControls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows.Controls;
 using System.Xml;
 
@@ -148,29 +142,9 @@ namespace Project_Сonfigurator.Services.Export.VU
         public bool Export(ObservableCollection<CheckBox> CheckBoxs)
         {
             #region Объявление
-            ObservableCollection<USO> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as LayotRackUserControlViewModel
-                                     where _TabItem is LayotRackUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
-            var NoCheck = true;
-            foreach (var CheckBox in CheckBoxs)
-                if (CheckBox.IsChecked == true)
-                    NoCheck = false;
-
-            if (CheckBoxs is null || CheckBoxs.Count <= 0) return false;
-            if (NoCheck) return false;
-
             var qty_plc = 0;
-            foreach (var _Param in Params)
-                foreach (var _Rack in _Param.Racks)
-                    foreach (var _Module in _Rack.Modules)
-                        if (_Module.Type == TypeModule.PLC)
-                            qty_plc++;
-
+            if (App.Settings is not null && App.Settings.Config is not null && App.Settings.Config.PLC_List is not null && App.Settings.Config.PLC_List.Count > 0)
+                qty_plc = App.Settings.Config.PLC_List.Count;
             #endregion
 
             try

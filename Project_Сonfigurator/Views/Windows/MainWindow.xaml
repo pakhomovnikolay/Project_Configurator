@@ -220,6 +220,9 @@
                     <RibbonButton LargeImageSource="../../Resources/Icons/Augmented.ico" Label="Экспорт приложение IOS"
                                   Command="{Binding CmdOpenExportNamespaceASWindow}"
                                   CommandParameter="{Binding Label, RelativeSource={RelativeSource Mode=Self}}"/>
+
+                    <RibbonButton LargeImageSource="../../Resources/Icons/CreateMapFile.ico" Label="Экспорт карты адресов"
+                                  Command="{Binding CmdExportAddressMap}"/>
                 </RibbonGroup>
             </RibbonTab>
             

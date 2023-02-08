@@ -1872,23 +1872,6 @@ namespace Project_Сonfigurator.Services.Export.VU
                     CreateSocketParametrNode("ct:socket-parameter", Nodes: _Nodes);
                 #endregion
 
-                #region Setpoints
-                // Добавляем узел типа сокета "ct:socket-type"
-                Nodes = new() { { "name", "SETPOINTS" }, { "uuid", "0" } };
-                CreateSocketTypeNode("ct:socket-type", Nodes);
-
-                // Добавляем узел параметра сокета "ct:socket-parameter"
-                ListNodes = new()
-                {
-                    new (){ { "name", "index_r" },      { "type", "setpoints_index_struct" },  { "uuid", "0" } },
-                    new (){ { "name", "index_w" },      { "type", "setpoints_index_struct" },  { "uuid", "0" } },
-                    new (){ { "name", "setpoints_w" },  { "type", "oip_setpoints_struct" },  { "uuid", "0" } },
-                    new (){ { "name", "setpoints_r" },  { "type", "oip_setpoints_struct" },  { "uuid", "0" } }
-                };
-                foreach (var _Nodes in ListNodes)
-                    CreateSocketParametrNode("ct:nested-socket", Nodes: _Nodes);
-                #endregion
-
                 #region Info
                 // Добавляем узел типа сокета "ct:socket-type"
                 Nodes = new() { { "name", "Info" }, { "uuid", "0" } };
@@ -1949,6 +1932,23 @@ namespace Project_Сonfigurator.Services.Export.VU
                         }
                     }
                 }
+                #endregion
+
+                #region Setpoints
+                // Добавляем узел типа сокета "ct:socket-type"
+                Nodes = new() { { "name", "SETPOINTS" }, { "uuid", "0" } };
+                CreateSocketTypeNode("ct:socket-type", Nodes);
+
+                // Добавляем узел параметра сокета "ct:socket-parameter"
+                ListNodes = new()
+                {
+                    new (){ { "name", "index_r" },      { "type", "setpoints_index_struct" },  { "uuid", "0" } },
+                    new (){ { "name", "index_w" },      { "type", "setpoints_index_struct" },  { "uuid", "0" } },
+                    new (){ { "name", "setpoints_w" },  { "type", "oip_setpoints_struct" },  { "uuid", "0" } },
+                    new (){ { "name", "setpoints_r" },  { "type", "oip_setpoints_struct" },  { "uuid", "0" } }
+                };
+                foreach (var _Nodes in ListNodes)
+                    CreateSocketParametrNode("ct:nested-socket", Nodes: _Nodes);
                 #endregion
 
                 #region Data
@@ -2068,6 +2068,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 // Добавляем узел параметра сокета "ct:socket-parameter"
                 foreach (var _Param in Params)
                 {
+                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
                     Nodes = new() { { "name", $"UserReg_{_Param.Index}" }, { "type", "uint16" }, { "uuid", "0" } };
                     CreateSocketParametrNode("ct:socket-parameter", Nodes: Nodes);
                 }
@@ -2176,7 +2177,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                 var qty = App.Settings.Config.DefualtMapKGMPNA.Count / 16;
                 foreach (var _Param in Params)
-                    if (_Param.KGMPNA.Count > qty)
+                    if (_Param.KGMPNA.Count / 16 > qty)
                         qty = _Param.KGMPNA.Count;
 
                 for (int i = 0; i < qty; i++)
@@ -2485,7 +2486,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                 var qty = App.Settings.Config.DefualtMapKTPRA.Count / 16;
                 foreach (var _Param in Params)
-                    if (_Param.KTPRA.Count > qty)
+                    if (_Param.KTPRA.Count / 16 > qty)
                         qty = _Param.KTPRA.Count;
 
                 for (int i = 0; i < qty; i++)
@@ -3403,6 +3404,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                 foreach (var _Param in Params)
                 {
+                    if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
                     // Добавляем узел типа сокета "ct:nested-socket"
                     Nodes = new() { { "name", $"UTS_{_Param.Param.Index}" }, { "type", "Struct" }, { "uuid", "0" } };
                     CreateSocketParametrNode("ct:nested-socket", Nodes: Nodes);
@@ -3417,6 +3419,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 // Добавляем узел параметра сокета "ct:socket-parameter"
                 foreach (var _Param in Params)
                 {
+                    if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
                     Nodes = new() { { "name", $"UTS_{_Param.Param.Index}" }, { "type", "string" }, { "uuid", "0" } };
                     Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{_Param.Param.Description}" } };
                     CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
@@ -3536,7 +3539,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 var qty = Params.Count / 16;
                 for (int i = 0; i < qty; i++)
                 {
-                    Nodes = new() { { "name", $"HandMap_{i}" }, { "type", "uint16" }, { "uuid", "0" } };
+                    Nodes = new() { { "name", $"HandMap_{i + 1}" }, { "type", "uint16" }, { "uuid", "0" } };
                     CreateSocketParametrNode("ct:socket-parameter", Nodes: Nodes);
                 }
                 #endregion

@@ -19,6 +19,8 @@ namespace Project_Сonfigurator.Services
             .AddTransient<IVUNamespaceASExportRedefineService, VUNamespaceASExportRedefineService>()
             .AddTransient<IVUAppPLCASExportRedefineService, VUAppPLCASExportRedefineService>()
             .AddTransient<IVUAppIOSASExportRedefineService, VUAppIOSASExportRedefineService>()
+            .AddTransient<IVUExportModbusMap, VUExportModbusMap>()
+            .AddTransient<IVUExportOPCMap, VUExportOPCMap>()
 
             .AddSingleton<IDBService, DBService>()
             .AddSingleton<ISignalService, SignalService>()

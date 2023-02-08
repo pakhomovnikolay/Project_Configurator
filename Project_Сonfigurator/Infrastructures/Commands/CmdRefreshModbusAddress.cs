@@ -63,22 +63,6 @@ namespace Project_Сonfigurator.Infrastructures.Commands
                 ModbusTCP_IR[i].AddressEnd = $"{AddressStart + LengthWord - 1}";
                 ModbusTCP_IR[i].AddressInPLC = ModbusTCP_IR[i].AddressStart;
             }
-
-
-            //var Index = 0;
-
-
-
-
-            //foreach (var ModbusTCP_HR in App.Settings.Config.ModbusTCP_HR)
-            //{
-            //    if (Index > 0)
-            //    {
-            //        ModbusTCP_HR
-            //    }
-
-            //    Index++;
-            //}
         }
     }
 }
