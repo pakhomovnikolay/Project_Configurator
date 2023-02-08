@@ -90,8 +90,11 @@
 
             <!--Главная-->
             <RibbonTab Header="Главная">
-                <RibbonGroup Header="Шрифт">
-
+                <RibbonGroup Header="Общие">
+                    <RibbonButton Height="35" VerticalContentAlignment="Center"
+                                  Label="Проверить наличие&#x0a;русских символов"
+                                  Command="{Binding CmdCheckAvailability}"
+                                  />
                 </RibbonGroup>
 
                 <RibbonGroup Header="Сообщения">

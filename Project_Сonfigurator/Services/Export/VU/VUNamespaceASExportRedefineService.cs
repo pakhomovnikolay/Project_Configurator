@@ -20,7 +20,6 @@ namespace Project_Сonfigurator.Services.Export.VU
 {
     public class VUNamespaceASExportRedefineService : IVUNamespaceASExportRedefineService
     {
-        private const int iBufferSize = 4095;
         private static readonly IUserDialogService UserDialog = new UserDialogService();
         private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "system";
@@ -542,7 +541,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 CreateSocketTypeNode("ct:type", Nodes);
 
                 // Добавляем узел параметра сокета "ct:socket"
-                for (int i = 0; i < iBufferSize; i++)
+                for (int i = 0; i < App.Settings.Config.BufferSize; i++)
                 {
                     var Name = $"Msg_{i + 1}";
                     Nodes = new()
@@ -599,7 +598,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 CreateSocketParametrNodeWithAttributeMessage("ct:parameter", "attribute", Nodes: Nodes, Attributes: ListAttributes);
 
                 // Добавляем узел параметра сокета "ct:handler"
-                for (int i = 0; i < iBufferSize; i++)
+                for (int i = 0; i < App.Settings.Config.BufferSize; i++)
                 {
                     #region Код обработчика события изменения кода сообщения
                     SourceCodeHandler =

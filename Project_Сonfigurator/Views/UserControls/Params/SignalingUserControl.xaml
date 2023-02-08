@@ -185,7 +185,7 @@
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                           Text="{Binding Param.Id}"
+                                           Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"
                                            />
                             </Border>
                         </DataTemplate>

@@ -74,6 +74,13 @@ namespace Project_Сonfigurator.Models.Settings.Interfaces
         string TypeSystem { get; set; }
         #endregion
 
+        #region Размер буфера сообщений
+        /// <summary>
+        /// Размер буфера сообщений
+        /// </summary>
+        int BufferSize { get; set; }
+        #endregion
+
         #region Адресное пространство
         /// <summary>
         /// Адресное пространство

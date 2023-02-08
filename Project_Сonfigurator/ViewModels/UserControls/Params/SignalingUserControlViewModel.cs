@@ -256,6 +256,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                     Params[index].Param.Id = _Channel.Id;
                                     Params[index].Param.Description = _Channel.Description;
                                     Params[index].IndexUSO = _Param.Index;
+                                    _ = int.TryParse(_Channel.Address, out int address);
+                                    if (address > 100000)
+                                        Params[index].Param.Address = $"{address - 100000}";
 
                                     Params[index].Color = "Красный";
                                     if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))

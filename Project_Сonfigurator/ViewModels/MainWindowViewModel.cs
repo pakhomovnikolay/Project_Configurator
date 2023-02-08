@@ -1,13 +1,16 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services;
 using Project_Сonfigurator.Services.Export.SU.Interfaces;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using Project_Сonfigurator.ViewModels.UserControls.Params;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -29,10 +32,11 @@ namespace Project_Сonfigurator.ViewModels
         private readonly ISUExportRedefineService SUExportRedefineServices;
         private readonly IVUExportOPCMap VUExportOPCMaps;
         private readonly IVUExportModbusMap IVUExportModbusMaps;
+        private readonly ICyrillicSymbolService CyrillicSymbolServices;
 
         public MainWindowViewModel(IUserDialogService _UserDialog, IDBService _IDBService, ISettingService _ISettingService,
             ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
-            IVUExportOPCMap _IVUExportOPCMap, IVUExportModbusMap _IVUExportModbusMaps) : this()
+            IVUExportOPCMap _IVUExportOPCMap, IVUExportModbusMap _IVUExportModbusMaps, ICyrillicSymbolService _ICyrillicSymbolService) : this()
         {
             #region Сервисы
             ViewModelUserControls = viewModelUserControls;
@@ -42,6 +46,7 @@ namespace Project_Сonfigurator.ViewModels
             SUExportRedefineServices = _ISUExportRedefineService;
             VUExportOPCMaps = _IVUExportOPCMap;
             IVUExportModbusMaps = _IVUExportModbusMaps;
+            CyrillicSymbolServices = _ICyrillicSymbolService;
             #endregion
 
             #region Задаем имя проекта
@@ -515,6 +520,32 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdOpenMessageWindowExecuted(object p)
         {
             UserDialog.OpenMessageWindow();
+        }
+        #endregion
+
+        #region Команда - Проверить в выбранной вкладке наличие русскиз символов
+        private ICommand _CmdCheckAvailability;
+        /// <summary>
+        /// Команда - Проверить в выбранной вкладке наличие русскиз символов
+        /// </summary>
+        public ICommand CmdCheckAvailability => _CmdCheckAvailability ??= new RelayCommand(OnCmdCheckAvailabilityExecuted, CanCmdCheckAvailabilityExecute);
+        private bool CanCmdCheckAvailabilityExecute(object p) => SelectedTabIndex >= 0;
+        private void OnCmdCheckAvailabilityExecuted(object p)
+        {
+            foreach (var _ViewModelUserControl in ViewModelUserControls)
+            {
+                if (_ViewModelUserControl.Title == "Сигнализация")
+                {
+                    var _ViewModel = _ViewModelUserControl as SignalingUserControlViewModel;
+                    foreach (var _Param in _ViewModel.Params)
+                    {
+                        if (CyrillicSymbolServices.CheckAvailability(_Param.Param.Id))
+                        {
+                            _Param.Param.Id += "\tRus";
+                        }
+                    }
+                }
+            }
         }
         #endregion
 

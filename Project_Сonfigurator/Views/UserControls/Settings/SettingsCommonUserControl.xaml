@@ -25,6 +25,7 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
             <RowDefinition Height="25"/>
+            <RowDefinition Height="25"/>
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
 
@@ -68,7 +69,7 @@
             <Grid>
                 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -83,7 +84,7 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -100,7 +101,7 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
@@ -120,7 +121,7 @@
             <Grid>
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
@@ -135,20 +136,34 @@
             </Grid>
         </Border>
 
-        <!--Для обмена данными используется OPC UA-->
+        <!--Размер буфера сообщений-->
         <Border Grid.Row="4">
+            <Grid>
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Размер буфера сообщений:"/>
+                <TextBox Grid.Column="1" Text="{Binding Config.BufferSize}"/>
+            </Grid>
+        </Border>
+
+        <!--Для обмена данными используется OPC UA-->
+        <Border Grid.Row="5">
             <CheckBox Content="Для обмена данными используется OPC UA" FontWeight="Bold"
                       VerticalAlignment="Center" Margin="3,0,0,0"
                       IsChecked="{Binding Config.UseOPC}"/>
         </Border>
 
         <!--Адресное пространство-->
-        <Border Grid.Row="5">
+        <Border Grid.Row="6">
             <Grid>
 
                 <!--Сетка-->
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -186,12 +201,12 @@
         </Border>
 
         <!--Идентификатор узла-->
-        <Border Grid.Row="6">
+        <Border Grid.Row="7">
             <Grid>
 
                 <!--Сетка-->
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="170"/>
+                    <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
@@ -229,7 +244,7 @@
         </Border>
 
         <!--Настройки типов и количества ПЛК-->
-        <GroupBox Grid.Row="7" BorderBrush="Black">
+        <GroupBox Grid.Row="8" BorderBrush="Black">
             
             <GroupBox.Header>
                 <TextBlock Text="Список ПЛК для диагностики" Margin="5,3"/>

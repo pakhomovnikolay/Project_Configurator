@@ -17,7 +17,6 @@ namespace Project_Сonfigurator.Services.Export.VU
         private const string Namespace = "format-version";
         private const string HR = "Holding Registers";
         private const string IR = "Input Registers";
-        private const int iBufferSize = 4095;
 
         private static Dictionary<string, string> Elements;
         private static Dictionary<string, string> Parametrs;
@@ -134,7 +133,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 #region Messages
                 ListParametrs = new();
                 MBAddress = long.Parse(ModbusTCP_IR[3].AddressStart);
-                for (int i = 0; i < iBufferSize; i++)
+                for (int i = 0; i < App.Settings.Config.BufferSize; i++)
                 {
                     VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.Val_1";
                     MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
