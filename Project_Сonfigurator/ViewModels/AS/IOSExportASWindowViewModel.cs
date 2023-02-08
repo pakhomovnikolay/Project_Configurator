@@ -165,85 +165,191 @@ namespace Project_Сonfigurator.ViewModels.AS
         {
             foreach (var _CheckBox in CheckBoxs)
             {
+                _CheckBox.IsEnabled = false;
 
-                _CheckBox.IsEnabled = _CheckBox.Content.ToString() switch
+                #region Сообщения
+                if (_CheckBox.Content.ToString() == "Сообщения")
                 {
-                    "Сообщения" =>
-                    App.Services.GetRequiredService<MessageWindowViewModel>().Params is not null &&
-                    App.Services.GetRequiredService<MessageWindowViewModel>().Params.Count > 0,
+                    var _ViewModel = App.Services.GetRequiredService<MessageWindowViewModel>();
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        foreach (var _Message in _Param.Messages)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Message.Description)) continue;
+                            _CheckBox.IsEnabled = true;
+                        }
+                    }
+                }
+                #endregion
 
-                    "Диагностика" =>
-                    UserDialog.SearchControlViewModel("Компоновка корзин") is LayotRackUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Диагностика
+                if (_CheckBox.Content.ToString() == "Диагностика")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Компоновка корзин") as LayotRackUserControlViewModel;
+                    _CheckBox.IsEnabled = _ViewModel is not null && _ViewModel.Params.Count > 0;
+                }
+                #endregion
 
-                    "Сигналы AI" =>
-                    UserDialog.SearchControlViewModel("Сигналы AI") is SignalsAIUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Сигналы AI
+                if (_CheckBox.Content.ToString() == "Сигналы AI")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Сигналы AI") as SignalsAIUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Регистры формируемые" =>
-                    UserDialog.SearchControlViewModel("Регистры формируемые") is UserRegUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Регистры формируемые
+                if (_CheckBox.Content.ToString() == "Регистры формируемые")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Регистры формируемые") as UserRegUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Карта готовностей агрегатов (Лист 1)" =>
-                    UserDialog.SearchControlViewModel("Настройки МПНА") is UMPNAUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Карта готовностей агрегатов (Лист 1)
+                if (_CheckBox.Content.ToString() == "Карта готовностей агрегатов (Лист 1)")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Настройки МПНА") as UMPNAUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        foreach (var item in _Param.KGMPNA)
+                        {
+                            if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                            _CheckBox.IsEnabled = true;
+                        }
+                    }
+                }
+                #endregion
 
-                    "Общестанционные защиты (Лист 2)" =>
-                    UserDialog.SearchControlViewModel("Общестанционные защиты") is KTPRUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Общестанционные защиты (Лист 2)
+                if (_CheckBox.Content.ToString() == "Общестанционные защиты (Лист 2)")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Общестанционные защиты") as KTPRUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Агрегатные защиты (Лист 3)" =>
-                    UserDialog.SearchControlViewModel("Настройки МПНА") is UMPNAUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Агрегатные защиты (Лист 3)
+                if (_CheckBox.Content.ToString() == "Агрегатные защиты (Лист 3)")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Настройки МПНА") as UMPNAUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        foreach (var item in _Param.KTPRA)
+                        {
+                            if (string.IsNullOrWhiteSpace(item.Param.Description)) continue;
+                            _CheckBox.IsEnabled = true;
+                        }
+                    }
+                }
+                #endregion
 
-                    "Предельные параметры (Лист 4)" =>
-                    UserDialog.SearchControlViewModel("Предельные параметры") is KTPRSUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Предельные параметры (Лист 4)
+                if (_CheckBox.Content.ToString() == "Предельные параметры (Лист 4)")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Предельные параметры") as KTPRSUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Лист 5" =>
-                    UserDialog.SearchControlViewModel("Сигнализация") is SignalingUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Сигнализация (Лист 5)
+                if (_CheckBox.Content.ToString() == "Сигнализация (Лист 5)")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Сигнализация") as SignalingUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Состояние НА" =>
-                    UserDialog.SearchControlViewModel("Настройки МПНА") is UMPNAUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Состояние НА
+                if (_CheckBox.Content.ToString() == "Состояние НА")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Настройки МПНА") as UMPNAUserControlViewModel;
+                    _CheckBox.IsEnabled = _ViewModel is not null && _ViewModel.Params.Count > 0;
+                }
+                #endregion
 
-                    "Состояние ЗД" =>
-                    UserDialog.SearchControlViewModel("Настройки задвижек") is UZDUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Состояние ЗД
+                if (_CheckBox.Content.ToString() == "Состояние ЗД")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Настройки задвижек") as UZDUserControlViewModel;
+                    _CheckBox.IsEnabled = _ViewModel is not null && _ViewModel.Params.Count > 0;
+                }
+                #endregion
 
-                    "Состояние ВС" =>
-                    UserDialog.SearchControlViewModel("Настройки вспомсистем") is UVSUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Состояние ВС
+                if (_CheckBox.Content.ToString() == "Состояние ВС")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Настройки вспомсистем") as UVSUserControlViewModel;
+                    _CheckBox.IsEnabled = _ViewModel is not null && _ViewModel.Params.Count > 0;
+                }
+                #endregion
 
-                    "Состояние ТС" =>
-                    UserDialog.SearchControlViewModel("DO остальные") is UTSUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Состояние ТС
+                if (_CheckBox.Content.ToString() == "Состояние ТС")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("DO остальные") as UTSUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Карта ручного ввода" =>
-                    UserDialog.SearchControlViewModel("Карта ручн. ввода") is HandMapUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
+                #region Карта ручного ввода
+                if (_CheckBox.Content.ToString() == "Карта ручного ввода")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Карта ручн. ввода") as HandMapUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
-                    "Команды" =>
-                    UserDialog.SearchControlViewModel("Команды") is CommandUserControlViewModel _ViewModel &&
-                    _ViewModel.Params is not null && _ViewModel.Params.Count > 0
-                    ,
-
-                    _ => false
-                };
+                #region Команды
+                if (_CheckBox.Content.ToString() == "Команды")
+                {
+                    var _ViewModel = UserDialog.SearchControlViewModel("Команды") as CommandUserControlViewModel;
+                    var Params = _ViewModel is not null && _ViewModel.Params.Count > 0 ? _ViewModel.Params : new();
+                    foreach (var _Param in Params)
+                    {
+                        if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                        _CheckBox.IsEnabled = true;
+                    }
+                }
+                #endregion
 
                 _CheckBox.IsChecked = _CheckBox.IsChecked == true && _CheckBox.IsEnabled;
             }

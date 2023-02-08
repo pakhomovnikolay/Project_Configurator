@@ -426,7 +426,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 "Общестанционные защиты (Лист 2)" => ExportKTPR(),
                 "Агрегатные защиты (Лист 3)" => ExportKTPRA(),
                 "Предельные параметры (Лист 4)" => ExportKTPRS(),
-                "Лист 5" => ExportLIST5(),
+                "Сигнализация (Лист 5)" => ExportLIST5(),
 
                 "Состояние НА" => ExportStateUMPNA(),
                 "Состояние ЗД" => ExportStateUZD(),

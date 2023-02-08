@@ -199,7 +199,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                         else if (TypeExport == "Общестанционные защиты (Лист 2)") { name = "LIST2"; base_type = "LIST2.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.LIST2"; }
                         else if (TypeExport == "Агрегатные защиты (Лист 3)") { name = "LIST3"; base_type = "LIST3.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.LIST3"; }
                         else if (TypeExport == "Предельные параметры (Лист 4)") { name = "LIST4"; base_type = "LIST4.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.LIST4"; }
-                        else if (TypeExport == "Лист 5") { name = "LIST5"; base_type = "LIST5.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.LIST5"; }
+                        else if (TypeExport == "Сигнализация (Лист 5)") { name = "LIST5"; base_type = "LIST5.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.LIST5"; }
                         else if (TypeExport == "Карта ручного ввода") { name = "HandMap"; base_type = "HandMap.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.HandMap"; }
                         else if (TypeExport == "Команды") { name = "CMD"; base_type = "CMD.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.CMD"; }
                         else if (TypeExport == "Сигналы AI") { name = "OIP"; base_type = "OIP.IO Server"; original_type = $"_APP_PLC.{TypeSystem}.OIP"; }

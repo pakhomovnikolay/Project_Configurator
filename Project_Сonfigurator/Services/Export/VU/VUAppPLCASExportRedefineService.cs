@@ -177,7 +177,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                         else if (TypeExport == "Общестанционные защиты (Лист 2)") { name = "LIST2"; base_type = "LIST2.PLC Device"; }
                         else if (TypeExport == "Агрегатные защиты (Лист 3)") { name = "LIST3"; base_type = "LIST3.PLC Device"; }
                         else if (TypeExport == "Предельные параметры (Лист 4)") { name = "LIST4"; base_type = "LIST4.PLC Device"; }
-                        else if (TypeExport == "Лист 5") { name = "LIST5"; base_type = "LIST5.PLC Device"; }
+                        else if (TypeExport == "Сигнализация (Лист 5)") { name = "LIST5"; base_type = "LIST5.PLC Device"; }
                         else if (TypeExport == "Карта ручного ввода") { name = "HandMap"; base_type = "HandMap.PLC Device"; }
                         else if (TypeExport == "Команды") { name = "CMD"; base_type = "CMD.PLC Device"; }
                         else if (TypeExport == "Сигналы AI") { name = "OIP"; base_type = "OIP.PLC Device"; }

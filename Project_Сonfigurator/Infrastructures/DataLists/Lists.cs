@@ -1,6 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Project_Сonfigurator.Infrastructures.ToolTips;
-using Project_Сonfigurator.Models;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -222,10 +220,10 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
         }
         #endregion
 
-        #region Список цветов
+        #region Список параметров для экпорта данных
         private ObservableCollection<CheckBox> _CheckBoxs = new();
         /// <summary>
-        /// Список цветов
+        /// Список параметров для экпорта данных
         /// </summary>
         public ObservableCollection<CheckBox> CheckBoxs
         {
@@ -241,7 +239,7 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
                     new CheckBox{ Content = "Общестанционные защиты (Лист 2)" },
                     new CheckBox{ Content = "Агрегатные защиты (Лист 3)" },
                     new CheckBox{ Content = "Предельные параметры (Лист 4)" },
-                    new CheckBox{ Content = "Лист 5" },
+                    new CheckBox{ Content = "Сигнализация (Лист 5)" },
                     new CheckBox{ Content = "Состояние НА" },
                     new CheckBox{ Content = "Состояние ЗД" },
                     new CheckBox{ Content = "Состояние ВС" },
