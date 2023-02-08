@@ -18,8 +18,10 @@ namespace Project_Сonfigurator.Services
             foreach (var _Rack in SelectedUSO.Racks)
             {
                 if (_Rack.IsEnable)
+                {
                     _Rack.Name = $"A{++i}";
-
+                    _Rack.Index = $"{i}";
+                }
                 var j = 0;
                 foreach (var _Module in _Rack.Modules)
                     _Module.Index = $"{_Rack.Name}.{++j}";
