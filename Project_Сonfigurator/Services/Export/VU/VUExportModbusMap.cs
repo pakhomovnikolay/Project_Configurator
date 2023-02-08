@@ -701,8 +701,6 @@ namespace Project_Сonfigurator.Services.Export.VU
                 foreach (var _Param in UTSList.Params)
                 {
                     if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
-                    if (index_par != 0) continue;
                     VariableName = $"{TypeSystem}.UTS.Data.UTS_{++index}.State_1";
                     MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
                 }
