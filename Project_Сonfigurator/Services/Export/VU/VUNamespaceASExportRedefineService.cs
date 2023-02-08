@@ -468,25 +468,26 @@ namespace Project_Сonfigurator.Services.Export.VU
                 CreateSocketTypeNode("ct:socket-type", Nodes);
 
                 // Добавляем узел параметра сокета "ct:socket-parameter" с атрибутом - "TypeAttributeComment"
-                Nodes = new() { { "name", "Val_1" }, { "type", "float32" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Текущее значение" } };
-                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
-
-                Nodes = new() { { "name", "Val_2" }, { "type", "float32" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Предыдущее значение" } };
-                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
-
-                Nodes = new() { { "name", "MsgCode" }, { "type", "uint32" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Код сообщения - Система, подсистема, код" } };
-                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
-
-                Nodes = new() { { "name", "YMD" }, { "type", "uint32" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - год, месяц, день" } };
-                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
-
-                Nodes = new() { { "name", "HMSmS" }, { "type", "uint32" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - Часы, минуты, секунды, милисекунды" } };
-                CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
+                ListAttributes = new()
+                {
+                    new() { { "type", TypeAttributeComment }, { "value", "Текущее значение" } },
+                    new() { { "type", TypeAttributeComment }, { "value", "Предыдущее значение" } },
+                    new() { { "type", TypeAttributeComment }, { "value", "Код сообщения - Система, подсистема, код" } },
+                    new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - год, месяц, день" } },
+                    new() { { "type", TypeAttributeComment }, { "value", "Время и дата сообщения - Часы, минуты, секунды, милисекунды" } }
+                };
+                ListNodes = new()
+                {
+                    new (){ { "name", "Val_1" },    { "type", "float32" },  { "uuid", "0" } },
+                    new (){ { "name", "Val_2" },    { "type", "float32" },  { "uuid", "0" } },
+                    new (){ { "name", "MsgCode" },  { "type", "uint16" },   { "uuid", "0" } },
+                    new (){ { "name", "YMD" },      { "type", "uint16" },   { "uuid", "0" } },
+                    new (){ { "name", "HMSmS" },    { "type", "uint16" },   { "uuid", "0" } }
+                };
+                for (int i = 0; i < ListNodes.Count; i++)
+                {
+                    CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: ListNodes[i], Attributes: ListAttributes[i]);
+                }
                 #endregion
 
                 #region StructIOS
@@ -525,12 +526,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     }
 
                     if (string.IsNullOrWhiteSpace(SourceCodeHandler)) { ExceptionSystemName += _SubParam.NameSystem; continue; }
-                    Nodes = new()
-                    {
-                        { "name", _SubParam.NameSystem },
-                        { "type", "uint16" },
-                        { "uuid", "0" }
-                    };
+                    Nodes = new() { { "name", _SubParam.NameSystem }, { "type", "uint16" }, { "uuid", "0" } };
                     ListAttributes = new()
                     {
                         new() { { "type", TypeAttributeHistory },   { "value", ValueAttributeTypeHistory } },
