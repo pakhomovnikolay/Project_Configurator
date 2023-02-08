@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using Project_Сonfigurator.Infrastructures.Enum;
+﻿using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -7,7 +6,6 @@ using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
@@ -88,7 +86,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         private static long AddListParametrs(List<Dictionary<string, string>> _ListParametrs, string NodePath, string Table, long Address, long Size)
         {
             _ListParametrs.Add(new() { { "node-path", NodePath }, { "table", Table }, { "address", $"{Address}" } });
-             return Address += Size;
+            return Address += Size;
 
         }
         #endregion
@@ -701,7 +699,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 foreach (var _Param in UTSList.Params)
                 {
                     if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    VariableName = $"{TypeSystem}.UTS.Data.UTS_{++index}.State_1";
+                    VariableName = $"{TypeSystem}.UTS.Data.UTS_{_Param.Param.Index}.State_1";
                     MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
                 }
                 Elements = new() { { "Binding", "Introduced" } };
