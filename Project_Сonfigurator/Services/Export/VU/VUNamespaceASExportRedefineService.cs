@@ -3548,12 +3548,10 @@ namespace Project_Сonfigurator.Services.Export.VU
                 // Добавляем узел параметра сокета "ct:socket-parameter"
                 foreach (var _Param in Params)
                 {
-                    if (!string.IsNullOrWhiteSpace(_Param.Description))
-                    {
-                        Nodes = new() { { "name", $"HandMap_{_Param.Index}" }, { "type", "string" } };
-                        Attributes = new() { { TypeAttributeInitialValue, _Param.Description } };
-                        CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
-                    }
+                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                    Nodes = new() { { "name", $"HandMap_{_Param.Index}" }, { "type", "string" } };
+                    Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{_Param.Description}" } };
+                    CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
                 }
                 #endregion
 
