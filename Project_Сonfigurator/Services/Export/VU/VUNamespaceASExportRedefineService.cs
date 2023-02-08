@@ -584,7 +584,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     CreateSocketParametrNode("ct:socket", Nodes: _Nodes);
 
                 // Добавляем узел параметра сокета "socket-parameter"
-                SourceCodeHandler = FinalyConditionMessage(CreateConditionMessage("1", "true", "Dynamic", "1", "\"\"", "1"));
+                SourceCodeHandler = FinalyConditionMessage(CreateConditionMessage("1", "true", "Dynamic", "1", "", "1"));
                 Nodes = new()
                 {
                     { "name", "VUMessage" }, { "access-level", "public" }, { "access-scope", "global" },
