@@ -23,33 +23,27 @@ namespace Project_Сonfigurator.Services
         #region Шифрование
         private static ICryptoTransform GetEncryptor(string password, byte[] salt = null)
         {
-            var pdb = new Rfc2898DeriveBytes(password, salt ?? __Salt);
-#pragma warning disable SYSLIB0022 // Тип или член устарел
-            var algoritm = Rijndael.Create();
-#pragma warning restore SYSLIB0022 // Тип или член устарел
-            algoritm.Key = pdb.GetBytes(32);
-            algoritm.IV = pdb.GetBytes(16);
-            return algoritm.CreateEncryptor();
+            using Aes aes = Aes.Create();
+            aes.IV = MD5.HashData(salt ?? __Salt);
+            aes.Key = SHA256.HashData(salt ?? __Salt);
+            return aes.CreateEncryptor(aes.Key, aes.IV);
         }
         #endregion
 
         #region Расшифровка
         private static ICryptoTransform GetDecryptor(string password, byte[] salt = null)
         {
-            var pdb = new Rfc2898DeriveBytes(password, salt ?? __Salt);
-#pragma warning disable SYSLIB0022 // Тип или член устарел
-            var algoritm = Rijndael.Create();
-#pragma warning restore SYSLIB0022 // Тип или член устарел
-            algoritm.Key = pdb.GetBytes(32);
-            algoritm.IV = pdb.GetBytes(16);
-            return algoritm.CreateDecryptor();
+            using Aes aes = Aes.Create();
+            aes.IV = MD5.HashData(salt ?? __Salt);
+            aes.Key = SHA256.HashData(salt ?? __Salt);
+            return aes.CreateDecryptor(aes.Key, aes.IV);
         }
         #endregion
 
         #region Синхронное шифрование
         public void Encryptor(string sourcePath, string destinationPath, string password, int bufferLegth = 102400)
         {
-            var encryptor = GetEncryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
+            var encryptor = GetEncryptor(password);
 
             using var destination_encrypted = File.Create(destinationPath, bufferLegth);
             using var destination = new CryptoStream(destination_encrypted, encryptor, CryptoStreamMode.Write);
@@ -72,7 +66,7 @@ namespace Project_Сonfigurator.Services
         {
             try
             {
-                var decryptor = GetDecryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
+                var decryptor = GetDecryptor(password);
 
                 using var destination_decrypted = File.Create(destinationPath, bufferLegth);
                 using var destination = new CryptoStream(destination_decrypted, decryptor, CryptoStreamMode.Write);
@@ -119,7 +113,7 @@ namespace Project_Сonfigurator.Services
 
             cancel.ThrowIfCancellationRequested();
 
-            var encryptor = GetEncryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
+            var encryptor = GetEncryptor(password);
 
             try
             {
@@ -182,7 +176,7 @@ namespace Project_Сonfigurator.Services
 
             cancel.ThrowIfCancellationRequested();
 
-            var decryptor = GetDecryptor(password/*, Encoding.UTF8.GetBytes(sourcePath)*/);
+            var decryptor = GetDecryptor(password);
 
             try
             {
@@ -239,6 +233,5 @@ namespace Project_Сonfigurator.Services
             return true;
         }
         #endregion
-
     }
 }

@@ -21,6 +21,7 @@ namespace Project_Сonfigurator
 
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();
+
         public static string PathConfig = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + $"\\{NameApp}";
         public static Window ActiveWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsActive);
         public static Window FucusedWindow => Current.Windows.Cast<Window>().FirstOrDefault(w => w.IsFocused);
