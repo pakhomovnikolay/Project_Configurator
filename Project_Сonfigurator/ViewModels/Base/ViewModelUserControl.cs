@@ -9,9 +9,12 @@ namespace Project_Сonfigurator.ViewModels.Base
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region Фиксация изменения свойств данных
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        #endregion
 
+        #region Проверка изменения данных
         protected virtual bool Set<T>(ref T filed, T value, [CallerMemberName] string propertyName = null)
         {
             if (Equals(filed, value)) return false;
@@ -19,13 +22,14 @@ namespace Project_Сonfigurator.ViewModels.Base
             OnPropertyChanged(propertyName);
             return true;
         }
+        #endregion
 
         #region Заголовок вкладки
         private string _Title;
         /// <summary>
         /// Заголовок вкладки
         /// </summary>
-        public string Title
+        public virtual string Title
         {
             get => _Title;
             set => Set(ref _Title, value);
@@ -37,7 +41,7 @@ namespace Project_Сonfigurator.ViewModels.Base
         /// <summary>
         /// Описание вкладки
         /// </summary>
-        public string Description
+        public virtual string Description
         {
             get => _Description;
             set => Set(ref _Description, value);
@@ -48,7 +52,7 @@ namespace Project_Сonfigurator.ViewModels.Base
         /// <summary>
         /// Пользовательский интерфейс
         /// </summary>
-        public UserControl UsingUserControl { get; set; } = new();
+        public virtual UserControl UsingUserControl { get; set; } = new();
         #endregion
 
         #region Состояние активной вкладки
@@ -63,6 +67,14 @@ namespace Project_Сonfigurator.ViewModels.Base
         /// Состояние необходимости выбора сигнала
         /// </summary>
         public virtual bool DoSelection { get; set; }
+        #endregion
+
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public virtual object GetParam() => null;
         #endregion
     }
 }

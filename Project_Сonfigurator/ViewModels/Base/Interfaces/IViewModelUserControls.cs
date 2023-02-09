@@ -38,5 +38,13 @@ namespace Project_Сonfigurator.ViewModels.Base.Interfaces
         /// </summary>
         bool DoSelection { get; set; }
         #endregion
+
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        object GetParam();
+        #endregion
     }
 }

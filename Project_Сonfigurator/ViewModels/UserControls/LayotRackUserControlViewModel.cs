@@ -252,6 +252,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         #region Функции
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return Params;
+        }
+        #endregion
+
         #region Создаем новое УСО
         private static void CreateNewUSO(ObservableCollection<USO> _Params)
         {

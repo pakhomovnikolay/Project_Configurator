@@ -282,6 +282,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
         #region Функции
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return Params;
+        }
+        #endregion
+
         #region Фильтрация УСО
         /// <summary>
         /// Фильтрация УСО

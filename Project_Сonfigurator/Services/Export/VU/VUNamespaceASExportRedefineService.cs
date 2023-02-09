@@ -1,19 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
-using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
@@ -416,24 +415,34 @@ namespace Project_Сonfigurator.Services.Export.VU
 
             return TypeExport switch
             {
-                "Сообщения" => Messages(),
-                "Диагностика" => ExportDiagnostics(),
-                "Сигналы AI" => ExportSignalsAI(),
-                "Регистры формируемые" => ExportUserReg(),
+                "Сообщения" => Messages(
+                    UserDialog.SearchControlViewModel("Сообщения").GetParam() as ObservableCollection<BaseSystemMessage>,
+                    App.Services.GetRequiredService<MessageWindowViewModel>().GetParam() as ObservableCollection<CollectionMessage>),
 
-                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(),
-                "Общестанционные защиты (Лист 2)" => ExportKTPR(),
-                "Агрегатные защиты (Лист 3)" => ExportKTPRA(),
-                "Предельные параметры (Лист 4)" => ExportKTPRS(),
-                "Сигнализация (Лист 5)" => ExportLIST5(),
+                "Диагностика" => ExportDiagnostics(
+                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>,
+                    UserDialog.SearchControlViewModel("Таблица сигналов").GetParam() as ObservableCollection<USO>,
+                    UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>),
 
-                "Состояние НА" => ExportStateUMPNA(),
-                "Состояние ЗД" => ExportStateUZD(),
-                "Состояние ВС" => ExportStateUVS(),
-                "Состояние ТС" => ExportStateUTS(),
+                "Сигналы AI" => ExportSignalsAI(
+                    UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>,
+                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
 
-                "Карта ручного ввода" => ExportHandMap(),
-                "Команды" => ExportCommands(),
+                "Регистры формируемые" => ExportUserReg(UserDialog.SearchControlViewModel("Регистры формируемые").GetParam() as ObservableCollection<BaseParam>),
+
+                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
+                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты").GetParam() as ObservableCollection<BaseKTPR>),
+                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
+                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Передельные параметры").GetParam() as ObservableCollection<BaseKTPRS>),
+                "Сигнализация (Лист 5)" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>),
+
+                "Состояние НА" => ExportStateUMPNA(UserDialog.SearchControlViewModel("Настрйоки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
+                "Состояние ЗД" => ExportStateUZD(UserDialog.SearchControlViewModel("Настрйоки задвижек").GetParam() as ObservableCollection<BaseUZD>),
+                "Состояние ВС" => ExportStateUVS(UserDialog.SearchControlViewModel("Настрйоки вспомсистем").GetParam() as ObservableCollection<BaseUVS>),
+                "Состояние ТС" => ExportStateUTS(UserDialog.SearchControlViewModel("DO остальные").GetParam() as ObservableCollection<BaseUTS>),
+
+                "Карта ручного ввода" => ExportHandMap(UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParam() as ObservableCollection<BaseParam>),
+                "Команды" => ExportCommands(UserDialog.SearchControlViewModel("Команды").GetParam() as ObservableCollection<BaseParam>),
 
                 _ => throw new NotSupportedException($"Экспорт данного типа \"{TypeExport}\" не поддерживается"),
             };
@@ -445,13 +454,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт сообщений
         /// </summary>
         /// <returns></returns>
-        private static bool Messages()
+        private static bool Messages(ObservableCollection<BaseSystemMessage> Params, ObservableCollection<CollectionMessage> SubParams)
         {
-            ObservableCollection<BaseSystemMessage> Params = null;
-            var SubParams = App.Services.GetRequiredService<MessageWindowViewModel>().Params;
-            if (UserDialog.SearchControlViewModel("Сообщения") is MessagesUserControlViewModel _MessagesUserControlViewModel)
-                Params = _MessagesUserControlViewModel.Params;
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -965,31 +969,9 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт диагностики
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDiagnostics()
+        private static bool ExportDiagnostics(ObservableCollection<USO> Params, ObservableCollection<USO> SubParams, ObservableCollection<BaseSignaling> SubSubParams)
         {
             #region Объявление
-            ObservableCollection<USO> Params = new();
-            ObservableCollection<USO> SubParams = new();
-            ObservableCollection<BaseSignaling> SubSubParams = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as LayotRackUserControlViewModel
-                                     where _TabItem is LayotRackUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as TableSignalsUserControlViewModel
-                                     where _TabItem is TableSignalsUserControlViewModel
-                                     select _TabItem)
-                SubParams = _TabItem.Params;
-
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalingUserControlViewModel
-                                     where _TabItem is SignalingUserControlViewModel
-                                     select _TabItem)
-                SubSubParams = _TabItem.Params;
-
             var qty_plc = 0;
             foreach (var _Param in Params)
                 foreach (var _Rack in _Param.Racks)
@@ -1748,25 +1730,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт аналоговых сигналов (AI)
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAI()
+        private static bool ExportSignalsAI(ObservableCollection<SignalAI> Params, ObservableCollection<USO> ParParams)
         {
-            #region Объявление
-            ObservableCollection<SignalAI> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsAIUserControlViewModel
-                                     where _TabItem is SignalsAIUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
-            ObservableCollection<USO> ParParams = new();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as LayotRackUserControlViewModel
-                                     where _TabItem is LayotRackUserControlViewModel
-                                     select _TabItem)
-                ParParams = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2034,18 +1999,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт регистров формируемых
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUserReg()
+        private static bool ExportUserReg(ObservableCollection<BaseParam> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseParam> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UserRegUserControlViewModel
-                                     where _TabItem is UserRegUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2140,18 +2095,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты готовностей МПНА
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKGMPNA()
+        private static bool ExportKGMPNA(ObservableCollection<BaseUMPNA> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2302,18 +2247,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты общестанционных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPR()
+        private static bool ExportKTPR(ObservableCollection<BaseKTPR> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseKTPR> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as KTPRUserControlViewModel
-                                     where _TabItem is KTPRUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2449,18 +2384,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты агрегатных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRA()
+        private static bool ExportKTPRA(ObservableCollection<BaseUMPNA> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2611,18 +2536,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты предельных параметров общестанционных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRS()
+        private static bool ExportKTPRS(ObservableCollection<BaseKTPRS> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseKTPRS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as KTPRSUserControlViewModel
-                                     where _TabItem is KTPRSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2757,18 +2672,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты общесистемной сигнализации
         /// </summary>
         /// <returns></returns>
-        private static bool ExportLIST5()
+        private static bool ExportLIST5(ObservableCollection<BaseSignaling> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseSignaling> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalingUserControlViewModel
-                                     where _TabItem is SignalingUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -2928,18 +2833,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных МПНА
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUMPNA()
+        private static bool ExportStateUMPNA(ObservableCollection<BaseUMPNA> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -3074,18 +2969,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ЗД
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUZD()
+        private static bool ExportStateUZD(ObservableCollection<BaseUZD> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUZD> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UZDUserControlViewModel
-                                     where _TabItem is UZDUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -3220,18 +3105,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ВС
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUVS()
+        private static bool ExportStateUVS(ObservableCollection<BaseUVS> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUVS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UVSUserControlViewModel
-                                     where _TabItem is UVSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -3361,18 +3236,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ТС
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUTS()
+        private static bool ExportStateUTS(ObservableCollection<BaseUTS> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseUTS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UTSUserControlViewModel
-                                     where _TabItem is UTSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -3504,18 +3369,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных карты ручного ввода
         /// </summary>
         /// <returns></returns>
-        private static bool ExportHandMap()
+        private static bool ExportHandMap(ObservableCollection<BaseParam> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseParam> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as HandMapUserControlViewModel
-                                     where _TabItem is HandMapUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"
@@ -3637,18 +3492,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт команд
         /// </summary>
         /// <returns></returns>
-        private static bool ExportCommands()
+        private static bool ExportCommands(ObservableCollection<BaseParam> Params)
         {
-            #region Объявление
-            ObservableCollection<BaseParam> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as CommandUserControlViewModel
-                                     where _TabItem is CommandUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            #endregion
-
             try
             {
                 // Добавляем корневой узел "omx"

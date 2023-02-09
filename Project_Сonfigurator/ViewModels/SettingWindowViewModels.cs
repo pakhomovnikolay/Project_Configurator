@@ -67,54 +67,6 @@ namespace Project_Сonfigurator.ViewModels
 
         #region Параметры
 
-        #region Высота окна
-        private int _WindowHeight = 800;
-        /// <summary>
-        /// Высота окна
-        /// </summary>
-        public int WindowHeight
-        {
-            get => _WindowHeight;
-            set => Set(ref _WindowHeight, value);
-        }
-        #endregion
-
-        #region Ширина окна
-        private int _WindowWidth = 1500;
-        /// <summary>
-        /// Ширина окна
-        /// </summary>
-        public int WindowWidth
-        {
-            get => _WindowWidth;
-            set => Set(ref _WindowWidth, value);
-        }
-        #endregion
-
-        #region Режим изменения размеров окна
-        private ResizeMode _WindowResizeMode = ResizeMode.NoResize;
-        /// <summary>
-        /// Режим изменения размеров окна
-        /// </summary>
-        public ResizeMode WindowResizeMode
-        {
-            get => _WindowResizeMode;
-            set => Set(ref _WindowResizeMode, value);
-        }
-        #endregion
-
-        #region Текущее состояние окна
-        private WindowState _WindowWindowState = WindowState.Normal;
-        /// <summary>
-        /// Текущее состояние окна
-        /// </summary>
-        public WindowState WindowWindowState
-        {
-            get => _WindowWindowState;
-            set => Set(ref _WindowWindowState, value);
-        }
-        #endregion
-
         #region Настройки приложения
         private SettingApp _Config = App.Settings.Config ?? new();
         /// <summary>

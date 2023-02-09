@@ -157,6 +157,17 @@ namespace Project_Сonfigurator.ViewModels.AS
 
         #region Функции
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return CheckBoxs;
+        }
+        #endregion
+
         #region Контроль разрешения выбора параметров экспорта
         /// <summary>
         /// Контроль разрешения выбора параметров экспорта

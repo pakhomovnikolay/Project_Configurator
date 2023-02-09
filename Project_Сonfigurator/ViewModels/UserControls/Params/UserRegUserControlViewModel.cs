@@ -118,6 +118,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Команды
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return Params;
+        }
+        #endregion
+
         #region Команда - Обновить фильтр
         private ICommand _CmdRefreshFilter;
         /// <summary>

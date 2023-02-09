@@ -1,11 +1,15 @@
-﻿using Project_Сonfigurator.Infrastructures.Enum;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Enum;
+using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.Services.Interfaces;
-using Project_Сonfigurator.ViewModels.UserControls;
-using Project_Сonfigurator.ViewModels.UserControls.Params;
-using Project_Сonfigurator.ViewModels.UserControls.Signals;
+using Project_Сonfigurator.ViewModels.AS;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Windows.Controls;
 using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
@@ -109,11 +113,13 @@ namespace Project_Сonfigurator.Services.Export.VU
         public bool ASExprot()
         {
             #region Объявление
+            var CheckBoxs = App.Services.GetRequiredService<ExportNamespaceASWindowViewModel>().GetParam() as ObservableCollection<CheckBox>;
             var TypeSystem = App.Settings.Config.TypeSystem;
             var ModbusTCP_HR = App.Settings.Config.ModbusTCP_HR;
             var ModbusTCP_IR = App.Settings.Config.ModbusTCP_IR;
             string VariableName;
             long MBAddress;
+            var Result = false;
 
             var MBAddress_AIChState = long.Parse(ModbusTCP_HR[5].AddressStart);
             var MBAddress_AIMask = long.Parse(ModbusTCP_HR[6].AddressStart);
@@ -130,613 +136,668 @@ namespace Project_Сonfigurator.Services.Export.VU
                 // Добавляем корневой узел "omx"
                 CreateRootNode("root");
 
-                #region Messages
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_IR[3].AddressStart);
-                for (int i = 0; i < App.Settings.Config.BufferSize; i++)
+                foreach (var _CheckBox in CheckBoxs)
                 {
-                    VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.Val_1";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
+                    if (_CheckBox.IsChecked != true) continue;
+                    Result = true;
 
-                    VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.Val_2";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
-
-                    VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.MsgCode";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
-
-                    VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.YMD";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
-
-                    VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.HMSmS";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region DiagLink
-                MBAddress = long.Parse(ModbusTCP_HR[0].AddressStart);
-                VariableName = $"{TypeSystem}.DiagLink.COUNTER";
-                Elements = new() { { "Binding", "Introduced" } };
-                Parametrs = new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress}" } };
-                CreateParametrsElementNode("item", Elements, Parametrs);
-                #endregion
-
-                #region Diagnostics
-                var LayotRackList = UserDialog.SearchControlViewModel("Компоновка корзин") as LayotRackUserControlViewModel;
-                var TableSignalList = UserDialog.SearchControlViewModel("Таблица сигналов") as TableSignalsUserControlViewModel;
-
-                #region Корзины
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[2].AddressStart);
-                var index = 1;
-                foreach (var _Param in LayotRackList.Params)
-                {
-                    foreach (var _Racks in _Param.Racks)
+                    #region Сообщения
+                    if (_CheckBox.Content.ToString() == "Сообщения")
                     {
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.Status";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ModHealth";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ErrBusA";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ErrBusB";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.TotalErrBusA";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                        VariableName = $"{TypeSystem}.DiagRack.Rack_{index++}.TotalErrBusB";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                    }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region ПКЛ
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[3].AddressStart);
-                index = 0;
-                foreach (var _Param in LayotRackList.Params)
-                {
-                    foreach (var _Racks in _Param.Racks)
-                    {
-                        foreach (var _Module in _Racks.Modules)
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_IR[3].AddressStart);
+                        for (int i = 0; i < App.Settings.Config.BufferSize; i++)
                         {
-                            if (_Module.Type != TypeModule.PLC) continue;
-                            VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{++index}.Status";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.Val_1";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
 
-                            VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.Mode";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.Val_2";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
 
-                            VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.CurrDT";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.MsgCode";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
 
-                            for (int i = 0; i < 4; i++)
-                            {
-                                VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.Version_{i + 1}";
-                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                            }
-                            for (int i = 0; i < 4; i++)
-                            {
-                                VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.StandardVersion_{i + 1}";
-                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                            }
+                            VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.YMD";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
 
-                            VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.BuildTime";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                            VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.StandardBuildTime";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            VariableName = $"{TypeSystem}.Messages.Msg_{i + 1}.HMSmS";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, IR, MBAddress, 2);
                         }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                     }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #endregion
 
-                #region УСО
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[4].AddressStart);
-                for (int i = 0; i < 2; i++)
-                {
-                    VariableName = $"{TypeSystem}.DiagUSO.Data.Red_{i + 1}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    VariableName = $"{TypeSystem}.DiagUSO.Data.Yellow_{i + 1}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    VariableName = $"{TypeSystem}.DiagUSO.Data.RedBlink_{i + 1}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-
-                for (int i = 0; i < 2; i++)
-                {
-                    VariableName = $"{TypeSystem}.DiagUSO.Data.YellowBlink_{i + 1}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-                VariableName = $"{TypeSystem}.DiagUSO.Data.Common";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                foreach (var _Param in LayotRackList.Params)
-                {
-                    for (int i = 0; i < 2; i++)
+                    #region Диагностика
+                    if (_CheckBox.Content.ToString() == "Диагностика")
                     {
-                        VariableName = $"{TypeSystem}.DiagUSO.USO_{_Param.Index}.ServiceSignal_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                    }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                        #region DiagLink
+                        MBAddress = long.Parse(ModbusTCP_HR[0].AddressStart);
+                        VariableName = $"{TypeSystem}.DiagLink.COUNTER";
+                        Elements = new() { { "Binding", "Introduced" } };
+                        Parametrs = new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress}" } };
+                        CreateParametrsElementNode("item", Elements, Parametrs);
+                        #endregion
 
-                #region Модуля В/В
-                ListParametrs = new();
-                var IndexAI = 0;
-                var IndexAO = 0;
-                var IndexDI = 0;
-                var IndexDO = 0;
+                        #region Diagnostics
+                        var _Params = UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>;
+                        var _ParParams = UserDialog.SearchControlViewModel("Таблица сигналов").GetParam() as ObservableCollection<USO>;
 
-                foreach (var _Param in TableSignalList.Params)
-                {
-                    foreach (var _Rack in _Param.Racks)
-                    {
-                        foreach (var _Module in _Rack.Modules)
+                        #region Корзины
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[2].AddressStart);
+                        var index = 1;
+                        foreach (var _Param in _Params)
                         {
-                            if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
-
-                            if (_Module.Type == TypeModule.AI)
+                            foreach (var _Racks in _Param.Racks)
                             {
-                                VariableName = $"{TypeSystem}.DiagRack.HW_AI_{++IndexAI}.ChannelHealth";
-                                MBAddress_AIChState = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AIChState, 1);
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.Status";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                                VariableName = $"{TypeSystem}.DiagRack.HW_AI_{IndexAI}.ChannelMask";
-                                MBAddress_AIMask = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AIMask, 1);
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ModHealth";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
 
-                                foreach (var _Channel in _Module.Channels)
-                                {
-                                    VariableName = $"{TypeSystem}.DiagRack.HW_AI_{IndexAI}.Value_{_Channel.Index}";
-                                    MBAddress_AI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AI, 1);
-                                }
-                            }
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ErrBusA";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                            if (_Module.Type == TypeModule.AO)
-                            {
-                                VariableName = $"{TypeSystem}.DiagRack.HW_AO_{++IndexAO}.ChannelHealth";
-                                MBAddress_AOChState = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AOChState, 1);
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ErrBusB";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                                VariableName = $"{TypeSystem}.DiagRack.HW_AO_{IndexAO}.ChannelMask";
-                                MBAddress_AOMask = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AOMask, 1);
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.TotalErrBusA";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                                foreach (var _Channel in _Module.Channels)
-                                {
-                                    VariableName = $"{TypeSystem}.DiagRack.HW_AO_{IndexAO}.Value_{_Channel.Index}";
-                                    MBAddress_AO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AO, 1);
-                                }
-                            }
-
-                            if (_Module.Type == TypeModule.DI)
-                            {
-                                VariableName = $"{TypeSystem}.DiagRack.HW_DI_{++IndexDI}.Value";
-                                MBAddress_DI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_DI, 2);
-                            }
-
-                            if (_Module.Type == TypeModule.DO)
-                            {
-                                VariableName = $"{TypeSystem}.DiagRack.HW_DO_{++IndexDO}.Value";
-                                MBAddress_DO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_DO, 2);
+                                VariableName = $"{TypeSystem}.DiagRack.Rack_{index++}.TotalErrBusB";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
                             }
                         }
-                    }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
 
-                #endregion
+                        #region ПКЛ
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[3].AddressStart);
+                        index = 0;
+                        foreach (var _Param in _Params)
+                        {
+                            foreach (var _Racks in _Param.Racks)
+                            {
+                                foreach (var _Module in _Racks.Modules)
+                                {
+                                    if (_Module.Type != TypeModule.PLC) continue;
+                                    VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{++index}.Status";
+                                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                #region OIP
-                var SignalsAIList = UserDialog.SearchControlViewModel("Сигналы AI") as SignalsAIUserControlViewModel;
+                                    VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.Mode";
+                                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                #region OIP.Data
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[14].AddressStart);
-                index = 0;
-                foreach (var _Param in SignalsAIList.Params)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{++index}.ElValue";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.CurrDT";
+                                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.Value";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    for (int i = 0; i < 4; i++)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.Version_{i + 1}";
+                                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    }
+                                    for (int i = 0; i < 4; i++)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.StandardVersion_{i + 1}";
+                                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    }
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.VisualValue";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.BuildTime";
+                                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.SimValue";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                    VariableName = $"{TypeSystem}.DiagPLC.Data.PLC_{index}.StandardBuildTime";
+                                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                                }
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.CurrLevel";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        #region УСО
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[4].AddressStart);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            VariableName = $"{TypeSystem}.DiagUSO.Data.Red_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.Status";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        for (int i = 0; i < 2; i++)
+                        {
+                            VariableName = $"{TypeSystem}.DiagUSO.Data.Yellow_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
 
-                    VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.UnitsVF";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                        for (int i = 0; i < 2; i++)
+                        {
+                            VariableName = $"{TypeSystem}.DiagUSO.Data.RedBlink_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
 
-                #region OIP.Sim
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[15].AddressStart);
-                index = 0;
-                foreach (var _Param in SignalsAIList.Params)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
-                    VariableName = $"{TypeSystem}.OIP.Sim.OIP_{++index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region OIP.SETPOINTS
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[30].AddressStart);
-
-                VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_r.request_index";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_r.conf_index";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_w.request_index";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_w.conf_index";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                var VariableNamePar = "";
-                for (int i = 0; i < 2; i++)
-                {
-                    switch (i)
-                    {
-                        case 0:
-                            VariableNamePar = $"{TypeSystem}.OIP.SETPOINTS.setpoints_w";
-                            break;
-                        case 1:
-                            VariableNamePar = $"{TypeSystem}.OIP.SETPOINTS.setpoints_r";
-                            break;
-                    }
-
-                    VariableName = $"{VariableNamePar}.link";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.t_max";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    for (int j = 0; j < 6; j++)
-                    {
-                        VariableName = $"{VariableNamePar}.l_max_{j + 1}";
+                        for (int i = 0; i < 2; i++)
+                        {
+                            VariableName = $"{TypeSystem}.DiagUSO.Data.YellowBlink_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
+                        VariableName = $"{TypeSystem}.DiagUSO.Data.Common";
                         MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                    }
 
-                    for (int j = 0; j < 6; j++)
+                        foreach (var _Param in _Params)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                VariableName = $"{TypeSystem}.DiagUSO.USO_{_Param.Index}.ServiceSignal_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
+
+                        #region Модуля В/В
+                        ListParametrs = new();
+                        var IndexAI = 0;
+                        var IndexAO = 0;
+                        var IndexDI = 0;
+                        var IndexDO = 0;
+
+                        foreach (var _Param in _ParParams)
+                        {
+                            foreach (var _Rack in _Param.Racks)
+                            {
+                                foreach (var _Module in _Rack.Modules)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
+
+                                    if (_Module.Type == TypeModule.AI)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_AI_{++IndexAI}.ChannelHealth";
+                                        MBAddress_AIChState = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AIChState, 1);
+
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_AI_{IndexAI}.ChannelMask";
+                                        MBAddress_AIMask = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AIMask, 1);
+
+                                        foreach (var _Channel in _Module.Channels)
+                                        {
+                                            VariableName = $"{TypeSystem}.DiagRack.HW_AI_{IndexAI}.Value_{_Channel.Index}";
+                                            MBAddress_AI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AI, 1);
+                                        }
+                                    }
+
+                                    if (_Module.Type == TypeModule.AO)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_AO_{++IndexAO}.ChannelHealth";
+                                        MBAddress_AOChState = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AOChState, 1);
+
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_AO_{IndexAO}.ChannelMask";
+                                        MBAddress_AOMask = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AOMask, 1);
+
+                                        foreach (var _Channel in _Module.Channels)
+                                        {
+                                            VariableName = $"{TypeSystem}.DiagRack.HW_AO_{IndexAO}.Value_{_Channel.Index}";
+                                            MBAddress_AO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AO, 1);
+                                        }
+                                    }
+
+                                    if (_Module.Type == TypeModule.DI)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_DI_{++IndexDI}.Value";
+                                        MBAddress_DI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_DI, 2);
+                                    }
+
+                                    if (_Module.Type == TypeModule.DO)
+                                    {
+                                        VariableName = $"{TypeSystem}.DiagRack.HW_DO_{++IndexDO}.Value";
+                                        MBAddress_DO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_DO, 2);
+                                    }
+                                }
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
+
+                        #endregion
+                    }
+                    #endregion
+
+                    #region Сигналы AI
+                    if (_CheckBox.Content.ToString() == "Сигналы AI")
                     {
-                        VariableName = $"{VariableNamePar}.l_min_{j + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        var Params = UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>;
+
+                        #region OIP.Data
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[14].AddressStart);
+                        var index = 0;
+                        foreach (var _Param in Params)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{++index}.ElValue";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.Value";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.VisualValue";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.SimValue";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.CurrLevel";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.Status";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.UnitsVF";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
+
+                        #region OIP.Sim
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[15].AddressStart);
+                        index = 0;
+                        foreach (var _Param in Params)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
+                            VariableName = $"{TypeSystem}.OIP.Sim.OIP_{++index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
+
+                        #region OIP.SETPOINTS
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[30].AddressStart);
+
+                        VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_r.request_index";
+                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                        VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_r.conf_index";
+                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                        VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_w.request_index";
+                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                        VariableName = $"{TypeSystem}.OIP.SETPOINTS.index_w.conf_index";
+                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                        var VariableNamePar = "";
+                        for (int i = 0; i < 2; i++)
+                        {
+                            switch (i)
+                            {
+                                case 0:
+                                    VariableNamePar = $"{TypeSystem}.OIP.SETPOINTS.setpoints_w";
+                                    break;
+                                case 1:
+                                    VariableNamePar = $"{TypeSystem}.OIP.SETPOINTS.setpoints_r";
+                                    break;
+                            }
+
+                            VariableName = $"{VariableNamePar}.link";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.t_max";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            for (int j = 0; j < 6; j++)
+                            {
+                                VariableName = $"{VariableNamePar}.l_max_{j + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            }
+
+                            for (int j = 0; j < 6; j++)
+                            {
+                                VariableName = $"{VariableNamePar}.l_min_{j + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            }
+
+                            VariableName = $"{VariableNamePar}.t_min";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.ks";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.agrNsigType";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.mask_msg";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.mask_sig";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.allowed_t_min";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.allowed_t_max";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.T01";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.hyst_level";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{VariableNamePar}.max_speed";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{VariableNamePar}.mask_level";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.r_max";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{VariableNamePar}.r_min";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+
+                            VariableName = $"{VariableNamePar}.units";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{VariableNamePar}.visual_format";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            for (int j = 0; j < 8; j++)
+                            {
+                                VariableName = $"{VariableNamePar}.res_{(j + 3):00}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            }
+                        }
+
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                        #endregion
                     }
+                    #endregion
 
-                    VariableName = $"{VariableNamePar}.t_min";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.ks";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.agrNsigType";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.mask_msg";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.mask_sig";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.allowed_t_min";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.allowed_t_max";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.T01";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.hyst_level";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                    VariableName = $"{VariableNamePar}.max_speed";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                    VariableName = $"{VariableNamePar}.mask_level";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.r_max";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                    VariableName = $"{VariableNamePar}.r_min";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-
-                    VariableName = $"{VariableNamePar}.units";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{VariableNamePar}.visual_format";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    for (int j = 0; j < 8; j++)
+                    #region Регистры формируемые
+                    if (_CheckBox.Content.ToString() == "Регистры формируемые")
                     {
-                        VariableName = $"{VariableNamePar}.res_{(j + 3):00}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        var Params = UserDialog.SearchControlViewModel("Регистры формируемые").GetParam() as ObservableCollection<BaseParam>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[26].AddressStart);
+                        var index = 0;
+                        foreach (var _Param in Params)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
+                            VariableName = $"{TypeSystem}.UserReg.Data.UserReg_{++index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                     }
-                }
+                    #endregion
 
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #endregion
-
-                #region LIST1
-                var UMPNAList = UserDialog.SearchControlViewModel("Настройки МПНА") as UMPNAUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[16].AddressStart);
-                foreach (var _Param in UMPNAList.Params)
-                {
-                    VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.Result";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    var Qty = _Param.KGMPNA.Count / 16;
-                    for (int i = 0; i < Qty; i++)
+                    #region Карта готовностей агрегатов (Лист 1)
+                    if (_CheckBox.Content.ToString() == "Карта готовностей агрегатов (Лист 1)")
                     {
-                        VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.F_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[16].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.Result";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                        VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.M_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            var Qty = _Param.KGMPNA.Count / 16;
+                            for (int i = 0; i < Qty; i++)
+                            {
+                                VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.F_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                        VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.P_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                                VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.M_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                                VariableName = $"{TypeSystem}.LIST1.NA_{_Param.Index}.P_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                     }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #endregion
 
-                #region LIST2
-                var KTPRList = UserDialog.SearchControlViewModel("Общестанционные защиты") as KTPRUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[17].AddressStart);
-                index = 0;
-                VariableName = $"{TypeSystem}.LIST2.Data.Result";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                foreach (var _Param in KTPRList.Params)
-                {
-                    var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
-                    if (index_par != 0) continue;
-                    VariableName = $"{TypeSystem}.LIST2.Data.F_{++index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{TypeSystem}.LIST2.Data.M_{index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{TypeSystem}.LIST2.Data.P_{index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region LIST3
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[18].AddressStart);
-                foreach (var _Param in UMPNAList.Params)
-                {
-                    VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.Result";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    var Qty = _Param.KTPRA.Count / 16;
-                    for (int i = 0; i < Qty; i++)
+                    #region Общестанционные защиты (Лист 2)
+                    if (_CheckBox.Content.ToString() == "Общестанционные защиты (Лист 2)")
                     {
-                        VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.F_{i + 1}";
+                        var Params = UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[17].AddressStart);
+                        var index = 0;
+                        VariableName = $"{TypeSystem}.LIST2.Data.Result";
                         MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                        VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.M_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        foreach (var _Param in Params)
+                        {
+                            var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
+                            if (index_par != 0) continue;
+                            VariableName = $"{TypeSystem}.LIST2.Data.F_{++index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                        VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.P_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            VariableName = $"{TypeSystem}.LIST2.Data.M_{index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{TypeSystem}.LIST2.Data.P_{index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                     }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #endregion
 
-                #region LIST4
-                var KTPRSList = UserDialog.SearchControlViewModel("Предельные параметры") as KTPRSUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[19].AddressStart);
-                index = 0;
-                VariableName = $"{TypeSystem}.LIST4.Data.Result";
-                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                foreach (var _Param in KTPRSList.Params)
-                {
-                    var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
-                    if (index_par != 0) continue;
-                    VariableName = $"{TypeSystem}.LIST4.Data.F_{++index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-
-                    VariableName = $"{TypeSystem}.LIST4.Data.P_{index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region LIST5
-                var SignalingList = UserDialog.SearchControlViewModel("Сигнализация") as SignalingUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[20].AddressStart);
-                index = 0;
-                foreach (var _Param in SignalingList.Params)
-                {
-                    var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
-                    if (index_par != 0) continue;
-                    VariableName = $"{TypeSystem}.LIST5.Data.P_{++index}";
-                    ListParametrs.Add(new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress += 1}" } });
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
-
-                #region UMPNA
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[21].AddressStart);
-                foreach (var _Param in UMPNAList.Params)
-                {
-                    for (int i = 0; i < 2; i++)
+                    #region Агрегатные защиты (Лист 3)
+                    if (_CheckBox.Content.ToString() == "Агрегатные защиты (Лист 3)")
                     {
-                        VariableName = $"{TypeSystem}.UMPNA.Data.NA_{_Param.Index}.State_{i + 1}";
-                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                    }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[18].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.Result";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
-                #region UZD
-                var UZDList = UserDialog.SearchControlViewModel("Настройки задвижек") as UZDUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[22].AddressStart);
-                foreach (var _Param in UZDList.Params)
-                {
-                    for (int i = 0; i < 2; i++)
+                            var Qty = _Param.KTPRA.Count / 16;
+                            for (int i = 0; i < Qty; i++)
+                            {
+                                VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.F_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                                VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.M_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                                VariableName = $"{TypeSystem}.LIST3.NA_{_Param.Index}.P_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
+
+                    #region Предельные параметры (Лист 4)
+                    if (_CheckBox.Content.ToString() == "Предельные параметры (Лист 4)")
                     {
-                        VariableName = $"{TypeSystem}.UZD.Data.UZD_{_Param.Index}.State_{i + 1}";
+                        var Params = UserDialog.SearchControlViewModel("Предельные параметры").GetParam() as ObservableCollection<BaseKTPRS>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[19].AddressStart);
+                        var index = 0;
+                        VariableName = $"{TypeSystem}.LIST4.Data.Result";
                         MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                        foreach (var _Param in Params)
+                        {
+                            var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
+                            if (index_par != 0) continue;
+                            VariableName = $"{TypeSystem}.LIST4.Data.F_{++index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+
+                            VariableName = $"{TypeSystem}.LIST4.Data.P_{index}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                     }
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
 
-                #region UVS
-                var UVSList = UserDialog.SearchControlViewModel("Настройки вспомсистем") as UVSUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[23].AddressStart);
-                foreach (var _Param in UVSList.Params)
-                {
-                    VariableName = $"{TypeSystem}.UVS.Data.UVS_{_Param.Index}.State_1";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #endregion
 
-                #region HandMap
-                var HandMapList = UserDialog.SearchControlViewModel("Карта ручн. ввода") as HandMapUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[25].AddressStart);
-                index = 0;
-                var qty = HandMapList.Params.Count / 16;
-                for (int i = 0; i < qty; i++)
-                {
-                    VariableName = $"{TypeSystem}.HandMap.Data.HandMap_{i + 1}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #region Лист 5
+                    if (_CheckBox.Content.ToString() == "Сигнализация (Лист 5)")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[20].AddressStart);
+                        var index = 0;
+                        foreach (var _Param in Params)
+                        {
+                            var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
+                            if (index_par != 0) continue;
+                            VariableName = $"{TypeSystem}.LIST5.Data.P_{++index}";
+                            ListParametrs.Add(new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress += 1}" } });
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
 
-                #region UTS
-                var UTSList = UserDialog.SearchControlViewModel("DO остальные") as UTSUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[24].AddressStart);
-                index = 0;
-                foreach (var _Param in UTSList.Params)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
-                    VariableName = $"{TypeSystem}.UTS.Data.UTS_{_Param.Param.Index}.State_1";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #endregion
 
-                #region UserReg
-                var UserRegList = UserDialog.SearchControlViewModel("Регистры формируемые") as UserRegUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[26].AddressStart);
-                index = 0;
-                foreach (var _Param in UserRegList.Params)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.Description)) continue;
-                    VariableName = $"{TypeSystem}.UserReg.Data.UserReg_{++index}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+                    #region Состояние НА
+                    if (_CheckBox.Content.ToString() == "Состояние НА")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[21].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                VariableName = $"{TypeSystem}.UMPNA.Data.NA_{_Param.Index}.State_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
 
-                #region CMD
-                var CommandList = UserDialog.SearchControlViewModel("Команды") as CommandUserControlViewModel;
-                ListParametrs = new();
-                MBAddress = long.Parse(ModbusTCP_HR[13].AddressStart);
-                index = 0;
-                foreach (var _Param in CommandList.Params)
-                {
-                    if (string.IsNullOrWhiteSpace(_Param.VarName)) continue;
-                    VariableName = $"{TypeSystem}.CMD.Cmd.{_Param.VarName}";
-                    MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                    #region Состояние ЗД
+                    if (_CheckBox.Content.ToString() == "Состояние ЗД")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Настройки задвижек").GetParam() as ObservableCollection<BaseUZD>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[22].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                VariableName = $"{TypeSystem}.UZD.Data.UZD_{_Param.Index}.State_{i + 1}";
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            }
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
+
+                    #region Состояние ВС
+                    if (_CheckBox.Content.ToString() == "Состояние ВС")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParam() as ObservableCollection<BaseUVS>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[23].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            VariableName = $"{TypeSystem}.UVS.Data.UVS_{_Param.Index}.State_1";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
+
+                    #region Состояние ТС
+                    if (_CheckBox.Content.ToString() == "Состояние ТС")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("DO остальные").GetParam() as ObservableCollection<BaseUTS>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[24].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                            VariableName = $"{TypeSystem}.UTS.Data.UTS_{_Param.Param.Index}.State_1";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
+
+                    #region Карта ручного ввода
+                    if (_CheckBox.Content.ToString() == "Карта ручного ввода")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParam() as ObservableCollection<BaseParam>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[25].AddressStart);
+                        var qty = Params.Count / 16;
+                        for (int i = 0; i < qty; i++)
+                        {
+                            VariableName = $"{TypeSystem}.HandMap.Data.HandMap_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
+
+                    #region Команды
+                    if (_CheckBox.Content.ToString() == "Команды")
+                    {
+                        var Params = UserDialog.SearchControlViewModel("Команды").GetParam() as ObservableCollection<BaseParam>;
+                        ListParametrs = new();
+                        MBAddress = long.Parse(ModbusTCP_HR[13].AddressStart);
+                        foreach (var _Param in Params)
+                        {
+                            if (string.IsNullOrWhiteSpace(_Param.VarName)) continue;
+                            VariableName = $"{TypeSystem}.CMD.Cmd.{_Param.VarName}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                        }
+                        Elements = new() { { "Binding", "Introduced" } };
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
+                    }
+                    #endregion
                 }
-                Elements = new() { { "Binding", "Introduced" } };
-                foreach (var _ListParametr in ListParametrs)
-                    CreateParametrsElementNode("item", Elements, _ListParametr);
-                #endregion
+
+                if (!Result) return false;
 
                 SaveDoc("MB_MAP");
                 return true;

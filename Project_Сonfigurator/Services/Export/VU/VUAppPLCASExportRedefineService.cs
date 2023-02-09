@@ -135,10 +135,8 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// <summary>
         /// Экспорт данных ВУ
         /// </summary>
-        /// <param name="TypeExport"></param>
+        /// <param name="CheckBoxs"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="NotSupportedException"></exception>
         public bool Export(ObservableCollection<CheckBox> CheckBoxs)
         {
             #region Объявление

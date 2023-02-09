@@ -104,6 +104,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
         #region Функции
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return Params;
+        }
+        #endregion
+
         #region Формирование данных при создании нового проекта
         private void CreateData()
         {

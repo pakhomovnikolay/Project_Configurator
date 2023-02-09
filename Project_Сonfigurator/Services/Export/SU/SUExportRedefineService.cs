@@ -1,15 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Export.SU.Interfaces;
-using Project_Сonfigurator.ViewModels.Base.Interfaces;
-using Project_Сonfigurator.ViewModels.UserControls.Params;
-using Project_Сonfigurator.ViewModels.UserControls.Signals;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Windows;
 
 namespace Project_Сonfigurator.Services.Export.SU
@@ -27,39 +23,46 @@ namespace Project_Сonfigurator.Services.Export.SU
         public bool Export(string TypeExport)
         {
             if (TypeExport is null) throw new ArgumentNullException(nameof(TypeExport));
+            IUserDialogService UserDialog = new UserDialogService();
+
             return TypeExport switch
             {
                 "Экспорт всего проекта" => ExportAll(),
-                "Чтение данных с модулей" => ExportReadInputs(),
-                "Запись данных для модулей" => ExportReadOutputs(),
+                "Чтение данных с модулей" => ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
+                "Запись данных для модулей" => ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
 
-                "Сигналы AI" => ExportSignalsAI(),
-                "Сигналы DI" => ExportSignalsDI(),
-                "Сигналы DO" => ExportSignalsDO(),
-                "Сигналы AO" => ExportSignalsAO(),
+                "Сигналы AI" => ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>),
+                "Сигналы DI" => ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParam() as ObservableCollection<SignalDI>),
+                "Сигналы DO" => ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParam() as ObservableCollection<SignalDO>),
+                "Сигналы AO" => ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParam() as ObservableCollection<SignalAO>),
 
-                "Диагностика" => ExportDiagnostics(),
-                "Секции шин" => ExportEC(),
-                "Группы сигналов" => ExportGroupSignal(),
-                "Рамки УСО" => ExportFrameUSO(),
-                "Рамки" => ExportFrame(),
+                "Диагностика" => ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
+                "Секции шин" => ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParam() as ObservableCollection<BaseParam>),
 
-                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(),
-                "Общестанционные защиты (Лист 2)" => ExportKTPR(),
-                "Агрегатные защиты (Лист 3)" => ExportKTPRA(),
-                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(),
-                "Предельные параметры (Лист 4)" => ExportKTPRS(),
-                "Лист 5" => ExportLIST5(),
+                "Группы сигналов" => ExportGroupSignal(
+                    UserDialog.SearchControlViewModel("Группы сигналов").GetParam() as ObservableCollection<GroupSignal>,
+                    UserDialog.SearchControlViewModel("Сигналы групп").GetParam() as ObservableCollection<BaseParam>),
 
-                "DI агрегатов" => ExportUMPNA_DI(),
-                "DI задвижек" => ExportUZD_DI(),
-                "DI вспомсистем" => ExportUVS_DI(),
-                "Параметры DO остальных" => ExportDO_Param(),
+                "Рамки УСО" => ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>),
+                "Рамки" => ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>),
 
-                "DO агрегатов" => ExportUMPNA_DO(),
-                "DO задвижек" => ExportUZD_DO(),
-                "DO вспомсистем" => ExportUVS_DO(),
-                "DO остальные" => ExportDO_Others(),
+                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
+                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>),
+                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
+                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
+                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры") as ObservableCollection<BaseKTPRS>),
+                "Лист 5" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация") as ObservableCollection<BaseSignaling>),
+
+                "DI агрегатов" => ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
+                "DI задвижек" => ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>),
+                "DI вспомсистем" => ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>),
+                "Параметры DO остальных" => ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>),
+
+                "DO агрегатов" => ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
+                "DO задвижек" => ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>),
+                "DO вспомсистем" => ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>),
+                "DO остальные" => ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>),
+
                 _ => throw new NotSupportedException($"Экспорт данного типа \"{TypeExport}\" не поддерживается"),
             };
         }
@@ -472,33 +475,45 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// <returns></returns>
         private static bool ExportAll()
         {
-            ExportReadInputs();
-            ExportReadOutputs();
-            ExportSignalsAI();
-            ExportSignalsDI();
-            ExportSignalsDO();
-            ExportSignalsAO();
-            ExportDiagnostics();
-            ExportEC();
-            ExportGroupSignal();
-            ExportFrameUSO();
-            ExportFrame();
-            ExportKGMPNA();
-            ExportKTPR();
-            ExportKTPRA();
-            ExportKTPRAS();
-            ExportKTPRS();
-            ExportLIST5();
-            ExportUMPNA_DI();
-            ExportUZD_DI();
-            ExportUVS_DI();
-            ExportDO_Param();
-            ExportUMPNA_DO();
-            ExportUZD_DO();
-            ExportUVS_DO();
-            ExportDO_Others();
+            var Result = true;
+            IUserDialogService UserDialog = new UserDialogService();
 
-            return true;
+            Result = Result && ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
+            Result = Result && ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
+
+            Result = Result && ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>);
+            Result = Result && ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParam() as ObservableCollection<SignalDI>);
+            Result = Result && ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParam() as ObservableCollection<SignalDO>);
+            Result = Result && ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParam() as ObservableCollection<SignalAO>);
+
+            Result = Result && ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
+            Result = Result && ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParam() as ObservableCollection<BaseParam>);
+
+            Result = Result && ExportGroupSignal(
+                UserDialog.SearchControlViewModel("Группы сигналов").GetParam() as ObservableCollection<GroupSignal>,
+                UserDialog.SearchControlViewModel("Сигналы групп").GetParam() as ObservableCollection<BaseParam>);
+
+            Result = Result && ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>);
+            Result = Result && ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>);
+
+            Result = Result && ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
+            Result = Result && ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>);
+            Result = Result && ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
+            Result = Result && ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
+            Result = Result && ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры") as ObservableCollection<BaseKTPRS>);
+            Result = Result && ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация") as ObservableCollection<BaseSignaling>);
+
+            Result = Result && ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
+            Result = Result && ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>);
+            Result = Result && ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>);
+            Result = Result && ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>);
+
+            Result = Result && ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
+            Result = Result && ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>);
+            Result = Result && ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>);
+            Result = Result && ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>);
+
+            return Result;
         }
         #endregion
 
@@ -507,7 +522,7 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт чтения данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadInputs()
+        private static bool ExportReadInputs(ObservableCollection<USO> Params)
         {
             //var ViewModel = item as MainWindowViewModel;
             //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
@@ -538,7 +553,7 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт записи данных с модулей
         /// </summary>
         /// <returns></returns>
-        private static bool ExportReadOutputs()
+        private static bool ExportReadOutputs(ObservableCollection<USO> Params)
         {
             //var ViewModel = item as MainWindowViewModel;
             //var Params = ViewModel.SignalsAIViewModel.SignalsAI;
@@ -569,16 +584,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Сигналы AI"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAI()
+        private static bool ExportSignalsAI(ObservableCollection<SignalAI> Params)
         {
-            ObservableCollection<SignalAI> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsAIUserControlViewModel
-                                     where _TabItem is SignalsAIUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных аналоговых параметров =========================================== *)\n\r";
 
@@ -624,16 +631,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Сигналы DI"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsDI()
+        private static bool ExportSignalsDI(ObservableCollection<SignalDI> Params)
         {
-            ObservableCollection<SignalDI> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsDIUserControlViewModel
-                                     where _TabItem is SignalsDIUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных дискретных параметров =========================================== *)\n\r";
             var fNumReal = "";
@@ -680,16 +679,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Сигналы DO"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsDO()
+        private static bool ExportSignalsDO(ObservableCollection<SignalDO> Params)
         {
-            ObservableCollection<SignalDO> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsDOUserControlViewModel
-                                     where _TabItem is SignalsDOUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных дискретных параметров =========================================== *)\n\r";
             var fNumReal = "";
@@ -741,16 +732,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Сигналы AO"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAO()
+        private static bool ExportSignalsAO(ObservableCollection<SignalAO> Params)
         {
-            ObservableCollection<SignalAO> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsAOUserControlViewModel
-                                     where _TabItem is SignalsAOUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных аналоговых параметров =========================================== *)\n\r";
 
@@ -789,16 +772,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Диагностика"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDiagnostics()
+        private static bool ExportDiagnostics(ObservableCollection<USO> Params)
         {
-            ObservableCollection<SignalAO> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsAOUserControlViewModel
-                                     where _TabItem is SignalsAOUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Получение диагностических данных =========================================== *)\n\r";
 
@@ -826,16 +801,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Секции шин"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportEC()
+        private static bool ExportEC(ObservableCollection<BaseParam> Params)
         {
-            ObservableCollection<BaseParam> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as ECUserControlViewModel
-                                     where _TabItem is ECUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка сигналов секций шин =========================================== *)\n\r";
 
@@ -875,22 +842,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Группы сигналов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportGroupSignal()
+        private static bool ExportGroupSignal(ObservableCollection<GroupSignal> Params, ObservableCollection<BaseParam> ParParams)
         {
-            ObservableCollection<GroupSignal> Params = new();
-            ObservableCollection<BaseParam> ParParams = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is GroupsSignalUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalsGroupUserControlViewModel
-                                     where _TabItem is SignalsGroupUserControlViewModel
-                                     select _TabItem)
-                ParParams = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка сигналов групп =========================================== *)\n\r";
 
@@ -941,16 +894,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Рамки УСО"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrameUSO()
+        private static bool ExportFrameUSO(ObservableCollection<USO> Params)
         {
-            ObservableCollection<GroupSignal> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is GroupsSignalUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка рамок для УСО =========================================== *)\n\r";
 
@@ -978,16 +923,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Рамки"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportFrame()
+        private static bool ExportFrame(ObservableCollection<USO> Params)
         {
-            ObservableCollection<GroupSignal> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as GroupsSignalUserControlViewModel
-                                     where _TabItem is GroupsSignalUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка рамок для объектов =========================================== *)\n\r";
 
@@ -1015,16 +952,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Карта готовностей агрегатов (Лист 1)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKGMPNA()
+        private static bool ExportKGMPNA(ObservableCollection<BaseUMPNA> Params)
         {
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров карты готовности насосных агрегатов ============================= *)\n\r";
 
@@ -1071,16 +1000,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Общестанционные защиты (Лист 2)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPR()
+        private static bool ExportKTPR(ObservableCollection<BaseKTPR> Params)
         {
-            ObservableCollection<BaseKTPR> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as KTPRUserControlViewModel
-                                     where _TabItem is KTPRUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров общестанционных защит ============================= *)\n\r";
 
@@ -1153,16 +1074,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Агрегатные защиты (Лист 3)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRA()
+        private static bool ExportKTPRA(ObservableCollection<BaseUMPNA> Params)
         {
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка параметров агрегатных защит ============================= *)\n\r";
 
@@ -1214,16 +1127,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Агрегатные предупреждения (Лист 3,5)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRAS()
+        private static bool ExportKTPRAS(ObservableCollection<BaseUMPNA> Params)
         {
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка предельных параметров агрегатных защит ============================= *)\n\r";
 
@@ -1272,16 +1177,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Предельные параметры (Лист 4)"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRS()
+        private static bool ExportKTPRS(ObservableCollection<BaseKTPRS> Params)
         {
-            ObservableCollection<BaseKTPRS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as KTPRSUserControlViewModel
-                                     where _TabItem is KTPRSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка предельных параметров общестанционныз защит ============================= *)\n\r";
 
@@ -1328,16 +1225,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Лист 5"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportLIST5()
+        private static bool ExportLIST5(ObservableCollection<BaseSignaling> Params)
         {
-            ObservableCollection<BaseSignaling> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as SignalingUserControlViewModel
-                                     where _TabItem is SignalingUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* ============================= Обработка общих сигналов системы диагностики ============================= *)\n\r";
 
@@ -1389,16 +1278,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DI агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DI()
+        private static bool ExportUMPNA_DI(ObservableCollection<BaseUMPNA> Params)
         {
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных сигналов НА =========================================== *)\n\r";
 
@@ -1458,16 +1339,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DI задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DI()
+        private static bool ExportUZD_DI(ObservableCollection<BaseUZD> Params)
         {
-            ObservableCollection<BaseUZD> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UZDUserControlViewModel
-                                     where _TabItem is UZDUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных сигналов задвижек =========================================== *)\n\r";
 
@@ -1533,16 +1406,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DI вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DI()
+        private static bool ExportUVS_DI(ObservableCollection<BaseUVS> Params)
         {
-            ObservableCollection<BaseUVS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UVSUserControlViewModel
-                                     where _TabItem is UVSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка входных сигналов вспомсистем =========================================== *)\n\r";
 
@@ -1609,16 +1474,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "Параметры DO остальных"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Param()
+        private static bool ExportDO_Param(ObservableCollection<BaseUTS> Params)
         {
-            ObservableCollection<BaseUTS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UTSUserControlViewModel
-                                     where _TabItem is UTSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка общесистемных выходных параметров =========================================== *)\n\r";
 
@@ -1678,16 +1535,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DO агрегатов"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUMPNA_DO()
+        private static bool ExportUMPNA_DO(ObservableCollection<BaseUMPNA> Params)
         {
-            ObservableCollection<BaseUMPNA> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UMPNAUserControlViewModel
-                                     where _TabItem is UMPNAUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных сигналов насосных агрегатов =========================================== *)\n\r";
 
@@ -1732,16 +1581,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DO задвижек"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUZD_DO()
+        private static bool ExportUZD_DO(ObservableCollection<BaseUZD> Params)
         {
-            ObservableCollection<BaseUZD> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UZDUserControlViewModel
-                                     where _TabItem is UZDUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных сигналов задвижек =========================================== *)\n\r";
 
@@ -1786,16 +1627,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DO вспомсистем"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUVS_DO()
+        private static bool ExportUVS_DO(ObservableCollection<BaseUVS> Params)
         {
-            ObservableCollection<BaseUVS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UVSUserControlViewModel
-                                     where _TabItem is UVSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка выходных сигналов вспомсистем =========================================== *)\n\r";
 
@@ -1840,16 +1673,8 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт "DO остальные"
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDO_Others()
+        private static bool ExportDO_Others(ObservableCollection<BaseUTS> Params)
         {
-            ObservableCollection<BaseUTS> Params = new();
-            IEnumerable<IViewModelUserControls> _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-            foreach (var _TabItem in from object _Item in _ViewModelsUserControl
-                                     let _TabItem = _Item as UTSUserControlViewModel
-                                     where _TabItem is UTSUserControlViewModel
-                                     select _TabItem)
-                Params = _TabItem.Params;
-
             var flAllowedPrint = false;
             var fNum = "(* =========================================== Обработка общесистемных выходных сигналов =========================================== *)\n\r";
 

@@ -264,6 +264,17 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
 
         #region Функции
 
+        #region Получение параметров
+        /// <summary>
+        /// Получение параметров
+        /// </summary>
+        /// <returns></returns>
+        public override object GetParam()
+        {
+            return Params;
+        }
+        #endregion
+
         #region Фильтрация сигналов AO
         /// <summary>
         /// Фильтрация сигналов AO
