@@ -242,7 +242,7 @@ namespace Project_Сonfigurator.ViewModels
             var msg = "Для применения настроек\nнеобходимо перезапустить приложение.\nПродолжить?";
             if (!UserDialog.SendMessage(Title, msg, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 
-            SettingServices.Config = _Config;
+            SettingServices.Config = Config;
             if (!SettingServices.Save())
             {
                 UserDialog.SendMessage(Title, "Ошибка сохранения конфигурации.\nсм. лог", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK);

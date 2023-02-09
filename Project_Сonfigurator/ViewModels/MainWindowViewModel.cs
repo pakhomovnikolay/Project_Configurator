@@ -318,7 +318,7 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdOpenProjectFolderExecute() => !string.IsNullOrWhiteSpace(App.Settings.Config.PathProject);
         private void OnCmdOpenProjectFolderExecuted()
         {
-            var name_folder = App.Settings.Config.PathProject;
+            var name_folder = App.Settings.Config.PathProject.Replace(NameProject + App.__EncryptedProjectFileSuffix, "");
             var name_project = App.Settings.Config.PathProject.Split('\\');
 
             if (name_project.Length <= 3)
