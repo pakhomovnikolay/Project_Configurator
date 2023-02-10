@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.DataLists;
-using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -17,18 +15,9 @@ namespace Project_Сonfigurator.ViewModels.AS
     public class IOSExportASWindowViewModel : ViewModel
     {
         #region Конструктор
-        private readonly IVUAppIOSASExportRedefineService VUAppIOSASExportRedefineServices;
-        private readonly IUserDialogService UserDialog;
-
         public IOSExportASWindowViewModel()
         {
             Title = "Экспорт приложения IOS";
-        }
-
-        public IOSExportASWindowViewModel(IVUAppIOSASExportRedefineService _VUAppIOSASExportRedefineServices, IUserDialogService _UserDialog) : this()
-        {
-            VUAppIOSASExportRedefineServices = _VUAppIOSASExportRedefineServices;
-            UserDialog = _UserDialog;
 
             #region Создаем CheckBox'ы
             CheckBoxs = new ObservableCollection<CheckBox>(new Lists().CheckBoxs);
@@ -162,10 +151,15 @@ namespace Project_Сonfigurator.ViewModels.AS
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return CheckBoxs;
-        }
+        public override ObservableCollection<T> GetParams<T>() => CheckBoxs as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => CheckBoxs = _Params as ObservableCollection<CheckBox>;
         #endregion
 
         #region Контроль разрешения выбора параметров экспорта

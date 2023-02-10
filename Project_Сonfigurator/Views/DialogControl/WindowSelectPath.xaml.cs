@@ -1,4 +1,4 @@
-﻿using Project_Сonfigurator.Services;
+﻿using Project_Сonfigurator.Services.Base;
 using System.Windows;
 
 namespace Project_Сonfigurator.Views.DialogControl

@@ -1,7 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls;
 using System.Collections.ObjectModel;
@@ -19,14 +18,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             Title = "Компоновка корзин";
             Description = $"Компоновка корзин {App.Settings.Config.NameProject}";
             UsingUserControl = new LayotRackUserControl();
-        }
-
-        private readonly ILayotRackService LayotRackServices;
-        private readonly ISignalService SignalServices;
-        public LayotRackUserControlViewModel(ILayotRackService _ILayotRackService, ISignalService _ISignalService) : this()
-        {
-            LayotRackServices = _ILayotRackService;
-            SignalServices = _ISignalService;
         }
         #endregion
 
@@ -257,10 +248,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<USO>;
         #endregion
 
         #region Создаем новое УСО

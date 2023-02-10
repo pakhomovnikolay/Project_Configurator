@@ -1,5 +1,5 @@
-﻿using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
+﻿using Project_Сonfigurator.Services.Base;
+using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -8,9 +8,8 @@ using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
 {
-    public class VUAppPLCASExportRedefineService : IVUAppPLCASExportRedefineService
+    public class VUAppPLCASExportRedefineService : BaseService, IVUAppPLCASExportRedefineService
     {
-        private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "system";
 
         private static Dictionary<string, string> Nodes;

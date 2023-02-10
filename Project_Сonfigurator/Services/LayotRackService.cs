@@ -1,11 +1,12 @@
 ﻿using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services
 {
-    public class LayotRackService : ILayotRackService
+    public class LayotRackService : BaseService, ILayotRackService
     {
         #region Обновление индексов модулей
         /// <summary>

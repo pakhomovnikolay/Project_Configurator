@@ -11,7 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 
-namespace Project_Сonfigurator.Services
+namespace Project_Сonfigurator.Services.Base
 {
     public class UserDialogService : IUserDialogService
     {
@@ -22,10 +22,7 @@ namespace Project_Сonfigurator.Services
         private ExportNamespaceASWindow? _ExportNamespaceASWindow;
         private IOSExportASWindow? _IOSExportASWindow;
         private PLCExportASWindow? _PLCExportASWindow;
-        private readonly IServiceProvider _Services;
-
-        public UserDialogService() { }
-        public UserDialogService(IServiceProvider Services) : this() => _Services = Services;
+        private readonly IServiceProvider _Services = App.Services;
         #endregion
 
         #region Открытие файла
@@ -276,13 +273,12 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenMessageWindow()
         {
-            if (_MessageWindow is { } window) { window.Show(); return; }
+            if (_MessageWindow is { } window) { window.Activate(); return; }
 
             window = _Services.GetRequiredService<MessageWindow>();
+            window.Closed += (_, _) => _MessageWindow = null;
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _MessageWindow = null;
-
 
             _MessageWindow = window;
             window.Show();
@@ -298,10 +294,9 @@ namespace Project_Сonfigurator.Services
             if (_ExportNamespaceASWindow is { } window) { window.Activate(); return; }
 
             window = _Services.GetRequiredService<ExportNamespaceASWindow>();
+            window.Closed += (_, _) => _ExportNamespaceASWindow = null;
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _ExportNamespaceASWindow = null;
-
 
             _ExportNamespaceASWindow = window;
             window.Show();
@@ -314,13 +309,12 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenIOSExportASWindow()
         {
-            if (_IOSExportASWindow is { } window) { window.Show(); return; }
+            if (_IOSExportASWindow is { } window) { window.Activate(); return; }
 
             window = _Services.GetRequiredService<IOSExportASWindow>();
+            window.Closed += (_, _) => _IOSExportASWindow = null;
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _IOSExportASWindow = null;
-
 
             _IOSExportASWindow = window;
             window.Show();
@@ -333,13 +327,12 @@ namespace Project_Сonfigurator.Services
         /// </summary>
         public void OpenPLCExportASWindow()
         {
-            if (_PLCExportASWindow is { } window) { window.Show(); return; }
+            if (_PLCExportASWindow is { } window) { window.Activate(); return; }
 
             window = _Services.GetRequiredService<PLCExportASWindow>();
+            window.Closed += (_, _) => _PLCExportASWindow = null;
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            window.Closed += (_, _) => _PLCExportASWindow = null;
-
 
             _PLCExportASWindow = window;
             window.Show();

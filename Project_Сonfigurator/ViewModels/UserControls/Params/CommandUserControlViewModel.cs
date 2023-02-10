@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System.Collections.ObjectModel;
@@ -14,16 +13,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Команды";
             Description = "Команды";
             UsingUserControl = new CommandUserControl();
-        }
-
-        private readonly IUserDialogService UserDialog;
-        private readonly ISignalService SignalServices;
-        private readonly IDBService DBServices;
-        public CommandUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService, IDBService _IDBService) : this()
-        {
-            UserDialog = _UserDialog;
-            SignalServices = _ISignalService;
-            DBServices = _IDBService;
         }
         #endregion
 
@@ -109,10 +98,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<BaseParam>;
         #endregion
 
         #region Формирование данных при создании нового проекта

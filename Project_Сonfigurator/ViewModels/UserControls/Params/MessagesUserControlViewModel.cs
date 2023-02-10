@@ -1,6 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System.Collections.ObjectModel;
@@ -17,12 +16,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Сообщения";
             Description = "Таблица систем сообщений";
             UsingUserControl = new MessagesUserControl();
-        }
-
-        private readonly ISignalService SignalServices;
-        public MessagesUserControlViewModel(ISignalService _ISignalService) : this()
-        {
-            SignalServices = _ISignalService;
         }
         #endregion
 
@@ -103,10 +96,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<BaseSystemMessage>;
         #endregion
 
         #region Формирование данных при создании нового проекта

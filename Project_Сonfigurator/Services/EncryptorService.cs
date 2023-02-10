@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Services.Interfaces;
+﻿using Project_Сonfigurator.Services.Base;
+using Project_Сonfigurator.Services.Interfaces;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Project_Сonfigurator.Services
 {
-    public class EncryptorService : IEncryptorService
+    public class EncryptorService : BaseService, IEncryptorService
     {
         #region Соль шифрования
         private static readonly byte[] __Salt =

@@ -1,5 +1,5 @@
 ﻿using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Services;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using System.Collections.ObjectModel;
 using System.Windows;

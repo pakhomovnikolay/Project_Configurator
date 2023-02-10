@@ -1,13 +1,12 @@
 ﻿using ClosedXML.Excel;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models;
+using Project_Сonfigurator.Models.Interfaces;
 using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows;
@@ -24,12 +23,6 @@ namespace Project_Сonfigurator.ViewModels
         {
             Title = "Сообщения";
             WindowWindowState = WindowState.Maximized;
-        }
-
-        private readonly IUserDialogService UserDialog;
-        public MessageWindowViewModel(IUserDialogService _UserDialog) : this()
-        {
-            UserDialog = _UserDialog;
             _SubParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -137,14 +130,6 @@ namespace Project_Сonfigurator.ViewModels
             get => _ListTableImport;
             set => Set(ref _ListTableImport, value);
         }
-        #endregion
-
-        #region Коллекция сообщений для отображения
-        /// <summary>
-        /// Коллекция сообщений для отображения
-        /// </summary>
-        private readonly CollectionViewSource _SubParamsDataView = new();
-        public ICollectionView SubParamsDataView => _SubParamsDataView?.View;
         #endregion
 
         #endregion
@@ -468,10 +453,15 @@ namespace Project_Сonfigurator.ViewModels
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<CollectionMessage>;
         #endregion
 
         #region Фильтрация сообщений
@@ -484,7 +474,7 @@ namespace Project_Сonfigurator.ViewModels
         {
             #region Проверки до начала фильтрации
             // Выходим, если источник события не имеет нужный нам тип фильтрации, фильтр не установлен
-            if (e.Item is not BaseMessage _Param || _Param is null) { e.Accepted = false; return; }
+            if (e.Item is not IBaseMessage _Param || _Param is null) { e.Accepted = false; return; }
             if (SelectedParam is null) { e.Accepted = false; return; }
             if (string.IsNullOrWhiteSpace(SelectedParam.TextFilter)) return;
             #endregion

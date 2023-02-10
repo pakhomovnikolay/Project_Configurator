@@ -4,7 +4,7 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project_Сonfigurator.Services
+namespace Project_Сonfigurator.Services.Base
 {
     public class LogSerivece : ILogSerivece
     {

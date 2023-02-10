@@ -4,8 +4,8 @@ using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -17,10 +17,8 @@ using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
 {
-    public class VUNamespaceASExportRedefineService : IVUNamespaceASExportRedefineService
+    public class VUNamespaceASExportRedefineService : BaseService, IVUNamespaceASExportRedefineService
     {
-        private static readonly IUserDialogService UserDialog = new UserDialogService();
-        private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "system";
         private const string ValueAttributeTypeHistory = "Enable=\"True\"; ServerTime=\"False\";";
         private const string TypeAttributeInitialValue = "unit.System.Attributes.InitialValue";
@@ -416,33 +414,33 @@ namespace Project_Сonfigurator.Services.Export.VU
             return TypeExport switch
             {
                 "Сообщения" => Messages(
-                    UserDialog.SearchControlViewModel("Сообщения").GetParam() as ObservableCollection<BaseSystemMessage>,
-                    App.Services.GetRequiredService<MessageWindowViewModel>().GetParam() as ObservableCollection<CollectionMessage>),
+                    UserDialog.SearchControlViewModel("Сообщения").GetParams<BaseSystemMessage>(),
+                    App.Services.GetRequiredService<MessageWindowViewModel>().GetParams<CollectionMessage>()),
 
                 "Диагностика" => ExportDiagnostics(
-                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>,
-                    UserDialog.SearchControlViewModel("Таблица сигналов").GetParam() as ObservableCollection<USO>,
-                    UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>),
+                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>(),
+                    UserDialog.SearchControlViewModel("Таблица сигналов").GetParams<USO>(),
+                    UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>()),
 
                 "Сигналы AI" => ExportSignalsAI(
-                    UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>,
-                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
+                    UserDialog.SearchControlViewModel("Сигналы AI").GetParams<SignalAI>(),
+                    UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
 
-                "Регистры формируемые" => ExportUserReg(UserDialog.SearchControlViewModel("Регистры формируемые").GetParam() as ObservableCollection<BaseParam>),
+                "Регистры формируемые" => ExportUserReg(UserDialog.SearchControlViewModel("Регистры формируемые").GetParams<BaseParam>()),
 
-                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
-                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты").GetParam() as ObservableCollection<BaseKTPR>),
-                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
-                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Передельные параметры").GetParam() as ObservableCollection<BaseKTPRS>),
-                "Сигнализация (Лист 5)" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>),
+                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты").GetParams<BaseKTPR>()),
+                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Передельные параметры").GetParams<BaseKTPRS>()),
+                "Сигнализация (Лист 5)" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>()),
 
-                "Состояние НА" => ExportStateUMPNA(UserDialog.SearchControlViewModel("Настрйоки МПНА").GetParam() as ObservableCollection<BaseUMPNA>),
-                "Состояние ЗД" => ExportStateUZD(UserDialog.SearchControlViewModel("Настрйоки задвижек").GetParam() as ObservableCollection<BaseUZD>),
-                "Состояние ВС" => ExportStateUVS(UserDialog.SearchControlViewModel("Настрйоки вспомсистем").GetParam() as ObservableCollection<BaseUVS>),
-                "Состояние ТС" => ExportStateUTS(UserDialog.SearchControlViewModel("DO остальные").GetParam() as ObservableCollection<BaseUTS>),
+                "Состояние НА" => ExportStateUMPNA(UserDialog.SearchControlViewModel("Настрйоки МПНА").GetParams<BaseUMPNA>()),
+                "Состояние ЗД" => ExportStateUZD(UserDialog.SearchControlViewModel("Настрйоки задвижек").GetParams<BaseUZD>()),
+                "Состояние ВС" => ExportStateUVS(UserDialog.SearchControlViewModel("Настрйоки вспомсистем").GetParams<BaseUVS>()),
+                "Состояние ТС" => ExportStateUTS(UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>()),
 
-                "Карта ручного ввода" => ExportHandMap(UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParam() as ObservableCollection<BaseParam>),
-                "Команды" => ExportCommands(UserDialog.SearchControlViewModel("Команды").GetParam() as ObservableCollection<BaseParam>),
+                "Карта ручного ввода" => ExportHandMap(UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParams<BaseParam>()),
+                "Команды" => ExportCommands(UserDialog.SearchControlViewModel("Команды").GetParams<BaseParam>()),
 
                 _ => throw new NotSupportedException($"Экспорт данного типа \"{TypeExport}\" не поддерживается"),
             };
@@ -454,7 +452,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт сообщений
         /// </summary>
         /// <returns></returns>
-        private static bool Messages(ObservableCollection<BaseSystemMessage> Params, ObservableCollection<CollectionMessage> SubParams)
+        private bool Messages(ObservableCollection<BaseSystemMessage> Params, ObservableCollection<CollectionMessage> SubParams)
         {
             try
             {
@@ -969,7 +967,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт диагностики
         /// </summary>
         /// <returns></returns>
-        private static bool ExportDiagnostics(ObservableCollection<USO> Params, ObservableCollection<USO> SubParams, ObservableCollection<BaseSignaling> SubSubParams)
+        private bool ExportDiagnostics(ObservableCollection<USO> Params, ObservableCollection<USO> SubParams, ObservableCollection<BaseSignaling> SubSubParams)
         {
             #region Объявление
             var qty_plc = 0;
@@ -1730,7 +1728,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт аналоговых сигналов (AI)
         /// </summary>
         /// <returns></returns>
-        private static bool ExportSignalsAI(ObservableCollection<SignalAI> Params, ObservableCollection<USO> ParParams)
+        private bool ExportSignalsAI(ObservableCollection<SignalAI> Params, ObservableCollection<USO> ParParams)
         {
             try
             {
@@ -1999,7 +1997,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт регистров формируемых
         /// </summary>
         /// <returns></returns>
-        private static bool ExportUserReg(ObservableCollection<BaseParam> Params)
+        private bool ExportUserReg(ObservableCollection<BaseParam> Params)
         {
             try
             {
@@ -2095,7 +2093,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты готовностей МПНА
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKGMPNA(ObservableCollection<BaseUMPNA> Params)
+        private bool ExportKGMPNA(ObservableCollection<BaseUMPNA> Params)
         {
             try
             {
@@ -2247,7 +2245,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты общестанционных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPR(ObservableCollection<BaseKTPR> Params)
+        private bool ExportKTPR(ObservableCollection<BaseKTPR> Params)
         {
             try
             {
@@ -2384,7 +2382,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты агрегатных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRA(ObservableCollection<BaseUMPNA> Params)
+        private bool ExportKTPRA(ObservableCollection<BaseUMPNA> Params)
         {
             try
             {
@@ -2536,7 +2534,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты предельных параметров общестанционных защит
         /// </summary>
         /// <returns></returns>
-        private static bool ExportKTPRS(ObservableCollection<BaseKTPRS> Params)
+        private bool ExportKTPRS(ObservableCollection<BaseKTPRS> Params)
         {
             try
             {
@@ -2672,7 +2670,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт карты общесистемной сигнализации
         /// </summary>
         /// <returns></returns>
-        private static bool ExportLIST5(ObservableCollection<BaseSignaling> Params)
+        private bool ExportLIST5(ObservableCollection<BaseSignaling> Params)
         {
             try
             {
@@ -2833,7 +2831,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных МПНА
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUMPNA(ObservableCollection<BaseUMPNA> Params)
+        private bool ExportStateUMPNA(ObservableCollection<BaseUMPNA> Params)
         {
             try
             {
@@ -2969,7 +2967,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ЗД
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUZD(ObservableCollection<BaseUZD> Params)
+        private bool ExportStateUZD(ObservableCollection<BaseUZD> Params)
         {
             try
             {
@@ -3105,7 +3103,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ВС
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUVS(ObservableCollection<BaseUVS> Params)
+        private bool ExportStateUVS(ObservableCollection<BaseUVS> Params)
         {
             try
             {
@@ -3236,7 +3234,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных ТС
         /// </summary>
         /// <returns></returns>
-        private static bool ExportStateUTS(ObservableCollection<BaseUTS> Params)
+        private bool ExportStateUTS(ObservableCollection<BaseUTS> Params)
         {
             try
             {
@@ -3369,7 +3367,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт данных карты ручного ввода
         /// </summary>
         /// <returns></returns>
-        private static bool ExportHandMap(ObservableCollection<BaseParam> Params)
+        private bool ExportHandMap(ObservableCollection<BaseParam> Params)
         {
             try
             {
@@ -3492,7 +3490,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// Экспорт команд
         /// </summary>
         /// <returns></returns>
-        private static bool ExportCommands(ObservableCollection<BaseParam> Params)
+        private bool ExportCommands(ObservableCollection<BaseParam> Params)
         {
             try
             {

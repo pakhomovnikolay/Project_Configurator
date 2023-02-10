@@ -1,8 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
+using Project_Сonfigurator.Infrastructures.DataLists;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Services;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
 using Project_Сonfigurator.Views.UserControls.Settings;
@@ -20,27 +19,10 @@ namespace Project_Сonfigurator.ViewModels
         public SettingWindowViewModels()
         {
             Title = "Настройки";
-        }
 
-        private readonly ISettingService SettingServices;
-        private readonly IEditService EditServices;
-        private readonly IUserDialogService UserDialog;
-        public SettingWindowViewModels(ISettingService _ISettingService, IEditService _EditServices, IUserDialogService _UserDialog) : this()
-        {
-            SettingServices = _ISettingService;
-            EditServices = _EditServices;
-            UserDialog = _UserDialog;
-
-            SettingsList = new()
-            {
-                new BaseText { Text = "Общие настройки" },
-                new BaseText { Text = "Настройки вендора" },
-                new BaseText { Text = "Настройки узов" },
-                new BaseText { Text = "Настройки импорта" },
-                new BaseText { Text = "Настройки испольнительных механизмов" },
-                new BaseText { Text = "Настройки карты адресов" }
-            };
-            SelectedSettingType = SettingsList[0];
+            SettingsList = new ObservableCollection<BaseText>(new Lists().SettingsList);
+            if (SettingsList.Count > 0)
+                SelectedSettingType = SettingsList[0];
 
             #region Создаем карты адресов при их отсутствии
             var _BaseAddressMap = Enumerable.Range(1, 1000).Select(
@@ -456,8 +438,6 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdSelectedFolderSavedProjectExecute() => true;
         private void OnCmdSelectedFolderSavedProjectExecuted()
         {
-            IUserDialogService UserDialog = new UserDialogService();
-
             string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
             if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathProject, Filter))
                 Config.PathProject = path + file;
@@ -475,8 +455,6 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdSelectedFolderExportVUExecute() => true;
         private void OnCmdSelectedFolderExportVUExecuted()
         {
-            IUserDialogService UserDialog = new UserDialogService();
-
             string Filter = $"Файлы (*.*)|*.*";
             if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathExportVU, Filter))
                 Config.PathExportVU = path;

@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using System;
 using System.Diagnostics;
@@ -9,7 +10,7 @@ using System.Xml.Serialization;
 
 namespace Project_Сonfigurator.Services
 {
-    public class SettingService : ISettingService
+    public class SettingService : BaseService, ISettingService
     {
         #region Параметры настроек
         /// <summary>

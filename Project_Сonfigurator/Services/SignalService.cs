@@ -2,12 +2,13 @@
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace Project_Сonfigurator.Services
 {
-    public class SignalService : ISignalService
+    public class SignalService : BaseService, ISignalService
     {
         #region Флаг необходимости выбора сигнала
         /// <summary>

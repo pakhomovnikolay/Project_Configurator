@@ -1,8 +1,8 @@
 ﻿using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Export.SU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using System;
 using System.Collections.ObjectModel;
@@ -10,7 +10,7 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Services.Export.SU
 {
-    public class SUExportRedefineService : ISUExportRedefineService
+    public class SUExportRedefineService : BaseService, ISUExportRedefineService
     {
         #region Экспорт данных СУ
         /// <summary>
@@ -23,45 +23,44 @@ namespace Project_Сonfigurator.Services.Export.SU
         public bool Export(string TypeExport)
         {
             if (TypeExport is null) throw new ArgumentNullException(nameof(TypeExport));
-            IUserDialogService UserDialog = new UserDialogService();
 
             return TypeExport switch
             {
                 "Экспорт всего проекта" => ExportAll(),
-                "Чтение данных с модулей" => ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
-                "Запись данных для модулей" => ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
+                "Чтение данных с модулей" => ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
+                "Запись данных для модулей" => ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
 
-                "Сигналы AI" => ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>),
-                "Сигналы DI" => ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParam() as ObservableCollection<SignalDI>),
-                "Сигналы DO" => ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParam() as ObservableCollection<SignalDO>),
-                "Сигналы AO" => ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParam() as ObservableCollection<SignalAO>),
+                "Сигналы AI" => ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParams<SignalAI>()),
+                "Сигналы DI" => ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParams<SignalDI>()),
+                "Сигналы DO" => ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParams<SignalDO>()),
+                "Сигналы AO" => ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParams<SignalAO>()),
 
-                "Диагностика" => ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>),
-                "Секции шин" => ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParam() as ObservableCollection<BaseParam>),
+                "Диагностика" => ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
+                "Секции шин" => ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParams<BaseParam>()),
 
                 "Группы сигналов" => ExportGroupSignal(
-                    UserDialog.SearchControlViewModel("Группы сигналов").GetParam() as ObservableCollection<GroupSignal>,
-                    UserDialog.SearchControlViewModel("Сигналы групп").GetParam() as ObservableCollection<BaseParam>),
+                    UserDialog.SearchControlViewModel("Группы сигналов").GetParams<GroupSignal>(),
+                    UserDialog.SearchControlViewModel("Сигналы групп").GetParams<BaseParam>()),
 
-                "Рамки УСО" => ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>),
-                "Рамки" => ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>),
+                "Рамки УСО" => ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
+                "Рамки" => ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>()),
 
-                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
-                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>),
-                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
-                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
-                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры") as ObservableCollection<BaseKTPRS>),
-                "Лист 5" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация") as ObservableCollection<BaseSignaling>),
+                "Карта готовностей агрегатов (Лист 1)" => ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "Общестанционные защиты (Лист 2)" => ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты").GetParams<BaseKTPR>()),
+                "Агрегатные защиты (Лист 3)" => ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "Агрегатные предупреждения (Лист 3,5)" => ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "Предельные параметры (Лист 4)" => ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры").GetParams<BaseKTPRS>()),
+                "Лист 5" => ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>()),
 
-                "DI агрегатов" => ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
-                "DI задвижек" => ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>),
-                "DI вспомсистем" => ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>),
-                "Параметры DO остальных" => ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>),
+                "DI агрегатов" => ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "DI задвижек" => ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек").GetParams<BaseUZD>()),
+                "DI вспомсистем" => ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParams<BaseUVS>()),
+                "Параметры DO остальных" => ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>()),
 
-                "DO агрегатов" => ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>),
-                "DO задвижек" => ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>),
-                "DO вспомсистем" => ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>),
-                "DO остальные" => ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>),
+                "DO агрегатов" => ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>()),
+                "DO задвижек" => ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек").GetParams<BaseUZD>()),
+                "DO вспомсистем" => ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParams<BaseUVS>()),
+                "DO остальные" => ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>()),
 
                 _ => throw new NotSupportedException($"Экспорт данного типа \"{TypeExport}\" не поддерживается"),
             };
@@ -473,45 +472,44 @@ namespace Project_Сonfigurator.Services.Export.SU
         /// Экспорт всего проекта
         /// </summary>
         /// <returns></returns>
-        private static bool ExportAll()
+        private bool ExportAll()
         {
             var Result = true;
-            IUserDialogService UserDialog = new UserDialogService();
 
-            Result = Result && ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
-            Result = Result && ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
+            Result = Result && ExportReadInputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>());
+            Result = Result && ExportReadOutputs(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>());
 
-            Result = Result && ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>);
-            Result = Result && ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParam() as ObservableCollection<SignalDI>);
-            Result = Result && ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParam() as ObservableCollection<SignalDO>);
-            Result = Result && ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParam() as ObservableCollection<SignalAO>);
+            Result = Result && ExportSignalsAI(UserDialog.SearchControlViewModel("Сигналы AI").GetParams<SignalAI>());
+            Result = Result && ExportSignalsDI(UserDialog.SearchControlViewModel("Сигналы DI").GetParams<SignalDI>());
+            Result = Result && ExportSignalsDO(UserDialog.SearchControlViewModel("Сигналы DO").GetParams<SignalDO>());
+            Result = Result && ExportSignalsAO(UserDialog.SearchControlViewModel("Сигналы AO").GetParams<SignalAO>());
 
-            Result = Result && ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>);
-            Result = Result && ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParam() as ObservableCollection<BaseParam>);
+            Result = Result && ExportDiagnostics(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>());
+            Result = Result && ExportEC(UserDialog.SearchControlViewModel("Секции шин").GetParams<BaseParam>());
 
             Result = Result && ExportGroupSignal(
-                UserDialog.SearchControlViewModel("Группы сигналов").GetParam() as ObservableCollection<GroupSignal>,
-                UserDialog.SearchControlViewModel("Сигналы групп").GetParam() as ObservableCollection<BaseParam>);
+                UserDialog.SearchControlViewModel("Группы сигналов").GetParams<GroupSignal>(),
+                UserDialog.SearchControlViewModel("Сигналы групп").GetParams<BaseParam>());
 
-            Result = Result && ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>);
-            Result = Result && ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин") as ObservableCollection<USO>);
+            Result = Result && ExportFrameUSO(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>());
+            Result = Result && ExportFrame(UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>());
 
-            Result = Result && ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
-            Result = Result && ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>);
-            Result = Result && ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
-            Result = Result && ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
-            Result = Result && ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры") as ObservableCollection<BaseKTPRS>);
-            Result = Result && ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация") as ObservableCollection<BaseSignaling>);
+            Result = Result && ExportKGMPNA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>());
+            Result = Result && ExportKTPR(UserDialog.SearchControlViewModel("Общестанционные защиты").GetParams<BaseKTPR>());
+            Result = Result && ExportKTPRA(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>());
+            Result = Result && ExportKTPRAS(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>());
+            Result = Result && ExportKTPRS(UserDialog.SearchControlViewModel("Предельные параметры").GetParams<BaseKTPRS>());
+            Result = Result && ExportLIST5(UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>());
 
-            Result = Result && ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
-            Result = Result && ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>);
-            Result = Result && ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>);
-            Result = Result && ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>);
+            Result = Result && ExportUMPNA_DI(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>());
+            Result = Result && ExportUZD_DI(UserDialog.SearchControlViewModel("Настройки задвижек").GetParams<BaseUZD>());
+            Result = Result && ExportUVS_DI(UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParams<BaseUVS>());
+            Result = Result && ExportDO_Param(UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>());
 
-            Result = Result && ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА") as ObservableCollection<BaseUMPNA>);
-            Result = Result && ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек") as ObservableCollection<BaseUZD>);
-            Result = Result && ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем") as ObservableCollection<BaseUVS>);
-            Result = Result && ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные") as ObservableCollection<BaseUTS>);
+            Result = Result && ExportUMPNA_DO(UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>());
+            Result = Result && ExportUZD_DO(UserDialog.SearchControlViewModel("Настройки задвижек").GetParams<BaseUZD>());
+            Result = Result && ExportUVS_DO(UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParams<BaseUVS>());
+            Result = Result && ExportDO_Others(UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>());
 
             return Result;
         }

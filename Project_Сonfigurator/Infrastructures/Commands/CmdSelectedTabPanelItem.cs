@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands.Base;
-using Project_Сonfigurator.Infrastructures.DataLists;
-using Project_Сonfigurator.Services;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;

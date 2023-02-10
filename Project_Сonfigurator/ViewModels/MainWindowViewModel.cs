@@ -1,8 +1,5 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
-using Project_Сonfigurator.Services.Export.SU.Interfaces;
-using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -22,31 +19,6 @@ namespace Project_Сonfigurator.ViewModels
         {
             Title = "Конфигуратор проекта";
             WindowWindowState = WindowState.Maximized;
-        }
-
-        public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
-        private readonly IUserDialogService UserDialog;
-        private readonly IDBService DBServices;
-        public readonly ISettingService SettingServices;
-        private readonly ISUExportRedefineService SUExportRedefineServices;
-        private readonly IVUExportOPCMap VUExportOPCMaps;
-        private readonly IVUExportModbusMap IVUExportModbusMaps;
-        private readonly ICyrillicSymbolService CyrillicSymbolServices;
-
-        public MainWindowViewModel(IUserDialogService _UserDialog, IDBService _IDBService, ISettingService _ISettingService,
-            ISUExportRedefineService _ISUExportRedefineService, IEnumerable<IViewModelUserControls> viewModelUserControls,
-            IVUExportOPCMap _IVUExportOPCMap, IVUExportModbusMap _IVUExportModbusMaps, ICyrillicSymbolService _ICyrillicSymbolService) : this()
-        {
-            #region Сервисы
-            ViewModelUserControls = viewModelUserControls;
-            UserDialog = _UserDialog;
-            DBServices = _IDBService;
-            SettingServices = _ISettingService;
-            SUExportRedefineServices = _ISUExportRedefineService;
-            VUExportOPCMaps = _IVUExportOPCMap;
-            IVUExportModbusMaps = _IVUExportModbusMaps;
-            CyrillicSymbolServices = _ICyrillicSymbolService;
-            #endregion
 
             #region Задаем имя проекта
             SetNameProject();
@@ -62,6 +34,12 @@ namespace Project_Сonfigurator.ViewModels
                 }
             }
             #endregion
+        }
+
+        public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
+        public MainWindowViewModel(IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
+        {
+            ViewModelUserControls = viewModelUserControls;
         }
         #endregion
 
@@ -491,10 +469,7 @@ namespace Project_Сonfigurator.ViewModels
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return SelectedViewModel;
-        }
+        public override void GetParams<T>(out T _Params) => _Params = (T)ViewModelUserControls;
         #endregion
 
         #region Задаем имя проекта

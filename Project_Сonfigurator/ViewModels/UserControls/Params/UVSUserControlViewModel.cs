@@ -2,7 +2,6 @@
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
@@ -22,14 +21,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Настройки вспомсистем";
             Description = "Текущие массивы состояний вспомсистем";
             UsingUserControl = new UVSUserControl();
-        }
-
-        private readonly ISignalService SignalServices;
-        private readonly IUserDialogService UserDialog;
-        public UVSUserControlViewModel(ISignalService _ISignalService, IUserDialogService _UserDialog) : this()
-        {
-            SignalServices = _ISignalService;
-            UserDialog = _UserDialog;
         }
         #endregion
 
@@ -305,10 +296,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<BaseUVS>;
         #endregion
 
         #region Создание параметра

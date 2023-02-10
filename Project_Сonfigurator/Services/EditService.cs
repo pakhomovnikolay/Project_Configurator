@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.Views.DialogControl;
 using System;
@@ -6,7 +7,7 @@ using System.Windows;
 
 namespace Project_Сonfigurator.Services
 {
-    public class EditService : IEditService
+    public class EditService : BaseService, IEditService
     {
         #region Редактирование объекта
         /// <summary>

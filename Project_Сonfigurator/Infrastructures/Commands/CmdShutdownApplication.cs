@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands.Base;
-using Project_Сonfigurator.Services;
+using Project_Сonfigurator.Services.Base;
+using Project_Сonfigurator.Services.Interfaces;
 using System.Windows;
 
 namespace Project_Сonfigurator.Infrastructures.Commands
@@ -14,7 +15,7 @@ namespace Project_Сonfigurator.Infrastructures.Commands
 
         protected override void Execute(object parameter)
         {
-            var UserDialog = new UserDialogService();
+            IUserDialogService UserDialog = new UserDialogService();
             var msg = "Вы действительно хотите выйти?";
             if (!UserDialog.SendMessage("Внимание!", msg, MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes)) return;
 

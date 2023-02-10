@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Models;
 using Project_Сonfigurator.ViewModels;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls;
@@ -251,6 +252,30 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
                 return _CheckBoxs;
             }
             set => _CheckBoxs = value;
+        }
+        #endregion
+
+        #region Список настроек
+        private ObservableCollection<BaseText> _SettingsList = new();
+        /// <summary>
+        /// Список настроек
+        /// </summary>
+        public ObservableCollection<BaseText> SettingsList
+        {
+            get
+            {
+                SettingsList = new()
+                {
+                    new BaseText { Text = "Общие настройки" },
+                    new BaseText { Text = "Настройки вендора" },
+                    new BaseText { Text = "Настройки узов" },
+                    new BaseText { Text = "Настройки импорта" },
+                    new BaseText { Text = "Настройки испольнительных механизмов" },
+                    new BaseText { Text = "Настройки карты адресов" }
+                };
+                return _SettingsList;
+            }
+            set => _SettingsList = value;
         }
         #endregion
     }

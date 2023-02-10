@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.DataLists;
-using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -17,18 +15,9 @@ namespace Project_Сonfigurator.ViewModels.AS
     public class ExportNamespaceASWindowViewModel : ViewModel
     {
         #region Конструктор
-        private readonly IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices;
-        private readonly IUserDialogService UserDialog;
-
         public ExportNamespaceASWindowViewModel()
         {
             Title = "Экспорт пространства имен";
-        }
-
-        public ExportNamespaceASWindowViewModel(IVUNamespaceASExportRedefineService _VUSocketsASExportRedefineService, IUserDialogService _UserDialog) : this()
-        {
-            VUSocketsASExportRedefineServices = _VUSocketsASExportRedefineService;
-            UserDialog = _UserDialog;
 
             #region Создаем CheckBox'ы
             CheckBoxs = new ObservableCollection<CheckBox>(new Lists().CheckBoxs);
@@ -112,7 +101,6 @@ namespace Project_Сonfigurator.ViewModels.AS
 
                 IsSelectedOne = IsSelectedAll;
             }
-
         }
         #endregion
 
@@ -132,7 +120,6 @@ namespace Project_Сonfigurator.ViewModels.AS
                 IsSelectedAll = IsSelectedAll && _CheckBox.IsChecked == true;
                 IsSelectedOne = IsSelectedOne || _CheckBox.IsChecked == true;
             }
-
         }
         #endregion
 
@@ -170,10 +157,15 @@ namespace Project_Сonfigurator.ViewModels.AS
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return CheckBoxs;
-        }
+        public override ObservableCollection<T> GetParams<T>() => CheckBoxs as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => CheckBoxs = _Params as ObservableCollection<CheckBox>;
         #endregion
 
         #region Контроль разрешения выбора параметров экспорта

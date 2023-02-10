@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Export.SU;
 using Project_Сonfigurator.Services.Export.SU.Interfaces;
 using Project_Сonfigurator.Services.Export.VU;
@@ -22,6 +23,7 @@ namespace Project_Сonfigurator.Services
             .AddTransient<IVUExportModbusMap, VUExportModbusMap>()
             .AddTransient<IVUExportOPCMap, VUExportOPCMap>()
             .AddTransient<ICyrillicSymbolService, CyrillicSymbolService>()
+            .AddTransient<IRequestToDataBaseService, RequestToDataBaseService>()
 
             .AddSingleton<IDBService, DBService>()
             .AddSingleton<ISignalService, SignalService>()

@@ -1,12 +1,10 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Params;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Windows.Data;
 using System.Windows.Input;
 
@@ -20,14 +18,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Сигналы групп";
             Description = "Список сигналов состоящих в группе";
             UsingUserControl = new SignalsGroupUserControl();
-        }
-
-        private readonly IUserDialogService UserDialog;
-        private readonly ISignalService SignalServices;
-        public SignalsGroupUserControlViewModel(IUserDialogService _UserDialog, ISignalService _ISignalService) : this()
-        {
-            UserDialog = _UserDialog;
-            SignalServices = _ISignalService;
             _ParamsDataView.Filter += ParamsFiltered;
         }
         #endregion
@@ -112,14 +102,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         }
         #endregion
 
-        #region Коллекция парметров для отображения
-        /// <summary>
-        /// Коллекция парметров для отображения
-        /// </summary>
-        private readonly CollectionViewSource _ParamsDataView = new();
-        public ICollectionView ParamsDataView => _ParamsDataView?.View;
-        #endregion
-
         #endregion
 
         #region Команды
@@ -197,10 +179,15 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         /// Получение параметров
         /// </summary>
         /// <returns></returns>
-        public override object GetParam()
-        {
-            return Params;
-        }
+        public override ObservableCollection<T> GetParams<T>() => Params as ObservableCollection<T>;
+        #endregion
+
+        #region Запись параметров
+        /// <summary>
+        /// Запись параметров
+        /// </summary>
+        /// <returns></returns>
+        public override void SetParams<T>(ObservableCollection<T> _Params) => Params = _Params as ObservableCollection<BaseParam>;
         #endregion
 
         #region Фильтрация парметров

@@ -1,8 +1,9 @@
-﻿using Project_Сonfigurator.Services.Interfaces;
+﻿using Project_Сonfigurator.Services.Base;
+using Project_Сonfigurator.Services.Interfaces;
 
 namespace Project_Сonfigurator.Services
 {
-    public class CyrillicSymbolService : ICyrillicSymbolService
+    public class CyrillicSymbolService : BaseService, ICyrillicSymbolService
     {
         #region Проверить наличие русских букв
         /// <summary>

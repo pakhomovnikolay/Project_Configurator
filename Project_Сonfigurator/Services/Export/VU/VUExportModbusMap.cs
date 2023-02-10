@@ -3,21 +3,18 @@ using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services.Base;
 using Project_Сonfigurator.Services.Export.VU.Interfaces;
-using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.AS;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
 {
-    public class VUExportModbusMap : IVUExportModbusMap
+    public class VUExportModbusMap : BaseService, IVUExportModbusMap
     {
-        private static readonly IUserDialogService UserDialog = new UserDialogService();
-        private static readonly ILogSerivece Logger = new LogSerivece();
         private const string Namespace = "format-version";
         private const string HR = "Holding Registers";
         private const string IR = "Input Registers";
@@ -113,7 +110,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         public bool ASExprot()
         {
             #region Объявление
-            var CheckBoxs = App.Services.GetRequiredService<ExportNamespaceASWindowViewModel>().GetParam() as ObservableCollection<CheckBox>;
+            var CheckBoxs = App.Services.GetRequiredService<ExportNamespaceASWindowViewModel>().GetParams<CheckBox>();
             var TypeSystem = App.Settings.Config.TypeSystem;
             var ModbusTCP_HR = App.Settings.Config.ModbusTCP_HR;
             var ModbusTCP_IR = App.Settings.Config.ModbusTCP_IR;
@@ -181,8 +178,8 @@ namespace Project_Сonfigurator.Services.Export.VU
                         #endregion
 
                         #region Diagnostics
-                        var _Params = UserDialog.SearchControlViewModel("Компоновка корзин").GetParam() as ObservableCollection<USO>;
-                        var _ParParams = UserDialog.SearchControlViewModel("Таблица сигналов").GetParam() as ObservableCollection<USO>;
+                        var _Params = UserDialog.SearchControlViewModel("Компоновка корзин").GetParams<USO>();
+                        var _ParParams = UserDialog.SearchControlViewModel("Таблица сигналов").GetParams<USO>();
 
                         #region Корзины
                         ListParametrs = new();
@@ -373,7 +370,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Сигналы AI
                     if (_CheckBox.Content.ToString() == "Сигналы AI")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Сигналы AI").GetParam() as ObservableCollection<SignalAI>;
+                        var Params = UserDialog.SearchControlViewModel("Сигналы AI").GetParams<SignalAI>();
 
                         #region OIP.Data
                         ListParametrs = new();
@@ -532,7 +529,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Регистры формируемые
                     if (_CheckBox.Content.ToString() == "Регистры формируемые")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Регистры формируемые").GetParam() as ObservableCollection<BaseParam>;
+                        var Params = UserDialog.SearchControlViewModel("Регистры формируемые").GetParams<BaseParam>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[26].AddressStart);
                         var index = 0;
@@ -551,7 +548,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Карта готовностей агрегатов (Лист 1)
                     if (_CheckBox.Content.ToString() == "Карта готовностей агрегатов (Лист 1)")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[16].AddressStart);
                         foreach (var _Param in Params)
@@ -581,7 +578,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Общестанционные защиты (Лист 2)
                     if (_CheckBox.Content.ToString() == "Общестанционные защиты (Лист 2)")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Общестанционные защиты") as ObservableCollection<BaseKTPR>;
+                        var Params = UserDialog.SearchControlViewModel("Общестанционные защиты").GetParams<BaseKTPR>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[17].AddressStart);
                         var index = 0;
@@ -610,7 +607,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Агрегатные защиты (Лист 3)
                     if (_CheckBox.Content.ToString() == "Агрегатные защиты (Лист 3)")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[18].AddressStart);
                         foreach (var _Param in Params)
@@ -640,7 +637,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Предельные параметры (Лист 4)
                     if (_CheckBox.Content.ToString() == "Предельные параметры (Лист 4)")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Предельные параметры").GetParam() as ObservableCollection<BaseKTPRS>;
+                        var Params = UserDialog.SearchControlViewModel("Предельные параметры").GetParams<BaseKTPRS>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[19].AddressStart);
                         var index = 0;
@@ -667,7 +664,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Лист 5
                     if (_CheckBox.Content.ToString() == "Сигнализация (Лист 5)")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Сигнализация").GetParam() as ObservableCollection<BaseSignaling>;
+                        var Params = UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[20].AddressStart);
                         var index = 0;
@@ -688,7 +685,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Состояние НА
                     if (_CheckBox.Content.ToString() == "Состояние НА")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParam() as ObservableCollection<BaseUMPNA>;
+                        var Params = UserDialog.SearchControlViewModel("Настройки МПНА").GetParams<BaseUMPNA>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[21].AddressStart);
                         foreach (var _Param in Params)
@@ -708,7 +705,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Состояние ЗД
                     if (_CheckBox.Content.ToString() == "Состояние ЗД")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Настройки задвижек").GetParam() as ObservableCollection<BaseUZD>;
+                        var Params = UserDialog.SearchControlViewModel("Настройки задвижек").GetParams<BaseUZD>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[22].AddressStart);
                         foreach (var _Param in Params)
@@ -728,7 +725,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Состояние ВС
                     if (_CheckBox.Content.ToString() == "Состояние ВС")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParam() as ObservableCollection<BaseUVS>;
+                        var Params = UserDialog.SearchControlViewModel("Настройки вспомсистем").GetParams<BaseUVS>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[23].AddressStart);
                         foreach (var _Param in Params)
@@ -745,7 +742,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Состояние ТС
                     if (_CheckBox.Content.ToString() == "Состояние ТС")
                     {
-                        var Params = UserDialog.SearchControlViewModel("DO остальные").GetParam() as ObservableCollection<BaseUTS>;
+                        var Params = UserDialog.SearchControlViewModel("DO остальные").GetParams<BaseUTS>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[24].AddressStart);
                         foreach (var _Param in Params)
@@ -763,7 +760,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Карта ручного ввода
                     if (_CheckBox.Content.ToString() == "Карта ручного ввода")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParam() as ObservableCollection<BaseParam>;
+                        var Params = UserDialog.SearchControlViewModel("Карта ручн. ввода").GetParams<BaseParam>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[25].AddressStart);
                         var qty = Params.Count / 16;
@@ -781,7 +778,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     #region Команды
                     if (_CheckBox.Content.ToString() == "Команды")
                     {
-                        var Params = UserDialog.SearchControlViewModel("Команды").GetParam() as ObservableCollection<BaseParam>;
+                        var Params = UserDialog.SearchControlViewModel("Команды").GetParams<BaseParam>();
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[13].AddressStart);
                         foreach (var _Param in Params)
