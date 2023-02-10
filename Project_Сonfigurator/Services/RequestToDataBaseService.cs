@@ -1020,7 +1020,11 @@ namespace Project_Сonfigurator.Services
             get
             {
                 return
-                    "(ID, DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT) VALUES";
+                    "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    "`DESCRIPTION` TEXT," +
+                    "`VAR_NAME` TEXT," +
+                    "`BIT` TEXT," +
+                    "PRIMARY KEY(`INDEX`));";
             }
         }
 
