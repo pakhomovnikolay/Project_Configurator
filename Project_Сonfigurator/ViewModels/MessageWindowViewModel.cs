@@ -276,7 +276,7 @@ namespace Project_Сonfigurator.ViewModels
         private void OnCmdSelectedPathImportExecuted()
         {
             SelectedPathImport = "";
-            if (UserDialog.SelectFile(Title, out string selected_path, Filter: "Книга Excel (*.xlsm*)|*.xlsm*"))
+            if (UserDialog.SelectFile(Title, out string selected_path, Filter: App.__FilterSelectExcelWithMakros))
                 SelectedPathImport = selected_path;
         }
         #endregion

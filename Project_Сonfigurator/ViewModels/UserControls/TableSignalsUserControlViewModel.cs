@@ -203,7 +203,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
         public ICommand CmdSelectedPathImport => _CmdSelectedPathImport ??= new RelayCommand(OnCmdSelectedPathImportExecuted);
         private void OnCmdSelectedPathImportExecuted()
         {
-            if (UserDialog.SelectFile(Title, out string path, PathImport))
+            if (UserDialog.SelectFile(Title, out string path, PathImport, App.__FilterSelectExcelWithMakros))
                 PathImport = path;
         }
         #endregion

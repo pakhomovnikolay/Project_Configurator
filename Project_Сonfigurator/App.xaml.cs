@@ -18,6 +18,10 @@ namespace Project_Сonfigurator
         public const string __EncryptedProjectFileSuffix = ".myprojectodb";
         public const string __SocketsExportFileSuffix = ".omx-export";
         public const string __XMLExportFileSuffix = ".xml";
+        public const string __FilterSelectExcelWithMakros = "Книга Excel (*.xlsm*)|*.xlsm*";
+        public const string __FilterSelectExcel = "Книга Excel (*.xlsm*)|*.xlsx*";
+        public const string __FilterSelectProject = $"Файлы (*{__EncryptedProjectFileSuffix}*)|*{__EncryptedProjectFileSuffix}*";
+
 
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();

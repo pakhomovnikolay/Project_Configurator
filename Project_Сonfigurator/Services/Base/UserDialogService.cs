@@ -182,7 +182,7 @@ namespace Project_Сonfigurator.Services.Base
                 Title = Title,
                 Filter = Filter,
                 RestoreDirectory = true,
-                InitialDirectory = path.Replace(".xlsx", ""),
+                InitialDirectory = path,
                 CheckPathExists = true,
                 ValidateNames = false,
                 CheckFileExists = true,

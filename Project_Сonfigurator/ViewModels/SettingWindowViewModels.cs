@@ -438,9 +438,8 @@ namespace Project_Сonfigurator.ViewModels
         private bool CanCmdSelectedFolderSavedProjectExecute() => true;
         private void OnCmdSelectedFolderSavedProjectExecuted()
         {
-            string Filter = $"Файлы (*{App.__EncryptedProjectFileSuffix}*)|*{App.__EncryptedProjectFileSuffix}*";
-            if (UserDialog.SelectFolder("Выбор пути хранения данных проекта", out string path, out string file, App.Settings.Config.PathProject, Filter))
-                Config.PathProject = path + file;
+            if (UserDialog.SelectFile("Выбор пути хранения данных проекта", out string path, App.Settings.Config.PathProject, App.__FilterSelectProject))
+                Config.PathProject = path;
 
             OnPropertyChanged(nameof(Config));
         }
