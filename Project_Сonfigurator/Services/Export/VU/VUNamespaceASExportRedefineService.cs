@@ -1277,7 +1277,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                             var Index = int.Parse(_Module.Index.Replace($"A{_Rack.Index}.", ""));
                             ModuleEnabled += (int)Math.Pow(2, Index - 1);
                             var StructType = _Module.Type == TypeModule.AI || _Module.Type == TypeModule.AO ? "StructAnalogs" : "StructDiscrets";
-                            var Desc = $"{_Param.Name} {_Module.Index} {_Module.Name}";
+                            var Desc = $"{_Param.Name} {_Module.Index} {_Module.Name.Replace(_Module.Index, "")}";
 
                             // Добавляем узел типа сокета "ct:nested-socket"
                             Nodes = new() { { "name", $"Module_{Index}" }, { "type", StructType }, { "uuid", "0" } };
@@ -1288,7 +1288,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                             // Добавляем узел параметра сокета "ct:socket-parameter"
                             Nodes = new() { { "name", "Desc" }, { "type", "string" }, { "uuid", "0" } };
-                            Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", _Module.Name } };
+                            Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{_Module.Index} {_Module.Name.Replace(_Module.Index, "")}" } };
                             CreateSocketParametrSubSubNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
 
                             // Добавляем узел параметра сокета "ct:socket-parameter"

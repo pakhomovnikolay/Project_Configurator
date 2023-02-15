@@ -8,6 +8,8 @@
         DI,
         AO,
         DO,
-        DA
+        DA,
+        ST,
+        CRA
     }
 }
