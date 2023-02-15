@@ -21,38 +21,7 @@
             <Style TargetType="{x:Type RowDefinition}">
                 <Setter Property="Height" Value="25"/>
             </Style>
-
-            <!--Стиль рамки-->
-            <Style TargetType="{x:Type Border}">
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="CornerRadius" Value="3"/>
-                <Setter Property="Margin" Value="0,1,0,0"/>
-                <Setter Property="Background" Value="LightGoldenrodYellow"/>
-            </Style>
-
-            <!--Стиль TextBox-->
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="TextAlignment" Value="Left"/>
-                <Setter Property="BorderThickness" Value="1,0,1,0"/>
-                <Style.Resources>
-
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="3"/>
-                    </Style>
-
-                </Style.Resources>
-            </Style>
-
-            <!--Стиль TextBlock-->
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="TextAlignment" Value="Left"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-                <Setter Property="Margin" Value="5,0,0,0"/>
-            </Style>
-
+            
         </Grid.Resources>
         
         <!--Сетка-->
@@ -65,89 +34,94 @@
         </Grid.RowDefinitions>
 
         <!--Стартовый индекс строки-->
-        <Grid Grid.Row="0">
-            
-            <Border Grid.Row="0">
-                <Grid>
+        <Border Grid.Row="0" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <TextBlock Grid.Column="0" Text="Стартовый индекс строки:"/>
-                    <TextBox Grid.Column="1" Text="{Binding Config.Import.StartIndexRow}"/>
-                </Grid>
-            </Border>
-        </Grid>
-
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Стартовый индекс строки:"/>
+                <TextBox Grid.Column="1" Tag="Например: 1"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.Import.StartIndexRow, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            </Grid>
+        </Border>
+        
         <!--Идентификатор-->
-        <Grid Grid.Row="1">
+        <Border Grid.Row="1" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
 
-            <Border Grid.Row="0">
-                <Grid>
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Идентификатор:"/>
-                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnId}"/>
-                </Grid>
-            </Border>
-        </Grid>
-
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Идентификатор:"/>
+                <TextBox Grid.Column="1" Tag="Например: 2"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.Import.IndexColumnId, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            </Grid>
+        </Border>
+        
         <!--Наименование сигнала-->
-        <Grid Grid.Row="2">
+        <Border Grid.Row="2" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
 
-            <Border Grid.Row="0">
-                <Grid>
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Наименование сигнала:"/>
-                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnDescription}"/>
-                </Grid>
-            </Border>
-        </Grid>
-
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Наименование сигнала:"/>
+                <TextBox Grid.Column="1" Tag="Например: 3"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.Import.IndexColumnDescription, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            </Grid>
+        </Border>
+        
         <!--Номер корзины-->
-        <Grid Grid.Row="3">
+        <Border Grid.Row="3" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
 
-            <Border Grid.Row="0">
-                <Grid>
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Номер корзины:"/>
-                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnRack}"/>
-                </Grid>
-            </Border>
-        </Grid>
-
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Номер корзины:"/>
+                <TextBox Grid.Column="1" Tag="Например: 4"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.Import.IndexColumnRack, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            </Grid>
+        </Border>
+        
         <!--Номер канала в модуле-->
-        <Grid Grid.Row="4">
+        <Border Grid.Row="4" Style="{StaticResource CustomBorderStyle}">
+            <Grid>
 
-            <Border Grid.Row="0">
-                <Grid>
+                <!--Сетка-->
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="170"/>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Column="0" Text="Номер канала в модуле:"/>
-                    <TextBox Grid.Column="1" Text="{Binding Config.Import.IndexColumnModule}"/>
-                </Grid>
-            </Border>
-        </Grid>
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Номер канала в модуле:"/>
+                <TextBox Grid.Column="1" Tag="Например: 5"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.Import.IndexColumnModule, UpdateSourceTrigger=PropertyChanged}"
+                         />
+            </Grid>
+        </Border>
         
     </Grid>
 

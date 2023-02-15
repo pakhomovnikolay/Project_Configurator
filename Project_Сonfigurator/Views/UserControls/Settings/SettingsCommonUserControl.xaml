@@ -28,86 +28,59 @@
             <RowDefinition Height="25"/>
             <RowDefinition Height="150"/>
         </Grid.RowDefinitions>
-
-        <!--Resources-->
-        <Grid.Resources>
-            
-            <!--Стиль рамки-->
-            <Style TargetType="{x:Type Border}">
-                <Setter Property="BorderThickness" Value="1"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="CornerRadius" Value="3"/>
-                <Setter Property="Margin" Value="0,1,0,0"/>
-                <Setter Property="Background" Value="LightGoldenrodYellow"/>
-            </Style>
-
-            <!--Стиль TextBox-->
-            <Style TargetType="{x:Type TextBox}">
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
-                <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                <Style.Resources>
-
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="3,0,0,3"/>
-                    </Style>
-
-                </Style.Resources>
-            </Style>
-
-            <!--Стиль TextBlock-->
-            <Style TargetType="{x:Type TextBlock}">
-                <Setter Property="TextAlignment" Value="Left"/>
-                <Setter Property="VerticalAlignment" Value="Center"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-                <Setter Property="Margin" Value="5,0,0,0"/>
-            </Style>
-            
-        </Grid.Resources>
-
+        
         <!--Наименование объекта-->
-        <Border Grid.Row="0">
+        <Border Grid.Row="0" Style="{StaticResource CustomBorderStyle}">
             <Grid>
-                
+
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Наименование объекта:"/>
-                <TextBox Grid.Column="1"
-                         Text="{Binding Config.NameProject}"/>
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Наименование объекта:"/>
+                <TextBox Grid.Column="1" Tag="Например: ЛПДС 'Название объекта' НПС-1"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.NameProject, UpdateSourceTrigger=PropertyChanged}"
+                         />
             </Grid>
         </Border>
 
         <!--Тип системы-->
-        <Border Grid.Row="1">
+        <Border Grid.Row="1" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Тип системы:"/>
-                <TextBox Grid.Column="1" Text="{Binding Config.TypeSystem}">
-
-                </TextBox>
-
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Тип системы:"/>
+                <TextBox Grid.Column="1" Tag="Например: МНС"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.TypeSystem, UpdateSourceTrigger=PropertyChanged}"
+                         />
             </Grid>
         </Border>
 
         <!--Путь к файлу приложения-->
-        <Border Grid.Row="2">
+        <Border Grid.Row="2" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Путь к файлу приложения:"/>
-                <TextBox Grid.Column="1" Text="{Binding Config.PathProject}"/>
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Путь к файлу приложения:"/>
+                <TextBox Grid.Column="1" Tag="Выберите файл проекта или укажите путь, где будет расположен файл"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.PathProject, UpdateSourceTrigger=PropertyChanged}"
+                         />
                 <Button Grid.Column="2" Content="..." FontWeight="Bold" Margin="0,-1,-1,-1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdSelectedFolderSavedProject}"
@@ -117,17 +90,20 @@
         </Border>
 
         <!--Путь для экспорта ВУ-->
-        <Border Grid.Row="3">
+        <Border Grid.Row="3" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Путь для экспорта ВУ:"/>
-                <TextBox Grid.Column="1" Text="{Binding Config.PathExportVU}"/>
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Путь для экспорта ВУ:"/>
+                <TextBox Grid.Column="1" Tag="Укажите путь где будут храниться файлы экспорта данных для ВУ"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.PathExportVU, UpdateSourceTrigger=PropertyChanged}"/>
                 <Button Grid.Column="2" Content="..." FontWeight="Bold" Margin="0,-1,-1,-1"
                         Style="{StaticResource CustomButtonStyle}"
                         Command="{Binding CmdSelectedFolderExportVU}"
@@ -137,28 +113,31 @@
         </Border>
 
         <!--Размер буфера сообщений-->
-        <Border Grid.Row="4">
+        <Border Grid.Row="4" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
+                <!--Сетка-->
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Размер буфера сообщений:"/>
-                <TextBox Grid.Column="1" Text="{Binding Config.BufferSize}"/>
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Размер буфера сообщений:"/>
+                <TextBox Grid.Column="1" Tag="Например: 1024"
+                         Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Text="{Binding Config.BufferSize, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Border>
 
         <!--Для обмена данными используется OPC UA-->
-        <Border Grid.Row="5">
+        <Border Grid.Row="5" Style="{StaticResource CustomBorderStyle}">
             <CheckBox Content="Для обмена данными используется OPC UA" FontWeight="Bold"
                       VerticalAlignment="Center" Margin="3,0,0,0"
                       IsChecked="{Binding Config.UseOPC}"/>
         </Border>
 
         <!--Адресное пространство-->
-        <Border Grid.Row="6">
+        <Border Grid.Row="6" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
                 <!--Сетка-->
@@ -167,41 +146,17 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Адресное пространство:"/>
-                <TextBox Grid.Column="3" Margin="1" VerticalContentAlignment="Center"
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Адресное пространство:"/>
+                <TextBox Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Grid.Column="3" Margin="1" Tag="Например: http://schneider-electric.com/UA/OFSUA-Server/DA"
                          IsEnabled="{Binding Config.UseOPC}"
-                         Text="{Binding Config.NamespaceOPC, UpdateSourceTrigger=PropertyChanged}">
-
-                    <TextBox.Resources>
-                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                            <VisualBrush.Visual>
-                                <Label Foreground="Gray" Background="White" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=TextBox}}"
-                                       Content="Например: http://schneider-electric.com/UA/OFSUA-Server/DA"
-                                       />
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                        <Style TargetType="{x:Type TextBox}">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Resources>
-                    
-                </TextBox>
-                
+                         Text="{Binding Config.NamespaceOPC, UpdateSourceTrigger=PropertyChanged}"
+                         />
             </Grid>
         </Border>
 
         <!--Идентификатор узла-->
-        <Border Grid.Row="7">
+        <Border Grid.Row="7" Style="{StaticResource CustomBorderStyle}">
             <Grid>
 
                 <!--Сетка-->
@@ -210,46 +165,18 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.Column="0" Text="Идентификатор узла:"/>
-                <TextBox Grid.Column="3" Margin="1" VerticalContentAlignment="Center"
+                <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Идентификатор узла:"/>
+                <TextBox Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                         Grid.Column="3" Margin="1" Tag="Например: 0:M580!"
                          IsEnabled="{Binding Config.UseOPC}"
-                         Text="{Binding Config.NodeID, UpdateSourceTrigger=PropertyChanged}">
-
-                    <TextBox.Resources>
-                        <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                            <VisualBrush.Visual>
-                                <Label Foreground="Gray" Background="White" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=TextBox}}"
-                                       Content="Например: 0:M580!"
-                                       />
-                            </VisualBrush.Visual>
-                        </VisualBrush>
-                        <Style TargetType="{x:Type TextBox}">
-                            <Style.Triggers>
-                                <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                    <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                </Trigger>
-                                <Trigger Property="Text" Value="{x:Null}">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                                <Trigger Property="IsKeyboardFocused" Value="True">
-                                    <Setter Property="Background" Value="White" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Resources>
-
-                </TextBox>
-                
+                         Text="{Binding Config.NamespaceOPC, UpdateSourceTrigger=PropertyChanged}"
+                         />
             </Grid>
         </Border>
 
         <!--Настройки типов и количества ПЛК-->
-        <GroupBox Grid.Row="8" BorderBrush="Black">
+        <GroupBox Style="{StaticResource GroupBoxStyle}" Header="Список ПЛК для диагностики" Grid.Row="8" BorderBrush="Black">
             
-            <GroupBox.Header>
-                <TextBlock Text="Список ПЛК для диагностики" Margin="5,3"/>
-            </GroupBox.Header>
-
             <Grid>
 
                 <!--Сетка-->

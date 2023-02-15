@@ -10,6 +10,9 @@
                 <ResourceDictionary Source="Infrastructures\Commands\Resources\DictionaryCommands.xaml"/>
                 <ResourceDictionary Source="Resources\Style\Buttons.xaml"/>
                 <ResourceDictionary Source="Resources\Style\UserControls.xaml"/>
+                <ResourceDictionary Source="Resources\Style\DataGrids.xaml"/>
+                <ResourceDictionary Source="Resources\Style\GroupBoxs.xaml"/>
+                <ResourceDictionary Source="Resources\Style\BordersStyle.xaml"/>
                 <ResourceDictionary Source="Resources\BrushList\DictionaryBrush.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Converters\DictionaryConverters.xaml"/>
                 <ResourceDictionary Source="Infrastructures\ToolTips\ToolTipsDictionary.xaml"/>

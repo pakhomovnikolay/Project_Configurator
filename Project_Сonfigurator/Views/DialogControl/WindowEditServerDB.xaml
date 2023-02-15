@@ -3,9 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
-        xmlns:cmd="clr-namespace:Project_Сonfigurator.Infrastructures.Commands"
         
         BorderThickness="1"
         BorderBrush="Gray"
@@ -14,33 +12,19 @@
         WindowState="Normal"
         ResizeMode="NoResize"
         Title="Окно редактирования"
-        Height="240"
+        Height="243"
         Width="800"
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
+    
     <Grid>
-        
-        <GroupBox BorderBrush="Black">
-            <GroupBox.Header>
-                <TextBlock Text="Настройки сохранения БД" FontWeight="Bold" Margin="5,0,5,0"/>
-            </GroupBox.Header>
-            <GroupBox.Resources>
-                <Style TargetType="{x:Type TextBox}">
-                    <Style.Triggers>
-                        <Trigger Property="IsFocused" Value="False">
-                            <Setter Property="Foreground" Value="LightGray"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-            </GroupBox.Resources>
+
+        <GroupBox Header="Настройки сохранения БД" Style="{StaticResource GroupBoxStyle}">
+
             <Grid>
                 
                 <!--Сетка-->
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="25"/>
                     <RowDefinition Height="25"/>
@@ -51,225 +35,86 @@
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
 
-                <Border Grid.Column="0" Grid.Row="0" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="1" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="2" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="3" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="4" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="5" BorderThickness="1,1,0,0" BorderBrush="Black" Background="White"/>
-                <Border Grid.Column="0" Grid.Row="6" BorderThickness="1,1,0,1" BorderBrush="Black" Background="White"/>
+                <!--Имя подключения-->
+                <Border Grid.Row="0" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Имя подключения:"/>
+                        <TextBox Tag="Например: localhost"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
 
-                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="4" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="5" BorderThickness="1,1,1,0" BorderBrush="Black"/>
-                <Border Grid.Column="1" Grid.Row="6" BorderThickness="1" BorderBrush="Black"/>
+                <!--Адрес подключения-->
+                <Border Grid.Row="1" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Адрес подключения:"/>
+                        <TextBox Tag="Например: 127.0.0.1"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.IPAddress, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
 
-                <TextBlock Grid.Column="0" Grid.Row="0" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Имя подключения:"/>
-                <TextBlock Grid.Column="0" Grid.Row="1" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Адрес подключения:"/>
-                <TextBlock Grid.Column="0" Grid.Row="2" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Имя базы данных:"/>
-                <TextBlock Grid.Column="0" Grid.Row="3" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Порт подключения:"/>
-                <TextBlock Grid.Column="0" Grid.Row="4" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Таймаут подключения(сек.):"/>
-                <TextBlock Grid.Column="0" Grid.Row="5" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Имя пользователя:"/>
-                <TextBlock Grid.Column="0" Grid.Row="6" TextAlignment="Left" VerticalAlignment="Center" Margin="5,0" Text="Пароль:"/>
+                <!--Имя базы данных-->
+                <Border Grid.Row="2" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Имя базы данных:"/>
+                        <TextBox Tag="Например: Object"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.NameDB, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
+
+                <!--Порт подключения-->
+                <Border Grid.Row="3" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Порт подключения:"/>
+                        <TextBox Tag="Например: 3306"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.Port, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
+
+                <!--Таймаут подключения (сек.)-->
+                <Border Grid.Row="4" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Таймаут подключения (сек.):"/>
+                        <TextBox Tag="Например: 3"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.TimeoutConnect, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
+
+                <!--Имя пользователя-->
+                <Border Grid.Row="5" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Имя пользователя:"/>
+                        <TextBox Tag="Например: user"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.UserName, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
+
+                <!--Пароль-->
+                <Border Grid.Row="6" Style="{StaticResource CustomBorderStyle}">
+                    <UniformGrid Columns="2">
+                        <TextBlock Grid.Column="0" Style="{StaticResource TextBlockCustomBorderStyle}" Text="Пароль:"/>
+                        <TextBox Tag="Например: user"
+                                 Style="{StaticResource TextBoxBackTextCustomBorderStyle}"
+                                 Text="{Binding SelectedServer.Password, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </UniformGrid>
+                </Border>
                 
-                <Border Grid.Column="1" Grid.Row="0" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: АРМ основное"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="1" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.IPAddress, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: 127.0.0.1"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="2" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.NameDB, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: Object"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="3" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.Port, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: 3306"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="4" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.TimeoutConnect, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: 3"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="5" BorderThickness="1,1,1,0" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.UserName, UpdateSourceTrigger=PropertyChanged}"
-                             >
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: user"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
-                <Border Grid.Column="1" Grid.Row="6" BorderThickness="1,1,1,1" BorderBrush="Black" Background="WhiteSmoke">
-                    <TextBox BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                             Text="{Binding SelectedServer.Password}"
-                             >
-                        
-                        <!--<TextBox.Text>
-                            <Binding Path="SelectedServer.Password" UpdateSourceTrigger="PropertyChanged" Converter="{StaticResource PasswordViewSecretConverter}"/>
-                        </TextBox.Text>-->
-                        <TextBox.Resources>
-                            <VisualBrush x:Key="CueBannerBrush" AlignmentX="Left" AlignmentY="Center" Stretch="None">
-                                <VisualBrush.Visual>
-                                    <Label Foreground="Gray" Background="White" Width="385"
-                                           Content="Например: user"/>
-                                </VisualBrush.Visual>
-                            </VisualBrush>
-                            <Style TargetType="{x:Type TextBox}">
-                                <Style.Triggers>
-                                    <Trigger Property="Text" Value="{x:Static sys:String.Empty}">
-                                        <Setter Property="Background" Value="{StaticResource CueBannerBrush}" />
-                                    </Trigger>
-                                    <Trigger Property="Text" Value="{x:Null}">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                    <Trigger Property="IsKeyboardFocused" Value="True">
-                                        <Setter Property="Background" Value="White" />
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Resources>
-                    </TextBox>
-                </Border>
             </Grid>
         </GroupBox>
         
     </Grid>
+    
 </Window>

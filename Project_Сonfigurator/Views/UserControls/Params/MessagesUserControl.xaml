@@ -47,6 +47,27 @@
                         <Setter Property="BorderBrush" Value="Black"/>
                         <Setter Property="Background" Value="LightGoldenrodYellow"/>
                     </Trigger>
+
+                    <!--<MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsMouseOver" Value="True" />
+                            <Condition Property="IsReadOnly" Value="False" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsEditing"  Value="True" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>-->
+
+                    <!--<MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsFocused" Value="True" />
+                            <Condition Property="IsKeyboardFocused" Value="False" />
+                            <Condition Property="IsReadOnly" Value="False" />
+                        </MultiTrigger.Conditions>
+                        <MultiTrigger.Setters>
+                            <Setter Property="IsEditing" Value="True" />
+                        </MultiTrigger.Setters>
+                    </MultiTrigger>-->
                 </Style.Triggers>
             </Style>
 

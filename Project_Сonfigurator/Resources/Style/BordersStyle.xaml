@@ -1,0 +1,87 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    >
+
+    <!--Стиль рамки-->
+    <Style x:Key="CustomBorderStyle" TargetType="{x:Type Border}">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="CornerRadius" Value="3"/>
+        <Setter Property="Margin" Value="0,0,0,1"/>
+        <Setter Property="Background" Value="LightGoldenrodYellow"/>
+    </Style>
+
+    <!--Стиль TextBox-->
+    <Style x:Key="TextBoxCustomBorderStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+        <Style.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="CornerRadius" Value="3,0,0,3"/>
+            </Style>
+        </Style.Resources>
+    </Style>
+
+    <!--Стиль TextBlock-->
+    <Style x:Key="TextBlockCustomBorderStyle" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Margin" Value="5,0,0,0"/>
+    </Style>
+
+
+    <!--Стиль TextBox с водяными знаками. Водяной знак указывается через свойство Tag-->
+    <ControlTemplate x:Key="TextBoxBackTextControlTemplate" TargetType="{x:Type TextBox}">
+        <Border x:Name="border"
+                Background="{TemplateBinding Background}"
+                BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                SnapsToDevicePixels="True"
+                CornerRadius="3,0,0,3"
+                >
+
+            <Grid>
+
+                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                <TextBlock Foreground="DarkGray" VerticalAlignment="Center" Background="Transparent" Margin="5,0,0,0"
+                           Text="{Binding Tag, RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Text, RelativeSource={RelativeSource Mode=TemplatedParent}}" Value="">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ContentPresenter Margin="5,0,0,0" Cursor="Arrow"
+                                  HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                  VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                  Opacity="{TemplateBinding Opacity}"
+                                  TextElement.FontSize="{TemplateBinding FontSize}"
+                                  TextElement.FontFamily="{TemplateBinding FontFamily}"
+                                  TextElement.FontWeight="{TemplateBinding FontWeight}"
+                                  TextElement.Foreground="{TemplateBinding Foreground}"
+                                  />
+                
+            </Grid>
+        </Border>
+    </ControlTemplate>
+    
+    <Style x:Key="TextBoxBackTextCustomBorderStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
+        <Setter Property="BorderThickness" Value="1,0,0,0"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Template" Value="{StaticResource TextBoxBackTextControlTemplate}"/>
+        <Style.Triggers>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="Transparent"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    
+</ResourceDictionary>
