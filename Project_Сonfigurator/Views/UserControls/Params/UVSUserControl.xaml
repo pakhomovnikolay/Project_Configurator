@@ -3,19 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:fa="http://schemas.fontawesome.com/icons/"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
+             xmlns:cuc="clr-namespace:Project_Сonfigurator.Views.UserControls.Params.CommonUserControls"
              d:Background="AliceBlue"
-             d:DesignHeight="800"
-             d:DesignWidth="1740"
              
              d:DataContext="{d:DesignInstance vm:UVSUserControlViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="{Binding WindowHeight}"
+             d:DesignWidth="{Binding WindowWidth}"
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              >
 
-    <TabControl Margin="1">
+    <TabControl Style="{StaticResource CustomTabControlStyle}">
 
         <TabItem Header="Настройки">
 
@@ -38,261 +38,131 @@
                     </Grid.ColumnDefinitions>
 
                     <!--Добавить вспомсистему-->
-                    <Button Grid.Column="0" Margin="0.5" ToolTip="Добавить вспомсистему"
-                            Style="{StaticResource CustomButtonStyle}"
+                    <Button Style="{StaticResource PlusButtonStyle}" Grid.Column="0" ToolTip="Добавить вспомсистему"
                             Command="{Binding CmdAddUVS}"
-                            >
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="12" TextAlignment="Center" VerticalAlignment="Center"/>
-                    </Button>
+                            />
 
                     <!--Удалить выбранную вспомсистему-->
-                    <Button Grid.Column="1" Margin="0.5" ToolTip="Удалить выбранную вспомсистему"
-                            Style="{StaticResource CustomButtonStyle}"
+                    <Button Style="{StaticResource MinusButtonStyle}" Grid.Column="1" ToolTip="Удалить выбранную вспомсистему"
                             Command="{Binding CmdDeleteUVS}"
                             CommandParameter="{Binding ElementName=SettingDataGrid}"
-                            >
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Minus" Foreground="Red" FontSize="12"  TextAlignment="Center" VerticalAlignment="Center"/>
-                    </Button>
+                            />
 
                     <!--Импортировать вспомсистемы из таблицы сигналов-->
-                    <Button Grid.Column="2" Margin="0.5" ToolTip="Импортировать вспомсистемы из таблицы сигналов"
+                    <Button Style="{StaticResource CustomButtonStyle}" Grid.Column="2" ToolTip="Импортировать вспомсистемы из таблицы сигналов"
                             Content="Импорт из ТБ" FontWeight="Bold"
-                            Style="{StaticResource CustomButtonStyle}"
                             Command="{Binding CmdImportUVS}"
-                            >
-                    </Button>
+                            />
 
                 </Grid>
 
                 <!--Данные-->
-                <DataGrid Grid.Row="0"
+                <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}" Grid.Row="0"
                           x:Name="SettingDataGrid"
-                          BorderThickness="0"
-                          BorderBrush="Black"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
-                          GridLinesVisibility="None"
-                          CanUserResizeColumns="False"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          Background="Gray"
-                          HeadersVisibility="Column"
+                          ColumnHeaderHeight="70"
                           ItemsSource="{Binding Params}"
                           SelectedItem="{Binding SelectedParam}"
                           >
-
-                    <DataGrid.Resources>
-
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="White"/>
-                            <Setter Property="Height" Value="25"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Setter Property="BorderBrush" Value="Black"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridColumnHeader}">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                            <Setter Property="Height" Value="80"/>
-                            <Setter Property="FontWeight" Value="Bold"/>
-                        </Style>
-
-                        <Style TargetType="{x:Type DataGridRow}">
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="Gray"/>
-                        </Style>
-
-                    </DataGrid.Resources>
-
+                    
                     <DataGrid.Columns>
 
-                        <DataGridTemplateColumn Width="350">
+                        <DataGridTemplateColumn Header="Наименование параметра" Width="700">
                             
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="2,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование параметра"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="2,0,0,0" BorderBrush="Black">
-                                        <TextBox VerticalContentAlignment="Center"
-                                                 BorderThickness="0" Background="Transparent"
-                                                 Margin="3,0,0,0"
-                                                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                                 />
-                                    </Border>
+                                    <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                             />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="2,0,0,0" BorderBrush="Black">
-                                        <TextBlock VerticalAlignment="Center"
-                                                   Margin="5,0,0,0"
-                                                   Text="{Binding Description}"
-                                                   />
+                                    <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Description}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Имя&#x0a;переменной" Width="100">
+                            
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="LightGray">
+                                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding VarName}"/>
                                     </Border>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="100">
+                        <DataGridTemplateColumn Header="Коротное&#x0a;обозначение" Width="100">
                             
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-                            
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                   Text="{Binding VarName}"
-                                                   />
-                                    </Border>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                            
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn Width="100">
-                            
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Коротное&#x0a;обозначение"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                 BorderThickness="0" Background="Transparent"
-                                                 Text="{Binding ShortDescription, UpdateSourceTrigger=PropertyChanged}"
-                                                 />
-                                    </Border>
+                                    <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                             Text="{Binding ShortDescription, UpdateSourceTrigger=PropertyChanged}"
+                                             />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                   Text="{Binding ShortDescription}"
-                                                   />
-                                    </Border>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding ShortDescription}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="100">
+                        <DataGridTemplateColumn Header="Номер&#x0a;секции шин" Width="100">
                             
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;секции шин"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                 BorderThickness="0" Background="Transparent"
-                                                 Text="{Binding IndexEC, UpdateSourceTrigger=PropertyChanged}"
-                                                 />
-                                    </Border>
+                                    <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                             Text="{Binding IndexEC, UpdateSourceTrigger=PropertyChanged}"
+                                             />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                   Text="{Binding IndexEC}"
-                                                   />
-                                    </Border>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding IndexEC}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="100">
+                        <DataGridTemplateColumn Header="Номер&#x0a;группы" Width="100">
                             
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Номер&#x0a;группы"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                 BorderThickness="0" Background="Transparent"
-                                                 Text="{Binding IndexGroup, UpdateSourceTrigger=PropertyChanged}"
-                                                 />
-                                    </Border>
+                                    <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                             Text="{Binding IndexGroup, UpdateSourceTrigger=PropertyChanged}"
+                                             />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                   Text="{Binding IndexGroup}"
-                                                   />
-                                    </Border>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding IndexGroup}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Width="200">
+                        <DataGridTemplateColumn Header="Имя&#x0a;группы" Width="312">
                             
-                            <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;группы"/>
-                                </Border>
-                            </DataGridTemplateColumn.Header>
-
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                 BorderThickness="0" Background="Transparent"
-                                                 Text="{Binding DescriptionGroup, UpdateSourceTrigger=PropertyChanged}"
-                                                 />
-                                    </Border>
+                                    <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                             Text="{Binding DescriptionGroup, UpdateSourceTrigger=PropertyChanged}"
+                                             />
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
 
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                   Text="{Binding DescriptionGroup}"
-                                                   />
-                                    </Border>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding DescriptionGroup}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
@@ -301,79 +171,59 @@
                         <DataGridTemplateColumn Width="500">
                             
                             <DataGridTemplateColumn.Header>
-                                <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                    <Grid>
+                                <Grid>
 
-                                        <!--Сетка-->
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="20"/>
-                                            <RowDefinition/>
-                                        </Grid.RowDefinitions>
+                                    <!--Сетка-->
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="20"/>
+                                        <RowDefinition Height="50"/>
+                                    </Grid.RowDefinitions>
 
-                                        <!--Общая колонка-->
-                                        <Border Grid.Row="0" BorderThickness="2,0" BorderBrush="Black" Background="White">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Настроечные параметры" />
+                                    <!--Общая колонка-->
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Настроечные параметры" />
+
+                                    <!--Колонки настроек-->
+                                    <UniformGrid Grid.Row="1" Columns="5">
+                                        <Border BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Наличие&#x0a;резервного&#x0a;насоса"/>
                                         </Border>
+                                        <Border BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Тип датчика&#x0a;давления"/>
+                                        </Border>
+                                        <Border BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Наличие&#x0a;цепей&#x0a;включения"/>
+                                        </Border>
+                                        <Border BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Одно&#x0a;давление&#x0a;на группу"/>
+                                        </Border>
+                                        <Border BorderThickness="0,1,0,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="Тип&#x0a;группы&#x0a;вспомсистем"/>
+                                        </Border>
+                                    </UniformGrid>
 
-                                        <!--Колонки настроек-->
-                                        <UniformGrid Columns="5" Grid.Row="1">
-                                            <Border BorderThickness="2,1,0,0" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наличие&#x0a;резервного&#x0a;насоса"/>
-                                            </Border>
-                                            <Border BorderThickness="1,1,0,0" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип датчика&#x0a;давления"/>
-                                            </Border>
-                                            <Border BorderThickness="1,1,0,0" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наличие&#x0a;цепей&#x0a;включения"/>
-                                            </Border>
-                                            <Border BorderThickness="1,1,0,0" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Одно&#x0a;давление&#x0a;на группу"/>
-                                            </Border>
-                                            <Border BorderThickness="1,1,2,0" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Тип&#x0a;группы&#x0a;вспомсистем"/>
-                                            </Border>
-                                        </UniformGrid>
-
-                                    </Grid>
-                                </Border>
+                                </Grid>
                             </DataGridTemplateColumn.Header>
 
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-
+                                    
                                     <!--Колонки настроек-->
                                     <UniformGrid Columns="5">
-                                        <Border BorderThickness="2,0,0,0" BorderBrush="Black">
-                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     BorderThickness="0" Background="Transparent"
-                                                     Text="{Binding Reservable, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Reservable}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     BorderThickness="0" Background="Transparent"
-                                                     Text="{Binding TypePressure, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding TypePressure}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     BorderThickness="0" Background="Transparent"
-                                                     Text="{Binding COz, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding COz}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     BorderThickness="0" Background="Transparent"
-                                                     Text="{Binding OnePressureSensorGroup, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding OnePressureSensorGroup}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                     BorderThickness="0" Background="Transparent"
-                                                     Text="{Binding TypeGroup, UpdateSourceTrigger=PropertyChanged}"
-                                                     />
-                                        </Border>
+                                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding TypeGroup}"/>
                                     </UniformGrid>
+                                    
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                             
@@ -382,22 +232,21 @@
                                     
                                     <!--Колонки настроек-->
                                     <UniformGrid Columns="5">
-                                        <Border BorderThickness="2,0,0,0" BorderBrush="Black">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Reservable}"/>
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Reservable}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding TypePressure}"/>
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding TypePressure}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding COz}"/>
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding COz}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding OnePressureSensorGroup}"/>
+                                        <Border BorderThickness="0,0,1,0" BorderBrush="LightSlateGray">
+                                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding OnePressureSensorGroup}"/>
                                         </Border>
-                                        <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding TypeGroup}"/>
-                                        </Border>
+                                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding TypeGroup}"/>
                                     </UniformGrid>
+                                    
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                             
@@ -423,716 +272,34 @@
                 <GridSplitter Width="5" Background="Transparent" Panel.ZIndex="99999"/>
 
                 <!--Cписок вспомсистем-->
-                <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
-                    <GroupBox.Header>
-                        <TextBlock Margin="5,0" Text="Список вспомсистем" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </GroupBox.Header>
-
-                    <ListView ItemsSource="{Binding Params}" SelectedItem="{Binding SelectedParam}" BorderThickness="0">
+                <GroupBox Style="{StaticResource GroupBoxStyle}" Grid.Column="0" Header="Список вспомсистем">
+                    <ListView Style="{StaticResource CustomListView}" ItemsSource="{Binding Params}" SelectedItem="{Binding SelectedParam}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="15"/>
-                                        <ColumnDefinition/>
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse Grid.Column="0" Fill="LightGray" Width="5" Height="5"/>
-                                    <TextBlock Grid.Column="1" Margin="5,0,0,0" VerticalAlignment="Center"
-                                               Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-                                </Grid>
-
+                                <TextBlock Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>
-
                 </GroupBox>
-
+                
                 <!--Данные выбранной вспомсистемы-->
-                <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
-                    <GroupBox.Header>
-                        <TextBlock Margin="5,0" Text="Данные выбранной вспомсистемы" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </GroupBox.Header>
+                <GroupBox Style="{StaticResource GroupBoxStyle}" Grid.Column="1"
+                          Header="{Binding SelectedParam.Description, StringFormat='Данные выбранной вспомсистемы - {0}', TargetNullValue='Данные отсутствуют'}">
 
-                    <TabControl>
+                    <TabControl Style="{StaticResource CustomTabControlStyle}">
 
                         <TabItem Header="Ввод\Вывод">
-
-                            <Grid>
-
-                                <!--Сетка-->
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="441"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-
-                                <!--Ссылки дискретных входов-->
-                                <GroupBox Grid.Row="0" Grid.Column="1" BorderBrush="LightSlateGray">
-                                    <GroupBox.Header>
-                                        <TextBlock Margin="5,0" Text="Ссылки дискретных входов" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                                    </GroupBox.Header>
-
-                                    <DataGrid BorderThickness="0"
-                                              BorderBrush="Black"
-                                              AutoGenerateColumns="False"
-                                              CanUserAddRows="False"
-                                              CanUserReorderColumns="False"
-                                              CanUserResizeRows="False"
-                                              GridLinesVisibility="None"
-                                              CanUserResizeColumns="False"
-                                              SelectionMode="Single"
-                                              SelectionUnit="FullRow"
-                                              Background="Gray"
-                                              HeadersVisibility="Column"
-                                              ItemsSource="{Binding SelectedParam.InputParam}"
-                                              SelectedItem="{Binding SelectedInputParam}"
-                                              >
-
-                                        <DataGrid.Resources>
-
-                                            <Style TargetType="{x:Type DataGridCell}">
-                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="White"/>
-                                                <Setter Property="Height" Value="25"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsSelected" Value="True">
-                                                        <Setter Property="Foreground" Value="Black"/>
-                                                        <Setter Property="Opacity" Value="1"/>
-                                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                                        <Setter Property="BorderBrush" Value="Black"/>
-                                                        <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-
-                                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="Gray"/>
-                                                <Setter Property="Height" Value="50"/>
-                                                <Setter Property="FontWeight" Value="Bold"/>
-                                            </Style>
-
-                                            <Style TargetType="{x:Type DataGridRow}">
-                                                <Setter Property="BorderThickness" Value="0"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="Gray"/>
-                                            </Style>
-
-                                        </DataGrid.Resources>
-
-                                        <DataGrid.Columns>
-
-                                            <DataGridTemplateColumn Width="35">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding Index}"
-                                                                       />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="150">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding VarName}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="150">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="30">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Инв.">
-                                                            <TextBlock.LayoutTransform>
-                                                                <RotateTransform Angle="-90"/>
-                                                            </TextBlock.LayoutTransform>
-                                                        </TextBlock>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-
-                                                <DataGridTemplateColumn.CellEditingTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                                     BorderThickness="0" Background="Transparent"
-                                                                     Text="{Binding Inv, UpdateSourceTrigger=PropertyChanged}"
-                                                                     />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellEditingTemplate>
-
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                                       Text="{Binding Inv}"
-                                                                       />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="80">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White"
-                                                            ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}">
-                                                        <Grid>
-                                                            <Grid.RowDefinitions>
-                                                                <RowDefinition Height="10"/>
-                                                                <RowDefinition/>
-                                                            </Grid.RowDefinitions>
-                                                            <Border Grid.Row="0">
-                                                                <fa:FontAwesome Icon="Solid_CaretRight" Foreground="Red"/>
-                                                                <Border.LayoutTransform>
-                                                                    <RotateTransform Angle="90"/>
-                                                                </Border.LayoutTransform>
-                                                            </Border>
-                                                            <TextBlock Grid.Row="1" TextAlignment="Center" HorizontalAlignment="Center" Text="Тип&#x0a;сигнала" Margin="0,0,0,5"/>
-                                                        </Grid>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-
-                                                <DataGridTemplateColumn.CellEditingTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                                     BorderThickness="0" Background="Transparent"
-                                                                     Text="{Binding TypeSignal, UpdateSourceTrigger=PropertyChanged}"
-                                                                     />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellEditingTemplate>
-
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                                       Text="{Binding TypeSignal}"
-                                                                       />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="80">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-
-                                                <DataGridTemplateColumn.CellEditingTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                                     BorderThickness="0" Background="Transparent"
-                                                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
-                                                                     />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellEditingTemplate>
-
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                                       Text="{Binding Address}">
-                                                                <TextBlock.InputBindings>
-                                                                    <MouseBinding MouseAction="RightClick"
-                                                                                  Command="{Binding DataContext.CmdChangeAddressInputParam,
-                                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                                  CommandParameter="{Binding Index}"/>
-                                                                </TextBlock.InputBindings>
-                                                            </TextBlock>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="500">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Left" VerticalAlignment="Center"
-                                                                       FontWeight="Bold" Margin="5,0"
-                                                                       Text="{Binding Description}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                        </DataGrid.Columns>
-
-                                    </DataGrid>
-                                </GroupBox>
-
-                                <!--Ссылки дискретных выходов-->
-                                <GroupBox Grid.Row="1" Grid.Column="1" BorderBrush="LightSlateGray">
-                                    <GroupBox.Header>
-                                        <TextBlock Margin="5,0" Text="Ссылки дискретных выходов" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                                    </GroupBox.Header>
-
-                                    <DataGrid BorderThickness="0"
-                                              BorderBrush="Black"
-                                              AutoGenerateColumns="False"
-                                              CanUserAddRows="False"
-                                              CanUserReorderColumns="False"
-                                              CanUserResizeRows="False"
-                                              GridLinesVisibility="None"
-                                              CanUserResizeColumns="False"
-                                              SelectionMode="Single"
-                                              SelectionUnit="FullRow"
-                                              Background="Gray"
-                                              HeadersVisibility="Column"
-                                              ItemsSource="{Binding SelectedParam.OutputParam}"
-                                              SelectedItem="{Binding SelectedOutputParam}"
-                                              >
-
-                                        <DataGrid.Resources>
-
-                                            <Style TargetType="{x:Type DataGridCell}">
-                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="White"/>
-                                                <Setter Property="Height" Value="25"/>
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsSelected" Value="True">
-                                                        <Setter Property="Foreground" Value="Black"/>
-                                                        <Setter Property="Opacity" Value="1"/>
-                                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                                        <Setter Property="BorderBrush" Value="Black"/>
-                                                        <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-
-                                            <Style TargetType="{x:Type DataGridColumnHeader}">
-                                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                                <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="Gray"/>
-                                                <Setter Property="Height" Value="50"/>
-                                                <Setter Property="FontWeight" Value="Bold"/>
-                                            </Style>
-
-                                            <Style TargetType="{x:Type DataGridRow}">
-                                                <Setter Property="BorderThickness" Value="0"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="Gray"/>
-                                            </Style>
-
-                                        </DataGrid.Resources>
-
-                                        <DataGrid.Columns>
-
-                                            <DataGridTemplateColumn Width="35">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding Index}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="150">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding VarName}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="150">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                                       Text="{Binding Id}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="190">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Смещение"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-
-                                                <DataGridTemplateColumn.CellEditingTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                                     BorderThickness="0" Background="Transparent"
-                                                                     Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
-                                                                     />
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellEditingTemplate>
-
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                                       Text="{Binding Address}">
-                                                                <TextBlock.InputBindings>
-                                                                    <MouseBinding MouseAction="RightClick"
-                                                                                  Command="{Binding DataContext.CmdChangeAddressOutputParam,
-                                                                        RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                                                  CommandParameter="{Binding Index}"/>
-                                                                </TextBlock.InputBindings>
-                                                            </TextBlock>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                            <DataGridTemplateColumn Width="500">
-                                                
-                                                <DataGridTemplateColumn.Header>
-                                                    <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание сигнала"/>
-                                                    </Border>
-                                                </DataGridTemplateColumn.Header>
-                                                
-                                                <DataGridTemplateColumn.CellTemplate>
-                                                    <DataTemplate>
-                                                        <Border BorderThickness="1,0,2,0" BorderBrush="Black" Background="LightGray">
-                                                            <TextBlock TextAlignment="Left" VerticalAlignment="Center"
-                                                                       FontWeight="Bold" Margin="5,0"
-                                                                       Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
-                                                        </Border>
-                                                    </DataTemplate>
-                                                </DataGridTemplateColumn.CellTemplate>
-                                                
-                                            </DataGridTemplateColumn>
-
-                                        </DataGrid.Columns>
-
-                                    </DataGrid>
-                                </GroupBox>
-
-                            </Grid>
-
+                            <cuc:InputOutputUserControl DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                         </TabItem>
 
                         <TabItem Header="Уставки">
-
-                            <DataGrid BorderThickness="0"
-                                      BorderBrush="Black"
-                                      AutoGenerateColumns="False"
-                                      CanUserAddRows="False"
-                                      CanUserReorderColumns="False"
-                                      CanUserResizeRows="False"
-                                      GridLinesVisibility="None"
-                                      CanUserResizeColumns="False"
-                                      SelectionMode="Single"
-                                      SelectionUnit="FullRow"
-                                      Background="Gray"
-                                      HeadersVisibility="Column"
-                                      ItemsSource="{Binding SelectedParam.Setpoints}"
-                                      >
-
-                                <DataGrid.Resources>
-
-                                    <Style TargetType="{x:Type DataGridCell}">
-                                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                        <Setter Property="BorderBrush" Value="Black"/>
-                                        <Setter Property="Background" Value="White"/>
-                                        <Setter Property="Height" Value="25"/>
-                                        <Style.Triggers>
-                                            <Trigger Property="IsSelected" Value="True">
-                                                <Setter Property="Foreground" Value="Black"/>
-                                                <Setter Property="Opacity" Value="1"/>
-                                                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                                <Setter Property="BorderBrush" Value="Black"/>
-                                                <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                            </Trigger>
-                                        </Style.Triggers>
-                                    </Style>
-
-                                    <Style TargetType="{x:Type DataGridColumnHeader}">
-                                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                                        <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                                        <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                                        <Setter Property="BorderBrush" Value="Black"/>
-                                        <Setter Property="Background" Value="Gray"/>
-                                        <Setter Property="Height" Value="50"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                    </Style>
-
-                                    <Style TargetType="{x:Type DataGridRow}">
-                                        <Setter Property="BorderThickness" Value="0"/>
-                                        <Setter Property="BorderBrush" Value="Black"/>
-                                        <Setter Property="Background" Value="Gray"/>
-                                    </Style>
-
-                                </DataGrid.Resources>
-
-                                <DataGrid.Columns>
-
-                                    <DataGridTemplateColumn Width="35">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-                                        
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                               Text="{Binding Index}"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="110">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Идентификатор" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-                                        
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                               Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="1000">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование таймера" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-
-                                        <DataGridTemplateColumn.CellEditingTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBox VerticalContentAlignment="Center"
-                                                             BorderThickness="0" Background="Transparent"
-                                                             Margin="3,0,0,0"
-                                                             Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                                             />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellEditingTemplate>
-
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBlock VerticalAlignment="Center"
-                                                               Margin="5,0,0,0"
-                                                               Text="{Binding Description}"
-                                                               />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="100">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-                                        
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                               Text="{Binding VarName}"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="100">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-                                        
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black" Background="LightGray">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                                               Text="{Binding Address}"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="100">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Значение&#x0a;уставки" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-                                        
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                                                    <TextBox BorderThickness="0" TextAlignment="Center" VerticalContentAlignment="Center"
-                                                             Background="Transparent"
-                                                             Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                    <DataGridTemplateColumn Width="100">
-                                        
-                                        <DataGridTemplateColumn.Header>
-                                            <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Ед.&#x0a;измерения" Margin="0,0,0,5"/>
-                                            </Border>
-                                        </DataGridTemplateColumn.Header>
-
-                                        <DataGridTemplateColumn.CellEditingTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                                                    <TextBox TextAlignment="Center" VerticalContentAlignment="Center"
-                                                             BorderThickness="0" Background="Transparent"
-                                                             Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"
-                                                             IsReadOnly="{Binding DataContext.DoSelection, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                                             />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellEditingTemplate>
-
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                                                    <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                                               Text="{Binding Unit}"
-                                                               />
-                                                </Border>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                        
-                                    </DataGridTemplateColumn>
-
-                                </DataGrid.Columns>
-
-                            </DataGrid>
-
+                            <cuc:SetpointsUserControl DataContext="{Binding DataContext, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
                         </TabItem>
 
                     </TabControl>
-
+                    
                 </GroupBox>
-
+                
             </Grid>
 
         </TabItem>

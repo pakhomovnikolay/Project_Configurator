@@ -9,10 +9,10 @@
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
              d:Background="AliceBlue"
-             d:DesignHeight="800"
-             d:DesignWidth="1740"
              
              d:DataContext="{d:DesignInstance vm:HandMapUserControlViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="{Binding WindowHeight}"
+             d:DesignWidth="{Binding WindowWidth}"
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              >
@@ -24,12 +24,10 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        
-        <!--Фильтр-->
-        <Border Grid.Row="0" Margin="0,1,0,0" CornerRadius="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite">
-            <Grid>
 
-                <!--Сетка-->
+        <!--Фильтр-->
+        <Border Style="{StaticResource BorderFilterStyle}" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition />
@@ -37,46 +35,24 @@
                 </Grid.ColumnDefinitions>
 
                 <fa:FontAwesome Grid.Column="0" Icon="Solid_Filter" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                <TextBox Grid.Column="1" Margin="0,1" VerticalContentAlignment="Center"
-                         BorderBrush="Black"
+                <TextBox Style="{StaticResource TextBoxFilterStyle}"
+                         Grid.Column="1"
                          Text="{Binding TextFilter, UpdateSourceTrigger=PropertyChanged}"
                          >
-                    <TextBox.Resources>
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="3"/>
-                        </Style>
-                    </TextBox.Resources>
                     <TextBox.InputBindings>
-                        <KeyBinding Key="Return" Command="{Binding CmdRefreshFilter}"/>
+                        <KeyBinding Key="Return" Command="{Binding CmdRefreshFilter, UpdateSourceTrigger=PropertyChanged}"/>
                     </TextBox.InputBindings>
                 </TextBox>
-                <Button Grid.Column="2" Margin="1"
+                <Button Grid.Column="2"
+                        Margin="1"
                         ToolTip="Обновить фльтр"
-                        Style="{StaticResource CustomButtonStyle}"
-                        Command="{Binding CmdRefreshFilter}"
-                        >
-                    <Button.Content>
-                        <fa:FontAwesome Icon="Solid_SyncAlt" FontSize="12" Foreground="Green"/>
-                    </Button.Content>
-                </Button>
+                        Style="{StaticResource RefreshButtonStyle}"
+                        Command="{Binding CmdRefreshFilter, UpdateSourceTrigger=PropertyChanged}"/>
             </Grid>
         </Border>
-
+        
         <!--Данные-->
-        <DataGrid Grid.Row="1"
-                  Margin="0,1,0,0"
-                  BorderThickness="1"
-                  BorderBrush="Black"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Gray"
-                  HeadersVisibility="Column"
+        <DataGrid Style="{StaticResource HeaderColumnLinesNoneDataGridStyle}" Grid.Row="1"
                   ItemsSource="{Binding ParamsDataView}"
                   SelectedItem="{Binding SelectedParam}"
                   >
@@ -84,50 +60,12 @@
             <DataGrid.Resources>
 
                 <tool_tip:ToolTipParam x:Key="ToolTipParam"/>
-
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="70"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                </Style>
-
+                
             </DataGrid.Resources>
 
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn Width="35">
-                    
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№" Margin="0,0,0,5"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
+                <DataGridTemplateColumn Header="№" Width="30">
                     
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -138,21 +76,14 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                           Text="{Binding Index}"/>
+                                <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Index}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     
                 </DataGridTemplateColumn>
-                
-                <DataGridTemplateColumn Width="800">
-                    
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование сигнала"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
+
+                <DataGridTemplateColumn Header="Наименование сигнала" Width="*" MinWidth="800">
                     
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
@@ -163,11 +94,8 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBox VerticalContentAlignment="Center"
-                                         BorderThickness="0" Background="Transparent"
-                                         Margin="3,0,0,0"
-                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-										 />
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
                             </Border>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
@@ -181,8 +109,7 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock VerticalAlignment="Center"
-                                           Margin="5,0,0,0"
+                                <TextBlock Style="{StaticResource TextBlockCustomStyle}"
                                            Text="{Binding Description}"
                                            />
                             </Border>
@@ -191,13 +118,7 @@
                     
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="100">
-                    
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя&#x0a;переменной"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
+                <DataGridTemplateColumn Header="Имя&#x0a;переменной" Width="100">
                     
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
@@ -208,7 +129,7 @@
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold">
+                                <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}">
                                     <TextBlock.Resources>
                                         <converter:IndexToVarNameConverter x:Key="IndexToVarNameConverter" VarName="{Binding VarName}"/>
                                     </TextBlock.Resources>
@@ -225,25 +146,19 @@
                 <DataGridTemplateColumn Width="30">
                     
                     <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,2,2" BorderBrush="Black" Background="White">
-                            <TextBlock TextAlignment="Center" HorizontalAlignment="Center" Text="Бит" Margin="0,0,0,5">
-                                <TextBlock.LayoutTransform>
-                                    <RotateTransform Angle="-90"/>
-                                </TextBlock.LayoutTransform>
-                            </TextBlock>
-                        </Border>
+                        <TextBlock Style="{StaticResource TextBlockVerticalCustomStyle}" Text="Бит"/>
                     </DataGridTemplateColumn.Header>
                     
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <DataTemplate.Resources>
-                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="5" />
+                                <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="6" />
                             </DataTemplate.Resources>
                             <Border BorderBrush="Black" Background="LightGray" Height="25">
                                 <Border.BorderThickness>
                                     <Binding Path="Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center">
+                                <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}">
                                     <TextBlock.Text>
                                         <Binding Path="Index" Converter="{StaticResource IndexToBitConverter}"/>
                                     </TextBlock.Text>

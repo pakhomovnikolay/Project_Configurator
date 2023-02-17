@@ -12,7 +12,9 @@
                 <ResourceDictionary Source="Resources\Style\UserControls.xaml"/>
                 <ResourceDictionary Source="Resources\Style\DataGrids.xaml"/>
                 <ResourceDictionary Source="Resources\Style\GroupBoxs.xaml"/>
-                <ResourceDictionary Source="Resources\Style\BordersStyle.xaml"/>
+                <ResourceDictionary Source="Resources\Style\ElementsView.xaml"/>
+                <ResourceDictionary Source="Resources\Style\TabControls.xaml"/>
+                <ResourceDictionary Source="Resources\Style\ListViews.xaml"/>
                 <ResourceDictionary Source="Resources\BrushList\DictionaryBrush.xaml"/>
                 <ResourceDictionary Source="Infrastructures\Converters\DictionaryConverters.xaml"/>
                 <ResourceDictionary Source="Infrastructures\ToolTips\ToolTipsDictionary.xaml"/>

@@ -32,14 +32,14 @@ namespace Project_Сonfigurator.Infrastructures.Converters
 
         public object Convert(object[] v, Type t, object p, CultureInfo c)
         {
-            if (v is null) return Brushes.White;
-            if (string.IsNullOrWhiteSpace(TextFilter)) return Brushes.White;
+            if (v is null) return Brushes.Transparent;
+            if (string.IsNullOrWhiteSpace(TextFilter)) return Brushes.Transparent;
             foreach (var text in v)
             {
-                if (text is not string _text) return Brushes.White;
+                if (text is not string _text) return Brushes.Transparent;
                 if (_text.Contains(TextFilter, StringComparison.CurrentCultureIgnoreCase)) return Brushes.AliceBlue;
             }
-            return Brushes.White;
+            return Brushes.Transparent;
         }
 
         public object[] ConvertBack(object v, Type[] t, object p, CultureInfo c)

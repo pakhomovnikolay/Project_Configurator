@@ -7,7 +7,7 @@
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
         WindowStartupLocation="CenterScreen"
-        AllowsTransparency="True"
+        AllowsTransparency="False"
         WindowStyle="None"
         BorderBrush="Black"
         BorderThickness="1"

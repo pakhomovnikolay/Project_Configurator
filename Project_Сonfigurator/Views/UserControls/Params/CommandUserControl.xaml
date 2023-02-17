@@ -6,173 +6,84 @@
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
              d:Background="AliceBlue"
-             d:DesignHeight="450"
-             d:DesignWidth="800"
              
              d:DataContext="{d:DesignInstance vm:CommandUserControlViewModel, IsDesignTimeCreatable=True}"
+             d:DesignHeight="{Binding WindowHeight}"
+             d:DesignWidth="{Binding WindowWidth}"
              Style="{StaticResource UserControlStyle}"
              Tag="{Binding Description}"
              
              >
 
     <!--Данные-->
-    <DataGrid Grid.Row="1"
-              Margin="0,1,0,0"
-              BorderThickness="0"
-              BorderBrush="Black"
-              AutoGenerateColumns="False"
-              CanUserAddRows="False"
-              CanUserReorderColumns="False"
-              CanUserResizeRows="False"
-              GridLinesVisibility="None"
-              CanUserResizeColumns="False"
-              SelectionMode="Single"
-              SelectionUnit="FullRow"
-              Background="Gray"
-              HeadersVisibility="Column"
+    <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
               ItemsSource="{Binding Params}"
               SelectedItem="{Binding SelectedParam}"
-                  >
-
-        <DataGrid.Resources>
-
-            <Style TargetType="{x:Type DataGridCell}">
-                <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Background" Value="White"/>
-                <Setter Property="Height" Value="25"/>
-                <Style.Triggers>
-                    <Trigger Property="IsSelected" Value="True">
-                        <Setter Property="Foreground" Value="Black"/>
-                        <Setter Property="Opacity" Value="1"/>
-                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                        <Setter Property="BorderBrush" Value="Black"/>
-                        <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-
-            <Style TargetType="{x:Type DataGridColumnHeader}">
-                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                <Setter Property="BorderThickness" Value="1,0,0,0"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Background" Value="Gray"/>
-                <Setter Property="Height" Value="70"/>
-                <Setter Property="FontWeight" Value="Bold"/>
-            </Style>
-
-            <Style TargetType="{x:Type DataGridRow}">
-                <Setter Property="BorderThickness" Value="0"/>
-                <Setter Property="BorderBrush" Value="Black"/>
-                <Setter Property="Background" Value="Gray"/>
-            </Style>
-
-        </DataGrid.Resources>
-
+              >
+        
         <DataGrid.Columns>
 
-            <DataGridTemplateColumn Width="35">
-                <DataGridTemplateColumn.Header>
-                    <Border BorderThickness="1,2,0,2" BorderBrush="Black" Background="White">
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="№"/>
-                    </Border>
-                </DataGridTemplateColumn.Header>
-                <DataGridTemplateColumn.CellTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="2,0,0,0" BorderBrush="Black" Background="LightGray">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                                       Text="{Binding Index}"/>
-                        </Border>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellTemplate>
-            </DataGridTemplateColumn>
-
-            <DataGridTemplateColumn Width="500">
+            <DataGridTemplateColumn Header="№" Width="30">
                 
-                <DataGridTemplateColumn.Header>
-                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Имя тега"/>
-                    </Border>
-                </DataGridTemplateColumn.Header>
-
-                <DataGridTemplateColumn.CellEditingTemplate>
-                    <DataTemplate>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
-                                     BorderThickness="0" Background="Transparent"
-                                     Text="{Binding VarName, UpdateSourceTrigger=PropertyChanged}"
-                                     />
-                        </Border>
-                    </DataTemplate>
-                </DataGridTemplateColumn.CellEditingTemplate>
-
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
-                                       Text="{Binding VarName}"/>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Index}"/>
                         </Border>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
                 
             </DataGridTemplateColumn>
 
-            <DataGridTemplateColumn Width="500">
+            <DataGridTemplateColumn Header="Имя тега" Width="500">
                 
-                <DataGridTemplateColumn.Header>
-                    <Border BorderThickness="0,2" BorderBrush="Black" Background="White">
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Адрес&#x0a;Полный путь к тегу в ПЛК"/>
-                    </Border>
-                </DataGridTemplateColumn.Header>
-
                 <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
-                                     BorderThickness="0" Background="Transparent"
-                                     Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
-                                     />
-                        </Border>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding VarName, UpdateSourceTrigger=PropertyChanged}"
+                                 />
                     </DataTemplate>
                 </DataGridTemplateColumn.CellEditingTemplate>
 
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,0,0" BorderBrush="Black">
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
-                                       Text="{Binding Id}"/>
-                        </Border>
+                        <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding VarName}"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
                 
             </DataGridTemplateColumn>
 
-            <DataGridTemplateColumn Width="500">
+            <DataGridTemplateColumn Header="Адрес&#x0a;Полный путь к тегу в ПЛК" Width="862">
                 
-                <DataGridTemplateColumn.Header>
-                    <Border BorderThickness="0,2,2,2" BorderBrush="Black" Background="White">
-                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Описание"/>
-                    </Border>
-                </DataGridTemplateColumn.Header>
-
                 <DataGridTemplateColumn.CellEditingTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                            <TextBox VerticalContentAlignment="Center" Margin="3,0,0,0"
-                                     BorderThickness="0" Background="Transparent"
-                                     Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                     />
-                        </Border>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding Id, UpdateSourceTrigger=PropertyChanged}"
+                                 />
                     </DataTemplate>
                 </DataGridTemplateColumn.CellEditingTemplate>
 
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <Border BorderThickness="1,0,2,0" BorderBrush="Black">
-                            <TextBlock VerticalAlignment="Center" Margin="5,0,0,0"
-                                       Text="{Binding Description}"/>
-                        </Border>
+                        <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Id}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                
+            </DataGridTemplateColumn>
+
+            <DataGridTemplateColumn Header="Описание" Width="500">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Description}"/>
                     </DataTemplate>
                 </DataGridTemplateColumn.CellTemplate>
                 

@@ -38,11 +38,11 @@ namespace Project_Сonfigurator.Infrastructures.Converters.UserDIUserControl
 
             var _Thickness = IndexColumn switch
             {
-                0 => Bit == 15 ? new Thickness(1, 0, 0, 2) : new Thickness(1, 0, 0, 1),
-                3 => Bit == 15 ? new Thickness(1, 0, 0, 2) : new Thickness(1, 0, 0, 0),
-                5 => Bit == 15 ? new Thickness(1, 0, 2, 2) : new Thickness(1, 0, 2, 1),
+                0 => Bit == 15 ? new Thickness(0, 0, 1, 2) : new Thickness(0, 0, 1, 1),
+                3 => Bit == 15 ? new Thickness(0, 0, 1, 2) : new Thickness(0, 0, 1, 0),
+                5 => Bit == 15 ? new Thickness(0, 0, 0, 2) : new Thickness(0, 0, 0, 1),
 
-                _ => Bit == 15 ? new Thickness(1, 0, 0, 2) : new Thickness(1, 0, 0, 1),
+                _ => Bit == 15 ? new Thickness(0, 0, 1, 2) : new Thickness(0, 0, 1, 1),
             };
 
             return _Thickness;

@@ -45,6 +45,30 @@ namespace Project_Сonfigurator.ViewModels.Base
         }
         #endregion
 
+        #region Высота окна
+        private int _WindowHeight = 1080;
+        /// <summary>
+        /// Высота окна
+        /// </summary>
+        public virtual int WindowHeight
+        {
+            get => _WindowHeight;
+            set => Set(ref _WindowHeight, value);
+        }
+        #endregion
+
+        #region Ширина окна
+        private int _WindowWidth = 1920;
+        /// <summary>
+        /// Ширина окна
+        /// </summary>
+        public virtual int WindowWidth
+        {
+            get => _WindowWidth;
+            set => Set(ref _WindowWidth, value);
+        }
+        #endregion
+
         #region Описание вкладки
         private string _Description;
         /// <summary>

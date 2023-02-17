@@ -10,14 +10,12 @@
             <Grid x:Name="PART_MainGrid"
                   Background="{TemplateBinding Background}">
                 <DockPanel>
-                    <Grid DockPanel.Dock="Top" x:Name="PART_TitleBar" Background="#FFCCFFCC">
-                        <DockPanel Height="30">
-                            <Border BorderThickness="2" BorderBrush="Black">
-                                <TextBlock TextAlignment="Center" VerticalAlignment="Center"
-                                           FontWeight="Bold" FontSize="16"
-                                           Text="{TemplateBinding Tag}"/>
-                            </Border>
-                        </DockPanel>
+                    <Grid DockPanel.Dock="Top" x:Name="PART_TitleBar" Background="#FFCCFFCC" Margin="0,0,0,2">
+                        <Border Height="30" BorderThickness="2" BorderBrush="LightSlateGray" CornerRadius="2">
+                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"
+                                       FontWeight="Bold" FontSize="16"
+                                       Text="{TemplateBinding Tag}"/>
+                        </Border>
                     </Grid>
                     <AdornerDecorator>
                         <ContentPresenter/>

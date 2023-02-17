@@ -86,7 +86,19 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         public BaseUMPNA SelectedParam
         {
             get => _SelectedParam;
-            set => Set(ref _SelectedParam, value);
+            set
+            {
+                if (Set(ref _SelectedParam, value))
+                {
+                    if (_SelectedParam?.KTPRA.Count > 0)
+                    {
+                        _ParamsDataView.Source = _SelectedParam.KTPRA;
+                        _ParamsDataView.View?.Refresh();
+                        OnPropertyChanged(nameof(ParamsDataView));
+                    }
+                }
+
+            }
         }
         #endregion
 

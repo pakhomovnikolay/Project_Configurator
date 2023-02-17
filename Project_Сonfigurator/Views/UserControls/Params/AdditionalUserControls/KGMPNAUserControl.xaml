@@ -1,0 +1,245 @@
+﻿<UserControl x:Class="Project_Сonfigurator.Views.UserControls.Params.AdditionalUserControls.KGMPNAUserControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Params.AdditionalUserControls"
+             xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels.UserControls.Params"
+             d:Background="AliceBlue"
+             d:DesignHeight="1080"
+             d:DesignWidth="1920"
+             
+             d:DataContext="{d:DesignInstance vm:UMPNAUserControlViewModel, IsDesignTimeCreatable=True}"
+             >
+
+    <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
+              ItemsSource="{Binding SelectedParam.KGMPNA}"
+              SelectedItem="{Binding SelectedKGMPNA}"
+              >
+        
+        <DataGrid.Columns>
+            
+            <DataGridTemplateColumn Header="№" Width="30">
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.Index}"/>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Идентификатор" Width="120">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}"
+                                 Text="{Binding Param.Id, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.Id}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+                
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Описание сигнала" Width="621">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding Param.Description, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Param.Description}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+                
+            <DataGridTemplateColumn Header="Имя&#x0a;переменной" Width="140">
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.VarName}"/>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Width="30">
+                
+                <DataGridTemplateColumn.Header>
+                    <TextBlock Style="{StaticResource TextBlockVerticalCustomStyle}" Text="Инв."/>
+                </DataGridTemplateColumn.Header>
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}"
+                                 Text="{Binding Param.Inv, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.Inv}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Width="80">
+                
+                <DataGridTemplateColumn.Header>
+                    <TextBlock Style="{StaticResource TextBlockCenterToolTipCustomStyle}" Text="Тип&#x0a;сигнала"
+                               ToolTip="{Binding TypeSignal, Source={StaticResource ToolTipParam}}"/>
+                </DataGridTemplateColumn.Header>
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}"
+                                 Text="{Binding Param.TypeSignal, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.TypeSignal}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Смещение" Width="80">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}"
+                                 Text="{Binding Param.Address, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.Address}">
+                            <TextBlock.InputBindings>
+                                <MouseBinding MouseAction="RightClick"
+                                              Command="{Binding DataContext.CmdChangeAddressKGMPNA,  RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              CommandParameter="{Binding Param.Index}"/>
+                            </TextBlock.InputBindings>
+                        </TextBlock>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Запрет&#x0a;маскирования" Width="100">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCenterCustomStyle}"
+                                 Text="{Binding NoMasked, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding NoMasked}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Адрес" Width="80">
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Address}"/>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Имя&#x0a;переменной" Width="120">
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.VarName}"/>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Идентификатор" Width="120">
+
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <Border Background="LightGray">
+                            <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Id}"/>
+                        </Border>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Значение&#x0a;уставки" Width="80">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding Setpoints.Value, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Value}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+            
+            <DataGridTemplateColumn Header="Ед.&#x0a;измерения" Width="80">
+                
+                <DataGridTemplateColumn.CellEditingTemplate>
+                    <DataTemplate>
+                        <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                 Text="{Binding Setpoints.Unit, UpdateSourceTrigger=PropertyChanged}"
+                                 />
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellEditingTemplate>
+                
+                <DataGridTemplateColumn.CellTemplate>
+                    <DataTemplate>
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Unit}"/>
+                    </DataTemplate>
+                </DataGridTemplateColumn.CellTemplate>
+            
+            </DataGridTemplateColumn>
+                
+        </DataGrid.Columns>
+
+    </DataGrid>
+    
+</UserControl>
