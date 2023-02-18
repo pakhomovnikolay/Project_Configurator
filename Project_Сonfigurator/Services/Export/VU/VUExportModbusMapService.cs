@@ -13,7 +13,7 @@ using System.Xml;
 
 namespace Project_Сonfigurator.Services.Export.VU
 {
-    public class VUExportModbusMap : BaseService, IVUExportModbusMap
+    public class VUExportModbusMapService : BaseService, IVUExportModbusMapService
     {
         private const string Namespace = "format-version";
         private const string HR = "Holding Registers";

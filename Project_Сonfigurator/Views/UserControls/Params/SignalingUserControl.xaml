@@ -71,7 +71,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="0" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Background="LightGray">
+                            <Border BorderBrush="LightSlateGray" Background="LightGray">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -89,7 +89,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -105,7 +105,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -126,7 +126,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -143,7 +143,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -162,7 +162,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="0" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Background="LightGray">
+                            <Border BorderBrush="LightSlateGray" Background="LightGray">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -184,7 +184,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -201,7 +201,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -227,7 +227,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -244,7 +244,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -265,7 +265,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -282,7 +282,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="1" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -308,7 +308,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="3" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Background="LightGray">
+                            <Border BorderBrush="LightSlateGray" Background="LightGray">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -337,7 +337,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="4" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Background="LightGray" Height="25">
+                            <Border BorderBrush="LightSlateGray" Background="LightGray" Height="25">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -356,7 +356,7 @@
                     
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Border x:Name="border" BorderBrush="Black">
+                            <Border x:Name="border" BorderBrush="LightSlateGray">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -408,7 +408,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="0" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black">
+                            <Border BorderBrush="LightSlateGray">
                                 <Border.Background>
                                     <Binding Path="Color" Converter="{StaticResource BrushConverter}"/>
                                 </Border.Background>
@@ -435,7 +435,7 @@
                     
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Border x:Name="border" BorderBrush="Black">
+                            <Border x:Name="border" BorderBrush="LightSlateGray">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -471,7 +471,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="0" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
                                 </Border.BorderThickness>
@@ -503,7 +503,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="6" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
@@ -520,7 +520,7 @@
                             <DataTemplate.Resources>
                                 <converter:IndexToBorderThicknessConverter x:Key="IndexToBorderThicknessConverter" IndexColumn="6" />
                             </DataTemplate.Resources>
-                            <Border BorderBrush="Black" Height="25">
+                            <Border BorderBrush="LightSlateGray" Height="25">
 
                                 <Border.BorderThickness>
                                     <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>

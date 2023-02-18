@@ -182,102 +182,11 @@ namespace Project_Сonfigurator.ViewModels.Base
         public virtual IUserDialogService UserDialog { get; set; } = new UserDialogService();
         #endregion
 
-        #region Сервис работы с БД
-        /// <summary>
-        /// Сервис работы с БД
-        /// </summary>
-        public virtual IDBService DBServices { get; set; } = new DBService();
-        #endregion
-
-        #region Сервис работы с настройками приложения
-        /// <summary>
-        /// Сервис работы с настройками приложения
-        /// </summary>
-        public virtual ISettingService SettingServices { get; set; } = new SettingService();
-        #endregion
-
-        #region Сервис экспорта данных приложения для ПЛК
-        /// <summary>
-        /// Сервис экспорта данных приложения для ПЛК
-        /// </summary>
-        public virtual ISUExportRedefineService SUExportRedefineServices { get; set; } = new SUExportRedefineService();
-        #endregion
-
-        #region Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по OPC
-        /// <summary>
-        /// Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по OPC
-        /// </summary>
-        public virtual IVUExportOPCMap VUExportOPCMaps { get; set; } = new VUExportOPCMap();
-        #endregion
-
-        #region Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по modbus
-        /// <summary>
-        /// Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по modbus
-        /// </summary>
-        public virtual IVUExportModbusMap IVUExportModbusMaps { get; set; } = new VUExportModbusMap();
-        #endregion
-
-        #region Сервис экспорта пространств имен для проектов AS
-        /// <summary>
-        /// Сервис экспорта пространств имен для проектов AS
-        /// </summary>
-        public virtual IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices { get; set; } = new VUNamespaceASExportRedefineService();
-        #endregion
-
-        #region Сервис экспорта приложения IOS для проектов AS
-        /// <summary>
-        /// Сервис экспорта приложения IOS для проектов AS
-        /// </summary>
-        public virtual IVUAppIOSASExportRedefineService VUAppIOSASExportRedefineServices { set; get; } = new VUAppIOSASExportRedefineService();
-        #endregion
-
-        #region Сервис экспорта приложения PLC для проектов AS
-        /// <summary>
-        /// Сервис экспорта приложения PLC для проектов AS
-        /// </summary>
-        public virtual IVUAppPLCASExportRedefineService VUAppPLCASExportRedefineServices { get; set; } = new VUAppPLCASExportRedefineService();
-        #endregion
-
-        #region Сервис проверки наличия в строках русских символов
-        /// <summary>
-        /// Сервис проверки наличия в строках русских символов
-        /// </summary>
-        public virtual ICyrillicSymbolService CyrillicSymbolServices { get; set; } = new CyrillicSymbolService();
-        #endregion
-
-        #region Сервис редактирования объектов
-        /// <summary>
-        /// Сервис редактирования объектов
-        /// </summary>
-        public virtual IEditService EditServices { get; set; } = new EditService();
-        #endregion
-
-        #region Сервис шифрования данных
-        /// <summary>
-        /// Сервис шифрования данных
-        /// </summary>
-        public virtual IEncryptorService EncryptorServices { get; set; } = new EncryptorService();
-        #endregion
-
         #region Сервис логирования
         /// <summary>
         /// Сервис логирования
         /// </summary>
         public virtual ILogSerivece LogSeriveces { get; set; } = new LogSerivece();
-        #endregion
-
-        #region Сервис работы с настройками корзин
-        /// <summary>
-        /// Сервис работы с настройками корзин
-        /// </summary>
-        public virtual ILayotRackService LayotRackServices { get; set; } = new LayotRackService();
-        #endregion
-
-        #region Сервис работы с параметрами
-        /// <summary>
-        /// Сервис работы с параметрами
-        /// </summary>
-        public virtual ISignalService SignalServices { get; set; } = new SignalService();
         #endregion
     }
 }

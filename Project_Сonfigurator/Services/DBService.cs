@@ -205,7 +205,7 @@ namespace Project_Сonfigurator.Services
         {
             SettingApp Config = App.Settings.Config;
             var _ViewModelsUserControl = App.Services.GetRequiredService<IEnumerable<IViewModelUserControls>>();
-
+            string TablesNotLoaded;
             try
             {
                 foreach (var ConnectSetting in Config.ServerDB)
@@ -231,6 +231,7 @@ namespace Project_Сonfigurator.Services
                         ConnectSetting.SuccessUpdate = true;
 
                         #region Формируем данные
+                        TablesNotLoaded = "";
                         foreach (var _ViewModel in _ViewModelsUserControl)
                         {
                             List<string> FieldValue = new();
@@ -288,7 +289,11 @@ namespace Project_Сonfigurator.Services
                                     RequestToDataBaseServices.TableFieldTableSignals,
                                     RequestToDataBaseServices.FieldTableSignals,
                                     FieldValue))
+                                {
                                     ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "TableSignals; ";
+                                }
+                                    
                             }
                             #endregion
 
@@ -310,7 +315,11 @@ namespace Project_Сonfigurator.Services
                                     "SIGNAL_DI",
                                     RequestToDataBaseServices.TableFieldSignalsDI,
                                     RequestToDataBaseServices.FieldSignalsDI,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SIGNAL_DI; ";
+                                }
                             }
                             #endregion
 
@@ -333,7 +342,11 @@ namespace Project_Сonfigurator.Services
                                     "SIGNAL_AI",
                                     RequestToDataBaseServices.TableFieldSignalsAI,
                                     RequestToDataBaseServices.FieldSignalsAI,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SIGNAL_AI; ";
+                                }
                             }
                             #endregion
 
@@ -354,7 +367,11 @@ namespace Project_Сonfigurator.Services
                                     "SIGNAL_DO",
                                     RequestToDataBaseServices.TableFieldSignalsDO,
                                     RequestToDataBaseServices.FieldSignalsDO,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SIGNAL_DO; ";
+                                }
                             }
                             #endregion
 
@@ -375,7 +392,11 @@ namespace Project_Сonfigurator.Services
                                     "SIGNAL_AO",
                                     RequestToDataBaseServices.TableFieldSignalsAO,
                                     RequestToDataBaseServices.FieldSignalsAO,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SIGNAL_AO; ";
+                                }
                             }
                             #endregion
 
@@ -396,7 +417,11 @@ namespace Project_Сonfigurator.Services
                                     "PARAM_EC",
                                     RequestToDataBaseServices.TableFieldEC,
                                     RequestToDataBaseServices.FieldEC,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "PARAM_EC; ";
+                                }
                             }
                             #endregion
 
@@ -417,7 +442,11 @@ namespace Project_Сonfigurator.Services
                                     "USER_DI",
                                     RequestToDataBaseServices.TableFieldUserDI,
                                     RequestToDataBaseServices.FieldUserDI,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "USER_DI; ";
+                                }
                             }
                             #endregion
 
@@ -436,7 +465,11 @@ namespace Project_Сonfigurator.Services
                                     "USER_AI",
                                     RequestToDataBaseServices.TableFieldUserAI,
                                     RequestToDataBaseServices.FieldUserAI,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "USER_AI; ";
+                                }
                             }
                             #endregion
 
@@ -456,7 +489,10 @@ namespace Project_Сonfigurator.Services
                                     RequestToDataBaseServices.TableFieldUserReg,
                                     RequestToDataBaseServices.FieldUserReg,
                                     FieldValue))
+                                {
                                     ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "USER_REG; ";
+                                }
                             }
                             #endregion
 
@@ -477,7 +513,11 @@ namespace Project_Сonfigurator.Services
                                     "SIGNAL_GROUP",
                                     RequestToDataBaseServices.TableFieldSignalsGroup,
                                     RequestToDataBaseServices.FieldSignalsGroup,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SIGNAL_GROUP; ";
+                                }
                             }
                             #endregion
 
@@ -498,7 +538,11 @@ namespace Project_Сonfigurator.Services
                                     "GROUP_SIGNAL",
                                     RequestToDataBaseServices.TableFieldGroupsSignal,
                                     RequestToDataBaseServices.FieldGroupsSignal,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "GROUP_SIGNAL; ";
+                                }
                             }
                             #endregion
 
@@ -520,7 +564,11 @@ namespace Project_Сonfigurator.Services
                                     "UZD",
                                     RequestToDataBaseServices.TableFieldUZD,
                                     RequestToDataBaseServices.FieldUZD,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "UZD; ";
+                                }
                             }
                             #endregion
 
@@ -541,7 +589,11 @@ namespace Project_Сonfigurator.Services
                                 if (!RequestToDataBaseServices.SetData(
                                     "UVS", RequestToDataBaseServices.TableFieldUVS,
                                     RequestToDataBaseServices.FieldUVS,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "UVS; ";
+                                }
                             }
                             #endregion
 
@@ -565,7 +617,11 @@ namespace Project_Сonfigurator.Services
                                     "UMPNA",
                                     RequestToDataBaseServices.TableFieldUMPNA,
                                     RequestToDataBaseServices.FieldUMPNA,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "UMPNA; ";
+                                }
                                 #endregion
 
                                 #region Готовности насосных агрегатов
@@ -586,7 +642,11 @@ namespace Project_Сonfigurator.Services
                                     "KGMPNA",
                                     RequestToDataBaseServices.TableFieldKGMPNA,
                                     RequestToDataBaseServices.FieldKGMPNA,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "KGMPNA; ";
+                                }
                                 #endregion
 
                                 #region Агрегатные защиты
@@ -598,7 +658,8 @@ namespace Project_Сonfigurator.Services
                                         if (string.IsNullOrWhiteSpace(_Param.Param.Id) && string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
                                         var _FieldValue =
                                             $"('{_Param.Param.Id}', '{_Param.Param.Description}', '{_Param.Param.VarName}', '{_Param.Param.Inv}', " +
-                                            $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.NoMasked}'),";
+                                            $"'{_Param.Param.TypeSignal}', '{_Param.Param.Address}', '{_Param.StateUMPNA}', '{_Param.NoMasked}', " +
+                                            $"'{_Param.AVR}', '{_Param.Type}', '{_Param.StopType}'),";
                                         FieldValue.Add(_FieldValue);
                                     }
                                 }
@@ -607,7 +668,11 @@ namespace Project_Сonfigurator.Services
                                     "KTPRA",
                                     RequestToDataBaseServices.TableFieldKTPRA,
                                     RequestToDataBaseServices.FieldKTPRA,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "KTPRA; ";
+                                }
                                 #endregion
 
                                 #region Предельные параметры агрегатных защит
@@ -629,7 +694,11 @@ namespace Project_Сonfigurator.Services
                                     "KTPRAS",
                                     RequestToDataBaseServices.TableFieldKTPRAS,
                                     RequestToDataBaseServices.FieldKTPRAS,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "KTPRAS; ";
+                                }
                                 #endregion
                             }
                             #endregion
@@ -653,7 +722,11 @@ namespace Project_Сonfigurator.Services
                                     "KTPR",
                                     RequestToDataBaseServices.TableFieldKTPR,
                                     RequestToDataBaseServices.FieldKTPR,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "KTPR; ";
+                                }
                             }
                             #endregion
 
@@ -675,7 +748,11 @@ namespace Project_Сonfigurator.Services
                                     "KTPRS",
                                     RequestToDataBaseServices.TableFieldKTPRS,
                                     RequestToDataBaseServices.FieldKTPRS,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "KTPRS; ";
+                                }
                             }
                             #endregion
 
@@ -698,7 +775,11 @@ namespace Project_Сonfigurator.Services
                                     "Signaling",
                                     RequestToDataBaseServices.TableFieldSignaling,
                                     RequestToDataBaseServices.FieldSignaling,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "Signaling; ";
+                                }
                             }
                             #endregion
 
@@ -721,7 +802,11 @@ namespace Project_Сonfigurator.Services
                                     "UTS",
                                     RequestToDataBaseServices.TableFieldUTS,
                                     RequestToDataBaseServices.FieldUTS,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "UTS; ";
+                                }
                             }
                             #endregion
 
@@ -742,7 +827,11 @@ namespace Project_Сonfigurator.Services
                                     "SETPOINTS_REAL",
                                     RequestToDataBaseServices.TableFieldUstReal,
                                     RequestToDataBaseServices.FieldUstReal,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "SETPOINTS_REAL; ";
+                                }
                             }
                             #endregion
 
@@ -763,7 +852,11 @@ namespace Project_Сonfigurator.Services
                                     "HAND_MAP",
                                     RequestToDataBaseServices.TableFieldHandMap,
                                     RequestToDataBaseServices.FieldHandMap,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "HAND_MAP; ";
+                                }
                             }
                             #endregion
 
@@ -783,7 +876,11 @@ namespace Project_Сonfigurator.Services
                                     "COMMANDS",
                                     RequestToDataBaseServices.TableFieldCommand,
                                     RequestToDataBaseServices.FieldCommand,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "COMMANDS; ";
+                                }
                             }
                             #endregion
 
@@ -803,7 +900,11 @@ namespace Project_Сonfigurator.Services
                                     "MESSAGE_SYSTEMS",
                                     RequestToDataBaseServices.TableFieldSyatemMessages,
                                     RequestToDataBaseServices.FieldSyatemMessages,
-                                    FieldValue)) ConnectSetting.SuccessUpdate = false;
+                                    FieldValue))
+                                {
+                                    ConnectSetting.SuccessUpdate = false;
+                                    TablesNotLoaded += "MESSAGE_SYSTEMS; ";
+                                }
                             }
                             #endregion
                         }
@@ -945,7 +1046,11 @@ namespace Project_Сonfigurator.Services
                                 "SETPOINTS",
                                 RequestToDataBaseServices.TableFieldUstCommon,
                                 RequestToDataBaseServices.FieldUstCommon,
-                                UstFieldValue)) ConnectSetting.SuccessUpdate = false;
+                                UstFieldValue))
+                            {
+                                ConnectSetting.SuccessUpdate = false;
+                                TablesNotLoaded += "SETPOINTS; ";
+                            }
                         #endregion
 
                         #region Сообщения
@@ -970,8 +1075,19 @@ namespace Project_Сonfigurator.Services
                                 "MESSAGES",
                                 RequestToDataBaseServices.TableFieldMessages,
                                 RequestToDataBaseServices.FieldMessages,
-                                MessageFieldValue)) ConnectSetting.SuccessUpdate = false;
+                                MessageFieldValue))
+                            {
+                                ConnectSetting.SuccessUpdate = false;
+                                TablesNotLoaded += "MESSAGES; ";
+                            }
                         #endregion
+
+                        if (!ConnectSetting.SuccessUpdate)
+                        {
+                            UserDialog.SendMessage("Управление приложением", $"Таблицы из указанного списка не были загружены в БД - {TablesNotLoaded}",
+                                MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
+                            
+                        }
                     }
                 }
             }

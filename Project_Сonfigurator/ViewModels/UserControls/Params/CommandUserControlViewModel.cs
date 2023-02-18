@@ -1,4 +1,5 @@
 ﻿using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System.Collections.ObjectModel;
@@ -13,6 +14,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Команды";
             Description = "Команды";
             UsingUserControl = new CommandUserControl();
+        }
+
+        private readonly ISignalService SignalServices;
+        public CommandUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

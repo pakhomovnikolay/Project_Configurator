@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.DataLists;
+using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -24,6 +25,13 @@ namespace Project_Сonfigurator.ViewModels.AS
             foreach (var _CheckBox in CheckBoxs)
                 _CheckBox.Command = CmdSelectParam;
             #endregion
+        }
+
+        private readonly IVUAppIOSASExportRedefineService VUAppIOSASExportRedefineServices;
+
+        public IOSExportASWindowViewModel(IVUAppIOSASExportRedefineService _IVUAppIOSASExportRedefineService) : this()
+        {
+            VUAppIOSASExportRedefineServices = _IVUAppIOSASExportRedefineService;
         }
         #endregion
 

@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Infrastructures.DataLists;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.DialogControl;
 using Project_Сonfigurator.Views.UserControls.Settings;
@@ -44,6 +45,14 @@ namespace Project_Сonfigurator.ViewModels
             if (App.Settings.Config.ModbusTCP_IR is null || App.Settings.Config.ModbusTCP_IR.Count <= 0)
                 App.Settings.Config.ModbusTCP_IR = new ObservableCollection<BaseAddressMap>(_BaseAddressMap);
             #endregion
+        }
+
+        private readonly ISettingService SettingServices;
+        private readonly IEditService EditServices;
+        public SettingWindowViewModels(ISettingService _ISettingService, IEditService _IEditService) : this()
+        {
+            SettingServices = _ISettingService;
+            EditServices = _IEditService;
         }
         #endregion
 

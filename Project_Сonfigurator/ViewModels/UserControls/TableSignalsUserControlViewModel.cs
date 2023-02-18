@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls;
@@ -25,6 +26,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls
 
             _ParamsDataView.Filter += ParamsFiltered;
             _SubParamsDataView.Filter += SubParamsFiltered;
+        }
+
+        private readonly ISignalService SignalServices;
+        public TableSignalsUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

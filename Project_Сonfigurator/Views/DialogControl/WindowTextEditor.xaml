@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
-        
         Height="800"
         Width="1100"
         FontSize="14"
@@ -12,9 +11,11 @@
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
+    
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <TextBox Text="{Binding TextView, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
     </Grid>
+    
 </Window>

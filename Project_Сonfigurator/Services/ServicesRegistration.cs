@@ -20,8 +20,8 @@ namespace Project_Сonfigurator.Services
             .AddTransient<IVUNamespaceASExportRedefineService, VUNamespaceASExportRedefineService>()
             .AddTransient<IVUAppPLCASExportRedefineService, VUAppPLCASExportRedefineService>()
             .AddTransient<IVUAppIOSASExportRedefineService, VUAppIOSASExportRedefineService>()
-            .AddTransient<IVUExportModbusMap, VUExportModbusMap>()
-            .AddTransient<IVUExportOPCMap, VUExportOPCMap>()
+            .AddTransient<IVUExportModbusMapService, VUExportModbusMapService>()
+            .AddTransient<IVUExportOPCMapService, VUExportOPCMapService>()
             .AddTransient<ICyrillicSymbolService, CyrillicSymbolService>()
             .AddTransient<IRequestToDataBaseService, RequestToDataBaseService>()
 

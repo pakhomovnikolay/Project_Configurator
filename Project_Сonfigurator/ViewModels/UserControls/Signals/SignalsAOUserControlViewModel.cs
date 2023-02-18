@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Signals;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Signals;
@@ -21,6 +22,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
             Description = "Аналоговые сигналы (AO)";
             UsingUserControl = new SignalsAOUserControl();
             _ParamsDataView.Filter += ParamsFiltered;
+        }
+
+        private readonly ISignalService SignalServices;
+        public SignalsAOUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

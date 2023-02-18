@@ -136,10 +136,10 @@
 
                 <DataGridTemplateColumn.CellTemplate>
                     <DataTemplate>
-                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.TypeSignal}">
+                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Param.Address}">
                             <TextBlock.InputBindings>
                                 <MouseBinding MouseAction="RightClick"
-                                              Command="{Binding DataContext.CmdChangeAddressKTPRA, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                              Command="{Binding DataContext.CmdChangeAddressKTPRAS, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                               CommandParameter="{Binding Param.Index}"/>
                             </TextBlock.InputBindings>
                         </TextBlock>

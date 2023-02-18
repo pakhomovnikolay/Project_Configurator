@@ -112,102 +112,11 @@ namespace Project_Сonfigurator.ViewModels.Base.Interfaces
         IUserDialogService UserDialog { get; set; }
         #endregion
 
-        #region Сервис работы с БД
-        /// <summary>
-        /// Сервис работы с БД
-        /// </summary>
-        IDBService DBServices { get; set; }
-        #endregion
-
-        #region Сервис работы с настройками приложения
-        /// <summary>
-        /// Сервис работы с настройками приложения
-        /// </summary>
-        ISettingService SettingServices { get; set; }
-        #endregion
-
-        #region Сервис экспорта данных приложения для ПЛК
-        /// <summary>
-        /// Сервис экспорта данных приложения для ПЛК
-        /// </summary>
-        ISUExportRedefineService SUExportRedefineServices { get; set; }
-        #endregion
-
-        #region Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по OPC
-        /// <summary>
-        /// Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по OPC
-        /// </summary>
-        IVUExportOPCMap VUExportOPCMaps { get; set; }
-        #endregion
-
-        #region Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по modbus
-        /// <summary>
-        /// Сервис экспорта данных для SCADA, при взаимодествии с ПЛК по modbus
-        /// </summary>
-        IVUExportModbusMap IVUExportModbusMaps { get; set; }
-        #endregion
-
-        #region Сервис экспорта пространств имен для проектов AS
-        /// <summary>
-        /// Сервис экспорта пространств имен для проектов AS
-        /// </summary>
-        IVUNamespaceASExportRedefineService VUSocketsASExportRedefineServices { get; set; }
-        #endregion
-
-        #region Сервис экспорта приложения IOS для проектов AS
-        /// <summary>
-        /// Сервис экспорта приложения IOS для проектов AS
-        /// </summary>
-        IVUAppIOSASExportRedefineService VUAppIOSASExportRedefineServices { set; get; }
-        #endregion
-
-        #region Сервис экспорта приложения PLC для проектов AS
-        /// <summary>
-        /// Сервис экспорта приложения PLC для проектов AS
-        /// </summary>
-        IVUAppPLCASExportRedefineService VUAppPLCASExportRedefineServices { get; set; }
-        #endregion
-
-        #region Сервис проверки наличия в строках русских символов
-        /// <summary>
-        /// Сервис проверки наличия в строках русских символов
-        /// </summary>
-        ICyrillicSymbolService CyrillicSymbolServices { get; set; }
-        #endregion
-
-        #region Сервис редактирования объектов
-        /// <summary>
-        /// Сервис редактирования объектов
-        /// </summary>
-        IEditService EditServices { get; set; }
-        #endregion
-
-        #region Сервис шифрования данных
-        /// <summary>
-        /// Сервис шифрования данных
-        /// </summary>
-        IEncryptorService EncryptorServices { get; set; }
-        #endregion
-
         #region Сервис логирования
         /// <summary>
         /// Сервис логирования
         /// </summary>
         ILogSerivece LogSeriveces { get; set; }
-        #endregion
-
-        #region Сервис работы с настройками корзин
-        /// <summary>
-        /// Сервис работы с настройками корзин
-        /// </summary>
-        ILayotRackService LayotRackServices { get; set; }
-        #endregion
-
-        #region Сервис работы с параметрами
-        /// <summary>
-        /// Сервис работы с параметрами
-        /// </summary>
-        ISignalService SignalServices { get; set; }
         #endregion
     }
 }

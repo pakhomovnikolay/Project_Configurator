@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
-        xmlns:fa="http://schemas.fontawesome.com/icons/"
         BorderThickness="1"
         BorderBrush="Gray"
         WindowStartupLocation="CenterOwner"
@@ -14,6 +13,7 @@
         Title="Окно редактирования"
         Height="500"
         Width="550"
+        
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
 

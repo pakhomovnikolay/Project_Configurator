@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
@@ -18,6 +19,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Description = "Временные уставки общие";
             UsingUserControl = new UstCommonUserControl();
             _ParamsDataView.Filter += ParamsFiltered;
+        }
+
+        private readonly ISignalService SignalServices;
+        public UstCommonUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

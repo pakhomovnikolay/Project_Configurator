@@ -1,6 +1,6 @@
 ﻿namespace Project_Сonfigurator.Services.Export.VU.Interfaces
 {
-    public interface IVUExportModbusMap
+    public interface IVUExportModbusMapService
     {
         #region Экспорт карты Modbus адресов, для проектов AS
         /// <summary>

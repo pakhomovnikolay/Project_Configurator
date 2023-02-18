@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.Views.UserControls;
 using System.Collections.ObjectModel;
@@ -18,6 +19,14 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             Title = "Компоновка корзин";
             Description = $"Компоновка корзин {App.Settings.Config.NameProject}";
             UsingUserControl = new LayotRackUserControl();
+        }
+
+        private readonly ISignalService SignalServices;
+        private readonly ILayotRackService LayotRackServices;
+        public LayotRackUserControlViewModel(ISignalService _ISignalService, ILayotRackService _ILayotRackService) : this()
+        {
+            SignalServices = _ISignalService;
+            LayotRackServices = _ILayotRackService;
         }
         #endregion
 

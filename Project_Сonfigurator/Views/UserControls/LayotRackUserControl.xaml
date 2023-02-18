@@ -156,7 +156,7 @@
                                             <RowDefinition Height="25"/>
                                             <RowDefinition Height="25"/>
                                         </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" Grid.RowSpan="4" BorderThickness="1,2,1,2" BorderBrush="Black" Background="LightGray">
+                                        <Border Grid.Row="0" Grid.RowSpan="4" BorderThickness="1,2,1,2" BorderBrush="LightSlateGray" Background="LightGray">
                                             <TextBlock FontWeight="Bold"
                                                      TextAlignment="Center" VerticalAlignment="Center"
                                                      Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}">
@@ -192,7 +192,7 @@
                                             <RowDefinition Height="25"/>
                                             <RowDefinition Height="25"/>
                                         </Grid.RowDefinitions>
-                                        <Border Grid.Row="0" BorderThickness="0,2,1,0" BorderBrush="Black">
+                                        <Border Grid.Row="0" BorderThickness="0,2,1,0" BorderBrush="LightSlateGray">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                                        FontWeight="Bold" Text="Индекс в корзине">
                                                 <TextBlock.Foreground>
@@ -200,7 +200,7 @@
                                                 </TextBlock.Foreground>
                                             </TextBlock>
                                         </Border>
-                                        <Border Grid.Row="1" BorderThickness="0,1,1,0" BorderBrush="Black">
+                                        <Border Grid.Row="1" BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                                        FontWeight="Bold" Text="Имя модуля">
                                                 <TextBlock.Foreground>
@@ -208,7 +208,7 @@
                                                 </TextBlock.Foreground>
                                             </TextBlock>
                                         </Border>
-                                        <Border Grid.Row="2" BorderThickness="0,1,1,0" BorderBrush="Black">
+                                        <Border Grid.Row="2" BorderThickness="0,1,1,0" BorderBrush="LightSlateGray">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                                        FontWeight="Bold" Text="Начальный адрес">
                                                 <TextBlock.Foreground>
@@ -216,7 +216,7 @@
                                                 </TextBlock.Foreground>
                                             </TextBlock>
                                         </Border>
-                                        <Border Grid.Row="3" BorderThickness="0,1,1,2" BorderBrush="Black">
+                                        <Border Grid.Row="3" BorderThickness="0,1,1,2" BorderBrush="LightSlateGray">
                                             <TextBlock TextAlignment="Center" VerticalAlignment="Center"
                                                        FontWeight="Bold" Text="Конечный адрес">
                                                 <TextBlock.Foreground>
@@ -257,7 +257,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
                                                     </Border>
                                                 </DataTemplate>
@@ -276,7 +276,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <Border.Background>
                                                             <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
                                                         </Border.Background>
@@ -303,7 +303,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
                                                     </Border>
                                                 </DataTemplate>
@@ -322,7 +322,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,1,1,2" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,1,1,2" Width="56" BorderBrush="LightSlateGray">
                                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding EndAddress}"/>
                                                     </Border>
                                                 </DataTemplate>
@@ -353,7 +353,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,2,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Text="{Binding Index}"/>
                                                     </Border>
                                                 </DataTemplate>
@@ -370,7 +370,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border x:Name="border" BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                    <Border x:Name="border" BorderThickness="0,1,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <StackPanel>
                                                             <ToggleButton x:Name="ListModule"
                                                                           BorderThickness="0"
@@ -412,7 +412,7 @@
                                             </ItemsControl.ItemsPanel>
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate>
-                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="Black">
+                                                    <Border BorderThickness="0,1,1,0" Width="56" BorderBrush="LightSlateGray">
                                                         <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" Text="{Binding StartAddress}"/>
                                                     </Border>
                                                 </DataTemplate>

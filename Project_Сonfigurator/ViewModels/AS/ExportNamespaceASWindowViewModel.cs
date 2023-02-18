@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.DataLists;
+using Project_Сonfigurator.Services.Export.VU.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.UserControls;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -24,6 +25,12 @@ namespace Project_Сonfigurator.ViewModels.AS
             foreach (var _CheckBox in CheckBoxs)
                 _CheckBox.Command = CmdSelectParam;
             #endregion
+        }
+
+        private readonly IVUNamespaceASExportRedefineService VUNamespaceASExportRedefineServices;
+        public ExportNamespaceASWindowViewModel(IVUNamespaceASExportRedefineService _IVUNamespaceASExportRedefineService) : this()
+        {
+            VUNamespaceASExportRedefineServices = _IVUNamespaceASExportRedefineService;
         }
         #endregion
 
@@ -137,7 +144,7 @@ namespace Project_Сonfigurator.ViewModels.AS
             var SuccessfulCompletion = true;
             foreach (var _CheckBox in CheckBoxs)
                 if (_CheckBox.IsChecked == true)
-                    if (!VUSocketsASExportRedefineServices.Export(_CheckBox.Content.ToString()))
+                    if (!VUNamespaceASExportRedefineServices.Export(_CheckBox.Content.ToString()))
                         SuccessfulCompletion = false;
 
             if (!SuccessfulCompletion)

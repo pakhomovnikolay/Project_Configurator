@@ -2,6 +2,7 @@
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
@@ -21,6 +22,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Title = "Настройки МПНА";
             Description = "Текущие массивы состояний МПНА. НЕ ЗАБУДЬТЕ ЗАПОЛНИТЬ НАСТРОЙКИ КАРТ";
             UsingUserControl = new UMPNAUserControl();
+        }
+
+        private readonly ISignalService SignalServices;
+        public UMPNAUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

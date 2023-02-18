@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.Services.Export.SU.Interfaces;
+using Project_Сonfigurator.Services.Export.VU.Interfaces;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
@@ -39,9 +42,25 @@ namespace Project_Сonfigurator.ViewModels
         }
 
         public IEnumerable<IViewModelUserControls> ViewModelUserControls { get; }
-        public MainWindowViewModel(IEnumerable<IViewModelUserControls> viewModelUserControls) : this()
+        private readonly IVUExportOPCMapService VUExportOPCMapServices;
+        private readonly IVUExportModbusMapService VUExportModbusMapService;
+        private readonly ISUExportRedefineService SUExportRedefineServices;
+        private readonly ISettingService SettingServices;
+        private readonly IDBService DBServices;
+        private readonly ICyrillicSymbolService CyrillicSymbolServices;
+
+        public MainWindowViewModel(IEnumerable<IViewModelUserControls> viewModelUserControls,
+            IVUExportOPCMapService _IVUExportOPCMapService, IVUExportModbusMapService _IVUExportModbusMapService,
+            ISUExportRedefineService _ISUExportRedefineService, ISettingService _ISettingService, IDBService _IDBService,
+            ICyrillicSymbolService _ICyrillicSymbolService) : this()
         {
             ViewModelUserControls = viewModelUserControls;
+            VUExportOPCMapServices = _IVUExportOPCMapService;
+            VUExportModbusMapService = _IVUExportModbusMapService;
+            SUExportRedefineServices = _ISUExportRedefineService;
+            SettingServices = _ISettingService;
+            DBServices = _IDBService;
+            CyrillicSymbolServices = _ICyrillicSymbolService;
         }
         #endregion
 
@@ -322,9 +341,9 @@ namespace Project_Сonfigurator.ViewModels
         {
             bool SuccessfulCompletion;
             if (Config.UseOPC)
-                SuccessfulCompletion = VUExportOPCMaps.ASExprot();
+                SuccessfulCompletion = VUExportOPCMapServices.ASExprot();
             else
-                SuccessfulCompletion = IVUExportModbusMaps.ASExprot();
+                SuccessfulCompletion = VUExportModbusMapService.ASExprot();
 
             if (!SuccessfulCompletion)
                 if (UserDialog.SendMessage("Внимание!", $"Экспорт выполнен c ошибками.\nСм. лог", ImageType: MessageBoxImage.Warning)) return;

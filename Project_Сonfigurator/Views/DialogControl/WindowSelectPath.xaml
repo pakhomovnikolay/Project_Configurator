@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:cmd="clr-namespace:Project_Сonfigurator.Infrastructures.Commands"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
-       
         BorderThickness="1"
         BorderBrush="Gray"
         WindowStartupLocation="CenterOwner"
@@ -24,46 +23,24 @@
             <RowDefinition Height="30"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-
-        <TextBlock Grid.Row="0" Margin="10,0" VerticalAlignment="Center" Text="Выбрать путь для сохранения проекта:"/>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="35"/>
-            </Grid.ColumnDefinitions>
-            <Border Grid.Column="0" Grid.ColumnSpan="2" Margin="5,0" BorderThickness="1" BorderBrush="Black" CornerRadius="5">
-                <TextBox Margin="5,0" BorderThickness="0" TextAlignment="Left" VerticalContentAlignment="Center"
-                     Text="{Binding SelectPath, UpdateSourceTrigger=PropertyChanged}"/>
-            </Border>
-            <Button Grid.Column="1" Content=". . ."
-                    Style="{StaticResource CustomButtonStyle}"
-                    Click="CmdSelectePath"/>
-        </Grid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="150"/>
-                <ColumnDefinition Width="150"/>
-            </Grid.ColumnDefinitions>
-            
-            <Button Grid.Column="0" Content="Сохранить" Margin="5"
-                    IsDefault="True" FontWeight="Bold"
-                    Style="{StaticResource CustomButtonStyle}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=l:WindowSelectPath}}"
-                    >
+        <TextBlock Style="{StaticResource TextBlockCustomStyle}" Grid.Row="0" Text="Выбрать путь для сохранения проекта:"/>
+        <DockPanel Grid.Row="1" LastChildFill="True">
+            <Button Style="{StaticResource SelectedButtonStyle}" DockPanel.Dock="Right" Width="50"/>
+            <TextBox Style="{StaticResource TextBoxCustomRadius3Style}" Text="{Binding SelectPath, UpdateSourceTrigger=PropertyChanged}"/>
+        </DockPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Height="25" VerticalAlignment="Bottom">
+            <Button Style="{StaticResource CustomButtonStyle}" Content="Сохранить" Width="150" IsDefault="True">
                 <Button.Command>
                     <cmd:WindowDialogCloseCommand DialogResult="True"/>
                 </Button.Command>
             </Button>
-            <Button Grid.Column="1" Content="Отменить" Margin="0,5"
-                    IsCancel="True" FontWeight="Bold"
-                    Style="{StaticResource CustomButtonStyle}"
-                    CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=l:WindowSelectPath}}"
-                    >
+            <Button Style="{StaticResource CustomButtonStyle}" Content="Отменить" Width="150" IsCancel="True">
                 <Button.Command>
                     <cmd:WindowDialogCloseCommand DialogResult="False"/>
                 </Button.Command>
             </Button>
-        </Grid>
+        </StackPanel>
         
     </Grid>
+    
 </Window>

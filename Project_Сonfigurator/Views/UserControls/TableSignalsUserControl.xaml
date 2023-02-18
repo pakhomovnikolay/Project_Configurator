@@ -112,7 +112,7 @@
 
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,1" BorderBrush="Black">
+                                <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray">
                                     <TextBlock Style="{StaticResource TextBlockVerticalCustomStyle}" Text="{Binding Type}" FontWeight="Bold"/>
                                 </Border>
                             </DataTemplate>
@@ -128,7 +128,7 @@
                         
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Border BorderThickness="0,0,1,1" BorderBrush="Black">
+                                <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray">
                                     <Border.Background>
                                         <Binding Path="Name" Converter="{StaticResource BrushModuleNameConverter}"/>
                                     </Border.Background>
@@ -158,7 +158,7 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Background="LightGray" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Background="LightGray" Height="25">
                                                 <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Index}" FontWeight="Bold"/>
                                             </Border>
                                         </DataTemplate>
@@ -184,7 +184,7 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Height="25">
                                                 <Border.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -214,7 +214,7 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Height="25">
                                                 <Border.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -247,7 +247,7 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Height="25">
                                                 <Border.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -277,7 +277,7 @@
 
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Height="25">
                                                 <Border.Background>
                                                     <MultiBinding Converter="{StaticResource BackLightConverter}">
                                                         <Binding Path="Id"/>
@@ -321,7 +321,7 @@
 
                                         <ItemsControl.ItemTemplate>
                                             <DataTemplate>
-                                                <Border BorderThickness="0,0,1,1" BorderBrush="Black" Background="LightGray" Height="25">
+                                                <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Background="LightGray" Height="25">
                                                     <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding VarName}"/>
                                                 </Border>
                                             </DataTemplate>
@@ -330,7 +330,7 @@
                                     </ItemsControl>
 
                                     <!--Для дискретных сигналов-->
-                                    <Border BorderThickness="0,0,1,1" BorderBrush="Black" Background="LightGray">
+                                    <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Background="LightGray">
 
                                         <Border.Resources>
                                             <converter:VisibilityModuleConverter x:Key="VisibilityModuleConverter" CountRow="32"/>
@@ -369,7 +369,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Background="LightGray" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Background="LightGray" Height="25">
                                                 <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="{Binding Bit}"/>
                                             </Border>
                                         </DataTemplate>
@@ -392,7 +392,7 @@
                                     </ItemsControl.ItemsPanel>
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
-                                            <Border BorderThickness="0,0,1,1" BorderBrush="Black" Height="25">
+                                            <Border BorderThickness="0,0,1,1" BorderBrush="LightSlateGray" Height="25">
                                                 <Border.InputBindings>
                                                     <MouseBinding MouseAction="LeftDoubleClick"
                                                               Command="{Binding DataContext.CmdSelectionSignal, RelativeSource={RelativeSource AncestorType=UserControl}}"

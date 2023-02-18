@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
@@ -20,6 +21,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Description = "Массив предельных параметров общестанционных защит";
             UsingUserControl = new KTPRSUserControl();
             _ParamsDataView.Filter += ParamsFiltered;
+        }
+
+        private readonly ISignalService SignalServices;
+        public KTPRSUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 

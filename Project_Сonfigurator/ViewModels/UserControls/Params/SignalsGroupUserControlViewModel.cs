@@ -1,5 +1,6 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Params;
+using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.Views.UserControls.Params;
@@ -19,6 +20,12 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             Description = "Список сигналов состоящих в группе";
             UsingUserControl = new SignalsGroupUserControl();
             _ParamsDataView.Filter += ParamsFiltered;
+        }
+
+        private readonly ISignalService SignalServices;
+        public SignalsGroupUserControlViewModel(ISignalService _ISignalService) : this()
+        {
+            SignalServices = _ISignalService;
         }
         #endregion
 
