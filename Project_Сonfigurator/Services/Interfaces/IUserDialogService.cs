@@ -114,21 +114,7 @@ namespace Project_Сonfigurator.Services.Interfaces
         /// <summary>
         /// Открыть окно экспорта пространства имен AS
         /// </summary>
-        void OpenExportNamespaceASWindow();
-        #endregion
-
-        #region Открыть окно экспорта приложение IOS
-        /// <summary>
-        /// Открыть окно экспорта приложение IOS
-        /// </summary>
-        void OpenIOSExportASWindow();
-        #endregion
-
-        #region Открыть окно экспорта приложение PLS
-        /// <summary>
-        /// Открыть окно экспорта приложение PLS
-        /// </summary>
-        void OpenPLCExportASWindow();
+        void OpenExportNamespaceASWindow(object _ViewModel);
         #endregion
 
         #region Поиск вкладки

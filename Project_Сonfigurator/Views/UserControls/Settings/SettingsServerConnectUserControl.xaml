@@ -7,8 +7,8 @@
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
              d:Background="AliceBlue"
-             d:DesignHeight="800"
-             d:DesignWidth="1740"
+             d:DesignHeight="1080"
+             d:DesignWidth="1920"
              
              d:DataContext="{d:DesignInstance vm:SettingWindowViewModels, IsDesignTimeCreatable=True}"
              >
@@ -22,98 +22,41 @@
         </Grid.RowDefinitions>
 
         <!--Данные-->
-        <DataGrid x:Name="ServerDBDataGrid"
-                  BorderThickness="0"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Transparent"
-                  HeadersVisibility="None"
+        <DataGrid Style="{StaticResource HeaderNoneLinesHorizontalDataGridStyle}" Grid.Row="0"
                   ItemsSource="{Binding Config.ServerDB}"
                   SelectedItem="{Binding SelectedServerDB}"
                   >
-
-            <DataGrid.Resources>
-
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="40"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Margin" Value="0"/>
-                </Style>
-                
-            </DataGrid.Resources>
-
+            
             <DataGrid.Columns>
                 
                 <DataGridTemplateColumn Width="*">
 
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1" BorderBrush="Black" Margin="0.5" CornerRadius="3">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Margin="3,0,0,0" BorderThickness="0"
-                                             TextAlignment="Left" VerticalAlignment="Center"
-                                             Background="Transparent" FontWeight="Bold"
-                                             Text="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{Binding DataContext.CmdEditSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                            >
-                                        <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
-                                    </Button>
-                                    <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{Binding DataContext.CmdDeleteSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
-                                        <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                    </Button>
-                                </Grid>
-                            </Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}" Grid.Column="0"
+                                         Text="{Binding DescriptionConnect, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Column="1" ToolTip="Редактировать"
+                                        Style="{StaticResource EditButtonStyle}"
+                                        Command="{Binding DataContext.CmdEditSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                <Button Grid.Column="2" ToolTip="Удалить"
+                                        Style="{StaticResource RemoveButtonStyle}"
+                                        Command="{Binding DataContext.CmdDeleteSelectedServerDB, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
 
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1" BorderBrush="Black" Margin="0.5" CornerRadius="3">
-                                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" Text="{Binding DescriptionConnect,UpdateSourceTrigger=PropertyChanged}"/>
-                            </Border>
+                            <TextBlock Style="{StaticResource TextBlockCustomStyle}"
+                                       Text="{Binding DescriptionConnect,UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
@@ -124,12 +67,9 @@
         </DataGrid>
         
         <!--Команды управления-->
-        <Button Grid.Row="1" Margin="1" Width="80"
-                ToolTip="Добавить узел" HorizontalAlignment="Left"
-                Style="{StaticResource CustomButtonStyle}"
-                Command="{Binding CmdCreateNewServerDB}">
-            <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
-        </Button>
+        <Button Grid.Row="1" Width="50" ToolTip="Добавить узел" HorizontalAlignment="Left"
+                Style="{StaticResource PlusButtonStyle}"
+                Command="{Binding CmdCreateNewServerDB}"/>
 
     </Grid>
 

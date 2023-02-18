@@ -3,12 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" mc:Ignorable="d" 
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:fa="http://schemas.fontawesome.com/icons/"
-             xmlns:local="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
+             xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
              d:Background="AliceBlue"
-             d:DesignHeight="800"
-             d:DesignWidth="1740"
+             d:DesignHeight="1080"
+             d:DesignWidth="1920"
              
              d:DataContext="{d:DesignInstance vm:SettingWindowViewModels, IsDesignTimeCreatable=True}"
              >
@@ -18,132 +17,60 @@
         <!--Сетка-->
         <Grid.RowDefinitions>
             <RowDefinition/>
-            <RowDefinition Height="30"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
 
         <!--Данные-->
-        <DataGrid x:Name="VendorDataGrid"
-                  BorderThickness="0"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Transparent"
-                  HeadersVisibility="Column"
+        <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
+                  ColumnHeaderHeight="35"
                   ItemsSource="{Binding Config.Vendors}"
                   SelectedItem="{Binding SelectedVendor}"
                   >
-
-            <DataGrid.Resources>
-
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Height" Value="40"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Transparent"/>
-                    <Setter Property="Margin" Value="0"/>
-                </Style>
-
-            </DataGrid.Resources>
-
+            
             <DataGrid.Columns>
 
-                <DataGridTemplateColumn Width="80">
-
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,0" BorderBrush="Black" Background="White" Margin="0,1,0,0" CornerRadius="3,0,0,3">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Выбранный"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-
+                <DataGridTemplateColumn Header="Выбранный" Width="80">
+                    
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="1" BorderBrush="Black" Margin="0,0,0,1" CornerRadius="3,0,0,3">
-                                <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
-                                          IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Border>
+                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
+                                      IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
                 </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="*">
-
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,1,0" BorderBrush="Black" Background="White" Margin="0,1,1,0" CornerRadius="0,3,3,0">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование вендора"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="0,1,1,1" BorderBrush="Black" Margin="0,0,1,1" CornerRadius="0,3,3,0">
-                                <TextBlock Background="Transparent" Margin="5,0,0,0"
-                                           TextAlignment="Left" VerticalAlignment="Center"
-                                           Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
+                <DataGridTemplateColumn Header="Наименование вендора" MinWidth="500" Width="*">
 
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <Border BorderThickness="0,1,1,1" BorderBrush="Black" Margin="0,0,1,1" CornerRadius="0,3,3,0">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition/>
-                                        <ColumnDefinition Width="30"/>
-                                        <ColumnDefinition Width="30"/>
-                                    </Grid.ColumnDefinitions>
-                                    <TextBox Grid.Column="0" Margin="3,0,0,0" BorderThickness="0"
-                                             TextAlignment="Left" VerticalAlignment="Center"
-                                             Background="Transparent" FontWeight="Bold"
-                                             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <Button Grid.Column="1" Margin="1" ToolTip="Редактировать" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{Binding DataContext.CmdEditSelectedVendor, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"
-                                            >
-                                        <fa:FontAwesome Icon="Solid_Edit" Foreground="Black"/>
-                                    </Button>
-                                    <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                            Style="{StaticResource CustomButtonStyle}"
-                                            Command="{Binding DataContext.CmdRemoveVendor, RelativeSource={RelativeSource AncestorType=Window}}"
-                                            CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}">
-                                        <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                    </Button>
-                                </Grid>
-                            </Border>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition Width="30"/>
+                                    <ColumnDefinition Width="30"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                                <Button Grid.Column="1" ToolTip="Редактировать"
+                                        Style="{StaticResource EditButtonStyle}"
+                                        Command="{Binding DataContext.CmdEditSelectedVendor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                                <Button Grid.Column="2" ToolTip="Удалить"
+                                        Style="{StaticResource RemoveButtonStyle}"
+                                        Command="{Binding DataContext.CmdRemoveVendor, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=DataGrid}}"/>
+                            </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
-
+                    
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockCustomStyle}"
+                                       Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    
                 </DataGridTemplateColumn>
 
             </DataGrid.Columns>
@@ -151,12 +78,9 @@
         </DataGrid>
         
         <!--Команды управления-->
-        <Button Grid.Row="1" Margin="1" Width="80"
-                ToolTip="Добавить вендора" HorizontalAlignment="Left"
-                Style="{StaticResource CustomButtonStyle}"
-                Command="{Binding CmdAddVendor}">
-            <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="14" TextAlignment="Center" VerticalAlignment="Center"/>
-        </Button>
+        <Button Grid.Row="1" Width="50" Margin="1"  ToolTip="Добавить вендора" HorizontalAlignment="Left"
+                Style="{StaticResource PlusButtonStyle}"
+                Command="{Binding CmdAddVendor}"/>
 
     </Grid>
 

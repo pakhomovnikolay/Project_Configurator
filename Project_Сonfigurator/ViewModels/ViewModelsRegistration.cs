@@ -113,29 +113,11 @@ namespace Project_Сonfigurator.ViewModels
             })
         #endregion
 
-        #region ExportNamespaceASWindow
+        #region ExportDataVU
             .AddTransient(s =>
             {
                 var model = s.GetRequiredService<ExportNamespaceASWindowViewModel>();
-                var window = new ExportNamespaceASWindow { DataContext = model };
-                return window;
-            })
-        #endregion
-
-        #region PLCExportASWindow
-            .AddTransient(s =>
-            {
-                var model = s.GetRequiredService<PLCExportASWindowViewModel>();
-                var window = new PLCExportASWindow { DataContext = model };
-                return window;
-            })
-        #endregion
-
-        #region IOSExportASWindow
-            .AddTransient(s =>
-            {
-                var model = s.GetRequiredService<IOSExportASWindowViewModel>();
-                var window = new IOSExportASWindow { DataContext = model };
+                var window = new ExportDataVU { DataContext = model };
                 return window;
             })
         #endregion

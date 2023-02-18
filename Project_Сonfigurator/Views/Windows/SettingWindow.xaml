@@ -7,7 +7,6 @@
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.Windows"
         xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
         WindowStartupLocation="CenterScreen"
-        AllowsTransparency="False"
         WindowStyle="None"
         BorderBrush="Black"
         BorderThickness="1"
@@ -36,18 +35,27 @@
                 <ColumnDefinition Width="35"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
+                <ColumnDefinition Width="48"/>
             </Grid.ColumnDefinitions>
 
-            <fa:FontAwesome Grid.Column="0" Icon="Solid_Tools" VerticalAlignment="Center"/>
-            <TextBlock Grid.Column="1" Text="{Binding Title}" VerticalAlignment="Center"
-                           MouseMove="TextBlock_MouseMove">
+            <fa:FontAwesome Grid.Column="0" Icon="Solid_Magic" VerticalAlignment="Center"/>
+            <TextBlock Style="{StaticResource TextBlockCustomStyle}" Grid.Column="1" MouseMove="TextBlock_MouseMove"
+                       Text="{Binding Title}">
                 <TextBlock.InputBindings>
                     <MouseBinding Gesture="LeftDoubleClick" Command="{StaticResource CmdChangeStateWindow}"/>
                 </TextBlock.InputBindings>
             </TextBlock>
             <Button Grid.Column="4"
-                        Style="{StaticResource CloseButtonStyle}"
-                        Command="{StaticResource CmdCloseWindow}"/>
+                    Style="{StaticResource CloseButtonStyle}"
+                    Command="{StaticResource CmdCloseWindow}"/>
+            <Button Grid.Column="3"
+                    Style="{Binding ButtonChangeStateWindowStyle}"
+                    Command="{StaticResource CmdChangeStateWindow}"/>
+            <Button Grid.Column="2"
+                    Style="{StaticResource HideButtonStyle}"
+                    Command="{StaticResource CmdHideWindow}"/>
+
         </Grid>
         
         <!--Данные-->

@@ -1,5 +1,7 @@
-﻿using Project_Сonfigurator.Infrastructures.Commands;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Models.Settings;
+using Project_Сonfigurator.ViewModels.AS;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
 using Project_Сonfigurator.ViewModels.UserControls.Params;
@@ -297,13 +299,13 @@ namespace Project_Сonfigurator.ViewModels
             switch (type_cmd)
             {
                 case "Экспорт пространства имен":
-                    UserDialog.OpenExportNamespaceASWindow();
+                    UserDialog.OpenExportNamespaceASWindow(App.Services.GetRequiredService<ExportNamespaceASWindowViewModel>());
                     break;
                 case "Экспорт приложение PLC":
-                    UserDialog.OpenPLCExportASWindow();
+                    UserDialog.OpenExportNamespaceASWindow(App.Services.GetRequiredService<PLCExportASWindowViewModel>());
                     break;
                 case "Экспорт приложение IOS":
-                    UserDialog.OpenIOSExportASWindow();
+                    UserDialog.OpenExportNamespaceASWindow(App.Services.GetRequiredService<IOSExportASWindowViewModel>());
                     break;
             }
         }

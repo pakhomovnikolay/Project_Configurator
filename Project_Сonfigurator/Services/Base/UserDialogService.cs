@@ -19,9 +19,7 @@ namespace Project_Сonfigurator.Services.Base
         private MainWindow? _MainWindow;
         private SettingWindow? _SettingWindow;
         private MessageWindow? _MessageWindow;
-        private ExportNamespaceASWindow? _ExportNamespaceASWindow;
-        private IOSExportASWindow? _IOSExportASWindow;
-        private PLCExportASWindow? _PLCExportASWindow;
+        private ExportDataVU? _ExportDataVU;
         private readonly IServiceProvider _Services = App.Services;
         #endregion
 
@@ -289,52 +287,16 @@ namespace Project_Сonfigurator.Services.Base
         /// <summary>
         /// Открыть окно экспорта пространства имен AS
         /// </summary>
-        public void OpenExportNamespaceASWindow()
+        public void OpenExportNamespaceASWindow(object _ViewModel)
         {
-            if (_ExportNamespaceASWindow is { } window) { window.Activate(); return; }
+            if (_ExportDataVU is { } window) { window.Activate(); return; }
 
-            window = _Services.GetRequiredService<ExportNamespaceASWindow>();
-            window.Closed += (_, _) => _ExportNamespaceASWindow = null;
+            window = _Services.GetRequiredService<ExportDataVU>();
+            window.Closed += (_, _) => _ExportDataVU = null;
             window.Owner = Application.Current.MainWindow;
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            _ExportNamespaceASWindow = window;
-            window.Show();
-        }
-        #endregion
-
-        #region Открыть окно экспорта приложение IOS
-        /// <summary>
-        /// Открыть окно экспорта приложение IOS
-        /// </summary>
-        public void OpenIOSExportASWindow()
-        {
-            if (_IOSExportASWindow is { } window) { window.Activate(); return; }
-
-            window = _Services.GetRequiredService<IOSExportASWindow>();
-            window.Closed += (_, _) => _IOSExportASWindow = null;
-            window.Owner = Application.Current.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            _IOSExportASWindow = window;
-            window.Show();
-        }
-        #endregion
-
-        #region Открыть окно экспорта приложение PLS
-        /// <summary>
-        /// Открыть окно экспорта приложение PLS
-        /// </summary>
-        public void OpenPLCExportASWindow()
-        {
-            if (_PLCExportASWindow is { } window) { window.Activate(); return; }
-
-            window = _Services.GetRequiredService<PLCExportASWindow>();
-            window.Closed += (_, _) => _PLCExportASWindow = null;
-            window.Owner = Application.Current.MainWindow;
-            window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-
-            _PLCExportASWindow = window;
+            window.DataContext = _ViewModel;
+            _ExportDataVU = window;
             window.Show();
         }
         #endregion
