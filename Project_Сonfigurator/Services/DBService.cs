@@ -54,8 +54,10 @@ namespace Project_Сonfigurator.Services
         {
             var path = App.Settings.Config.PathProject;
             if (!File.Exists(path))
+            {
+                CreateNewProject();
                 return;
-
+            }
 
             var FileNameEncrypt = path;
             var FileNameEncrypted = path.Replace(App.__EncryptedProjectFileSuffix, ".xml");
