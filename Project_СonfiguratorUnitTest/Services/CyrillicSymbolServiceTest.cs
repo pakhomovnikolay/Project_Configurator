@@ -1,6 +1,6 @@
 using Project_Сonfigurator.Services;
 
-namespace Project_СonfiguratorUnitTest
+namespace Project_СonfiguratorUnitTest.Services
 {
     [TestClass]
     public class CyrillicSymbolServiceTest
