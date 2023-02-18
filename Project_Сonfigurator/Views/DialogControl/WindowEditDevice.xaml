@@ -5,7 +5,6 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:fa="http://schemas.fontawesome.com/icons/"
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
-        
         BorderThickness="1"
         BorderBrush="Gray"
         WindowStartupLocation="CenterOwner"
@@ -20,419 +19,119 @@
         >
     
     <Grid>
-        
+
         <!--Сетка-->
         <Grid.RowDefinitions>
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="193"/>
-            <RowDefinition Height="30"/>
-
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="193"/>
-            <RowDefinition Height="30"/>
-
-            <RowDefinition Height="30"/>
-            <RowDefinition Height="192"/>
-            <RowDefinition Height="30"/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
 
         <!--Настройки входных параметров-->
-        <Border Grid.Row="0" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite" CornerRadius="5" Margin="1,1">
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                       Text="Настройки входных параметров"/>
-        </Border>
-        <DataGrid Grid.Row="1" Margin="1,0"
-                  x:Name="DataGridInputParam"
-                  BorderThickness="1" BorderBrush="Black"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Gray"
-                  HeadersVisibility="None"
-                  AlternatingRowBackground="LightGray"
-                  ItemsSource="{Binding InputParam}"
-                  SelectedItem="{Binding SelectedInputParam}"
-                  >
+        <Grid Grid.Row="0" Margin="0,0,0,5">
+            
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
+                      ColumnHeaderHeight="30"
+                      ItemsSource="{Binding InputParam}"
+                      SelectedItem="{Binding SelectedInputParam}"
+                      >
 
-            <DataGrid.Resources>
+                <DataGrid.Columns>
 
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
-
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                </Style>
-
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Width="*">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,2" BorderBrush="Black" Background="BlanchedAlmond">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                <TextBox Margin="5,0,0,0" BorderThickness="0"
-                                         TextAlignment="Left" VerticalContentAlignment="Center"
-                                         Background="Transparent"
-                                         Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                                         />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid Grid.Row="2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="35"/>
-                <ColumnDefinition Width="35"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Margin="0.5" ToolTip="Добавить тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdCreateInputParam"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="12" TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="1" Margin="0.5" ToolTip="Удалить выбранный тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdDeleteSelectedInputParam"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Minus" Foreground="Red" FontSize="12"  TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-
+                    <DataGridTemplateColumn Header="Настройки входных параметров" Width="*">
+                                            
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                        
+                    </DataGridTemplateColumn>
+                    
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button Style="{StaticResource PlusButtonStyle}" ToolTip="Добавить входной параметр" Click="CmdCreateInputParam" Width="50"/>
+                <Button Style="{StaticResource MinusButtonStyle}" ToolTip="Удалить выбранный входной параметр" Click="CmdDeleteSelectedInputParam" Width="50"/>
+            </StackPanel>
+            
         </Grid>
 
         <!--Настройки выходных параметров-->
-        <Border Grid.Row="3" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite" CornerRadius="5" Margin="1,1">
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                       Text="Настройки выходных параметров"/>
-        </Border>
-        <DataGrid Grid.Row="4" Margin="1,0"
-                  x:Name="DataGridOutputParam"
-                  BorderThickness="1" BorderBrush="Black"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Gray"
-                  HeadersVisibility="None"
-                  AlternatingRowBackground="LightGray"
-                  ItemsSource="{Binding OutputParam}"
-                  SelectedItem="{Binding SelectedOutputParam}"
-                  >
+        <Grid Grid.Row="1" Margin="0,0,0,5">
 
-            <DataGrid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
+                      ColumnHeaderHeight="30"
+                      ItemsSource="{Binding OutputParam}"
+                      SelectedItem="{Binding SelectedOutputParam}"
+                      >
 
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
+                <DataGrid.Columns>
 
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
+                    <DataGridTemplateColumn Header="Настройки выходных параметров" Width="*">
 
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                </Style>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
 
-            </DataGrid.Resources>
-            <DataGrid.Columns>
-                <DataGridTemplateColumn Width="*">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,2" BorderBrush="Black" Background="BlanchedAlmond">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                <TextBox Margin="5,0,0,0" BorderThickness="0"
-                                         TextAlignment="Left" VerticalContentAlignment="Center"
-                                         Background="Transparent"
-                                         Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}"
-                                         />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-            </DataGrid.Columns>
-        </DataGrid>
-        <Grid Grid.Row="5">
+                    </DataGridTemplateColumn>
 
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="35"/>
-                <ColumnDefinition Width="35"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Margin="0.5" ToolTip="Добавить тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdCreateOutputParam"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="12" TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="1" Margin="0.5" ToolTip="Удалить выбранный тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdDeleteSelectedOutputParam"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Minus" Foreground="Red" FontSize="12"  TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button Style="{StaticResource PlusButtonStyle}" ToolTip="Добавить выходной параметр" Click="CmdCreateOutputParam" Width="50"/>
+                <Button Style="{StaticResource MinusButtonStyle}" ToolTip="Удалить выбранный выходной параметр" Click="CmdDeleteSelectedOutputParam" Width="50"/>
+            </StackPanel>
 
         </Grid>
 
         <!--Настройки уставок-->
-        <Border Grid.Row="6" BorderThickness="1" BorderBrush="Black" Background="AntiqueWhite" CornerRadius="5" Margin="1,1">
-            <TextBlock TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"
-                       Text="Настройки уставок"/>
-        </Border>
-        <DataGrid Grid.Row="7" Margin="1,0"
-                  x:Name="DataGridSetpoints"
-                  BorderThickness="1" BorderBrush="Black"
-                  AutoGenerateColumns="False"
-                  CanUserAddRows="False"
-                  CanUserReorderColumns="False"
-                  CanUserResizeRows="False"
-                  GridLinesVisibility="None"
-                  CanUserResizeColumns="False"
-                  SelectionMode="Single"
-                  SelectionUnit="FullRow"
-                  Background="Gray"
-                  HeadersVisibility="Column"
-                  HorizontalScrollBarVisibility="Auto"
-                  ItemsSource="{Binding Setpoints}"
-                  SelectedItem="{Binding SelectedSetpoint}"
-                  >
+        <Grid Grid.Row="2" Margin="0,0,0,5">
 
-            <DataGrid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}"
+                      ColumnHeaderHeight="30"
+                      ItemsSource="{Binding Setpoints}"
+                      SelectedItem="{Binding SelectedSetpoint}"
+                      >
 
-                <Style TargetType="{x:Type DataGridCell}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="25"/>
-                    <Style.Triggers>
-                        <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Foreground" Value="Black"/>
-                            <Setter Property="Opacity" Value="1"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                        </Trigger>
-                    </Style.Triggers>
-                </Style>
+                <DataGrid.Columns>
 
-                <Style TargetType="{x:Type DataGridColumnHeader}">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                    <Setter Property="VerticalContentAlignment" Value="Stretch"/>
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="White"/>
-                    <Setter Property="Height" Value="50"/>
-                    <Setter Property="FontWeight" Value="Bold"/>
-                </Style>
+                    <DataGridTemplateColumn Header="Наименование таймера" Width="*">
 
-                <Style TargetType="{x:Type DataGridRow}">
-                    <Setter Property="BorderThickness" Value="0"/>
-                    <Setter Property="BorderBrush" Value="Black"/>
-                    <Setter Property="Background" Value="Gray"/>
-                </Style>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
 
-            </DataGrid.Resources>
-            
-            <DataGrid.Columns>
-                
-                <DataGridTemplateColumn Width="*">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,2" BorderBrush="Black">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Наименование таймера"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="1,0,1,1" BorderBrush="Black">
-                                <TextBox Margin="5,0,0,0" BorderThickness="0"
-                                         TextAlignment="Left" VerticalContentAlignment="Center"
-                                         Background="Transparent"
-                                         Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                                         />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
+                    </DataGridTemplateColumn>
 
-                <DataGridTemplateColumn Width="80">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="0,1,0,2" BorderBrush="Black">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Значение&#x0a;уставки"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="0,0,1,1" BorderBrush="Black">
-                                <TextBox BorderThickness="0"
-                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                         Background="Transparent"
-                                         Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"
-                                         />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-
-                <DataGridTemplateColumn Width="80">
-                    <DataGridTemplateColumn.Header>
-                        <Border BorderThickness="1,1,1,2" BorderBrush="Black">
-                            <TextBlock TextAlignment="Center" VerticalAlignment="Center" Text="Ед.&#x0a;измерения"/>
-                        </Border>
-                    </DataGridTemplateColumn.Header>
-                    <DataGridTemplateColumn.CellTemplate>
-                        <DataTemplate>
-                            <Border BorderThickness="0,0,1,1" BorderBrush="Black">
-                                <TextBox BorderThickness="0"
-                                         TextAlignment="Center" VerticalContentAlignment="Center"
-                                         Background="Transparent"
-                                         Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"
-                                         />
-                            </Border>
-                        </DataTemplate>
-                    </DataGridTemplateColumn.CellTemplate>
-                </DataGridTemplateColumn>
-                
-            </DataGrid.Columns>
-            
-        </DataGrid>
-        <Grid Grid.Row="8">
-
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="35"/>
-                <ColumnDefinition Width="35"/>
-            </Grid.ColumnDefinitions>
-
-            <Button Grid.Column="0" Margin="0.5" ToolTip="Добавить тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdCreateSetpoints"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Plus" Foreground="Green" FontSize="12" TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
-            <Button Grid.Column="1" Margin="0.5" ToolTip="Удалить выбранный тип модуля"
-                                Style="{StaticResource CustomButtonStyle}"
-                                Click="CmdDeleteSelectedSetpoints"
-                                >
-                <Button.Content>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <fa:FontAwesome Grid.Column="0" Icon="Solid_Minus" Foreground="Red" FontSize="12"  TextAlignment="Center" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" TextAlignment="Center" VerticalAlignment="Center" FontWeight="Bold"/>
-                    </Grid>
-                </Button.Content>
-            </Button>
+                </DataGrid.Columns>
+            </DataGrid>
+            <StackPanel Grid.Row="1" Orientation="Horizontal">
+                <Button Style="{StaticResource PlusButtonStyle}" ToolTip="Добавить параметр уставки" Click="CmdCreateSetpoints" Width="50"/>
+                <Button Style="{StaticResource MinusButtonStyle}" ToolTip="Удалить выбранный параметр уставки" Click="CmdDeleteSelectedSetpoints" Width="50"/>
+            </StackPanel>
 
         </Grid>
-
+        
     </Grid>
+    
 </Window>

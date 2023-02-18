@@ -13,7 +13,7 @@
         ResizeMode="NoResize"
         Title="Окно редактирования"
         Height="500"
-        Width="535"
+        Width="550"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
 
@@ -21,217 +21,102 @@
 
         <!--Сетка-->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="250"/>
+            <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
         <!--Типы модулей-->
-        <GroupBox Grid.Column="0" BorderBrush="LightSlateGray">
-            <GroupBox.Header>
-                <TextBlock Text="Типы модулей" Margin="5,0" FontWeight="Bold"/>
-            </GroupBox.Header>
+        <GroupBox Style="{StaticResource GroupBoxStyle}" Header="Типы модулей" Grid.Column="0">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition Height="25"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="1" ToolTip="Добавить тип модуля" Margin="2,0"
-                            Style="{StaticResource CustomButtonStyle}"
-                            Click="CmdCreateTypeModule"
-                            >
-                    <fa:FontAwesome Grid.Column="2" Icon="Solid_Plus" FontSize="12" Foreground="Green"/>
-                </Button>
-                <DataGrid Grid.Row="0"
-                          Margin="2,0,2,5"
-                          Background="White"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
-                          GridLinesVisibility="None"
-                          CanUserResizeColumns="False"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          HeadersVisibility="None"
-                          ScrollViewer.CanContentScroll="False"
+                <Button Grid.Row="1" ToolTip="Добавить тип модуля"
+                        Style="{StaticResource PlusButtonStyle}"
+                        Click="CmdCreateTypeModule"/>
+                <DataGrid Style="{StaticResource HeaderNoneLinesHorizontalDataGridStyle}" Grid.Row="0"
                           ItemsSource="{Binding VendorData.ModuleTypes}"
                           SelectedItem="{Binding SelectedVendorModuleTypeData}">
-
-                    <DataGrid.Resources>
-
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                            <Setter Property="Height" Value="22"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="2"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="BorderBrush" Value="LightSlateGray"/>
-                            
-                        </Style>
-
-                    </DataGrid.Resources>
-
+                    
                     <DataGrid.Columns>
-
-                        <DataGridTemplateColumn Width="232">
+                        <DataGridTemplateColumn Width="250">
                             
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
-                                    <Grid Background="Transparent">
+                                    <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
                                             <ColumnDefinition Width="30"/>
                                         </Grid.ColumnDefinitions>
 
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Focusable="True" Background="Transparent"
-                                                 TextAlignment="Left" VerticalContentAlignment="Center" Margin="3,0,0,0"
-                                                 Text="{Binding Name}"/>
-
-                                        <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                Click="CmdDeleteTypeModule"
-                                                >
-                                            <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                        </Button>
+                                        <TextBox Grid.Column="0" Style="{StaticResource TextBoxCustomStyle}" Text="{Binding Name}"/>
+                                        <Button Grid.Column="1" ToolTip="Удалить"
+                                                Style="{StaticResource RemoveButtonStyle}"
+                                                Click="CmdDeleteTypeModule"/>
                                     </Grid>
-                                    
-                                    
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                             
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Border>
-                                        <TextBlock TextAlignment="Left" VerticalAlignment="Center"
-                                               Margin="5,0,0,0" FontWeight="Bold"
-                                               Text="{Binding Name}"/>
-                                    </Border>
+                                    <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Name}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
-                            
+                        
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+        
+        <!--Список модулей-->
+        <GroupBox Style="{StaticResource GroupBoxStyle}" Header="Список модулей" Grid.Column="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="25"/>
+                </Grid.RowDefinitions>
+                <Button Grid.Row="1" ToolTip="Добавить модуль"
+                        Style="{StaticResource PlusButtonStyle}"
+                        Click="CmdCreateModule"/>
+                <DataGrid Style="{StaticResource HeaderNoneLinesHorizontalDataGridStyle}" Grid.Row="0"
+                          ItemsSource="{Binding SelectedVendorModuleTypeData.Modules}"
+                          SelectedItem="{Binding SelectedVendorModuleData}">
+                    
+                    <DataGrid.Columns>
+                        
+                        <DataGridTemplateColumn Width="250">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition Width="30"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Grid.Column="0" Style="{StaticResource TextBoxCustomStyle}" Text="{Binding Name}"/>
+                                        <Button Grid.Column="1" ToolTip="Удалить"
+                                                Style="{StaticResource RemoveButtonStyle}"
+                                                Click="CmdDeleteTypeModule"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
                         </DataGridTemplateColumn>
                         
                     </DataGrid.Columns>
-
                 </DataGrid>
             </Grid>
         </GroupBox>
-
-        <!--Список модулей-->
-        <GroupBox Grid.Column="1" BorderBrush="LightSlateGray">
-            <GroupBox.Header>
-                <TextBlock Text="Список модулей" Margin="5,0" FontWeight="Bold"/>
-            </GroupBox.Header>
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition/>
-                    <RowDefinition Height="25"/>
-                </Grid.RowDefinitions>
-                <Button Grid.Row="1" ToolTip="Добавить модуль" Margin="2,0"
-                            Style="{StaticResource CustomButtonStyle}"
-                            Click="CmdCreateModule"
-                            >
-                    <fa:FontAwesome Grid.Column="2" Icon="Solid_Plus" FontSize="12" Foreground="Green"/>
-                </Button>
-                <DataGrid Grid.Row="0"
-                          Margin="2,0,2,5"
-                          Background="White"
-                          AutoGenerateColumns="False"
-                          CanUserAddRows="False"
-                          CanUserReorderColumns="False"
-                          CanUserResizeRows="False"
-                          GridLinesVisibility="None"
-                          CanUserResizeColumns="False"
-                          SelectionMode="Single"
-                          SelectionUnit="FullRow"
-                          HeadersVisibility="None"
-                          ScrollViewer.CanContentScroll="False"
-                          ItemsSource="{Binding SelectedVendorModuleTypeData.Modules}"
-                          SelectedItem="{Binding SelectedVendorModuleData}">
-
-                    <DataGrid.Resources>
-
-                        <Style TargetType="{x:Type DataGridCell}">
-                            <Setter Property="BorderBrush" Value="Black"/>
-                            <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                            <Setter Property="Height" Value="22"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Foreground" Value="Black"/>
-                                    <Setter Property="Opacity" Value="1"/>
-                                    <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                                    <Setter Property="Background" Value="LightGoldenrodYellow"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-
-                        <Style TargetType="{x:Type Border}">
-                            <Setter Property="CornerRadius" Value="2"/>
-                            <Setter Property="BorderThickness" Value="1"/>
-                            <Setter Property="BorderBrush" Value="LightSlateGray"/>
-
-                        </Style>
-
-                    </DataGrid.Resources>
-
-                    <DataGrid.Columns>
-
-                        <DataGridTemplateColumn Width="232">
-
-                            <DataGridTemplateColumn.CellEditingTemplate>
-                                <DataTemplate>
-                                    <Grid Background="Transparent">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition/>
-                                            <ColumnDefinition Width="30"/>
-                                        </Grid.ColumnDefinitions>
-
-                                        <TextBox BorderThickness="0" FontWeight="Bold" Focusable="True" Background="Transparent"
-                                                 TextAlignment="Left" VerticalContentAlignment="Center" Margin="3,0,0,0"
-                                                 Text="{Binding Name}"/>
-
-                                        <Button Grid.Column="2" Margin="1" ToolTip="Удалить" BorderThickness="0"
-                                                Style="{StaticResource CustomButtonStyle}"
-                                                Click="CmdDeleteModule"
-                                                >
-                                            <fa:FontAwesome Icon="Solid_Trash" Foreground="DarkRed"/>
-                                        </Button>
-                                    </Grid>
-
-
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellEditingTemplate>
-
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <Border>
-                                        <TextBlock TextAlignment="Left" VerticalAlignment="Center"
-                                               Margin="5,0,0,0" FontWeight="Bold"
-                                               Text="{Binding Name}"/>
-                                    </Border>
-
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-
-                        </DataGridTemplateColumn>
-
-                    </DataGrid.Columns>
-
-                </DataGrid>
-            </Grid>
-        </GroupBox>
-
+        
     </Grid>
 
 </Window>

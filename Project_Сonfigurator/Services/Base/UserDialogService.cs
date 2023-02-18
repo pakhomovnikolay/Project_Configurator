@@ -283,9 +283,9 @@ namespace Project_Сonfigurator.Services.Base
         }
         #endregion
 
-        #region Открыть окно экспорта пространства имен AS
+        #region Открыть окно экспорта данных ВУ для AS
         /// <summary>
-        /// Открыть окно экспорта пространства имен AS
+        /// Открыть окно экспорта  AS
         /// </summary>
         public void OpenExportNamespaceASWindow(object _ViewModel)
         {
@@ -297,7 +297,7 @@ namespace Project_Сonfigurator.Services.Base
             window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
             window.DataContext = _ViewModel;
             _ExportDataVU = window;
-            window.Show();
+            window.ShowDialog();
         }
         #endregion
 

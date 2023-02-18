@@ -73,7 +73,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                     Value = ""
                 }
             });
-            DataGridInputParam.Items.Refresh();
             SelectedDefaultMapLocal = DefaultMap[^1];
         }
         #endregion
@@ -97,7 +96,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 else
                     SelectedDefaultMapLocal = DefaultMap[index];
             }
-            DataGridInputParam.Items.Refresh();
         }
         #endregion
 
@@ -124,7 +122,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 if (SetpointsId is not null && !string.IsNullOrWhiteSpace(SetpointsId))
                     _Map.Setpoints.Id = $"H{int.Parse(SetpointsId.Replace("H", "")) + (index - 1)}";
             }
-            DataGridInputParam.Items.Refresh();
         }
         #endregion
 

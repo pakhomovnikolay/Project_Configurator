@@ -129,7 +129,6 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdCreateInputParam(object sender, RoutedEventArgs e)
         {
             InputParam.Add(new BaseText { Text = $"Новый параметр {InputParam.Count + 1}" });
-            DataGridInputParam.Items.Refresh();
             SelectedInputParam = InputParam[^1];
 
         }
@@ -154,7 +153,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 else
                     SelectedInputParam = InputParam[index];
             }
-            DataGridInputParam.Items.Refresh();
         }
         #endregion
 
@@ -167,7 +165,6 @@ namespace Project_Сonfigurator.Views.DialogControl
         private void CmdCreateOutputParam(object sender, RoutedEventArgs e)
         {
             OutputParam.Add(new BaseText { Text = $"Новый параметр {OutputParam.Count + 1}" });
-            DataGridOutputParam.Items.Refresh();
             SelectedOutputParam = OutputParam[^1];
 
         }
@@ -192,7 +189,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 else
                     SelectedOutputParam = OutputParam[index];
             }
-            DataGridOutputParam.Items.Refresh();
         }
         #endregion
 
@@ -214,7 +210,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 Value = "",
                 VarName = ""
             });
-            DataGridSetpoints.Items.Refresh();
             SelectedSetpoint = Setpoints[^1];
 
         }
@@ -239,7 +234,6 @@ namespace Project_Сonfigurator.Views.DialogControl
                 else
                     SelectedSetpoint = Setpoints[index];
             }
-            DataGridSetpoints.Items.Refresh();
         }
         #endregion
 

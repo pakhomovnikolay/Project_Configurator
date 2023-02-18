@@ -5,10 +5,10 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:l="clr-namespace:Project_Сonfigurator.Views.UserControls.Settings"
              xmlns:vm="clr-namespace:Project_Сonfigurator.ViewModels"
-             
              d:Background="AliceBlue"
-             d:DesignHeight="800"
-             d:DesignWidth="1740"
+             d:DesignHeight="1080"
+             d:DesignWidth="1920"
+             
              d:DataContext="{d:DesignInstance vm:SettingWindowViewModels, IsDesignTimeCreatable=True}"
              >
 
