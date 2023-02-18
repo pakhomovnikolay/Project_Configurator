@@ -152,7 +152,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Style="{StaticResource TextBlockCustomBorderStyle}" Grid.Column="0" Text="Количество параметров:"/>
-                    <TextBox Grid.Column="1"/>
+                    <TextBox Style="{StaticResource TextBoxCustomBorderStyle}" Grid.Column="1"/>
                 </Grid>
             </Border>
            
