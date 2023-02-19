@@ -44,6 +44,22 @@
 
                                 </Border>
                                 <ControlTemplate.Triggers>
+
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Grid.Column" Value="1"/>
+                                            <Condition Property="Content" Value="{x:Null}"/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Visibility" TargetName="Ct" Value="Collapsed"/>
+                                    </MultiTrigger>
+                                    
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="Grid.Column" Value="1"/>
+                                            <Condition Property="Content" Value=""/>
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Visibility" TargetName="Ct" Value="Collapsed"/>
+                                    </MultiTrigger>
                                     
                                     <MultiTrigger>
                                         <MultiTrigger.Conditions>

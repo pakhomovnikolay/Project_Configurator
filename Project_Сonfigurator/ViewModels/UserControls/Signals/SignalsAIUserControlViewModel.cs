@@ -1,6 +1,7 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
 using Project_Сonfigurator.Infrastructures.Enum;
 using Project_Сonfigurator.Models.LayotRack;
+using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Models.Signals;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -338,6 +339,35 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         Address = "",
                         VarName = $"ai_shared[{Params.Count + 1}]",
                         LinkValue = ""
+                    },
+                    Setpoints = new BaseSetpointsAI
+                    {
+                        AMax = "",
+                        AMin = "",
+                        Delta = "",
+                        DescriptionTab = "",
+                        Hyst = "",
+                        HystNPD = "",
+                        HystVPD = "",
+                        KS = "",
+                        PDDelay = "",
+                        QtySimbolsComma = "",
+                        Speed = "",
+                        TMax = "",
+                        TMax_1 = "",
+                        TMax_2 = "",
+                        TMax_3 = "",
+                        TMax_4 = "",
+                        TMax_5 = "",
+                        TMax_6 = "",
+                        TMin = "",
+                        TMin_1 = "",
+                        TMin_2 = "",
+                        TMin_3 = "",
+                        TMin_4 = "",
+                        TMin_5 = "",
+                        TMin_6 = "",
+                        Trending = ""
                     }
                 };
                 Params.Add(param);

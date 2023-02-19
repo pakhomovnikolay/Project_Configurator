@@ -1,4 +1,5 @@
-﻿using Project_Сonfigurator.Models.Signals.Interfaces;
+﻿using Project_Сonfigurator.Models.Setpoints;
+using Project_Сonfigurator.Models.Signals.Interfaces;
 
 namespace Project_Сonfigurator.Models.Signals
 {
@@ -25,7 +26,7 @@ namespace Project_Сonfigurator.Models.Signals
         public string Unit { get; set; }
         #endregion
 
-        #region Тип  вибрации
+        #region Тип вибрации
         /// <summary>
         /// Тип  вибрации
         /// </summary>
@@ -72,6 +73,13 @@ namespace Project_Сonfigurator.Models.Signals
         /// Отображать в кгс\см2
         /// </summary>
         public string ConverterKgs { get; set; }
+        #endregion
+
+        #region Настройки уставок
+        /// <summary>
+        /// Настройки уставок
+        /// </summary>
+        public BaseSetpointsAI Setpoints { get; set; } = new(); 
         #endregion
     }
 }

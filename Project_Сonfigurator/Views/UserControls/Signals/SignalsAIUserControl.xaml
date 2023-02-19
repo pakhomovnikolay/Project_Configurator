@@ -95,7 +95,7 @@
 
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Наименование параметра" Width="1305">
+                        <DataGridTemplateColumn Header="Наименование параметра" Width="*" MinWidth="700">
 
                             <DataGridTemplateColumn.CellEditingTemplate>
                                 <DataTemplate>
@@ -232,7 +232,7 @@
 
                         </DataGridTemplateColumn>
 
-                        <DataGridTemplateColumn Header="Наименование параметра" Width="820">
+                        <DataGridTemplateColumn Header="Наименование параметра" Width="*" MinWidth="700">
                             
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -453,7 +453,391 @@
                 </DataGrid>
                 
             </TabItem>
-            
+
+            <TabItem Header="Настройки уставок">
+
+                <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}" Grid.Column="1"
+                          ColumnHeaderHeight="40"
+                          ItemsSource="{Binding Params}"
+                          SelectedItem="{Binding SelectedParam}"
+                          >
+
+                    <DataGrid.Columns>
+
+                        <DataGridTemplateColumn Header="№" MinWidth="30">
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Border Background="LightGray">
+                                        <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Signal.Index}"/>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Идентификатор" MinWidth="150">
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Signal.Id}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Наименование параметра" Width="*" MinWidth="700">
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCustomStyle}" Text="{Binding Signal.Description}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn Header="Мин. 1" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_1}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_1}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Мин. 2" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_2}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_2}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Мин. 3" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_3}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_3}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Мин. 4" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_4}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_4}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Мин. 5" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_5}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_5}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Мин. 6" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin_6}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin_6}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn Header="Макс. 1" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_1}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_1}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Макс. 2" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_2}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_2}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Макс. 3" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_3}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_3}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Макс. 4" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_4}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_4}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Макс. 5" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_5}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_5}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="Макс. 6" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax_6}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax_6}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn Header="ТМин." MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMin}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMin}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="ТМакс." MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TMax}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TMax}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="АМин." MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.AMin}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.AMin}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="АМакс." MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.AMax}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.AMax}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn Header="Гист." MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.Hyst}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Hyst}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="НПД" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.HystNPD}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.HystNPD}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="ВПД" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.HystVPD}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.HystVPD}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+                        
+                        <DataGridTemplateColumn Header="КС" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.KS}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.KS}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="ЗЗД" MinWidth="50">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.PDDelay}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.PDDelay}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
+                    </DataGrid.Columns>
+
+                </DataGrid>
+
+            </TabItem>
+
         </TabControl>
         
     </Grid>
