@@ -304,22 +304,6 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// <summary>
         /// Создание условий выдачи сообщений
         /// </summary>
-        private static string CreateConditionMessage(List<string> ConditionValue)
-        {
-            var _ConditionValue = "";
-            if (ConditionValue is null || ConditionValue.Count <= 0) return _ConditionValue;
-            foreach (var _Value in ConditionValue)
-                _ConditionValue += $"{_Value}}},";
-
-            _ConditionValue = _ConditionValue.TrimEnd(',');
-            return FinalyConditionMessage(_ConditionValue);
-        }
-        #endregion
-
-        #region Создание условий выдачи сообщений
-        /// <summary>
-        /// Создание условий выдачи сообщений
-        /// </summary>
         private static string CreateConditionMessage(string AckStrategy, string IsEnabled, string Message, string Severity, string Sound, string Value)
         {
             _ = int.TryParse(AckStrategy, out int _AckStrategy);
@@ -586,7 +570,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     CreateSocketParametrNode("ct:socket", Nodes: _Nodes);
 
                 // Добавляем узел параметра сокета "socket-parameter"
-                SourceCodeHandler = FinalyConditionMessage(CreateConditionMessage("1", "true", "Dynamic", "1", "", "1"));
+                SourceCodeHandler = $"{{\"Condition\":{{\"IsEnabled\":\"true\",\"Subconditions\":[{{\"AckStrategy\":1,\"IsEnabled\":true,\"Message\":\"Dynamic\",\"Severity\":1,\"Type\":1}}],\"Type\":1}}}}";
                 Nodes = new()
                 {
                     { "name", "VUMessage" }, { "access-level", "public" }, { "access-scope", "global" },
@@ -1217,7 +1201,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                 for (int i = 0; i < 8; i++)
                 {
-                    Nodes = new() { { "name", $"Value_{i + 1}" }, { "type", "uint16" }, { "uuid", "0" } };
+                    Nodes = new() { { "name", $"Value_{i + 1}" }, { "type", "float32" }, { "uuid", "0" } };
                     CreateSocketParametrNode("ct:socket-parameter", Nodes: Nodes);
                 }
                 #endregion
@@ -1257,6 +1241,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 {
                     foreach (var _Rack in _Param.Racks)
                     {
+                        if (!_Rack.IsEnable) { index_rack++; continue; }
                         // Добавляем узел типа сокета "ct:socket-type"
                         Nodes = new() { { "name", $"Rack_{++index_rack}" }, { "uuid", "0" } };
                         CreateSocketTypeNode("ct:socket-type", Nodes);
@@ -1362,6 +1347,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 {
                     foreach (var _Rack in _Param.Racks)
                     {
+                        if (!_Rack.IsEnable) { index_rack++; continue; }
                         // Добавляем узел параметра сокета "ct:socket"
                         Nodes = new()
                         {
@@ -1451,6 +1437,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 {
                     foreach (var _Rack in _Param.Racks)
                     {
+                        if (!_Rack.IsEnable) { index_rack++; continue; }
                         // Добавляем узел параметра сокета "ct:socket"
                         Nodes = new()
                         {

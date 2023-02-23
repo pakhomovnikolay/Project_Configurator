@@ -46,6 +46,7 @@ namespace Project_Сonfigurator.Models.Signals
             set
             {
                 _Area = value;
+                
                 LinkValue = "";
                 var address = 0;
                 var area = 0;
@@ -54,14 +55,10 @@ namespace Project_Сonfigurator.Models.Signals
 
                 if (!string.IsNullOrWhiteSpace(_Area))
                 {
-                    area = int.Parse(_Area);
-                    if (area > 0)
-                    {
-                        area = 1;
-                        _Area = "1";
-                    }
+                    _ = int.TryParse(_Area, out area);
+                    if (area > 1) area = 1;
+                    _Area = area.ToString();
                 }
-
 
                 if (address > 0 || area > 0)
                 {

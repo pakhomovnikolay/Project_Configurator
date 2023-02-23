@@ -458,7 +458,7 @@
 
                 <DataGrid Style="{StaticResource HeaderColumnLinesAllDataGridStyle}" Grid.Column="1"
                           ColumnHeaderHeight="40"
-                          ItemsSource="{Binding Params}"
+                          ItemsSource="{Binding ParamsDataView}"
                           SelectedItem="{Binding SelectedParam}"
                           >
 

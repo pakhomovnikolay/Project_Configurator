@@ -187,10 +187,16 @@ namespace Project_Сonfigurator.Services.Export.VU
                         var index = 1;
                         foreach (var _Param in _Params)
                         {
-                            foreach (var _Racks in _Param.Racks)
+                            foreach (var _Rack in _Param.Racks)
                             {
+                                if (!_Rack.IsEnable)
+                                {
+                                    index++;
+                                    MBAddress += 8;
+                                    continue;
+                                }
                                 VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.Status";
-                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                                MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
 
                                 VariableName = $"{TypeSystem}.DiagRack.Rack_{index}.ModHealth";
                                 MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
@@ -206,6 +212,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                                 VariableName = $"{TypeSystem}.DiagRack.Rack_{index++}.TotalErrBusB";
                                 MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                                
                             }
                         }
                         Elements = new() { { "Binding", "Introduced" } };
@@ -310,6 +317,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                         {
                             foreach (var _Rack in _Param.Racks)
                             {
+                                if (!_Rack.IsEnable) continue;
                                 foreach (var _Module in _Rack.Modules)
                                 {
                                     if (string.IsNullOrWhiteSpace(_Module.Name)) continue;
@@ -325,7 +333,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                                         foreach (var _Channel in _Module.Channels)
                                         {
                                             VariableName = $"{TypeSystem}.DiagRack.HW_AI_{IndexAI}.Value_{_Channel.Index}";
-                                            MBAddress_AI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AI, 1);
+                                            MBAddress_AI = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AI, 2);
                                         }
                                     }
 
@@ -340,7 +348,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                                         foreach (var _Channel in _Module.Channels)
                                         {
                                             VariableName = $"{TypeSystem}.DiagRack.HW_AO_{IndexAO}.Value_{_Channel.Index}";
-                                            MBAddress_AO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AO, 1);
+                                            MBAddress_AO = AddListParametrs(ListParametrs, VariableName, HR, MBAddress_AO, 2);
                                         }
                                     }
 
