@@ -82,7 +82,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls
             {
                 if (Set(ref _Params, value))
                 {
-                    if (Params is not null && _Params.Count > 0)
+                    if (_Params is not null && _Params.Count > 0)
                     {
                         SelectedParam = _Params[0];
                         RefreshDataView();
