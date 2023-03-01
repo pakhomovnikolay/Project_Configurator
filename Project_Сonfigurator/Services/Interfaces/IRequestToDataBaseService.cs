@@ -391,6 +391,18 @@ namespace Project_Сonfigurator.Services.Interfaces
         string FieldSyatemMessages { get; }
         #endregion
 
+        #region Уставки аналоговых параметров
+        /// <summary>
+        /// Поля таблицы для "SETPOINTS_AI"
+        /// </summary>
+        public string TableFieldSetpointsAI { get; }
+
+        /// <summary>
+        /// Поля для "SETPOINTS_AI"
+        /// </summary>
+        public string FieldSetpointsAI { get; }
+        #endregion
+
         #endregion
     }
 }

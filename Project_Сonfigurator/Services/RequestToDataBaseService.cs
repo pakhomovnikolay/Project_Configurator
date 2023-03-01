@@ -1141,6 +1141,60 @@ namespace Project_Сonfigurator.Services
         }
         #endregion
 
+        #region Уставки аналоговых параметров
+        /// <summary>
+        /// Поля таблицы для "SETPOINTS_AI"
+        /// </summary>
+        public string TableFieldSetpointsAI
+        {
+            get
+            {
+                return
+                    "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    "`ID` TEXT," +
+                    "`DESCRIPTION` TEXT," +
+                    "`UNITS` TEXT," +
+                    "`TMin` TEXT," +
+                    "`TMax` TEXT," +
+                    "`Min_1` TEXT," +
+                    "`Min_2` TEXT," +
+                    "`Min_3` TEXT," +
+                    "`Min_4` TEXT," +
+                    "`Min_5` TEXT," +
+                    "`Min_6` TEXT," +
+                    "`Max_1` TEXT," +
+                    "`Max_2` TEXT," +
+                    "`Max_3` TEXT," +
+                    "`Max_4` TEXT," +
+                    "`Max_5` TEXT," +
+                    "`Max_6` TEXT," +
+                    "`AMin` TEXT," +
+                    "`AMax` TEXT," +
+                    "`Hyst` TEXT," +
+                    "`NPD` TEXT," +
+                    "`VPD` TEXT," +
+                    "`KS` TEXT," +
+                    "`PDDelay` TEXT," +
+                    "`ADDRESS` TEXT," +
+                    "PRIMARY KEY(`INDEX`));";
+            }
+        }
+
+        /// <summary>
+        /// Поля для "SETPOINTS_AI"
+        /// </summary>
+        public string FieldSetpointsAI
+        {
+            get
+            {
+                return
+                    "(ID, DESCRIPTION, UNITS, TMin, TMax," +
+                    "Min_1, Min_2, Min_3, Min_4, Min_5, Min_6, Max_1, Max_2, Max_3, Max_4, Max_5, Max_6, " +
+                    "AMin, AMax, Hyst, NPD, VPD, KS, PDDelay, ADDRESS) VALUES";
+            }
+        }
+        #endregion
+
         #endregion
     }
 }

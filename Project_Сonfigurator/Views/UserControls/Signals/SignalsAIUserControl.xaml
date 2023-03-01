@@ -495,7 +495,46 @@
                             </DataGridTemplateColumn.CellTemplate>
 
                         </DataGridTemplateColumn>
-                        
+
+                        <DataGridTemplateColumn Header="Ед. изм." MinWidth="60">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="border" BorderThickness="0,0,0,0" BorderBrush="Black">
+                                        <StackPanel>
+                                            <ToggleButton x:Name="ListModule"
+                                                          BorderThickness="0"
+                                                          VerticalContentAlignment="Center"
+                                                          HorizontalContentAlignment="Left"
+                                                          Background="#FFE5E5E5"
+                                                          BorderBrush="#FFACACAC"
+                                                          Height="{Binding ElementName=border, Path=ActualHeight}">
+                                                <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}"
+                                                           Text="{Binding Setpoints.Unit, UpdateSourceTrigger=PropertyChanged}">
+                                                </TextBlock>
+                                            </ToggleButton>
+                                            <Popup AllowsTransparency="False"
+                                                   StaysOpen="False"
+                                                   PlacementTarget="{Binding ElementName=ListModule}"
+                                                   IsOpen="{Binding IsChecked, ElementName=ListModule}">
+                                                <ListBox MaxHeight="250" MinWidth="350"
+                                                         ItemsSource="{Binding UnitList, Source={StaticResource Lists}}"
+                                                         SelectedItem="{Binding Setpoints.Unit, UpdateSourceTrigger=PropertyChanged}"
+                                                         />
+                                            </Popup>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.Unit}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
                         <DataGridTemplateColumn Header="Мин. 1" MinWidth="50">
 
                             <DataGridTemplateColumn.CellEditingTemplate>

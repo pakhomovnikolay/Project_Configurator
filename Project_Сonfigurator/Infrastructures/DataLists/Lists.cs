@@ -278,5 +278,58 @@ namespace Project_Сonfigurator.Infrastructures.DataLists
             set => _SettingsList = value;
         }
         #endregion
+
+        #region Список единиц измерения
+        private ObservableCollection<string> _UnitList = new();
+        /// <summary>
+        /// Список единиц измерения
+        /// </summary>
+        public ObservableCollection<string> UnitList
+        {
+            get
+            {
+                UnitList = new()
+                {
+                    "°С",
+                    "МПа",
+                    "кПа",
+                    "Па",
+                    "кгс/см2",
+                    "Бар",
+                    "ат",
+                    "мм рт. ст.",
+                    "МПа",
+                    "кПа",
+                    "Па",
+                    "кгс/см2",
+                    "Бар",
+                    "ат",
+                    "мм рт. ст.",
+                    "мм",
+                    "мм/с",
+                    "А",
+                    "мА",
+                    "В",
+                    "кВ",
+                    "кг",
+                    "м3/ч",
+                    "%",
+                    "Вт",
+                    "кВт",
+                    "кВА",
+                    "сек",
+                    "мсек",
+                    "кг/м3",
+                    "час",
+                    "шт",
+                    "м3",
+                    "ГКалл",
+                    "м/с"
+                };
+                return _UnitList;
+            }
+            set => _UnitList = value;
+        }
+        #endregion
     }
 }

@@ -185,5 +185,12 @@ namespace Project_Сonfigurator.Models.Setpoints
         /// </summary>
         public string QtySimbolsComma { get; set; }
         #endregion
+
+        #region Ед. измерения
+        /// <summary>
+        /// Ед. измерения
+        /// </summary>
+        public string Unit { get; set; }
+        #endregion
     }
 }

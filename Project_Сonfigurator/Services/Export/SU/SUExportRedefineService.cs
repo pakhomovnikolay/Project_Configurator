@@ -650,8 +650,8 @@ namespace Project_Сonfigurator.Services.Export.SU
 
                     var exp = ((int)Math.Pow(2, b)).ToString("X");
 
-                    fNumReal += $"\t {VarName} := (HW_DI[{w}] & 16#{exp}) > 0;\n";
-                    fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w}] & 16#{exp}) > 0;\n";
+                    fNumReal += $"\t {VarName} := (HW_DI[{w}] AND 16#{exp}) > 0;\n";
+                    fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w}] AND 16#{exp}) > 0;\n";
                 }
             }
             fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";

@@ -465,9 +465,9 @@ namespace Project_Сonfigurator.Services.Export.VU
                 {
                     new (){ { "name", "Val_1" },    { "type", "float32" },  { "uuid", "0" } },
                     new (){ { "name", "Val_2" },    { "type", "float32" },  { "uuid", "0" } },
-                    new (){ { "name", "MsgCode" },  { "type", "uint16" },   { "uuid", "0" } },
-                    new (){ { "name", "YMD" },      { "type", "uint16" },   { "uuid", "0" } },
-                    new (){ { "name", "HMSmS" },    { "type", "uint16" },   { "uuid", "0" } }
+                    new (){ { "name", "MsgCode" },  { "type", "uint32" },   { "uuid", "0" } },
+                    new (){ { "name", "YMD" },      { "type", "uint32" },   { "uuid", "0" } },
+                    new (){ { "name", "HMSmS" },    { "type", "uint32" },   { "uuid", "0" } }
                 };
                 for (int i = 0; i < ListNodes.Count; i++)
                 {

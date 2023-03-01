@@ -2,7 +2,6 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:l="clr-namespace:Project_Сonfigurator.Infrastructures.Converters"
                     xmlns:UserDI="clr-namespace:Project_Сonfigurator.Infrastructures.Converters.UserDIUserControl"
-                    xmlns:TableSignal="clr-namespace:Project_Сonfigurator.Infrastructures.Converters.TableSignalsUserControl"
                     >
     <l:BrushConverter x:Key="BrushConverter"/>
     <l:BrushModuleNameConverter x:Key="BrushModuleNameConverter"/>

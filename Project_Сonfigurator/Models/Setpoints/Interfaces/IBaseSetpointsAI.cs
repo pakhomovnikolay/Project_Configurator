@@ -183,5 +183,12 @@
         /// </summary>
         string QtySimbolsComma { get; set; }
         #endregion
+
+        #region Ед. измерения
+        /// <summary>
+        /// Ед. измерения
+        /// </summary>
+        string Unit { get; set; }
+        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DocumentFormat.OpenXml.Office2010.Excel;
+using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
@@ -1053,6 +1054,42 @@ namespace Project_Сonfigurator.Services
                                 ConnectSetting.SuccessUpdate = false;
                                 TablesNotLoaded += "SETPOINTS; ";
                             }
+                        #endregion
+
+                        #region Уставки аналоговых параметров
+                        UstFieldValue = new();
+                        foreach (var _ViewModel in _ViewModelsUserControl)
+                        {
+                            if (_ViewModel is SignalsAIUserControlViewModel)
+                            {
+                                var Params = _ViewModel.GetParams<SignalAI>();
+                                foreach (var _Param in Params)
+                                {
+                                    if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
+                                    var _FieldValue =
+                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', '{_Param.Setpoints.Unit}', " +
+                                            $"'{_Param.Setpoints.TMin}', '{_Param.Setpoints.TMax}', " +
+                                            $"'{_Param.Setpoints.TMin_1}', '{_Param.Setpoints.TMin_2}', '{_Param.Setpoints.TMin_3}', '{_Param.Setpoints.TMin_4}', '{_Param.Setpoints.TMin_5}', '{_Param.Setpoints.TMin_6}', " +
+                                            $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', '{_Param.Setpoints.TMax_4}', '{_Param.Setpoints.TMax_5}', '{_Param.Setpoints.TMax_6}', " +
+                                            $"'{_Param.Setpoints.AMin}', '{_Param.Setpoints.AMax}', '{_Param.Setpoints.Hyst}', " +
+                                            $"'{_Param.Setpoints.HystNPD}', '{_Param.Setpoints.HystVPD}', '{_Param.Setpoints.KS}', " +
+                                            $"'{_Param.Setpoints.PDDelay}', '{_Param.Signal.Address}'),";
+
+                                    UstFieldValue.Add(_FieldValue);
+                                }
+
+                                if (UstFieldValue is not null && UstFieldValue.Count > 0)
+                                    if (!RequestToDataBaseServices.SetData(
+                                        "SETPOINTS_AI",
+                                        RequestToDataBaseServices.TableFieldSetpointsAI,
+                                        RequestToDataBaseServices.FieldSetpointsAI,
+                                        UstFieldValue))
+                                    {
+                                        ConnectSetting.SuccessUpdate = false;
+                                        TablesNotLoaded += "SETPOINTS_AI; ";
+                                    }
+                            }
+                        }
                         #endregion
 
                         #region Сообщения
