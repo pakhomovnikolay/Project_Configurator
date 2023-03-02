@@ -1176,6 +1176,20 @@ namespace Project_Сonfigurator.Services
                     "`KS` TEXT," +
                     "`PDDelay` TEXT," +
                     "`ADDRESS` TEXT," +
+                    "`NAIndex_SigType` TEXT," +
+                    "`MaskMsg` TEXT," +
+                    "`MaskSig` TEXT," +
+                    "`MaskLevel` TEXT," +
+                    "`MaxSpeed` TEXT," +
+                    "`QtySimbolsComma` TEXT," +
+                    "`Res_03` TEXT," +
+                    "`Res_04` TEXT," +
+                    "`Res_05` TEXT," +
+                    "`Res_06` TEXT," +
+                    "`Res_07` TEXT," +
+                    "`Res_08` TEXT," +
+                    "`Res_09` TEXT," +
+                    "`Res_10` TEXT," +
                     "PRIMARY KEY(`INDEX`));";
             }
         }
@@ -1190,7 +1204,8 @@ namespace Project_Сonfigurator.Services
                 return
                     "(ID, DESCRIPTION, UNITS, TMin, TMax," +
                     "Min_1, Min_2, Min_3, Min_4, Min_5, Min_6, Max_1, Max_2, Max_3, Max_4, Max_5, Max_6, " +
-                    "AMin, AMax, Hyst, NPD, VPD, KS, PDDelay, ADDRESS) VALUES";
+                    "AMin, AMax, Hyst, NPD, VPD, KS, PDDelay, ADDRESS, " +
+                    "NAIndex_SigType, MaskMsg, MaskSig, MaskLevel, MaxSpeed, QtySimbolsComma, Res_03, Res_04, Res_05, Res_06, Res_07, Res_08, Res_09, Res_10) VALUES";
             }
         }
         #endregion

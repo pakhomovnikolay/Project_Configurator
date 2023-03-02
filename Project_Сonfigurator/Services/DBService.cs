@@ -1073,7 +1073,8 @@ namespace Project_Сonfigurator.Services
                                             $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', '{_Param.Setpoints.TMax_4}', '{_Param.Setpoints.TMax_5}', '{_Param.Setpoints.TMax_6}', " +
                                             $"'{_Param.Setpoints.AMin}', '{_Param.Setpoints.AMax}', '{_Param.Setpoints.Hyst}', " +
                                             $"'{_Param.Setpoints.HystNPD}', '{_Param.Setpoints.HystVPD}', '{_Param.Setpoints.KS}', " +
-                                            $"'{_Param.Setpoints.PDDelay}', '{_Param.Signal.Address}'),";
+                                            $"'{_Param.Setpoints.PDDelay}', '{_Param.Signal.Address}', " +
+                                            $"'\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"'),";
 
                                     UstFieldValue.Add(_FieldValue);
                                 }
