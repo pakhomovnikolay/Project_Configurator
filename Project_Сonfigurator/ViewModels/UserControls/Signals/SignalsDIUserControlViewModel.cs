@@ -150,7 +150,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                             foreach (var Channel in _Module.Channels)
                             {
                                 if ((string.IsNullOrWhiteSpace(Channel.Id) && string.IsNullOrWhiteSpace(Channel.Description)) ||
-                                    Channel.Description == "Резерв") continue;
+                                    Channel.Description == "Резерв" || Channel.Description == "Резеерв") continue;
 
                                 var Address = 0;
                                 if (int.TryParse(Channel.Address, out int address))

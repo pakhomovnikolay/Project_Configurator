@@ -3,6 +3,7 @@ using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
 using Project_Сonfigurator.ViewModels.Base.Interfaces;
+using Project_Сonfigurator.ViewModels.UserControls.Signals;
 using Project_Сonfigurator.Views.UserControls.Params;
 using System;
 using System.Collections.ObjectModel;
@@ -10,6 +11,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
+using static System.Net.WebRequestMethods;
 
 namespace Project_Сonfigurator.ViewModels.UserControls.Params
 {
@@ -209,7 +211,6 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                 if (!UserDialog.SendMessage("Внимание!", "Пожалуйста, проверьте ТБ",
                         MessageBoxButton.OK, MessageBoxImage.Warning, MessageBoxResult.OK)) return;
 
-
             CreateData();
 
             #region Создаем имена УСО без сигналов
@@ -241,13 +242,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
 
                                 if (!flTmp)
                                 {
+                                    if (UserDialog.SearchControlViewModel("Сигналы DI") is not SignalsDIUserControlViewModel _UserControlViewModel) return;
+                                    SignalsDIUserControlViewModel SignalsDIViewModel = _UserControlViewModel;
+
+                                    var address = "";
+                                    foreach (var _SignalsDI in SignalsDIViewModel.Params)
+                                        if (_SignalsDI.Signal.Id.Contains(_Channel.Id, StringComparison.CurrentCultureIgnoreCase))
+                                            address = _SignalsDI.Signal.Index;
+
+                                    Params[index].Param.Description = _Channel.Description;
+                                    if (Params[index].Param.Description.Contains("исправность", StringComparison.CurrentCultureIgnoreCase) &&
+                                        !Params[index].Param.Description.Contains("неисправность", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        Params[index].Param.Description = Params[index].Param.Description.Replace("Исправность", "Неисправность");
+                                        Params[index].Param.Inv = "1";
+                                    }
+
+                                    if (Params[index].Param.Description.Contains("наличие", StringComparison.CurrentCultureIgnoreCase))
+                                    {
+                                        Params[index].Param.Description = Params[index].Param.Description.Replace("Наличие", "Отсутствие");
+                                        Params[index].Param.Inv = "1";
+                                    }
+
                                     flNeedShift = true;
                                     Params[index].Param.Id = _Channel.Id;
-                                    Params[index].Param.Description = _Channel.Description;
+                                    //Params[index].Param.Description = _Channel.Description;
                                     Params[index].IndexUSO = _Param.Index;
-                                    _ = int.TryParse(_Channel.Address, out int address);
-                                    if (address > 100000)
-                                        Params[index].Param.Address = $"{address - 100000}";
+                                    Params[index].Param.Address = address;
 
                                     Params[index].Color = "Красный";
                                     if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))
@@ -283,10 +304,33 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                                     {
                                         if (_Channel.Description.Contains(_Name, StringComparison.CurrentCultureIgnoreCase))
                                         {
+                                            if (UserDialog.SearchControlViewModel("Сигналы DI") is not SignalsDIUserControlViewModel _UserControlViewModel) return;
+                                            SignalsDIUserControlViewModel SignalsDIViewModel = _UserControlViewModel;
+
+                                            var address = "";
+                                            foreach (var _SignalsDI in SignalsDIViewModel.Params)
+                                                if (_SignalsDI.Signal.Id.Contains(_Channel.Id, StringComparison.CurrentCultureIgnoreCase))
+                                                    address = _SignalsDI.Signal.Index;
+
+
+                                            Params[index].Param.Description = _Channel.Description;
+                                            if (Params[index].Param.Description.Contains("исправность", StringComparison.CurrentCultureIgnoreCase) &&
+                                                !Params[index].Param.Description.Contains("неисправность", StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                Params[index].Param.Description = Params[index].Param.Description.Replace("исправность", "Неисправность");
+                                                Params[index].Param.Inv = "1";
+                                            }
+
+                                            if (Params[index].Param.Description.Contains("наличие", StringComparison.CurrentCultureIgnoreCase))
+                                            {
+                                                Params[index].Param.Description = Params[index].Param.Description.Replace("наличие", "Отсутствие");
+                                                Params[index].Param.Inv = "1";
+                                            }
+
                                             flNeedShift = true;
                                             Params[index].Param.Id = _Channel.Id;
-                                            Params[index].Param.Description = _Channel.Description;
-
+                                            //Params[index].Param.Description = _Channel.Description;
+                                            Params[index].Param.Address = address;
 
                                             Params[index].Color = "Красный";
                                             if (_Channel.Description.Contains("Двер", StringComparison.CurrentCultureIgnoreCase))

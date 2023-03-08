@@ -1598,6 +1598,11 @@ namespace Project_Сonfigurator.Services.Export.VU
                             CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
                         }
                     }
+
+                    // Добавляем узел типа сокета "ct:socket-parameter"
+                    Nodes = new() { { "name", $"CountButton" }, { "type", "uint16" }, { "uuid", "0" } };
+                    Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{(qty_signaling - 1) / 32 + 1}"  } };
+                    CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
                 }
                 #endregion
 
@@ -2691,6 +2696,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 foreach (var _Param in Params)
                 {
                     if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                    var Color = string.IsNullOrWhiteSpace(_Param.Color) ? "\"\"" : _Param.Color;
                     Nodes = new() { { "name", $"Desc_{_Param.Param.Index}" }, { "type", "string" }, { "uuid", "0" } };
                     Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{_Param.Param.Description}" } };
                     CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
@@ -2700,7 +2706,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                     CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
 
                     Nodes = new() { { "name", $"Color_{_Param.Param.Index}" }, { "type", "string" }, { "uuid", "0" } };
-                    Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{_Param.Color}" } };
+                    Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{Color}" } };
                     CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
 
                     Nodes = new() { { "name", $"Index_{_Param.Param.Index}" }, { "type", "string" }, { "uuid", "0" } };

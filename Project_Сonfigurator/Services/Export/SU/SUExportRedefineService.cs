@@ -103,7 +103,7 @@ namespace Project_Сonfigurator.Services.Export.SU
         #region Генерация входных сигналов для параметров
         private static string GenInSignal(int TypeSignal, int Address, string VarName, bool Inv)
         {
-            string _VarName = Inv ? $"{VarName} := NOT" : $"{VarName} := ";
+            string _VarName = Inv ? $"{VarName} := NOT " : $"{VarName} := ";
 
             return TypeSignal switch
             {
@@ -637,6 +637,7 @@ namespace Project_Сonfigurator.Services.Export.SU
             var fNumImin = "";
 
             #region Формируем данные
+            var imit_index = 0;
             foreach (var _Param in Params)
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
@@ -648,10 +649,15 @@ namespace Project_Сonfigurator.Services.Export.SU
                     var w = Link / 32;
                     var b = Link % 32;
 
+                    var w_imit = imit_index / 32;
+                    var b_imit = imit_index % 32;
+                    imit_index++;
+
                     var exp = ((int)Math.Pow(2, b)).ToString("X");
+                    var exp_imit = ((int)Math.Pow(2, b_imit)).ToString("X");
 
                     fNumReal += $"\t {VarName} := (HW_DI[{w}] AND 16#{exp}) > 0;\n";
-                    fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w}] AND 16#{exp}) > 0;\n";
+                    fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w_imit}] AND 16#{exp_imit}) > 0;\n";
                 }
             }
             fNum += $"IF NOT nps_state.fl_simulation THEN\n{fNumReal}ELSE\n{fNumImin}END_IF;";
@@ -1233,22 +1239,23 @@ namespace Project_Сonfigurator.Services.Export.SU
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Param.Description))
                 {
+                    flAllowedPrint = true;
                     fNum += $"(* ============================= {_Param.Param.Description} ============================= *)\n";
 
                     var TypeSignal = TextToInt(_Param.Param.TypeSignal);
                     var Address = TextToInt(_Param.Param.Address);
                     var Inv = TextToBool(_Param.Param.Inv);
 
-                    fNum += $"{_Param.Param.VarName}.enable := TRUE;\n";
-                    fNum += $"{_Param.Param.VarName}.num_uso := {TextToSint(_Param.IndexUSO)};\n";
-                    fNum += $"{_Param.Param.VarName}.type_warning := {TextToSint(_Param.TypeWarning)};\n";
+                    fNum += $"{_Param.Param.VarName}.Enabled := TRUE;\n";
+                    fNum += $"{_Param.Param.VarName}.NumUSO := {TextToSint(_Param.IndexUSO)};\n";
+                    fNum += $"{_Param.Param.VarName}.TypeWarningr := {TextToSint(_Param.TypeWarning)};\n";
 
                     fNum += _Param.Color switch
                     {
-                        "Краный" => $"{_Param.Param.VarName}.warning_color := 3;\n",
-                        "Желтый" => $"{_Param.Param.VarName}.warning_color := 2;\n",
-                        "Зеленый" => $"{_Param.Param.VarName}.warning_color := 1;\n",
-                        _ => $"{_Param.Param.VarName}.warning_color := 0;\n",
+                        "Краный" => $"{_Param.Param.VarName}.Color := 1;\n",
+                        "Желтый" => $"{_Param.Param.VarName}.Color := 2;\n",
+                        "Зеленый" => $"{_Param.Param.VarName}.Color := 3;\n",
+                        _ => $"{_Param.Param.VarName}.Color := 0;\n",
                     };
 
                     fNum += $"{GenInSignal(TypeSignal, Address, $"{_Param.Param.VarName}.Input", Inv)}\n\r";
@@ -1496,7 +1503,7 @@ namespace Project_Сonfigurator.Services.Export.SU
                     var SODErrAddress = TextToInt(_Param.SignalErrSOD.Address);
                     var SODErrTypeSignal = TextToInt(_Param.Param.TypeSignal);
 
-                    fNum += VarName + $".enable := TRUE;\n";
+                    fNum += VarName + $".enabled := TRUE;\n";
                     fNum += VarName + $".EnableCVCheck := {TextToSbool(_Param.TypeCOz)};\n";
                     fNum += VarName + $".APT_OFF := {TextToSbool(_Param.AptOff)};\n";
                     fNum += VarName + $".uts_type := {TextToSint(_Param.Type)};\n";

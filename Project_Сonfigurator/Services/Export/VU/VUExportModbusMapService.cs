@@ -20,7 +20,7 @@ namespace Project_Сonfigurator.Services.Export.VU
         private const string IR = "Input Registers";
 
         private static Dictionary<string, string> Elements;
-        private static Dictionary<string, string> Parametrs;
+        //private static Dictionary<string, string> Parametrs;
         private static List<Dictionary<string, string>> ListParametrs;
 
         private static XmlDocument Doc = new();
@@ -170,11 +170,14 @@ namespace Project_Сonfigurator.Services.Export.VU
                     if (_CheckBox.Content.ToString() == "Диагностика")
                     {
                         #region DiagLink
+                        ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[0].AddressStart);
                         VariableName = $"{TypeSystem}.DiagLink.COUNTER";
+                        MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 0);
+
                         Elements = new() { { "Binding", "Introduced" } };
-                        Parametrs = new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress}" } };
-                        CreateParametrsElementNode("item", Elements, Parametrs);
+                        foreach (var _ListParametr in ListParametrs)
+                            CreateParametrsElementNode("item", Elements, _ListParametr);
                         #endregion
 
                         #region Diagnostics
@@ -406,7 +409,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                             MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
                             VariableName = $"{TypeSystem}.OIP.Data.OIP_{index}.UnitsVF";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
                         }
                         Elements = new() { { "Binding", "Introduced" } };
                         foreach (var _ListParametr in ListParametrs)
@@ -503,7 +506,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                             MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
 
                             VariableName = $"{VariableNamePar}.max_speed";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 2);
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
 
                             VariableName = $"{VariableNamePar}.mask_level";
                             MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
@@ -673,16 +676,16 @@ namespace Project_Сonfigurator.Services.Export.VU
                     if (_CheckBox.Content.ToString() == "Сигнализация (Лист 5)")
                     {
                         var Params = UserDialog.SearchControlViewModel("Сигнализация").GetParams<BaseSignaling>();
+
                         ListParametrs = new();
                         MBAddress = long.Parse(ModbusTCP_HR[20].AddressStart);
-                        var index = 0;
-                        foreach (var _Param in Params)
+                        var QtyParams = Params.Count / 16;
+                        for (int i = 0; i < QtyParams; i++)
                         {
-                            var index_par = (int.Parse(_Param.Param.Index) - 1) % 16;
-                            if (index_par != 0) continue;
-                            VariableName = $"{TypeSystem}.LIST5.Data.P_{++index}";
-                            ListParametrs.Add(new() { { "node-path", VariableName }, { "table", HR }, { "address", $"{MBAddress += 1}" } });
+                            VariableName = $"{TypeSystem}.LIST5.Data.P_{i + 1}";
+                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
                         }
+
                         Elements = new() { { "Binding", "Introduced" } };
                         foreach (var _ListParametr in ListParametrs)
                             CreateParametrsElementNode("item", Elements, _ListParametr);

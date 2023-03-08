@@ -324,8 +324,6 @@ namespace Project_Сonfigurator.ViewModels
                             {
                                 if (_Messages.Description == Item)
                                 {
-                                    _Messages.IndexSystem = worksheet.Cell(2, 1).Value.ToString();
-
                                     foreach (var _Message in _Messages.Messages)
                                     {
                                         _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();
@@ -373,7 +371,6 @@ namespace Project_Сonfigurator.ViewModels
                                 continue;
                             }
 
-                            _Messages.IndexSystem = worksheet.Cell(2, 1).Value.ToString();
                             foreach (var _Message in _Messages.Messages)
                             {
                                 _Message.Description = worksheet.Cell(StartIndexRow, 2).Value.ToString();

@@ -176,7 +176,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             foreach (var _Param in MyViewModel.Params)
             {
                 if (!(_Param.Signal.Description.Contains(" СШ ", StringComparison.CurrentCultureIgnoreCase) ||
-                    _Param.Signal.Description.Contains(" шин ", StringComparison.CurrentCultureIgnoreCase))) continue;
+                    _Param.Signal.Description.Contains(" шин ", StringComparison.CurrentCultureIgnoreCase) ||
+                    _Param.Signal.Description.Contains("с.ш.", StringComparison.CurrentCultureIgnoreCase))) continue;
 
                 var param = new BaseParam
                 {
@@ -185,7 +186,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Description = $"{_Param.Signal.Description}",
                     Inv = "",
                     TypeSignal = "",
-                    Address = $"{_Param.Signal.Address}",
+                    Address = $"{_Param.Signal.Index}",
                     VarName = $"EC_KTP_P[{_Params.Count + 1}]"
                 };
                 _Params.Add(param);

@@ -357,16 +357,14 @@
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Border x:Name="border" BorderBrush="LightSlateGray">
-                                <Border.BorderThickness>
-                                    <Binding Path="Param.Index" Converter="{StaticResource IndexToBorderThicknessConverter}"/>
-                                </Border.BorderThickness>
+                                
                                 <StackPanel>
                                     <ToggleButton x:Name="ListModule"
-                                                  BorderThickness="0"
+                                                  BorderThickness="1"
                                                   VerticalContentAlignment="Center"
                                                   HorizontalContentAlignment="Stretch"
                                                   Background="#FFE5E5E5"
-                                                  BorderBrush="#FFACACAC"
+                                                  BorderBrush="LightSlateGray"
                                                   Height="{Binding ElementName=border, Path=ActualHeight}">
                                         <TextBlock HorizontalAlignment="Center"
                                                    TextAlignment="Center"
