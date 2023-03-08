@@ -31,8 +31,6 @@ namespace Project_Сonfigurator.Infrastructures.Commands
                     DBServices.RequestToWriteProjectData();
                 }
             }
-                
-            
 
             Application.Current.Shutdown();
         }
