@@ -29,6 +29,9 @@ namespace Project_Сonfigurator.ViewModels.Base
             if (Equals(filed, value)) return false;
             filed = value;
             OnPropertyChanged(propertyName);
+            if (App.LoadComplite)
+                App.ProjectChanged = true;
+
             return true;
         }
         #endregion

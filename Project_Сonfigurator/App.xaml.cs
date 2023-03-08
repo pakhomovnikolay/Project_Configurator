@@ -22,7 +22,8 @@ namespace Project_Сonfigurator
         public const string __FilterSelectExcel = "Книга Excel (*.xlsm*)|*.xlsx*";
         public const string __FilterSelectProject = $"Файлы (*{__EncryptedProjectFileSuffix}*)|*{__EncryptedProjectFileSuffix}*";
 
-
+        public static bool LoadComplite = false;
+        public static bool ProjectChanged = false;
         public static readonly ISettingService Settings = new SettingService();
         public static readonly IDBService DBServices = new DBService();
 
@@ -72,6 +73,7 @@ namespace Project_Сonfigurator
             #endregion
 
             Services.GetRequiredService<IUserDialogService>().OpenMainWindow();
+            LoadComplite = true;
         }
 
         protected override async void OnExit(ExitEventArgs e)
