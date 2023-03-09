@@ -81,7 +81,7 @@
                                                Command="{Binding CmdSaveAsData}"/>
                     <RibbonApplicationMenuItem Header="Открыть папку с проектом" ImageSource="../../Resources/Icons/OpenFolder.ico"
                                                Command="{Binding CmdOpenProjectFolder}"/>
-                    <RibbonApplicationMenuItem Header="Открыть папку с настройками проектом" ImageSource="../../Resources/Icons/OpenFolder.ico"
+                    <RibbonApplicationMenuItem Header="Открыть папку с настройками проекта" ImageSource="../../Resources/Icons/OpenFolder.ico"
                                                Command="{Binding CmdOpenSettingsProjectFolder}"/>
                     <RibbonApplicationMenuItem Header="Настройки" VerticalAlignment="Bottom" ImageSource="../../Resources/Icons/Settings.ico"
                                                Command="{Binding CmdOpenSettingWindow}"/>
