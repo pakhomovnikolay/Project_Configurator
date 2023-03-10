@@ -288,7 +288,7 @@ namespace Project_Сonfigurator.Services.Export.VU
             switch (Severity)
             {
                 case "зеленый":
-                    return "200";
+                    return "300";
                 case "желтый":
                     return "500";
                 case "красный":
@@ -782,7 +782,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                                 var Description = FormatingMessage(item.Param.Description, true);
                                 var Index = item.Param.Index;
                                 Operator = string.IsNullOrWhiteSpace(Operator) ? "if " : "else if ";
-                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; }}\n";
+                                SourceCodeHandler += $"{Operator} (Msg.SubSystem == {Index}) {{ msg = {Description}; Severity = {ConverMessageSeverity(item.Color.ToLower())}; }}\n";
                             }
                         }
                         #endregion
@@ -2715,7 +2715,7 @@ namespace Project_Сonfigurator.Services.Export.VU
                 }
 
                 Nodes = new() { { "name", "CountButton" }, { "type", "uint16" }, { "uuid", "0" } };
-                Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{j / 16}" } };
+                Attributes = new() { { "type", TypeAttributeInitialValue }, { "value", $"{(j - 1) / 32 + 1}" } };
                 CreateSocketParametrNode("ct:socket-parameter", "attribute", Nodes: Nodes, Attributes: Attributes);
                 #endregion
 
