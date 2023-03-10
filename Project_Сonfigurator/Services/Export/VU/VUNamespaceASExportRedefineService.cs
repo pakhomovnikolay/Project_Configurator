@@ -285,18 +285,13 @@ namespace Project_Сonfigurator.Services.Export.VU
         /// </summary>
         private static string ConverMessageSeverity(string Severity)
         {
-            switch (Severity)
+            return Severity switch
             {
-                case "зеленый":
-                    return "300";
-                case "желтый":
-                    return "500";
-                case "красный":
-                    return "800";
-                default:
-                    return "1";
-
-            }
+                "зеленый" => "300",
+                "желтый" => "500",
+                "красный" => "800",
+                _ => "1",
+            };
         }
         #endregion
 
