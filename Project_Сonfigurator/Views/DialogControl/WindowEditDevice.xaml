@@ -122,6 +122,28 @@
 
                     </DataGridTemplateColumn>
 
+                    <DataGridTemplateColumn Header="Значение" Width="50">
+
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Value, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+
+                    <DataGridTemplateColumn Header="Ед. изм." Width="50">
+
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBox Style="{StaticResource TextBoxCustomStyle}"
+                                         Text="{Binding Unit, UpdateSourceTrigger=PropertyChanged}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+
+                    </DataGridTemplateColumn>
+
                 </DataGrid.Columns>
             </DataGrid>
             <StackPanel Grid.Row="1" Orientation="Horizontal">

@@ -42,7 +42,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _IsSelected;
             set
             {
-                if (Set(ref _IsSelected, value))
+                if (Set(ref _IsSelected, value, DontСommitСhanges: true))
                 {
                     if (DoSelectionKCOParam) DoSelectionKCOParam = SignalServices.RedefineAddress(SelectedParam.KCO, _IsSelected, Title);
                     else if (DoSelectionSignalSOD) DoSelectionSignalSOD = SignalServices.RedefineAddress(SelectedParam.SignalSOD, _IsSelected, Title);

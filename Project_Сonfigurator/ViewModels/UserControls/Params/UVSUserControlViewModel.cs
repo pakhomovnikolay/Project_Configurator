@@ -43,7 +43,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _IsSelected;
             set
             {
-                if (Set(ref _IsSelected, value))
+                if (Set(ref _IsSelected, value, DontСommitСhanges: true))
                 {
                     if (DoSelectionInputParam) DoSelectionInputParam = SignalServices.RedefineAddress(SelectedInputParam, _IsSelected, Title);
                     if (DoSelectionOutputParam) DoSelectionOutputParam = SignalServices.RedefineAddress(SelectedOutputParam, _IsSelected, Title);

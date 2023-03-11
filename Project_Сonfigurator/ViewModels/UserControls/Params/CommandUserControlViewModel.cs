@@ -35,7 +35,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
             get => _IsSelected;
             set
             {
-                if (Set(ref _IsSelected, value))
+                if (Set(ref _IsSelected, value, DontСommitСhanges: true))
                     if (_IsSelected) SignalServices.ResetSignal();
             }
         }

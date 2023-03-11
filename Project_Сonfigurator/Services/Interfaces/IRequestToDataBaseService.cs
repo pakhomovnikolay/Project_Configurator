@@ -403,6 +403,18 @@ namespace Project_Сonfigurator.Services.Interfaces
         public string FieldSetpointsAI { get; }
         #endregion
 
+        #region Уставки аналоговых параметров для вибраций
+        /// <summary>
+        /// Поля таблицы для "SETPOINTS_AI_VIBR"
+        /// </summary>
+        public string TableFieldSetpointsAIVibration { get; }
+
+        /// <summary>
+        /// Поля для "SETPOINTS_AI_VIBR"
+        /// </summary>
+        public string FieldSetpointsAIVibration { get; }
+        #endregion
+
         #endregion
     }
 }

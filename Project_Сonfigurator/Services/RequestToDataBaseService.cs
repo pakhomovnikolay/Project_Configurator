@@ -956,6 +956,7 @@ namespace Project_Сonfigurator.Services
                     "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
                     "`ID` TEXT," +
                     "`DESCRIPTION` TEXT," +
+                    "`TAB_DESCRIPTION` TEXT," +
                     "`VAR_NAME` TEXT," +
                     "`ADDRESS` TEXT," +
                     "`VALUE` TEXT," +
@@ -973,7 +974,7 @@ namespace Project_Сonfigurator.Services
             get
             {
                 return
-                    "(ID, DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT, QTY_SIMBOLS_COMMA) VALUES";
+                    "(ID, DESCRIPTION, TAB_DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT, QTY_SIMBOLS_COMMA) VALUES";
             }
         }
         #endregion
@@ -990,6 +991,7 @@ namespace Project_Сonfigurator.Services
                     "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
                     "`ID` TEXT," +
                     "`DESCRIPTION` TEXT," +
+                    "`TAB_DESCRIPTION` TEXT," +
                     "`VAR_NAME` TEXT," +
                     "`ADDRESS` TEXT," +
                     "`VALUE` TEXT," +
@@ -1006,7 +1008,7 @@ namespace Project_Сonfigurator.Services
             get
             {
                 return
-                    "(ID, DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT) VALUES";
+                    "(ID, DESCRIPTION, TAB_DESCRIPTION, VAR_NAME, ADDRESS, VALUE, UNIT) VALUES";
             }
         }
         #endregion
@@ -1153,6 +1155,7 @@ namespace Project_Сonfigurator.Services
                     "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
                     "`ID` TEXT," +
                     "`DESCRIPTION` TEXT," +
+                    "`TAB_DESCRIPTION` TEXT," +
                     "`UNITS` TEXT," +
                     "`TMin` TEXT," +
                     "`TMax` TEXT," +
@@ -1202,8 +1205,75 @@ namespace Project_Сonfigurator.Services
             get
             {
                 return
-                    "(ID, DESCRIPTION, UNITS, TMin, TMax," +
+                    "(ID, DESCRIPTION, TAB_DESCRIPTION, UNITS, TMin, TMax," +
                     "Min_1, Min_2, Min_3, Min_4, Min_5, Min_6, Max_1, Max_2, Max_3, Max_4, Max_5, Max_6, " +
+                    "AMin, AMax, Hyst, NPD, VPD, KS, PDDelay, ADDRESS, " +
+                    "NAIndex_SigType, MaskMsg, MaskSig, MaskLevel, MaxSpeed, QtySimbolsComma, Res_03, Res_04, Res_05, Res_06, Res_07, Res_08, Res_09, Res_10) VALUES";
+            }
+        }
+        #endregion
+
+        #region Уставки аналоговых параметров для вибраций
+        /// <summary>
+        /// Поля таблицы для "SETPOINTS_AI_VIBR"
+        /// </summary>
+        public string TableFieldSetpointsAIVibration
+        {
+            get
+            {
+                return
+                    "(`INDEX` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT," +
+                    "`ID` TEXT," +
+                    "`DESCRIPTION` TEXT," +
+                    "`TAB_DESCRIPTION` TEXT," +
+                    "`UNITS` TEXT," +
+                    "`TMin` TEXT," +
+                    "`TMax` TEXT," +
+                    "`Max_1` TEXT," +
+                    "`Max_2` TEXT," +
+                    "`Max_3` TEXT," +
+                    "`Max_4` TEXT," +
+                    "`Max_5` TEXT," +
+                    "`Max_6` TEXT," +
+                    "`Max_7` TEXT," +
+                    "`Max_8` TEXT," +
+                    "`Max_9` TEXT," +
+                    "`AMin` TEXT," +
+                    "`AMax` TEXT," +
+                    "`Hyst` TEXT," +
+                    "`NPD` TEXT," +
+                    "`VPD` TEXT," +
+                    "`KS` TEXT," +
+                    "`PDDelay` TEXT," +
+                    "`ADDRESS` TEXT," +
+                    "`NAIndex_SigType` TEXT," +
+                    "`MaskMsg` TEXT," +
+                    "`MaskSig` TEXT," +
+                    "`MaskLevel` TEXT," +
+                    "`MaxSpeed` TEXT," +
+                    "`QtySimbolsComma` TEXT," +
+                    "`Res_03` TEXT," +
+                    "`Res_04` TEXT," +
+                    "`Res_05` TEXT," +
+                    "`Res_06` TEXT," +
+                    "`Res_07` TEXT," +
+                    "`Res_08` TEXT," +
+                    "`Res_09` TEXT," +
+                    "`Res_10` TEXT," +
+                    "PRIMARY KEY(`INDEX`));";
+            }
+        }
+
+        /// <summary>
+        /// Поля для "SETPOINTS_AI_VIBR"
+        /// </summary>
+        public string FieldSetpointsAIVibration
+        {
+            get
+            {
+                return
+                    "(ID, DESCRIPTION, TAB_DESCRIPTION, UNITS, TMin, TMax," +
+                    "Max_1, Max_2, Max_3, Max_4, Max_5, Max_6, Max_7, Max_8, Max_9, " +
                     "AMin, AMax, Hyst, NPD, VPD, KS, PDDelay, ADDRESS, " +
                     "NAIndex_SigType, MaskMsg, MaskSig, MaskLevel, MaxSpeed, QtySimbolsComma, Res_03, Res_04, Res_05, Res_06, Res_07, Res_08, Res_09, Res_10) VALUES";
             }

@@ -24,12 +24,12 @@ namespace Project_Сonfigurator.ViewModels.Base
         #endregion
 
         #region Проверка изменения данных
-        protected virtual bool Set<T>(ref T filed, T value, [CallerMemberName] string propertyName = null)
+        protected virtual bool Set<T>(ref T filed, T value, [CallerMemberName] string propertyName = null, bool DontСommitСhanges = false)
         {
             if (Equals(filed, value)) return false;
             filed = value;
             OnPropertyChanged(propertyName);
-            if (App.LoadComplite)
+            if (App.LoadComplite && !DontСommitСhanges)
                 App.ProjectChanged = true;
 
             return true;

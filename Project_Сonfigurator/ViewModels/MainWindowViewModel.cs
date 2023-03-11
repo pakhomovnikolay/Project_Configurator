@@ -124,7 +124,7 @@ namespace Project_Сonfigurator.ViewModels
             get => _SelectedTabIndex;
             set
             {
-                if (Set(ref _SelectedTabIndex, value))
+                if (Set(ref _SelectedTabIndex, value, DontСommitСhanges: true))
                 {
                     var i = 0;
                     foreach (var _ViewModel in ViewModelUserControls)
@@ -147,7 +147,7 @@ namespace Project_Сonfigurator.ViewModels
         public IViewModelUserControls SelectedViewModel
         {
             get => _SelectedViewModel;
-            set => Set(ref _SelectedViewModel, value);
+            set => Set(ref _SelectedViewModel, value, DontСommitСhanges:true);
         }
         #endregion
 
@@ -217,6 +217,7 @@ namespace Project_Сonfigurator.ViewModels
             SettingServices.Save();
             DBServices.RequestToWriteProjectData();
             SetNameProject();
+            App.ProjectChanged = false;
         }
         #endregion
 

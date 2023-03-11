@@ -1,6 +1,5 @@
 ﻿using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.Setpoints;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 

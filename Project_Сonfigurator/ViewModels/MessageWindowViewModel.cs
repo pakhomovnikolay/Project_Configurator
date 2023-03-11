@@ -68,7 +68,7 @@ namespace Project_Сonfigurator.ViewModels
         public CollectionMessage SelectedParam
         {
             get => _SelectedParam;
-            set => Set(ref _SelectedParam, value);
+            set => Set(ref _SelectedParam, value, DontСommitСhanges: true);
         }
         #endregion
 
@@ -82,7 +82,7 @@ namespace Project_Сonfigurator.ViewModels
             get => _SelectedTabIndex;
             set
             {
-                if (Set(ref _SelectedTabIndex, value))
+                if (Set(ref _SelectedTabIndex, value, DontСommitСhanges: true))
                 {
                     SelectedParam = null;
                     if (_SelectedTabIndex < 0) return;

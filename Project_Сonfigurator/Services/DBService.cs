@@ -1,5 +1,4 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Project_Сonfigurator.Models;
 using Project_Сonfigurator.Models.LayotRack;
 using Project_Сonfigurator.Models.Params;
@@ -296,7 +295,7 @@ namespace Project_Сonfigurator.Services
                                     ConnectSetting.SuccessUpdate = false;
                                     TablesNotLoaded += "TableSignals; ";
                                 }
-                                    
+
                             }
                             #endregion
 
@@ -819,9 +818,9 @@ namespace Project_Сonfigurator.Services
                                 var Params = _ViewModel.GetParams<BaseSetpointsReal>();
                                 foreach (var _Param in Params)
                                 {
-                                    if (string.IsNullOrWhiteSpace(_Param.Setpoints.Id) && string.IsNullOrWhiteSpace(_Param.Setpoints.Description)) continue;
+                                    if (string.IsNullOrWhiteSpace(_Param.Setpoints.Value)) continue;
                                     var _FieldValue =
-                                        $"('{_Param.Setpoints.Id}', '{_Param.Setpoints.Description}', '{_Param.Setpoints.VarName}', " +
+                                        $"('{_Param.Setpoints.Id}', '{_Param.Setpoints.Description}', 'Уставки с плавающей запятой', '{_Param.Setpoints.VarName}', " +
                                         $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}', '{_Param.QtySimbolsComma}'),";
                                     FieldValue.Add(_FieldValue);
                                 }
@@ -925,7 +924,7 @@ namespace Project_Сonfigurator.Services
                                 {
                                     if (string.IsNullOrWhiteSpace(_Param.Value)) continue;
                                     var _FieldValue =
-                                        $"('{_Param.Id}', '{_Param.Description}', '{_Param.VarName}', " +
+                                        $"('{_Param.Id}', '{_Param.Description}', '{_ViewModel.Title}', '{_Param.VarName}', " +
                                         $"'{_Param.Address}', '{_Param.Value}', '{_Param.Unit}'),";
                                     UstFieldValue.Add(_FieldValue);
                                 }
@@ -943,7 +942,7 @@ namespace Project_Сonfigurator.Services
                                     {
                                         if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
                                         var _FieldValue =
-                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', 'Уставки задвижек', '{_Setpoint.VarName}', " +
                                             $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
                                         UstFieldValue.Add(_FieldValue);
                                     }
@@ -962,7 +961,7 @@ namespace Project_Сonfigurator.Services
                                     {
                                         if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
                                         var _FieldValue =
-                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', 'Уставки вспомсистем', '{_Setpoint.VarName}', " +
                                             $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
                                         UstFieldValue.Add(_FieldValue);
                                     }
@@ -983,7 +982,7 @@ namespace Project_Сonfigurator.Services
                                     {
                                         if (string.IsNullOrWhiteSpace(_Setpoint.Value)) continue;
                                         var _FieldValue =
-                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', '{_Setpoint.VarName}', " +
+                                            $"('{_Setpoint.Id}', '{_Param.Description}. {_Setpoint.Description}', 'Уставки МПНА', '{_Setpoint.VarName}', " +
                                             $"'{_Setpoint.Address}', '{_Setpoint.Value}', '{_Setpoint.Unit}'),";
                                         UstFieldValue.Add(_FieldValue);
                                     }
@@ -994,8 +993,8 @@ namespace Project_Сonfigurator.Services
                                     {
                                         if (string.IsNullOrWhiteSpace(_SubParam.Setpoints.Value)) continue;
                                         var _FieldValue =
-                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', '{_SubParam.Setpoints.VarName}', " +
-                                            $"'{_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
+                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', 'Уставки агрегатный готовностей. {_Param.Description}', " +
+                                            $"'{_SubParam.Setpoints.VarName}', {_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
                                         UstFieldValue.Add(_FieldValue);
                                     }
                                     #endregion
@@ -1005,8 +1004,8 @@ namespace Project_Сonfigurator.Services
                                     {
                                         if (string.IsNullOrWhiteSpace(_SubParam.Setpoints.Value)) continue;
                                         var _FieldValue =
-                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', '{_SubParam.Setpoints.VarName}', " +
-                                            $"'{_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
+                                            $"('{_SubParam.Setpoints.Id}', '{_Param.Description}. {_SubParam.Param.Description}', 'Уставки агрегатный защит. {_Param.Description}', " +
+                                            $"'{_SubParam.Setpoints.VarName}', {_SubParam.Setpoints.Address}', '{_SubParam.Setpoints.Value}', '{_SubParam.Setpoints.Unit}'),";
                                         UstFieldValue.Add(_FieldValue);
                                     }
                                     #endregion
@@ -1022,7 +1021,7 @@ namespace Project_Сonfigurator.Services
                                 {
                                     if (string.IsNullOrWhiteSpace(_Param.Setpoints.Value)) continue;
                                     var _FieldValue =
-                                        $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', '{_Param.Setpoints.VarName}', " +
+                                        $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', 'Уставки общестанционных защит', '{_Param.Setpoints.VarName}', " +
                                         $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}'),";
                                     UstFieldValue.Add(_FieldValue);
                                 }
@@ -1037,7 +1036,7 @@ namespace Project_Сonfigurator.Services
                                 {
                                     if (string.IsNullOrWhiteSpace(_Param.Setpoints.Value)) continue;
                                     var _FieldValue =
-                                        $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', '{_Param.Setpoints.VarName}', " +
+                                       $"('{_Param.Setpoints.Id}', '{_Param.Param.Description}', 'Уставки предельных параметров общестанционных защит', '{_Param.Setpoints.VarName}', " +
                                         $"'{_Param.Setpoints.Address}', '{_Param.Setpoints.Value}', '{_Param.Setpoints.Unit}'),";
                                     UstFieldValue.Add(_FieldValue);
                                 }
@@ -1058,6 +1057,7 @@ namespace Project_Сonfigurator.Services
 
                         #region Уставки аналоговых параметров
                         UstFieldValue = new();
+                        var UstFieldValuePar = new List<string>();
                         foreach (var _ViewModel in _ViewModelsUserControl)
                         {
                             if (_ViewModel is SignalsAIUserControlViewModel)
@@ -1066,8 +1066,12 @@ namespace Project_Сonfigurator.Services
                                 foreach (var _Param in Params)
                                 {
                                     if (string.IsNullOrWhiteSpace(_Param.Signal.Description)) continue;
-                                    var _FieldValue =
-                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', '{_Param.Setpoints.Unit}', " +
+
+                                    #region Собираем аналоги
+                                    if (string.IsNullOrWhiteSpace(_Param.IndexNA))
+                                    {
+                                        var _FieldValue =
+                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', 'Аналоговые входы', '{_Param.Setpoints.Unit}', " +
                                             $"'{_Param.Setpoints.TMin}', '{_Param.Setpoints.TMax}', " +
                                             $"'{_Param.Setpoints.TMin_1}', '{_Param.Setpoints.TMin_2}', '{_Param.Setpoints.TMin_3}', '{_Param.Setpoints.TMin_4}', '{_Param.Setpoints.TMin_5}', '{_Param.Setpoints.TMin_6}', " +
                                             $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', '{_Param.Setpoints.TMax_4}', '{_Param.Setpoints.TMax_5}', '{_Param.Setpoints.TMax_6}', " +
@@ -1076,7 +1080,26 @@ namespace Project_Сonfigurator.Services
                                             $"'{_Param.Setpoints.PDDelay}', '{_Param.Signal.Address}', " +
                                             $"'\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"'),";
 
-                                    UstFieldValue.Add(_FieldValue);
+                                        UstFieldValue.Add(_FieldValue);
+                                    }
+                                    #endregion
+
+                                    #region Собираем аналоги для вибрации
+                                    else if (!string.IsNullOrWhiteSpace(_Param.IndexNA))
+                                    {
+                                        var _FieldValue =
+                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', 'Аналоговые входы (вибрация)', '{_Param.Setpoints.Unit}', " +
+                                            $"'{_Param.Setpoints.TMin}', '{_Param.Setpoints.TMax}', " +
+                                            $"'{_Param.Setpoints.TMin_1}', '{_Param.Setpoints.TMin_2}', '{_Param.Setpoints.TMin_3}', '{_Param.Setpoints.TMin_4}', '{_Param.Setpoints.TMin_5}', '{_Param.Setpoints.TMin_6}', " +
+                                            $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', " +
+                                            $"'{_Param.Setpoints.AMin}', '{_Param.Setpoints.AMax}', '{_Param.Setpoints.Hyst}', " +
+                                            $"'{_Param.Setpoints.HystNPD}', '{_Param.Setpoints.HystVPD}', '{_Param.Setpoints.KS}', " +
+                                            $"'{_Param.Setpoints.PDDelay}', '{_Param.Signal.Address}', " +
+                                            $"'\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"', '\"\"'),";
+
+                                        UstFieldValuePar.Add(_FieldValue);
+                                    }
+                                    #endregion
                                 }
 
                                 if (UstFieldValue is not null && UstFieldValue.Count > 0)
@@ -1088,6 +1111,17 @@ namespace Project_Сonfigurator.Services
                                     {
                                         ConnectSetting.SuccessUpdate = false;
                                         TablesNotLoaded += "SETPOINTS_AI; ";
+                                    }
+
+                                if (UstFieldValuePar is not null && UstFieldValuePar.Count > 0)
+                                    if (!RequestToDataBaseServices.SetData(
+                                        "SETPOINTS_AI_VIBR",
+                                        RequestToDataBaseServices.TableFieldSetpointsAIVibration,
+                                        RequestToDataBaseServices.FieldSetpointsAIVibration,
+                                        UstFieldValuePar))
+                                    {
+                                        ConnectSetting.SuccessUpdate = false;
+                                        TablesNotLoaded += "SETPOINTS_AI_VIBR; ";
                                     }
                             }
                         }
@@ -1126,7 +1160,7 @@ namespace Project_Сonfigurator.Services
                         {
                             UserDialog.SendMessage("Управление приложением", $"Таблицы из указанного списка не были загружены в БД - {TablesNotLoaded}",
                                 MessageBoxButton.OK, MessageBoxImage.Information, MessageBoxResult.OK, MessageBoxOptions.None);
-                            
+
                         }
                     }
                 }
