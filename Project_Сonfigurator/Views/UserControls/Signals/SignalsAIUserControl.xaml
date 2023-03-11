@@ -496,6 +496,22 @@
 
                         </DataGridTemplateColumn>
 
+                        <DataGridTemplateColumn Header="Описание принадлежности группы" MinWidth="220" Width="220">
+
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <TextBox Style="{StaticResource TextBoxCenterCustomStyle}" Text="{Binding Setpoints.TabDescription}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                            
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCenterCustomStyle}" Text="{Binding Setpoints.TabDescription}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+
+                        </DataGridTemplateColumn>
+
                         <DataGridTemplateColumn Header="Ед. изм." MinWidth="60">
 
                             <DataGridTemplateColumn.CellEditingTemplate>

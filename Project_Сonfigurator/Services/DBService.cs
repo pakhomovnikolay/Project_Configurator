@@ -1071,7 +1071,7 @@ namespace Project_Сonfigurator.Services
                                     if (string.IsNullOrWhiteSpace(_Param.IndexNA))
                                     {
                                         var _FieldValue =
-                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', 'Аналоговые входы', '{_Param.Setpoints.Unit}', " +
+                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', '{_Param.Setpoints.TabDescription}', '{_Param.Setpoints.Unit}', " +
                                             $"'{_Param.Setpoints.TMin}', '{_Param.Setpoints.TMax}', " +
                                             $"'{_Param.Setpoints.TMin_1}', '{_Param.Setpoints.TMin_2}', '{_Param.Setpoints.TMin_3}', '{_Param.Setpoints.TMin_4}', '{_Param.Setpoints.TMin_5}', '{_Param.Setpoints.TMin_6}', " +
                                             $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', '{_Param.Setpoints.TMax_4}', '{_Param.Setpoints.TMax_5}', '{_Param.Setpoints.TMax_6}', " +
@@ -1088,7 +1088,7 @@ namespace Project_Сonfigurator.Services
                                     else if (!string.IsNullOrWhiteSpace(_Param.IndexNA))
                                     {
                                         var _FieldValue =
-                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', 'Аналоговые входы (вибрация)', '{_Param.Setpoints.Unit}', " +
+                                            $"('{_Param.Signal.Id}', '{_Param.Signal.Description}', '{_Param.Setpoints.TabDescription}', '{_Param.Setpoints.Unit}', " +
                                             $"'{_Param.Setpoints.TMin}', '{_Param.Setpoints.TMax}', " +
                                             $"'{_Param.Setpoints.TMin_1}', '{_Param.Setpoints.TMin_2}', '{_Param.Setpoints.TMin_3}', '{_Param.Setpoints.TMin_4}', '{_Param.Setpoints.TMin_5}', '{_Param.Setpoints.TMin_6}', " +
                                             $"'{_Param.Setpoints.TMax_1}', '{_Param.Setpoints.TMax_2}', '{_Param.Setpoints.TMax_3}', " +

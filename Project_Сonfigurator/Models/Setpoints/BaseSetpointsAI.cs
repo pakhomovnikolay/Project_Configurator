@@ -8,7 +8,7 @@ namespace Project_Сonfigurator.Models.Setpoints
         /// <summary>
         /// Описание вкладки, при необходиомсти группировки уставок
         /// </summary>
-        public string DescriptionTab { get; set; }
+        public string TabDescription { get; set; }
         #endregion
 
         #region Технологический максимум

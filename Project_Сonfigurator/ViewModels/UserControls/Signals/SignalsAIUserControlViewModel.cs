@@ -345,7 +345,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         AMax = "",
                         AMin = "",
                         Delta = "",
-                        DescriptionTab = "",
+                        TabDescription = "",
                         Hyst = "",
                         HystNPD = "",
                         HystVPD = "",
@@ -367,7 +367,8 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Signals
                         TMin_4 = "",
                         TMin_5 = "",
                         TMin_6 = "",
-                        Trending = ""
+                        Trending = "",
+                        Unit = ""
                     }
                 };
                 Params.Add(param);

@@ -6,7 +6,7 @@
         /// <summary>
         /// Описание вкладки, при необходиомсти группировки уставок
         /// </summary>
-        string DescriptionTab { get; set; }
+        string TabDescription { get; set; }
         #endregion
 
         #region Технологический максимум
