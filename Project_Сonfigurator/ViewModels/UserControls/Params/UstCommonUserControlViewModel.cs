@@ -167,6 +167,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Формирование данных при создании нового проекта
         private void CreateData()
         {
+            _ = int.TryParse(App.Settings.Config.ModbusTCP_HR[31].AddressInPLC.Replace("%MW", ""), out int address);
             while (Params.Count < 400)
             {
                 #region Создаем параметр
@@ -176,7 +177,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Id = $"H{(Params.Count + 1):000}",
                     Description = "",
                     VarName = $"SP_TM_COMMON[{Params.Count + 1}]",
-                    Address = $"{1000 + Params.Count}",
+                    Address = $"{address + Params.Count}",
                     Value = "",
                     Unit = "сек.",
                 };

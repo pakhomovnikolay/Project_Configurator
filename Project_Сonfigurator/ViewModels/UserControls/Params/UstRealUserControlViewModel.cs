@@ -1,5 +1,4 @@
 ﻿using Project_Сonfigurator.Infrastructures.Commands;
-using Project_Сonfigurator.Models.Params;
 using Project_Сonfigurator.Models.Setpoints;
 using Project_Сonfigurator.Services.Interfaces;
 using Project_Сonfigurator.ViewModels.Base;
@@ -168,21 +167,9 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
         #region Формирование данных при создании нового проекта
         private void CreateData()
         {
+            _ = int.TryParse(App.Settings.Config.ModbusTCP_HR[32].AddressInPLC.Replace("%MW", ""), out int address);
             while (Params.Count < 256)
             {
-                #region Создаем данные параметра
-                var param = new BaseParam
-                {
-                    Index = $"{Params.Count + 1}",
-                    Id = "",
-                    Description = "",
-                    Inv = "",
-                    TypeSignal = "",
-                    Address = "",
-                    VarName = $"ktpr_param[{Params.Count + 1}]"
-                };
-                #endregion
-
                 #region Создаем уставки
                 var setpoint = new BaseSetpoints
                 {
@@ -190,7 +177,7 @@ namespace Project_Сonfigurator.ViewModels.UserControls.Params
                     Id = $"FL{(Params.Count + 1):000}",
                     Description = "",
                     VarName = $"SP_REAL[{Params.Count + 1}]",
-                    Address = $"{1000 + Params.Count}",
+                    Address = $"{address + Params.Count}",
                     Value = "",
                     Unit = "",
                 };
