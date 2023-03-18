@@ -259,6 +259,7 @@ namespace Project_Сonfigurator.Services.Base
             window = _Services.GetRequiredService<SettingWindow>();
             window.Closed += (_, _) => _SettingWindow = null;
             window.Owner = Application.Current.MainWindow;
+            window.Topmost = true;
 
             _SettingWindow = window;
             window.ShowDialog();

@@ -6,7 +6,7 @@
 	  <Nullable>annotations</Nullable>
 	  <UseWPF>true</UseWPF>
 	  <StartupObject>Project_Сonfigurator.Program</StartupObject>
-	  <PackageIcon>MagicIcon.jpg</PackageIcon>
+	  
 	  <ApplicationIcon>Resources\Icons\MagicIcon.ico</ApplicationIcon>
   </PropertyGroup>
 

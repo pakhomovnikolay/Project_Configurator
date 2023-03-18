@@ -759,8 +759,10 @@ namespace Project_Сonfigurator.Services.Export.VU
                         foreach (var _Param in Params)
                         {
                             if (string.IsNullOrWhiteSpace(_Param.Param.Description)) continue;
+                            _ = long.TryParse(_Param.Param.Index, out long Index);
+
                             VariableName = $"{TypeSystem}.UTS.Data.UTS_{_Param.Param.Index}.State_1";
-                            MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
+                            AddListParametrs(ListParametrs, VariableName, HR, MBAddress + (Index - 1), Index);
                         }
                         Elements = new() { { "Binding", "Introduced" } };
                         foreach (var _ListParametr in ListParametrs)
