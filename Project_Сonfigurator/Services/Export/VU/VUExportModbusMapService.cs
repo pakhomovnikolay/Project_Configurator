@@ -215,7 +215,7 @@ namespace Project_Сonfigurator.Services.Export.VU
 
                                 VariableName = $"{TypeSystem}.DiagRack.Rack_{index++}.TotalErrBusB";
                                 MBAddress = AddListParametrs(ListParametrs, VariableName, HR, MBAddress, 1);
-                                
+
                             }
                         }
                         Elements = new() { { "Binding", "Introduced" } };
