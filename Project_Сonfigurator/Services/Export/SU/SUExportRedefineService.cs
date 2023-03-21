@@ -642,21 +642,38 @@ namespace Project_Сonfigurator.Services.Export.SU
             {
                 if (!string.IsNullOrWhiteSpace(_Param.Signal.Description))
                 {
+
+
                     flAllowedPrint = true;
                     var VarName = _Param.Signal.VarName;
-                    var Link = TextToInt(_Param.Signal.Address);
-
+                    var VarNamelocal = _Param.Signal.VarName;
+                    var Link = TextToInt(_Param.Signal.LinkValue);
+                    var UserDI = (Link & 32768) > 0;
                     var w = Link / 32;
                     var b = Link % 32;
+                    
 
                     var w_imit = imit_index / 32;
                     var b_imit = imit_index % 32;
+
+                    if (UserDI)
+                    {
+                        w = (Link - 32768 - 1) / 16 + 1;
+                        b = (Link - 32768 - 1) % 16;
+                    }
+                    
                     imit_index++;
 
                     var exp = ((int)Math.Pow(2, b)).ToString("X");
                     var exp_imit = ((int)Math.Pow(2, b_imit)).ToString("X");
 
-                    fNumReal += $"\t {VarName} := (HW_DI[{w}] AND 16#{exp}) > 0;\n";
+                    VarNamelocal = $"(HW_DI[{w}] AND 16#{exp}) > 0;";
+                    if (UserDI)
+                    {
+                        VarNamelocal = $"(user_di[{w}] AND 16#{exp}) > 0;";
+                    }
+
+                    fNumReal += $"\t {VarName} := {VarNamelocal}\n";
                     fNumImin += $"\t {VarName} := (HW_DI_IMIT[{w_imit}] AND 16#{exp_imit}) > 0;\n";
                 }
             }
