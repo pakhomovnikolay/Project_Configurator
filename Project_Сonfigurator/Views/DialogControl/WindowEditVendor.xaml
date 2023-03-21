@@ -13,6 +13,7 @@
         Title="Окно редактирования"
         Height="500"
         Width="550"
+        Topmost="True"
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >

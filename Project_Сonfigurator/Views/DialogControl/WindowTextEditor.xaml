@@ -8,6 +8,7 @@
         Width="1100"
         FontSize="14"
         FontFamily="Consolas"
+        Topmost="True"
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >

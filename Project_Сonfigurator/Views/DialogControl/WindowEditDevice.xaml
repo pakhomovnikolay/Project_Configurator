@@ -12,6 +12,7 @@
         ResizeMode="NoResize"
         Height="800"
         Width="1000"
+        Topmost="True"
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         Title="{Binding _Title}" 

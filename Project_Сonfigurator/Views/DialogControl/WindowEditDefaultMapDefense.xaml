@@ -6,6 +6,7 @@
         xmlns:l="clr-namespace:Project_Сonfigurator.Views.DialogControl"
         ResizeMode="NoResize"
         Height="1000" Width="1200"
+        Topmost="True"
         
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
         >
