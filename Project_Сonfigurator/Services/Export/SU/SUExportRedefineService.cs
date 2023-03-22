@@ -1269,7 +1269,7 @@ namespace Project_Сonfigurator.Services.Export.SU
 
                     fNum += _Param.Color switch
                     {
-                        "Краный" => $"{_Param.Param.VarName}.Color := 1;\n",
+                        "Краcный" => $"{_Param.Param.VarName}.Color := 1;\n",
                         "Желтый" => $"{_Param.Param.VarName}.Color := 2;\n",
                         "Зеленый" => $"{_Param.Param.VarName}.Color := 3;\n",
                         _ => $"{_Param.Param.VarName}.Color := 0;\n",
