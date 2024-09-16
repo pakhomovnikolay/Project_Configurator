@@ -29,7 +29,7 @@ namespace Project_Сonfigurator.ViewModels.Base
             if (Equals(filed, value)) return false;
             filed = value;
             OnPropertyChanged(propertyName);
-            if (App.LoadComplite && !DontСommitСhanges)
+            if (App.LoadComplete && !DontСommitСhanges)
                 App.ProjectChanged = true;
 
             return true;
